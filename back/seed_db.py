@@ -31,4 +31,19 @@ for info in [
         user.roles.append(ROLE_MAP[role_name])
     DB.session.add(user)
 
+for line in open('machines.dat', mode='r'):
+    elems = line.split('|')
+    manufacturer = app.types.Manufacturer.query.filter_by(name=elems[1]).first()
+    if manufacturer is None:
+        manufacturer = app.types.Manufacturer(
+            name=elems[1]
+        )
+        DB.session.add(manufacturer)
+    machine = app.types.Machine(
+        name=elems[0],
+        manufacturer=manufacturer,
+        year=elems[2]
+    )
+    DB.session.add(machine)
+
 DB.session.commit()
