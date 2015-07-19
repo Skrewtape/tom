@@ -4,6 +4,10 @@ from app import DB
 
 import app.types
 
+from re import compile, UNICODE
+
+_strip_pattern = compile('[\W_]+', UNICODE)
+
 DB.drop_all()
 DB.create_all()
 
@@ -39,8 +43,10 @@ for line in open('machines.dat', mode='r'):
             name=elems[1]
         )
         DB.session.add(manufacturer)
+
     machine = app.types.Machine(
         name=elems[0],
+        search_name=_strip_pattern.sub("", elems[0].lower()),
         manufacturer=manufacturer,
         year=elems[2]
     )

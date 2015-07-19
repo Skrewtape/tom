@@ -1,4 +1,4 @@
-"""Routs for dealing with users and authentication"""
+"""Routes for dealing with users and authentication"""
 import os
 import json
 import uuid
