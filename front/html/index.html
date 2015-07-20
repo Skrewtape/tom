@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html ng-app="TOMApp" ng-controller="IndexController">
+	<head>
+		<base href="[BASEHREF]">
+		<title>Tournament Operations Manager | {{ Page.title() }}</title>
+		<link rel="stylesheet" href="screen.css">
+		<script type="text/javascript" src="app.js"></script>
+	</head>
+	<body>
+		<div class="container navbar">
+			<div class="navbar-header">
+				<span class="navbar-brand">Safe Space</span>
+			</div>
+			<button ng-if='!!Page.logged_in_user().user_id' ng-click='logout()'>Logout {{Page.logged_in_user().username}}</button>
+			<button ng-if='!Page.logged_in_user().user_id' ng-click='login()'>Login</button>
+		</div>
+		<div ng-view></div>
+	</body>
+</html>

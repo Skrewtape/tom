@@ -33,3 +33,12 @@ def get_tournament(tournament):
     tournament_data = to_dict(tournament)
     tournament_data['divisions'] = [to_dict(d) for d in tournament.divisions]
     return jsonify(tournament_data)
+
+@App.route('/tournament', methods=['GET'])
+@login_required
+def get_tournaments():
+    """Get a list of tournaments"""
+    return jsonify(tournaments=[
+        to_dict(t) for t in
+        Tournament.query.order_by(Tournament.name.asc()).all()
+    ])

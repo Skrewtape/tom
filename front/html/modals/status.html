@@ -1,0 +1,11 @@
+<div class="modal-header"></div>
+<div class="modal-body">
+	<p>
+		<img src="img/spin.gif" ng-show='!modal.message'>
+		</span>
+	</p>
+	<span ng-bind='modal.message'></span>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-modal" ng-click="$close()" ng-disabled="!modal.message">OK</button>
+</div>
