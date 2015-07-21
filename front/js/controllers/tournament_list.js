@@ -6,7 +6,4 @@ app.controller('TournamentListController', function($scope, $http, $location, Pa
 			$scope.data = data;
 		}
 	);
-	$scope.openWork = function(tournamentId) {
-		$location.path('tournaments/' + tournamentId);
-	};
 });

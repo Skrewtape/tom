@@ -5,7 +5,7 @@ app.controller(
 ) {
 	Page.set_title('Create Tournament');
 	$scope.data = {};
-	$scope.add_work = function() {
+	$scope.create_tournament = function() {
         if (!$scope.validData()) {
             return;
         }

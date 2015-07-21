@@ -1,3 +1,8 @@
 <ul>
-	<li ng-repeat='tournament in data.tournaments'>{{tournament.name}}</li>
+	<li ng-repeat='tournament in data.tournaments'>
+        <a
+            href='#/tournaments/{{tournament.tournament_id}}'
+        >{{tournament.name}}</a>
+    </li>
+    <a href='#/create_tournament'>Create Tournament</a>
 </ul>
