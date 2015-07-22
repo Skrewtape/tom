@@ -1,1 +1,11 @@
 {{data.tournament.name}}
+<ul>
+    <li ng-repeat='division in data.tournament.divisions'>
+        <a
+            href='#/divisions/{{division.division_id}}'
+        >{{division.name}}</a>
+    </li>
+<ul>
+Name:
+<input type='text' ng-model='data.new_division.name' />
+<button ng-click='create_division()'>Create</button>

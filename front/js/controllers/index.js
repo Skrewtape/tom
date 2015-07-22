@@ -28,7 +28,6 @@ app.controller(
 	}
 );
 
-require('./create_tournament.js');
 require('./tournament_detail.js');
 require('./tournament_list.js');
 require('./login.js');

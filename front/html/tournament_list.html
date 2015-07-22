@@ -4,5 +4,7 @@
             href='#/tournaments/{{tournament.tournament_id}}'
         >{{tournament.name}}</a>
     </li>
-    <a href='#/create_tournament'>Create Tournament</a>
 </ul>
+Name:
+<input type='text' ng-model='data.new_tournament.name' />
+<button ng-click='create_tournament()'>Create</button>
