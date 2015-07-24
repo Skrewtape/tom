@@ -33,32 +33,3 @@ def add_division(tournament):
 def get_division(division):
     """Get a division"""
     return jsonify(to_dict(division))
-
-@App.route('/division/<division_id>/machine', methods=['GET'])
-@login_required
-@fetch_entity(Division, 'division')
-def get_division_machines(division):
-    """Get a division's machines"""
-    return jsonify(machines=[to_dict(m) for m in division.machines])
-
-@App.route('/division/<division_id>/machine/<machine_id>', methods=['PUT'])
-@login_required
-@fetch_entity(Division, 'division')
-@fetch_entity(Machine, 'machine')
-def add_machine(division, machine):
-    """Add a machine to a division"""
-    if machine not in division.machines:
-        division.machines.append(machine)
-        DB.session.commit();
-    return jsonify(to_dict(division))
-
-@App.route('/division/<division_id>/machine/<machine_id>', methods=['DELETE'])
-@login_required
-@fetch_entity(Division, 'division')
-@fetch_entity(Machine, 'machine')
-def remove_machine(division, machine):
-    """Removes a machine from a division"""
-    if machine in division.machines:
-        division.machines.remove(machine)
-        DB.session.commit();
-    return jsonify(to_dict(division))

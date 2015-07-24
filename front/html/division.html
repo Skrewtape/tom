@@ -1,0 +1,29 @@
+<h1>{{data.division.tournament.name}}</h1>
+<h2>{{data.division.name}}</h2>
+<ul>
+    <li ng-repeat='machine in data.machines'>
+        <a ng-click='remove_machine(machine)'>X</a>
+        {{machine.name}}
+        ({{machine.year}})
+        -
+        {{machine.manufacturer.name}}
+    </li>
+<ul>
+Add Machine:
+<input
+    type='text'
+    ng-model='typeahead_machine'
+    typeahead='machine for machine in machine_search($viewValue)'
+    typeahead-on-select='machine_selected($item);typeahead_machine=null'
+    typeahead-template-url='machine_item.html'
+    typeahead-editable='false'
+/>
+
+<script type='text/ng-template' id='machine_item.html'>
+    <a>
+        {{match.model.name}}
+        ({{match.model.year}})
+        -
+        {{match.model.manufacturer.name}}
+    </a>
+</script>

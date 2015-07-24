@@ -11,6 +11,11 @@ app.config(function($routeProvider){
 			controller: 'TournamentDetailController',
 		}
 	).when(
+		'/divisions/:divisionId', {
+			templateUrl: 'division.html',
+			controller: 'DivisionDetailController',
+		}
+	).when(
 		'/create_tournament', {
 			templateUrl: 'create_tournament.html',
 			controller: 'CreateTournamentController',

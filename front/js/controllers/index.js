@@ -29,5 +29,6 @@ app.controller(
 );
 
 require('./tournament_detail.js');
+require('./division_detail.js');
 require('./tournament_list.js');
 require('./login.js');
