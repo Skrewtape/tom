@@ -1,23 +1,30 @@
-<h1>{{data.division.tournament.name}}</h1>
-<h2>{{data.division.name}}</h2>
-<ul>
-    <li ng-repeat='machine in data.machines'>
-        <a ng-click='remove_machine(machine)'>X</a>
-        {{machine.name}}
-        ({{machine.year}})
-        -
-        {{machine.manufacturer.name}}
-    </li>
-<ul>
-Add Machine:
+<h2>{{data.division.name}} <small>{{data.division.tournament.name}}</small></h2>
+<h3>Machines:</h3>
+<table class='table table-bordered'>
+    <tr ng-repeat='machine in data.machines'>
+        <td>
+            <a
+                class='btn btn-danger glyphicon glyphicon-remove'
+                ng-click='remove_machine(machine)'
+            ></a>
+            {{machine.name}}
+            ({{machine.year}})
+            -
+            {{machine.manufacturer.name}}
+        </td>
+    </tr>
+</table>
+<h3>Add Machine:</h3>
 <input
     type='text'
     ng-model='typeahead_machine'
     typeahead='machine for machine in machine_search($viewValue)'
     typeahead-on-select='machine_selected($item);typeahead_machine=null'
     typeahead-template-url='machine_item.html'
+    typeahead-loading='loading_machines'
     typeahead-editable='false'
 />
+<i ng-show="loading_machines" class="glyphicon glyphicon-refresh"></i>
 
 <script type='text/ng-template' id='machine_item.html'>
     <a>

@@ -6,13 +6,21 @@
 		<script type="text/javascript" src="app.js"></script>
 	</head>
 	<body>
-		<div class="container navbar">
-			<div class="navbar-header">
-				<span class="navbar-brand">Tournament Operations Manager</span>
-			</div>
-			<button ng-if='!!Page.logged_in_user().user_id' ng-click='logout()'>Logout {{Page.logged_in_user().username}}</button>
-			<button ng-if='!Page.logged_in_user().user_id' ng-click='login()'>Login</button>
-		</div>
+        <h1>Tournament Operations Manager</h1>
+        <button
+            class='btn btn-danger'
+            ng-if='!!Page.logged_in_user().user_id'
+            ng-click='logout()'
+        >
+            Logout {{Page.logged_in_user().username}}
+        </button>
+        <button
+            class='btn btn-info'
+            ng-if='!Page.logged_in_user().user_id'
+            ng-click='login()'
+        >
+            Login
+        </button>
 		<div ng-view></div>
 	</body>
 </html>

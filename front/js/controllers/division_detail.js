@@ -39,7 +39,6 @@ app.controller('DivisionDetailController', function(
             ).then(function(response) {
                 $scope.data.machines = response.data.machines
             });
-            $scope.typeahead_machine = '';
         };
         $scope.remove_machine = function(machine) {
             $http.delete(

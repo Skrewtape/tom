@@ -6,6 +6,12 @@ module.exports = function(grunt) {
                 files : [
                     { expand: true, cwd: 'html/', src: '**', dest: 'dist/' },
                     { expand: true, cwd: 'img/', src: '**', dest: 'dist/img/' },
+                    {
+                        expand: true,
+                        cwd: 'node_modules/bootstrap-sass/assets/fonts/bootstrap/',
+                        src: '*',
+                        dest: 'dist/bootstrap/'
+                    },
                 ]
             },
         },
