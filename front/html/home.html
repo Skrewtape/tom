@@ -1,0 +1,92 @@
+<div class='container-fluid'>
+    <div class='row'>
+        <div class='col-md-4'>
+            <table class='table table-bordered'>
+                <thead>
+                    <tr>
+                        <th>Scoring</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat='tournament in data.scoring_tournaments'>
+                        <td>
+                            <a
+                                class='btn btn-info'
+                                href='#/scoring/{{tournament.tournament_id}}'
+                            >{{tournament.name}}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class='col-md-4'>
+            <table class='table table-bordered'>
+                <thead>
+                    <tr>
+                        <th>Tournaments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat='tournament in data.tournaments'>
+                        <td>
+                            <a
+                                class='btn btn-info'
+                                href='#/tournaments/{{tournament.tournament_id}}'
+                            >{{tournament.name}}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>New Tournament:</h3>
+            <form>
+                <div class='form-group'>
+                    <label for='name'>Name</label>
+                    <input type='text' ng-model='data.new_tournament.name' />
+                </div>
+                <button
+                    class='btn btn-default'
+                    ng-click='create_tournament()'
+                >Create</button>
+            </form>
+        </div>
+        <div class='col-md-4'>
+            <table class='table table-bordered'>
+                <thead>
+                    <tr>
+                        <th>Users</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat='user in data.users'>
+                        <td>
+                            <a
+                                class='btn btn-info'
+                                href='#/user/{{user.user_id}}'
+                            >{{user.username}}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Create User:</h3>
+            <form>
+                <div class='form-group'>
+                    <label for='name'>Username</label>
+                    <input type='text' ng-model='data.new_user.username'/>
+                </div>
+                <div class='form-group'>
+                    <label for='name'>Password</label>
+                    <input type='password' ng-model='data.new_user.password'/>
+                </div>
+                <div ng-repeat='(role, granted) in data.new_user_roles'>
+                    <label>
+                        <input type='checkbox'>{{role}}
+                    </label>
+                </div>
+                <button
+                    class='btn btn-default'
+                    ng-click='create_user()'
+                >Create</button>
+            </form>
+        </div>
+    </div>
+</div>

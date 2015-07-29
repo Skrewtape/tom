@@ -1,9 +1,9 @@
 /*global app*/
 app.config(function($routeProvider){
 	$routeProvider.when(
-		'/tournaments', {
-			templateUrl: 'tournament_list.html',
-			controller: 'TournamentListController',
+		'/', {
+			templateUrl: 'home.html',
+			controller: 'HomeController',
 		}
 	).when(
 		'/tournaments/:tournamentId', {
@@ -21,6 +21,6 @@ app.config(function($routeProvider){
 			controller: 'CreateTournamentController',
 		}
 	).otherwise({
-		redirectTo: '/tournaments',
+		redirectTo: '/',
 	});
 });

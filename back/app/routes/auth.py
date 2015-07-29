@@ -101,7 +101,9 @@ def logout():
     )
     return '', 200
 
-@App.route('/register', methods=['POST'])
+@App.route('/user', methods=['POST'])
+@login_required
+@Admin_permission.require(403)
 def register():
     """Register a new user"""
     user_data = json.loads(request.data)
@@ -120,5 +122,4 @@ def register():
     new_user.crypt_password(password)
     DB.session.add(new_user)
     DB.session.commit()
-    login_user(new_user)
     return jsonify(new_user)

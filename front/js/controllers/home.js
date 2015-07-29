@@ -1,8 +1,8 @@
 /*global angular, app*/
 app.controller(
-    'TournamentListController',
+    'HomeController',
     function($scope, $http, $modal, $location, Page) {
-        Page.set_title('Tournaments');
+        Page.set_title('Home');
         $scope.data = {};
         $http.get('[APIHOST]/tournament').success(
             function(data) {
