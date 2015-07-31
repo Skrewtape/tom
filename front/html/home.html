@@ -1,6 +1,6 @@
 <div class='container-fluid'>
     <div class='row'>
-        <div class='col-md-4'>
+        <div class='col-md-4' ng-show='Page.has_role("scorekeeper")'>
             <table class='table table-bordered'>
                 <thead>
                     <tr>
@@ -19,7 +19,7 @@
                 </tbody>
             </table>
         </div>
-        <div class='col-md-4'>
+        <div class='col-md-4' ng-show='Page.has_role("admin")'>
             <table class='table table-bordered'>
                 <thead>
                     <tr>
@@ -40,16 +40,21 @@
             <h3>New Tournament:</h3>
             <form>
                 <div class='form-group'>
-                    <label for='name'>Name</label>
-                    <input type='text' ng-model='data.new_tournament.name' />
+                    <label for='turnament_name'>Name</label>
+                    <input
+                        type='text'
+                        name='tournament_name'
+                        ng-model='data.new_tournament.name'
+                    />
                 </div>
                 <button
-                    class='btn btn-default'
+                    class='btn btn-success'
+                    ng-disabled='!valid_new_tournament()'
                     ng-click='create_tournament()'
                 >Create</button>
             </form>
         </div>
-        <div class='col-md-4'>
+        <div class='col-md-4' ng-show='Page.has_role("admin")'>
             <table class='table table-bordered'>
                 <thead>
                     <tr>
@@ -70,20 +75,41 @@
             <h3>Create User:</h3>
             <form>
                 <div class='form-group'>
-                    <label for='name'>Username</label>
-                    <input type='text' ng-model='data.new_user.username'/>
+                    <label for='new_un'>Username</label>
+                    <input
+                        type='text'
+                        name='new_un'
+                        ng-model='data.new_user.username'
+                    />
                 </div>
                 <div class='form-group'>
-                    <label for='name'>Password</label>
-                    <input type='password' ng-model='data.new_user.password'/>
+                    <label for='new_pwd'>Password</label>
+                    <input
+                        type='password'
+                        name='new_pwd'
+                        ng-model='data.new_user.password'
+                    />
                 </div>
-                <div ng-repeat='(role, granted) in data.new_user_roles'>
+                <div class='form-group'>
+                    <label for='new_eml'>Email</label>
+                    <input
+                        type='text'
+                        name='new_eml'
+                        ng-model='data.new_user.email'
+                    />
+                </div>
+                <div ng-repeat='role in data.roles'>
                     <label>
-                        <input type='checkbox'>{{role}}
+                        <input
+                            ng-model='data.new_user_roles[role.name]'
+                            ng-change='update_new_user_roles()'
+                            type='checkbox'>
+                            {{role.name}}
                     </label>
                 </div>
                 <button
-                    class='btn btn-default'
+                    class='btn btn-success'
+                    ng-disabled='!valid_new_user()'
                     ng-click='create_user()'
                 >Create</button>
             </form>

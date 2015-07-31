@@ -32,6 +32,13 @@ def get_users():
     """Get a list of users"""
     return jsonify(users=[user_dict(u) for u in User.query.order_by(User.user_id.asc()).all()])
 
+@App.route('/role', methods=['GET'])
+@login_required
+@Admin_permission.require(403)
+def get_roles():
+    """Get a list of roles"""
+    return jsonify(roles=[to_dict(r) for r in Role.query.all()])
+
 @App.route('/user/current', methods=['PUT'])
 def update_current_user():
     """Update the current user's data"""
@@ -122,4 +129,4 @@ def register():
     new_user.crypt_password(password)
     DB.session.add(new_user)
     DB.session.commit()
-    return jsonify(new_user)
+    return jsonify(user_dict(new_user))

@@ -1,6 +1,8 @@
 import os
 
-from traceback import format_exc
+from json import loads, dumps
+
+from traceback import format_exception_only
 
 import flask
 from flask import Flask, jsonify
@@ -40,16 +42,20 @@ from app import routes
 
 def make_json_error(ex):
     """Turn an exception into a chunk of JSON"""
-    is_http_ex = isinstance(ex, HTTPException)
-    response = jsonify(
-        message=(
-            ex.description
-            if is_http_ex
-            else str(ex)
-        ),
-        stack=format_exc(ex)
-    )
-    response.status_code = (ex.code if is_http_ex else 500)
+    response = jsonify({})
+    response_dict = loads(response.get_data())
+    if isinstance(ex, HTTPException):
+        response.status_code = ex.code
+        if isinstance(ex.description, Permission):
+            response_dict['message'] = "Permission denied"
+        else:
+            response_dict['message'] = str(ex.description)
+    else:
+        response.status_code = 500
+        response_dict['message'] = str(ex)
+    if response.status_code == 500:
+        response_dict['stack'] = str(format_exception_only(type(ex), ex))
+    response.set_data(dumps(response_dict))
     return response
 
 for code in default_exceptions.iterkeys():
