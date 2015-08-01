@@ -32,4 +32,6 @@ def add_division(tournament):
 @fetch_entity(Division, 'division')
 def get_division(division):
     """Get a division"""
-    return jsonify(to_dict(division))
+    division_dict = to_dict(division)
+    division_dict['tournament'] = to_dict(division.tournament)
+    return jsonify(division_dict)

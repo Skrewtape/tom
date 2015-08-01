@@ -1,17 +1,20 @@
 /*global angular:true, app:true*/
 angular = require('./lib/angular-index.js');
 
-require('angular-route');
-require('angular-touch');
 require('jquery-browserify');
-require('bootstrap-sass/assets/javascripts/bootstrap');
+
 require('angular-bootstrap');
+require('angular-breadcrumb');
+require('angular-touch');
+require('angular-ui-router');
+require('bootstrap-sass/assets/javascripts/bootstrap');
 
 app = angular.module(
 	'TOMApp',
 	[
-		'ngRoute',
 		'ui.bootstrap',
+		'ui.router',
+        'ncy-angular-breadcrumb',
 	]
 );
 

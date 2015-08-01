@@ -1,14 +1,15 @@
 /*global angular, $, moment, app */
 app.controller('DivisionDetailController', function(
-	$scope, $http, $timeout, $modal, $routeParams, Page) {
+	$scope, $http, $timeout, $modal, $state, Page) {
         $scope.data = {};
         $scope.machine_cache = {};
 
         Page.set_title('Division Detail');
 
-        $http.get('[APIHOST]/division/' + $routeParams.divisionId).success(
+        $http.get('[APIHOST]/division/' + $state.params.divisionId).success(
             function(data) {
                 $scope.data.division = data;
+                $scope.data.tournament = data.tournament;
                 Page.set_title('Division: ' + data.name);
                 $http.get(
                     '[APIHOST]/division/' +
