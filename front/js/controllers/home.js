@@ -9,18 +9,28 @@ app.controller(
                 $scope.data.tournaments = data.tournaments;
             }
         );
-        if (Page.has_role('admin')) {
-            $http.get('[APIHOST]/user').success(
-                function(data) {
-                    $scope.data.users = data.users;
-                }
-            );
-            $http.get('[APIHOST]/role').success(
-                function(data) {
-                    $scope.data.roles = data.roles;
-                }
-            );
+
+        var loadSensitive = function() {
+            if (Page.has_role('admin')) {
+                $http.get('[APIHOST]/user').success(
+                    function(data) {
+                        $scope.data.users = data.users;
+                    }
+                );
+                $http.get('[APIHOST]/role').success(
+                    function(data) {
+                        $scope.data.roles = data.roles;
+                    }
+                );
+                $http.get('[APIHOST]/player').success(
+                    function(data) {
+                        $scope.data.players = data.players;
+                    }
+                );
+            }
         }
+        loadSensitive();
+        $scope.$on('login_changed', loadSensitive);
 
         $scope.data.new_tournament = {};
         $scope.create_tournament = function() {
@@ -97,6 +107,38 @@ app.controller(
                     $scope.data.new_user.roles.push(k);
                 }
             });
+        };
+
+        $scope.data.new_player = {};
+        $scope.create_player = function() {
+            if (!$scope.valid_new_player()) {
+                return;
+            }
+            $scope.modal = {};
+            var statusModal = $modal.open({
+                templateUrl: 'modals/status.html',
+                backdrop: 'static',
+                keyboard: false,
+                scope: $scope
+            });
+            $http.post('[APIHOST]/player', $scope.data.new_player).success(
+                function(created) {
+                    $scope.data.new_player = {};
+                    $scope.data.players.push(created);
+                    statusModal.close();
+                }
+            ).error(
+                function(data) {
+                    $scope.modal.message = 'Failed to create player!';
+                    if (data && data.message) {
+                        $scope.modal.message += ' : ' + data.message;
+                    }
+                }
+            );
+        };
+        $scope.valid_new_player = function() {
+            return $scope.data.new_player.first_name && 
+                $scope.data.new_player.last_name;
         };
     }
 );

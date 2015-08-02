@@ -36,6 +36,7 @@ Principal(App)
 DB = SQLAlchemy(App)
 
 Admin_permission = Permission(RoleNeed('admin'))
+Scorekeeper_permission = Permission(RoleNeed('scorekeeper'))
 
 from app import auth
 from app import routes

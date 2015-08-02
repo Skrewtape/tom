@@ -24,6 +24,7 @@ app.controller(
         };
         $http.get('[APIHOST]/user/current').success(function (data) {
             Page.set_logged_in_user(data);
+            $scope.$broadcast('login_changed');
         });
 	}
 );
