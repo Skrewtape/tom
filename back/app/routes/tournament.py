@@ -42,3 +42,21 @@ def get_tournaments():
         to_dict(t) for t in
         Tournament.query.order_by(Tournament.name.asc()).all()
     ])
+
+@App.route('/tournament/<tournament_id>/begin', methods=['PUT'])
+@login_required
+@Admin_permission.require(403)
+@fetch_entity(Tournament, 'tournament')
+def start_tournament(tournament):
+    tournament.active = True
+    DB.session.commit()
+    return jsonify(to_dict(tournament))
+
+@App.route('/tournament/<tournament_id>/end', methods=['PUT'])
+@login_required
+@Admin_permission.require(403)
+@fetch_entity(Tournament, 'tournament')
+def end_tournament(tournament):
+    tournament.active = False
+    DB.session.commit()
+    return jsonify(to_dict(tournament))

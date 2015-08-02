@@ -33,6 +33,11 @@
                                 class='btn btn-info'
                                 ui-sref='home.tournament({tournamentId:tournament.tournament_id})'
                             >{{tournament.name}}</a>
+                            <i
+                                ng-show='tournament.active'
+                                class='glyphicon glyphicon-arrow-right'
+                                style='color:red'
+                            ></i>
                         </td>
                     </tr>
                 </tbody>

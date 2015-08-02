@@ -8,3 +8,4 @@ class Tournament(DB.Model):
     # pylint can't find SQLAlchemy's __init__() method for some reason
     tournament_id = DB.Column(DB.Integer, primary_key=True)
     name = DB.Column(DB.String(1000))
+    active = DB.Column(DB.Boolean)

@@ -8,13 +8,12 @@ app.controller('TournamentDetailController', function(
         $http.get('[APIHOST]/tournament/' + $state.params.tournamentId).success(
             function(data) {
                 $scope.data.tournament = data;
-
                 Page.set_title('Tournament: ' + data.name);
             }
         );
         $scope.data.new_division = {};
         $scope.create_division = function() {
-            if (!$scope.validData()) {
+            if (!$scope.valid_data()) {
                 return;
             }
             $scope.modal = {};
@@ -44,8 +43,23 @@ app.controller('TournamentDetailController', function(
                 }
             );
         };
-        $scope.validData = function() {
+        $scope.valid_data = function() {
             return $scope.data.new_division.name;
+        };
+        $scope.toggle_tournament = function() {
+            if ($scope.data.tournament) {
+                $http.put(
+                    '[APIHOST]/tournament/' +
+                    $state.params.tournamentId +
+                    '/' +
+                    ($scope.data.tournament.active ? "end" : "begin")
+                ).success(
+                    function() {
+                        $scope.data.tournament.active =
+                        !$scope.data.tournament.active;
+                    }
+                );
+            }
         };
     }
 );
