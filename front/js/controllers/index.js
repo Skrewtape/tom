@@ -33,3 +33,4 @@ require('./tournament_detail.js');
 require('./division_detail.js');
 require('./home.js');
 require('./login.js');
+require('./scoring.js');

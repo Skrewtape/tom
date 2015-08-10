@@ -9,3 +9,4 @@ class Player(DB.Model):
     player_id = DB.Column(DB.Integer, primary_key=True)
     first_name = DB.Column(DB.String(1000))
     last_name = DB.Column(DB.String(1000))
+    search_name = DB.Column(DB.String(1000))

@@ -12,7 +12,7 @@ def fetch_entity(model_class, arg_name):
             """Decorator to turn an id into a model object"""
             kwargs[arg_name] = model_class.query.get(kwargs.pop(arg_name + '_id', None))
             if kwargs[arg_name] is None:
-                raise NotFound('')
+                raise NotFound(arg_name)
             return decorated_f(*args, **kwargs)
         return decorator
     return wrap

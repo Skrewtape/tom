@@ -20,7 +20,10 @@ def add_player():
     player_data = json.loads(request.data)
     new_player = Player(
         first_name = player_data['first_name'],
-        last_name = player_data['last_name']
+        last_name = player_data['last_name'],
+        search_name = "".join(
+            player_data[field].lower() for field in ['first_name', 'last_name']
+        )
     )
     DB.session.add(new_player)
     DB.session.commit()
@@ -33,6 +36,14 @@ def get_player(player):
     """Get a player"""
     player_data = to_dict(player)
     return jsonify(player_data)
+
+@App.route('/player/search', methods=['GET'])
+@login_required
+def search_players():
+    """Get a list of players matching a query"""
+    return jsonify(players = [to_dict(p) for p in Player.query.filter(
+        Player.search_name.contains(request.args.get('substring'))
+    ).order_by(Player.last_name.asc(), Player.first_name.asc()).limit(10)])
 
 @App.route('/player', methods=['GET'])
 @login_required

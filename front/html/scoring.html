@@ -1,0 +1,33 @@
+<h3>Add entry:</h3>
+<form ng-submit='new_entry()'>
+    <div class='form-group'>
+        <label for='division'>Division</label>
+        <select
+            name='division'
+            ng-model='data.new_entry.division'
+            ng-options='division.name for division in data.tournament.divisions'
+        >
+        </select>
+        <label for='player'>Player</label>
+        <input
+            type='text'
+            name='player'
+            ng-model='data.new_entry.player'
+            typeahead='player as player.first_name + " " + player.last_name for player in player_search($viewValue)'
+            typeahead-editable='false'
+            typeahead-loading='loading_player'
+            typeahead-template-url='player_item.html'
+        />
+        <i ng-show="loading_player" class="glyphicon glyphicon-refresh"></i>
+    </div>
+    <button
+        class='btn btn-success'
+    >Add</button>
+</form>
+
+<script type='text/ng-template' id='player_item.html'>
+    <a>
+        {{match.model.first_name}}
+        {{match.model.last_name}}
+    </a>
+</script>

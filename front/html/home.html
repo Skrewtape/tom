@@ -8,11 +8,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat='tournament in data.scoring_tournaments'>
+                    <tr ng-repeat='tournament in data.tournaments | filter: {active: true}'>
                         <td>
                             <a
                                 class='btn btn-info'
-                                href='#/scoring/{{tournament.tournament_id}}'
+                                ui-sref='home.scoring({tournamentId:tournament.tournament_id})'
                             >{{tournament.name}}</a>
                         </td>
                     </tr>

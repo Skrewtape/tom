@@ -1,6 +1,5 @@
 /*global app*/
-app.config(function($stateProvider, $urlRouterProvider){
-
+app.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
 
 	$stateProvider.state(
@@ -36,6 +35,19 @@ app.config(function($stateProvider, $urlRouterProvider){
             },
             ncyBreadcrumb: {
                 label: '{{data.division.name}}',
+            },
+		}
+	).state(
+        'home.scoring', {
+            url: 'scoring/:tournamentId',
+            views: {
+                '@': {
+                    templateUrl: 'scoring.html',
+                    controller: 'ScoringController',
+                }
+            },
+            ncyBreadcrumb: {
+                label: 'Scoring {{data.tournament.name}}',
             },
 		}
 	)

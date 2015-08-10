@@ -12,6 +12,8 @@ from app.types import Entry, Player, Division, Machine
 
 from app.routes.util import fetch_entity
 
+from werkzeug.exceptions import NotFound, Conflict
+
 def entry_dict(entry):
     entry_dict = to_dict(entry)
     entry_dict['player'] = to_dict(division.player)
@@ -26,8 +28,13 @@ def entry_dict(entry):
 def add_entry(player):
     """Create a new entry"""
     entry_data = json.loads(request.data)
+    division = Division.query.get(entry_data['division_id'])
+    if division is None:
+        raise NotFound('division')
+    if not division.tournament.active:
+        raise Conflict('tournament closed')
     new_entry = Entry(
-        division_id = entry_data['division_id']
+        division = division
     )
     player.entries.append(new_entry)
     DB.session.add(new_entry)
@@ -48,6 +55,10 @@ def get_entry(division):
 @fetch_entity(Machine, 'machine')
 def set_entry_machine(entry, machine):
     """Set the machine (spend) the entry"""
+    if not entry.division.tournament.active:
+        raise Conflict('tournament closed')
+    if entry.machine is not None:
+        raise Conflict('entry already spent')
     entry.machine = machine
     DB.session.commit()
     return jsonify(entry_dict(entry))
