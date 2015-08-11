@@ -65,5 +65,6 @@ for code in default_exceptions.iterkeys():
 @App.errorhandler(Exception)
 def app_error(exception):
     """Handle uncaught exceptions from the app"""
-    App.logger.error(format_exception_only(type(exception), exception))
+    App.logger.exception(exception)
+    # App.logger.error(format_exception_only(type(exception), exception))
     return make_json_error(exception), 500

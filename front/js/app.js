@@ -1,5 +1,6 @@
-/*global angular:true, app:true*/
+/*global angular:true, app:true, _:true*/
 angular = require('./lib/angular-index.js');
+_ = require('underscore');
 
 require('jquery-browserify');
 
