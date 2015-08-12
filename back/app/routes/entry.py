@@ -63,6 +63,25 @@ def get_free_entries(tournament):
         Division.name.asc()
     ).all()])
 
+@App.route('/tournament/<tournament_id>/entry/scoring', methods=['GET'])
+@login_required
+@fetch_entity(Tournament, 'tournament')
+def get_scoring_entries(tournament):
+    """Get entries ready for scoring"""
+    return jsonify(entries = [entry_dict(e) for e in Entry.query.filter(
+        Entry.machine != None
+    ).filter(
+        (Entry.score == 0) | (Entry.score == None)
+    ).filter(
+        Entry.division.has(Division.tournament == tournament)
+    ).join(
+        Player, Entry.player
+    ).join(
+        Division, Entry.division
+    ).join(
+        Machine, Entry.machine
+    ).all()])
+
 @App.route('/entry/<entry_id>/machine/<machine_id>', methods=['PUT'])
 @login_required
 @Scorekeeper_permission.require(403)

@@ -4,6 +4,8 @@ app.controller('ScoringController', function(
         $scope.data = {};
         $scope.data.new_entry = {};
         $scope.data.free_entries = [];
+        $scope.data.machine_map = {};
+        $scope.data.scoring_queue = [];
 
         Page.set_title('Scoring');
 
@@ -14,6 +16,17 @@ app.controller('ScoringController', function(
                 $scope.data.tournament = data;
                 $scope.data.new_entry.division = data.divisions[0];
                 Page.set_title('Tournament: ' + data.name);
+                _.each($scope.data.tournament.divisions, function(division) {
+                    $http.get(
+                        '[APIHOST]/division/' + division.division_id +
+                        '/machine'
+                    ).success(
+                        function (data) {
+                            $scope.data.machine_map[division.division_id] =
+                                data.machines;
+                        }
+                    );
+                });
             }
         );
         $http.get(
@@ -25,6 +38,33 @@ app.controller('ScoringController', function(
                 $scope.group_entries();
             }
         );
+        $http.get(
+            '[APIHOST]/tournament/' + $state.params.tournamentId +
+            '/entry/scoring'
+        ).success(
+            function(data) {
+                $scope.data.scoring_queue = data.entries;
+            }
+        );
+        $scope.spend_entry = function(entry_group, machine) {
+            var entry_id = entry_group.entry_ids[0];
+            $http.put(
+                '[APIHOST]/entry/' + entry_id +
+                '/machine/' + machine.machine_id
+            ).success(
+                function (created) {
+                    for (var i = 0; i < $scope.data.free_entries.length; i++) {
+                        var entry = $scope.data.free_entries[i];
+                        if (created.entry_id == entry_id) {
+                            $scope.data.free_entries.splice(i, 1);
+                            break;
+                        }
+                    }
+                    $scope.group_entries();
+                    $scope.data.scoring_queue.push(created);
+                }
+            );
+        };
         $scope.player_search = function(substr) {
             return $http.get(
                 '[APIHOST]/player/search', {
@@ -80,8 +120,8 @@ app.controller('ScoringController', function(
             _.each(_.sortBy(
                 $scope.data.free_entries, function (entry) {
                     return (
-                        entry.player.last_name +
-                        entry.player.first_name +
+                        entry.player.last_name + ' ' +
+                        entry.player.first_name + ' ' +
                         entry.division.name
                     );
                 }
@@ -97,13 +137,13 @@ app.controller('ScoringController', function(
                         last.division.division_id == entry.division.division_id
                     )
                 ) {
-                    last.count++;
+                    last.entry_ids.push(entry.entry_id);
                 }
                 else {
                     $scope.data.grouped_free_entries.push({
                         player: entry.player,
                         division: entry.division,
-                        count: 1
+                        entry_ids: [entry.entry_id]
                     });
                 }
             });
