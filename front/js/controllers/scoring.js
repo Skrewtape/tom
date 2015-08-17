@@ -46,7 +46,26 @@ app.controller('ScoringController', function(
                 $scope.data.scoring_queue = data.entries;
             }
         );
+        $scope.save_entry_score = function(entry) {
+            $http.put(
+                '[APIHOST]/entry/' + entry.entry_id + '/score',
+                { score: entry.score }
+            ).success(function () {
+                for (var i = 0; i < $scope.data.scoring_queue.length; i++) {
+                    if (
+                        $scope.data.scoring_queue[i].entry_id ==
+                        entry.entry_id
+                    ) {
+                        $scope.data.scoring_queue.splice(i, 1);
+                        break;
+                    }
+                }
+            });
+        }
         $scope.spend_entry = function(entry_group, machine) {
+            if (!machine) {
+                return;
+            }
             var entry_id = entry_group.entry_ids[0];
             $http.put(
                 '[APIHOST]/entry/' + entry_id +
@@ -55,7 +74,7 @@ app.controller('ScoringController', function(
                 function (created) {
                     for (var i = 0; i < $scope.data.free_entries.length; i++) {
                         var entry = $scope.data.free_entries[i];
-                        if (created.entry_id == entry_id) {
+                        if (created.entry_id == entry.entry_id) {
                             $scope.data.free_entries.splice(i, 1);
                             break;
                         }

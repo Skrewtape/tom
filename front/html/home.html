@@ -162,5 +162,24 @@
                 >Create</button>
             </form>
         </div>
+        <div class='col-md-4'>
+            <table class='table table-bordered'>
+                <thead>
+                    <tr>
+                        <th>Tournament Stats</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat='tournament in data.tournaments'>
+                        <td>
+                            <a
+                                class='btn btn-info'
+                                ui-sref='home.stats({tournamentId:tournament.tournament_id})'
+                            >{{tournament.name}}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

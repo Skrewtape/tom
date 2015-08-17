@@ -1,0 +1,31 @@
+<h3>{{data.tournament.name}}</h3>
+<div class='container-fluid'>
+    <div class='row'>
+        <div
+            class='col-md-4'
+            ng-repeat='division in data.tournament.divisions'
+        >
+            <table class='table table-bordered'>
+                <thead>
+                    <tr>
+                        <th colspan='3'>{{division.name}}</th>
+                    </tr>
+                    <tr>
+                        <th>Machine</th>
+                        <th>Winner</th>
+                        <th>Score</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat='high_score in data.high_scores[division.division_id]'>
+                        <td>{{high_score.machine.name}}</td>
+                        <td>
+                            {{high_score.player.first_name}}
+                            {{high_score.player.last_name}}
+                        </td>
+                        <td>{{high_score.score}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

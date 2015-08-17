@@ -50,5 +50,18 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 label: 'Scoring {{data.tournament.name}}',
             },
 		}
+	).state(
+        'home.stats', {
+            url: 'stats/:tournamentId',
+            views: {
+                '@': {
+                    templateUrl: 'stats.html',
+                    controller: 'TournamentStatsController',
+                }
+            },
+            ncyBreadcrumb: {
+                label: '{{data.tournament.name}} Stats',
+            },
+		}
 	)
 });

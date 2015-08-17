@@ -82,17 +82,52 @@ def get_scoring_entries(tournament):
         Machine, Entry.machine
     ).all()])
 
+@App.route('/tournament/<tournament_id>/entry/scored', methods=['GET'])
+@login_required
+@fetch_entity(Tournament, 'tournament')
+def get_scored_entries(tournament):
+    """Get entries that are scored"""
+    return jsonify(entries = [entry_dict(e) for e in Entry.query.filter(
+        Entry.machine != None
+    ).filter(
+        (Entry.score != None) & (Entry.score > 0)
+    ).filter(
+        Entry.division.has(Division.tournament == tournament)
+    ).join(
+        Player, Entry.player
+    ).join(
+        Division, Entry.division
+    ).join(
+        Machine, Entry.machine
+    ).all()])
+
 @App.route('/entry/<entry_id>/machine/<machine_id>', methods=['PUT'])
 @login_required
 @Scorekeeper_permission.require(403)
 @fetch_entity(Entry, 'entry')
 @fetch_entity(Machine, 'machine')
 def set_entry_machine(entry, machine):
-    """Set the machine (spend) the entry"""
+    """Set the machine for (spend) the entry"""
     if not entry.division.tournament.active:
         raise Conflict('tournament closed')
     if entry.machine is not None:
         raise Conflict('entry already spent')
     entry.machine = machine
+    DB.session.commit()
+    return jsonify(entry_dict(entry))
+
+@App.route('/entry/<entry_id>/score', methods=['PUT'])
+@login_required
+@Scorekeeper_permission.require(403)
+@fetch_entity(Entry, 'entry')
+def set_entry_score(entry):
+    """Set the score for the entry"""
+    if not entry.division.tournament.active:
+        raise Conflict('tournament closed')
+    if entry.machine is None:
+        raise Conflict('No machine set')
+    if entry.score is not None or entry.score > 0:
+        raise Conflict('Score already set')
+    entry.score = json.loads(request.data)['score']
     DB.session.commit()
     return jsonify(entry_dict(entry))
