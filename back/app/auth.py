@@ -20,7 +20,7 @@ def load_user(userid):
 def on_identity_loaded(sender, identity):
     """Set up the Flask-Principal stuff for this user"""
     identity.user = current_user
-    if hasattr(current_user, 'id'):
+    if hasattr(current_user, 'user_id'):
         identity.provides.add(UserNeed(current_user.user_id))
     if hasattr(current_user, 'roles'):
         for role in current_user.roles:
