@@ -7,9 +7,13 @@ class Entry(DB.Model):
     # pylint: disable=no-init
     # pylint can't find SQLAlchemy's __init__() method for some reason
     entry_id = DB.Column(DB.Integer, primary_key=True)
-
+    completed = DB.Column(DB.Boolean)
+    voided = DB.Column(DB.Boolean)    
     score = DB.Column(DB.Integer)
-
+    rank = DB.Column(DB.Integer)
+    number_of_scores_per_entry = DB.Column(DB.Integer)
+    active = DB.Column(DB.Boolean)
+    
     player_id = DB.Column(DB.Integer, DB.ForeignKey(
         'player.player_id'
     ))

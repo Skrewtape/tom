@@ -91,10 +91,10 @@ class Player(DB.Model):
         if self.machine:
             player['machine'] = self.machine.to_dict()
         if self.linked_division:            
-            ##player['linked_division'] = self.linked_division[0].to_dict()
-            pass
-        player['entries']=self.build_tournament_entries_dict(type, relationship)
-        
+            player['linked_division'] = self.linked_division[0].to_dict_simple()            
+        player['entries']=self.build_tournament_entries_dict(relationship)
+        return player
+    
     def to_dict(self, type='simple'):
         player = to_dict(self)
         if(type == 'simple'):
