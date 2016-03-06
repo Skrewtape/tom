@@ -1,27 +1,22 @@
 import os
+import tomtestbase
 from app import App
 import unittest
 import tempfile
-from flask import json, Response
-from flask_login import login_user, logout_user, current_user
-from flask_principal import Identity, RoleNeed, UserNeed
 from app.types import User
-from app import auth
-from seed_testing_db import init_db
-from app import DB
-import app.types
-from sqlalchemy.exc import ArgumentError,InvalidRequestError,IntegrityError
-from base_case import admin_user_name, all_roles_user_name, non_admin_user_name, non_existant_user
-from base_case import admin_user_password, all_roles_user_password, non_admin_user_password, non_existant_user_password
+from app import auth, DB
+from flask_principal import Identity, RoleNeed, UserNeed
+from flask_login import login_user
+#from base_case import admin_user_name, all_roles_user_name, non_admin_user_name, non_existant_user
+#from base_case import admin_user_password, all_roles_user_password, non_admin_user_password, non_existant_user_password
 
-class TomAppAuthTestCase(unittest.TestCase):
+
+class TestAppAuth(tomtestbase.TomTestCase):
 
     def setUp(self):
-        App.config['TESTING'] = True
-        self.app = App.test_client()
-        init_db()
-        self.all_roles_user = User.query.filter_by(username=all_roles_user_name).first()
-                
+        super(TestAppAuth,self).setUp()
+        self.all_roles_user = User.query.filter_by(username=self.all_roles_user_name).first()
+
     def test_on_identity_loaded_no_roles(self):
         no_roles_identity_to_test = Identity(-1)
         no_roles_needs = {UserNeed(None)}

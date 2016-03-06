@@ -1,27 +1,82 @@
-<h3>Divisions:</h3>
-<table class='table table-bordered'>
-    <tr ng-repeat='division in data.tournament.divisions'>
-        <td>
+<div style='margin:auto;width:50%' class='arrow_box'>
+  Tournament List
+</div>
+<div style='width:50%;margin:auto;padding-top:25px'>
+  <uib-accordion close-others="true">
+    <uib-accordion-group>
+      <uib-accordion-heading>
+          <span class='glyphicon glyphicon-plus-sign' style='font-size:24px;color:green;top:5px'></span><span>Create Tournament</span>
+      </uib-accordion-heading>
+      <div class='form-group input-group'>        
+        <span class="input-group-addon" id="tournament_name">Tournament Name</span>
+        <input
+           type='text'
+           class='form-control'
+           aria-describedby='tournament_name'
+           ng-model='tournament.tournament_name'
+           />
+      </div>
+      <form>
+      <input
+         type='checkbox'
+         name='single_division'
+         ng-model='tournament.single_division'
+         style='margin-left:10px;margin-right:10px;'
+         >
+      <label for='single_division'>
+        Is this a single division tournament?
+      </label>
+      <br>
+      </form>
+      <a
+         class='btn btn-info'
+         ng-click='create_tournament()'
+      > Create Tournament</a>
+    </uib-accordion-group>    
+    <uib-accordion-group ng-repeat="tournament in tournaments">
+      <uib-accordion-heading>
+        {{tournament.name}}
+      </uib-accordion-heading>
+      <center>
+        <table><td><switch ng-model="tournament.active" ng-change='setTournamentActive(tournament)'></switch></td><td valign=center>Click to <span ng-if='tournament.active == false'>Activate</span><span ng-if='tournament.active == true'>Deactivate</span> Tournament</td></table>
+        <br>
+        <span ng-if='tournament.divisions.length > 0'>
+          <b>Divisions</b>
+          <hr style='width:50%'>
+        </span>
+        <span ng-repeat='division in tournament.divisions|orderBy:"name"'>        
+          <a
+             style='width:50%;'
+             class='btn btn-info'
+             ui-sref='home.tournament.division({tournament_name:tournament.name,division_id:division.division_id})'
+             > {{division.name}} Division</a>
+          <br>
+        </span>
+        <span ng-if='tournament.divisions[0].name != "all"'>
+        <br>
+        <br>
+        <b>Add New Division</b>
+        <hr style='width:50%'>
+        <table style='width:70%'>
+          <td>
+            <div class='form-group input-group'>        
+              <span class="input-group-addon" id="division_name">Division Name</span>
+              <input
+                 type='text'
+                 class='form-control'
+                 aria-describedby='division_name'
+                 ng-model='tournament.new_division_name'
+                 />
+            </div>
+          </td>
+          <td>
             <a
-                class='btn btn-info'
-                ui-sref='home.tournament.division({divisionId:division.division_id})'
-            >{{division.name}}</a>
-        </td>
-    </tr>
-</table>
-{{data.tournament.active ? "Running" : "Off"}}
-<button
-    class='btn btn-danger'
-    ng-click='toggle_tournament()'
->{{data.tournament.active ? "Stop" : "Start"}}</button>
-<h3>New Division:</h3>
-<form>
-    <div class='form-group'>
-        <label for='name'>Name</label>
-        <input type='text' name='name' ng-model='data.new_division.name'/>
-    </div>
-    <button
-        class='btn btn-default'
-        ng-click='create_division()'
-    >Create</button>
-</form>
+               ng-click='create_division(tournament)'
+               ><span class='glyphicon glyphicon-plus-sign' style='font-size:24px;color:green;top:-5px'></span></a>
+          </td>
+        </table>
+        </span>
+      </center>
+    </uib-accordion-group>
+  </uib-accordion>
+</div>

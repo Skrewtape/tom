@@ -1,6 +1,7 @@
 """Model object for a tournament"""
 
 from app import DB
+from flask_restless.helpers import to_dict
 
 class Tournament(DB.Model):
     """Model object for a tournament"""
@@ -9,3 +10,21 @@ class Tournament(DB.Model):
     tournament_id = DB.Column(DB.Integer, primary_key=True)
     name = DB.Column(DB.String(1000))
     active = DB.Column(DB.Boolean)
+
+    divisions = DB.relationship('Division',lazy='joined')
+
+    def to_dict_with_divisions(self):
+        tournament = to_dict(self)
+        if self.divisions:
+            tournament['divisions']=[]
+            for division in self.divisions:
+                tournament['divisions'].append(division.to_dict_with_machines())
+        return tournament
+    
+    def to_dict_simple(self):
+        return to_dict(self)
+
+        
+
+    
+    

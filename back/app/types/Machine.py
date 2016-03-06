@@ -1,6 +1,7 @@
 """Model object for a game machine"""
 
 from app import DB
+from flask_restless.helpers import to_dict
 
 class Machine(DB.Model):
     """Model object for a game machine"""
@@ -19,3 +20,10 @@ class Machine(DB.Model):
         backref=DB.backref('machines'),
         foreign_keys=[manufacturer_id]
     )
+
+    def to_dict_simple(self):
+        return to_dict(self)
+    
+    def to_dict_with_relationships(self):
+        return to_dict(self)
+    

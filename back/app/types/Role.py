@@ -9,5 +9,5 @@ class Role(DB.Model):
     role_id = DB.Column(DB.Integer, primary_key=True)
     name = DB.Column(DB.String(100))
 
-    def to_dict(self):
+    def to_dict_simple(self):
         return to_dict(self)

@@ -16,6 +16,9 @@ def load_user(userid):
 # pylint: disable=no-member,unused-argument
 # I don't know why pylint thinks connect_via doesn't exist; it totally does
 # Also I'm not sure how to skip the sender argument, since I need identity
+#
+# current_user is the currently logged in user ( from flask_login and then modified by flask_principal).
+# identity gets the user id and the user roles added to it's provides property
 @identity_loaded.connect_via(App)
 def on_identity_loaded(sender, identity):
     """Set up the Flask-Principal stuff for this user"""

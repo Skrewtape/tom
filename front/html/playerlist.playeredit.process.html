@@ -1,0 +1,14 @@
+<div style='margin:auto;width:50%' class='arrow_box'>
+  Player Division Set!  
+</div>
+<center>
+  <div ng-if='division_set == "true"' align=center style='padding-top:25px'>  Player division has been set </div>.
+  <div ng-if='division_set == "null"' align=center style='padding-top:25px'>  Player division has not been changed</div>
+  <div ng-if='division_set == "false"' align=center style='padding-top:25px'>  Player division has NOT been set </div>
+  <div>
+    <a
+       class='btn btn-info'
+       ng-click='goto_next_state()'
+       >Proceed</a> 
+  </div>
+</center>

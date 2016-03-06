@@ -17,7 +17,8 @@ App = Flask(__name__)
 App.secret_key = '\xee\xaa\x99\xdc\xcd\xbf\x0e2\xf5D\x94\xe4\xc7\x90\xaf\xd2\xea\x89\x95_\x94\x82\x8b\xdc'
 
 App.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-
+App.config['SQLALCHEMY_POOL_SIZE']=10
+App.config['SQLALCHEMY_POOL_TIMEOUT']=5
 if 'DYNO' not in os.environ:
     App.config['DEBUG'] = True
 
@@ -68,3 +69,4 @@ def app_error(exception):
     App.logger.exception(exception)
     # App.logger.error(format_exception_only(type(exception), exception))
     return make_json_error(exception), 500
+print "here we go..."

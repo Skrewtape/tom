@@ -19,28 +19,19 @@ from app.routes.util import fetch_entity
 
 from sqlalchemy.exc import ArgumentError,InvalidRequestError,IntegrityError
 
-# def user_dict(user):
-#     """Turn a User object into a dictionary suitable for serialization"""
-#     data = to_dict(user)
-#     del data['password_crypt']
-#     if Admin_permission.can() or user.user_id == current_user.user_id:
-#         data['roles'] = [r.name for r in user.roles]
-#     return data
-
 @App.route('/user', methods=['GET'])
 @login_required
 @Admin_permission.require(403)
 def get_users():
-    """Get a list of users"""
-    #return jsonify(users=[user_dict(u) for u in User.query.order_by(User.user_id.asc()).all()])
-    return jsonify(users=[u.to_dict() for u in User.query.order_by(User.user_id.asc()).all()])
+    """Get a list of users"""    
+    return jsonify(users=[u.to_dict_simple() for u in User.query.order_by(User.user_id.asc()).all()])
 
 @App.route('/role', methods=['GET'])
 @login_required
 @Admin_permission.require(403)
 def get_roles():
     """Get a list of roles"""
-    return jsonify(roles=[r.to_dict() for r in Role.query.all()])
+    return jsonify(roles=[r.to_dict_simple() for r in Role.query.all()])
 
 @App.route('/user/current', methods=['PUT'])
 def update_current_user():
@@ -79,7 +70,7 @@ def update_user(user):
         else:
             abort(422)
     DB.session.commit()
-    return jsonify(user.to_dict())
+    return jsonify(user.to_dict_simple())
 
 @App.route('/user/current', methods=['GET'])
 @login_required
@@ -97,7 +88,7 @@ def get_current_user():
 @fetch_entity(User, 'user')
 def get_user(user):
     """Get information about a particular user"""
-    user_dict = user.to_dict()
+    user_dict = user.to_dict_simple()
     if Admin_permission.can() or user.user_id == current_user.user_id:
         user_dict['roles'] = [r.name for r in user.roles]
     return jsonify(user_dict)
@@ -154,7 +145,7 @@ def register():
         new_user.crypt_password(password)
         DB.session.add(new_user)
         DB.session.commit()
-        return jsonify(new_user.to_dict())
+        return jsonify(new_user.to_dict_simple())
     except IntegrityError as e:    
         abort(422)
         pass

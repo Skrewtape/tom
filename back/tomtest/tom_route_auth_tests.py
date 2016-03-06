@@ -1,45 +1,23 @@
 import os
+import tomtestbase
+from tomtestbase import TomTestCase
 from app import App
 import unittest
 import tempfile
-from flask import json, Response
-from flask_login import login_user, logout_user, current_user
-from flask_principal import Identity, RoleNeed, UserNeed
 from app.types import User
 from app import auth
-from seed_testing_db import init_db
 from app import DB
-import app.types
-from sqlalchemy.exc import ArgumentError,InvalidRequestError,IntegrityError
-from base_case import admin_user_name, all_roles_user_name, non_admin_user_name, non_existant_user
-from base_case import admin_user_password, all_roles_user_password, non_admin_user_password, non_existant_user_password
+from tomtestbase import admin_user_name, admin_user_password, all_roles_user_name, all_roles_user_password,non_admin_user_name, non_admin_user_password, non_existant_user, non_existant_user_password
+from tomtestbase import login_before_test
+from flask import json, Response
+from flask_login import current_user
 
-
-
-class TomRouteAuthTestCase(unittest.TestCase):
-    def login_before_test(username,password):
-        def wrapper(f):
-            def wrapper_f(*args):
-                self = args[0]
-                #It would be better if we didn't use the test_client() to
-                #login, but it makes the tests easier to understand            
-                rv = self.app.put('/login',
-                                  data=json.dumps({'username':username,
-                                                   'password':password})
-                )
-                f(*args)
-            return wrapper_f            
-        return wrapper
+class TomRouteAuthTestCase(tomtestbase.TomTestCase):
     
-    def setUp(self):
-        App.config['TESTING'] = True
-        self.app = App.test_client()
-        init_db()
-                
     @login_before_test(admin_user_name,admin_user_password)
     def test_GET_user_with_admin_login(self):
         rv = self.app.get('/user')
-        returned_users = json.loads(rv.data)    
+        returned_users = json.loads(rv.data)
         self.assertIn('users',returned_users,'No users were returned, but users were expected')
         self.assertEquals(rv.status_code,200,'Was expecting status code 200, but it was %s' % (rv.status_code))
         self.assertEquals(len(returned_users['users']),4,'Expecting 4 results,got %s' % (len(returned_users['users'])))

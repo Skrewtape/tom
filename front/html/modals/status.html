@@ -1,7 +1,14 @@
 <div class="modal-body">
-	<i class='glyphicon glyphicon-refresh' ng-show='!modal.message'></i>
+<!--	<i class='glyphicon glyphicon-refresh' ng-show='!modal.message'></i>
+	<span ng-bind='modal.message'></span>-->
 	<span ng-bind='modal.message'></span>
+Loading
+        <div class="loader-inner ball-pulse">
+          <div></div>
+          <div></div>
+          <div></div>         
+        </div>
 </div>
-<div class="modal-footer">
+<!--<div class="modal-footer">
 	<button type="button" class="btn btn-modal" ng-click="$close()" ng-disabled="!modal.message">OK</button>
-</div>
+</div>-->

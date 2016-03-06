@@ -1,0 +1,55 @@
+<div style='margin:auto;width:75%' class='arrow_box'>
+  Purchase Tickets
+</div>
+<div style='width:50%;margin:auto;padding-top:25px'>
+  <uib-accordion close-others="true">
+    <uib-accordion-group ng-repeat="tournament in tournaments">
+      <uib-accordion-heading>
+        {{tournament.name}}
+      </uib-accordion-heading>
+      <span ng-if='checkPlayerLinkedDivision(tournament)==false'>
+        Ooops - you need to be linked to a division.
+      </span>
+      <span ng-repeat='division in tournament.divisions'>
+        <span ng-if='displayLinkToPurchase(division) == false'>
+          Player Has Max Entries Purchased.
+        </span>
+        <span ng-if='displayLinkToPurchase(division) == true'>
+          <span ng-if='checkSingleDivisionTournament(tournament) == true'>
+            Player can purchase entries in {{tournament.name}}.
+          </span>
+          <span ng-if='checkSingleDivisionTournament(tournament) == false'>
+            <span ng-if='matchPlayerLinkedDivision(division)==true'>
+              You can purchase a ticket in {{division.name}} division.
+            </span>            
+          </span>          
+        </span>
+        
+      </span>
+      <!--
+          loop over divisions {
+            check active entries for division;
+            display "no joy" or...
+            check linked division
+             if not linked, say so
+             if linked, check division against link
+          }
+
+          displayLinkToPurchase?(player_division_link,player_entries,tournament)
+          displayNoJoy(player_division_link,player_entries,tournament)
+          displayLinkToPlayerEdit(player,tournament)
+
+          check if trounament's first division is "all"
+          if it is, check if number of open entries for player is 2
+            if it is, put a "no joy" link
+            if not, put link in to purchase tickets
+          if not, check if player has linked division
+           if not, put link in to "player edit"
+           if yes, check for open entries for linked division
+            if 2, put a "no joy" link in
+            if not 2, put link in to purchase tickets
+        -->
+    </uib-accordion-group>  
+  </uib-accordion>
+</div>
+

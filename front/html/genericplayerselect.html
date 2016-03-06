@@ -1,0 +1,17 @@
+<div style='margin:auto;width:75%' class='arrow_box'>
+  {{Page.title()}} : Player Select
+</div>
+<div class='android' style='width:300px;margin:auto;margin-top:55px;'>
+<center>
+  <input style='margin:auto;width:25%' popover-is-open="popoverIsOpen" popover-placement="right" uib-popover="{{keypad_player_name}}" class="keypad-display" ng-model='player.player_id' disabled/>
+  </center>
+<ng-keypad on-key-pressed='onKeyPressed'>
+  <ng-key ng-repeat="key in ['1','2','3','4','5','6','7','8','9']" ng-key-data='key'>{{key}}</ng-key>
+  <ng-key></ng-key>
+  <ng-key ng-key-data='0'>0</ng-key>
+  <ng-key ng-key-data='"<"'>del</ng-key>
+</ng-keypad>
+<center>
+<span ui-view></span>
+</center>
+</div>

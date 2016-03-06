@@ -1,35 +1,46 @@
-<h3>Machines:</h3>
-<table class='table table-bordered'>
-    <tr ng-repeat='machine in data.machines'>
-        <td>
-            <a
-                class='btn btn-danger glyphicon glyphicon-remove'
-                ng-click='remove_machine(machine)'
-            ></a>
-            {{machine.name}}
-            ({{machine.year}})
-            -
-            {{machine.manufacturer.name}}
-        </td>
-    </tr>
+<div style='margin:auto;width:50%' class='arrow_box'>
+  {{tournament_name}} Tournament, {{division.name}} Division
+</div>
+<div style='width:50%;margin:auto;align:center;margin-top:25px'>
+<center>
+  <b>Add Machine To Division</b><hr style='width:50%'>
+<table style='width:75%'>
+  <td>
+    <div class='form-group input-group'>        
+      <span class="input-group-addon" id="machine_name">Machine Name</span>
+      <input type="text" ng-model="division.new_machine" uib-typeahead="machine as machine.name for machine in machines_array | filter:$viewValue | limitTo:8" class="form-control">
+    </div>
+  </td>
+  <td>
+    <a
+       ng-click='add_machine(division)'
+       ><span class='glyphicon glyphicon-plus-sign' style='font-size:24px;color:green;top:-5px'></span></a>
+  </td>
 </table>
-<h3>Add Machine:</h3>
-<input
-    type='text'
-    ng-model='typeahead_machine'
-    typeahead='machine for machine in machine_search($viewValue)'
-    typeahead-on-select='machine_selected($item);typeahead_machine=null'
-    typeahead-template-url='machine_item.html'
-    typeahead-loading='loading_machines'
-    typeahead-editable='false'
-/>
-<i ng-show="loading_machines" class="glyphicon glyphicon-refresh"></i>
-
-<script type='text/ng-template' id='machine_item.html'>
-    <a>
-        {{match.model.name}}
-        ({{match.model.year}})
-        -
-        {{match.model.manufacturer.name}}
-    </a>
-</script>
+<span ng-if='division.machines.length > 0'>
+<br><br>
+  <b>Machine List</b><hr style='width:50%'>
+</span>
+</center>
+</div>
+<table style='margin:auto;margin-top:25px;width:40%'>
+  <tr ng-repeat='machine in division.machines | orderBy:"name"'>
+    <td>
+      <a ng-click='remove_machine(division.division_id,machine)'><span class='glyphicon glyphicon-remove-circle' style='font-size:24px;color:red'></a>
+    </td>
+    <td>
+      <input type="text" ng-model="division.machines[$index]" uib-typeahead="machine as machine.name for machine in machines_array | filter:$viewValue | limitTo:8" class="form-control">
+    </td>
+    <td>
+      <a
+         ng-if='score_modified[score.score_id] == "dirty"'
+         class='btn btn-info'
+         ng-click='change_score(score)' 
+         >save score</a>
+      <a class='btn btn-success'
+         ng-if='score_modified[score.score_id] == "updated"'>
+        Successfully updated score.
+      </a>
+    </td>
+  </tr>
+</table>

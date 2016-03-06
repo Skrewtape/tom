@@ -1,0 +1,78 @@
+<div style='margin:auto;width:50%' class='arrow_box'>
+Edit Player Entries
+</div>
+<br>
+<div style='width:75%;margin-left:auto;margin-right:auto;' ng-repeat="(division_id,division_entries) in entries">
+  <div align=center style='width:75%;margin:auto'><h3>{{tournaments[divisions[division_id].tournament_id].name}} {{divisions[division_id].name}}</h3></div>
+  <hr style='width:50%'>
+  <uib-accordion close-others="true">
+    <uib-accordion-group ng-repeat="entry in division_entries">
+      <uib-accordion-heading>
+        <b>{{entry.entry_id}}</b> <span class='badge' style='background:red;font-size:16px;' ng-if='entry.voided'>VOIDED</span></span>
+<span style='padding:5px;border-style:solid;border-width:0;border-right-width:1px' ng-repeat='score in entry.scores'>{{truncateString(machines[score.machine_id].name)}}</span>
+      </uib-accordion-heading>
+      <table><td><switch class='red' ng-model="entry.voided" ng-change='setEntryVoidStatus(entry)'></switch></td><td valign=center>Click to <span ng-if='entry.voided == false'>Void</span><span ng-if='entry.voided == true'>UnVoid</span></td></table>
+      <br>
+      <table>
+        <tr ng-repeat='score in entry.scores'>
+          <td>
+            <a ng-click='remove_score(score)'><span class='glyphicon glyphicon-remove-circle' style='font-size:24px;color:red'></a>
+          </td>
+          <td>
+            <input type="text" ng-change='score_and_machine_change(score)' ng-model="score_machine[score.score_id]" uib-typeahead="machine as machine.name for machine in machines_array | filter:$viewValue | limitTo:8" class="form-control">
+          </td>
+          <td>
+            <input ng-change='score_and_machine_change(score)' type="text" ng-model="score.score" class="form-control">
+          </td>
+          <td>
+            <a
+               ng-if='score_modified[score.score_id] == "dirty"'
+               class='btn btn-info'
+               ng-click='change_score(score)' 
+               >save score</a>
+            <a class='btn btn-success'
+               ng-if='score_modified[score.score_id] == "updated"'>
+              Successfully updated score.
+            </a>
+          </td>
+        </tr>
+      </table>
+  </uib-accordion>        
+</div>
+
+<!--<center>
+  <div ng-repeat="(division_id,division_entries) in entries">
+    <h3>{{tournaments[divisions[division_id].tournament_id].name}} {{divisions[division_id].name}}</h3>
+    <hr style='width:50%'>
+    <table class='table'>
+      <tr>
+        <th>Entry Number</th><th>Last Activity</th><th>Voided</th><th>Machine</th><th></th>
+      </tr>
+      <tr ng-repeat="(entry_id,entry) in division_entries">      
+        <td valign=top>
+          {{entry.entry_id}}
+        </td>
+        <td valign=top></td>
+        <td valign=top>
+          <switch ng-model='enabled' small></switch>
+        </td>
+        <td valign=top>
+              <td ng-repeat='score in entry.scores'>
+                <input type="text" ng-model="score.machine_id" uib-typeahead="machine.name for machine in machines_array | filter:$viewValue | limitTo:8" class="form-control">
+                <input type="text" ng-model="score.score" class="form-control">
+              </td>
+              <td>
+                <a
+                   class='btn btn-info'
+                   ng-click='change_entry(entry)' 
+                   >save score</a>
+              </td>
+              
+            </tr>
+         </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+</center>
+-->

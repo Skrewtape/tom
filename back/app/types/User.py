@@ -5,8 +5,7 @@ from app import DB
 from passlib.hash import sha512_crypt
 from sqlalchemy.exc import ArgumentError
 from flask_restless.helpers import to_dict
-
-import re
+from app.types import util
 
 Role_user_mapping = DB.Table(
     'role_user',
@@ -23,10 +22,12 @@ class User(DB.Model):
     email = DB.Column(DB.String(120), unique=True, nullable=False)
     password_crypt = DB.Column(DB.String(134))
     @DB.validates('email')
-    def validate_email(self,key,address):
-        if re.match(r"[^@]+@[^@]+\.[^@]+",address):
-            return address
-        raise ArgumentError
+    def validate_email_wrapper(self,key,address):
+        return util.validate_email(key,address)
+#    def validate_email(self,key,address):
+#        if re.match(r"[^@]+@[^@]+\.[^@]+",address):
+#            return address
+#        raise ArgumentError
         
     @DB.validates('username')
     def validate_username(self,key,username):
@@ -70,7 +71,7 @@ class User(DB.Model):
         """Get the user's id"""
         return self.user_id
 
-    def to_dict(self):
+    def to_dict_simple(self):
         user = to_dict(self)
         del user['password_crypt']
         #if Admin_permission.can() or self.user_id == current_user.user_id:

@@ -6,6 +6,7 @@ module.exports = function(grunt) {
                 files : [
                     { expand: true, cwd: 'html/', src: '**', dest: 'dist/' },
                     { expand: true, cwd: 'img/', src: '**', dest: 'dist/img/' },
+                    { expand: true, cwd: 'node_modules/', src: '**/*.css', dest: 'dist/styles/' },
                     {
                         expand: true,
                         cwd: 'node_modules/bootstrap-sass/assets/fonts/bootstrap/',
@@ -22,7 +23,8 @@ module.exports = function(grunt) {
                 replacements: [
                     {
                         from: '[APIHOST]',
-                        to: 'http://localhost:5000',
+                        //to: 'http://192.168.1.177:8000',
+                        to: 'http://72.77.58.216:8000',
                     },
                 ],
             },

@@ -1,21 +1,27 @@
 /*global angular:true, app:true, _:true*/
-angular = require('./lib/angular-index.js');
+//angular = require('./lib/angular-index.js');
+
 _ = require('underscore');
-
+angular = require('angular');
 require('jquery-browserify');
-
-require('angular-bootstrap');
+require('angular-animate');
+require('angular-ui-bootstrap');
 require('angular-breadcrumb');
 require('angular-touch');
 require('angular-ui-router');
+require('angular-ui-switch');
 require('bootstrap-sass/assets/javascripts/bootstrap');
+require('ngKeypad');
 
 app = angular.module(
 	'TOMApp',
 	[
-		'ui.bootstrap',
-		'ui.router',
-        'ncy-angular-breadcrumb',
+            'ngAnimate',
+	    'ui.bootstrap',
+	    'ui.router',
+            'ncy-angular-breadcrumb',
+            'uiSwitch',
+            'ngKeypad'
 	]
 );
 
@@ -32,9 +38,9 @@ app.config(function($httpProvider) {
 });
 
 // Close all modals when changing routes
-app.run(function($rootScope, $modalStack) {
+app.run(function($rootScope, $uibModalStack) {
     $rootScope.$on('$routeChangeSuccess', function() {
-        $modalStack.dismissAll();
+        $uibModalStack.dismissAll();
     });
 });
 

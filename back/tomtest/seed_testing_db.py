@@ -13,26 +13,40 @@ _strip_pattern = compile('[\W_]+', UNICODE)
 
 #by importing app.types, the DB var now has all the table info
 
-def init_db():
+ROLE_MAP = {}
+
+ALL_ROLES = ['admin', 'scorekeeper']
+
+def init_clean_db():
     DB.drop_all()
     DB.create_all()
+    init_roles()
+    init_tournaments_and_divisions_and_machines()    
+    init_users()
 
-    ROLE_MAP = {}
 
-    ALL_ROLES = ['admin', 'scorekeeper']
+def init_bootstrapped_db():
+    DB.drop_all()
+    DB.create_all()
+    init_roles()
+    init_tournaments_and_divisions_and_machines()    
+    init_users()
+    
+def init_roles():    
 
     for role_name in ALL_ROLES:
         role = app.types.Role(name=role_name)
         DB.session.add(role)
         ROLE_MAP[role_name] = role
 
+def init_tournaments_and_divisions_and_machines():
     tournament = app.types.Tournament(name='aitons_tourney', active=True)
     tournament2 = app.types.Tournament(name='aitons_new_tourney', active=True)
     DB.session.add(tournament)
     DB.session.add(tournament2)    
     DB.session.commit()
     x=1
-    for division_name in ['A','BB','C','DD','E','Classics','Extra1','Extra2']:
+    for division_name in ['A','B','C','D','E','Classics','Extra1','Extra2']:
         division = app.types.Division(name=division_name,
                                       tournament_id=1
         )
@@ -40,7 +54,7 @@ def init_db():
         x = x + 5
         DB.session.add(division)
         DB.session.commit()
-    for division_name in ['AA','B','CC','D','EE','Classics','Extra1','Extra2']:
+    for division_name in ['A','B','C','D','E','Classics','Extra1','Extra2']:
         division = app.types.Division(name=division_name,
                                       tournament_id=2
         )
@@ -48,8 +62,10 @@ def init_db():
         x = x + 5
         DB.session.add(division)
         DB.session.commit()
-        
+
+def init_users():        
     #create users in db
+    
     for info in [    
         ['avi', 'finkel.org', ALL_ROLES],
         ['elizabeth', 'papa.org', ALL_ROLES],
@@ -66,21 +82,15 @@ def init_db():
             user.roles.append(ROLE_MAP[role_name])
         DB.session.add(user)
         DB.session.commit()
-            
-    for line in open('machines.dat', mode='r'):
-        elems = line.split('|')
-        manufacturer = app.types.Manufacturer.query.filter_by(name=elems[1]).first()
-        if manufacturer is None:
-            manufacturer = app.types.Manufacturer(
-                name=elems[1]
-            )
-            DB.session.add(manufacturer)
 
-        machine = app.types.Machine(
-            name=elems[0],
-            search_name=_strip_pattern.sub("", elems[0].lower()),
-            manufacturer=manufacturer,
-            year=elems[2]
-        )
-        DB.session.add(machine)
-    DB.session.commit()
+def init_single_entry():
+    pass
+        
+def init_multiple_entry():
+    pass
+
+def init_add_linked_division_to_player():
+    pass
+
+def init_add_linked_player_to_machine():
+    pass
