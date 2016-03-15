@@ -34,6 +34,9 @@ app.controller(
                     StatusModal.loaded();
                     console.log('success');
                     tournament.new_division_name = undefined;
+		    if(tournament.divisions == undefined){
+			tournament.divisions = [];
+		    }
                     tournament.divisions.push(data);
                 });
         };

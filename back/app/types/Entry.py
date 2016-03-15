@@ -13,6 +13,8 @@ class Entry(DB.Model):
     completed = DB.Column(DB.Boolean)
     voided = DB.Column(DB.Boolean)        
     rank = DB.Column(DB.Integer)
+    score = DB.Column(DB.Integer)
+    refresh = DB.Column(DB.Boolean)
     number_of_scores_per_entry = DB.Column(DB.Integer)
     active = DB.Column(DB.Boolean)
     player_id = DB.Column(DB.Integer, DB.ForeignKey(

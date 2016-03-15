@@ -8,7 +8,10 @@ app.controller(
         $scope.tournament_id =$state.params.tournamentId;
         $scope.division_id =$state.params.divisionId;
 
-        
+	$scope.goto_next_state = function(){
+	    $state.go('^.^');
+	};
+	
         $scope.edit_player = function(){            
             if ($scope.has_tournament_division_changed($scope.tournament_id,$scope.division_id)){
                 $http.put('[APIHOST]/player/'+$scope.player_id,{linked_division:$scope.division_id}).success(

@@ -1,0 +1,22 @@
+<div style='margin:auto;width:75%' class='arrow_box'>
+  Select Tournament
+</div>
+<div style='width:75%;margin:auto;padding-top:25px'>
+  <uib-accordion close-others="true">
+    <uib-accordion-group ng-repeat="tournament in tournaments">
+      <uib-accordion-heading>
+        <span style='font-size:32px'>{{tournament.name}}</span>
+      </uib-accordion-heading>
+      <span ng-repeat='division in tournament.divisions'>
+	<a
+	   style='font-size:32px'
+             class='btn btn-info'
+             ui-sref='home.scorekeeper.selectmachine({divisionId:division.division_id,tournamentId:tournament.tournament_id})'
+             >Select <span ng-if='checkSingleDivisionTournament(tournament)==true'>{{tournament.name}}</span>
+	    <span ng-if='checkSingleDivisionTournament(tournament)==false'>{{division.name}} Division</span></a>
+	  <br>
+      </span>
+    </uib-accordion-group>  
+  </uib-accordion>
+</div>
+

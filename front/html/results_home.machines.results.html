@@ -1,0 +1,15 @@
+  <div style='margin:auto;width:75%;margin-bottom:25px' class='arrow_box'>
+    Results For {{machine_name}}
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+    <table style='width:100%;'>
+      <td style='width:50px'>Rank</td><td style='width:100px'>Score</td><td>Player Name</td>
+    </table>
+    </li>
+    <li ng-repeat='score in rankings|orderBy:"-score"' class="list-group-item">
+	  <table><td style='width:50px'>{{score.rank}}</td><td style='width:100px'>{{score.score}}</td><td>{{players[entries[score.entry_id].player_id]['first_name']}} {{players[entries[score.entry_id].player_id]['last_name']}}</td></table>      
+    </li>
+  </ul>
+
+  

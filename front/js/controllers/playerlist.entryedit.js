@@ -13,18 +13,7 @@ app.controller(
                     StatusModal.loaded();
                 }
             );                            
-        };
-
-        
-        
-        $scope.truncateString = function(name){                        
-            maxStringLength=10
-            if(name.length>maxStringLength){
-                return $filter('limitTo')(name,maxStringLength)+'..';
-            }
-            return $filter('limitTo')(name,maxStringLength);            
-        };
-        
+        };                      
         
         $scope.get_tournaments = function(){
             $http.get('[APIHOST]/tournament').success(

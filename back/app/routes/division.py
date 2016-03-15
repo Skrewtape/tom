@@ -1,12 +1,13 @@
 import json
 from sqlalchemy import null
-from flask import jsonify, request, abort
+from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Division, Machine
+from app.types import Division, Machine, Entry
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
-
+from werkzeug.exceptions import BadRequest
+import time
 
 @App.route('/division/<division_id>/machine/<machine_id>', methods=['DELETE'])
 @login_required
@@ -14,7 +15,8 @@ from app.routes.util import fetch_entity
 @fetch_entity(Division, 'division')
 @fetch_entity(Machine, 'machine')
 def delete_division_machine(division,machine):
-    """delete machine from division"""    
+    """delete machine from division"""        
+    #FIXME : add check for machine before removing
     division.machines.remove(machine)
     DB.session.commit()
     return jsonify(machine.to_dict_simple())
@@ -25,7 +27,8 @@ def delete_division_machine(division,machine):
 @fetch_entity(Division, 'division')
 @fetch_entity(Machine, 'machine')
 def add_machine_to_division(division,machine):
-    """delete machine from division"""    
+    """add machine to division"""    
+    #FIXME : add check for machine before adding
     division.machines.append(machine)
     DB.session.commit()
     return jsonify(machine.to_dict_simple())
@@ -38,9 +41,8 @@ def add_machine_to_division(division,machine):
 def add_division():
     """Add a player"""
     division_data = json.loads(request.data)
-    print division_data
     if 'division_name' not in division_data or 'tournament_id' not in division_data:
-        abort(400)
+        raise BadRequest('Did not specify division_name or tournament_id in post data')
     new_division = Division(
         name = division_data['division_name'],
         tournament_id = division_data['tournament_id']
@@ -50,17 +52,26 @@ def add_division():
     return jsonify(new_division.to_dict_with_machines())
 
 @App.route('/division/<division_id>', methods=['GET'])
-@login_required
 @fetch_entity(Division, 'division')
 def get_division(division):
+    time.sleep(15)
     return jsonify(division.to_dict_with_machines())
+
+@App.route('/division/<division_id>/rankings', methods=['GET'])
+@fetch_entity(Division, 'division')
+def get_division_rankings(division):
+    division_entries = Entry.query.filter_by(division_id=division.division_id,voided=False,completed=True).order_by(Entry.rank.desc()).all()
+    division_entries_dict = {}
+    division_entries_list = []
+    for division_entry in division_entries:
+        division_entries_list.append(division_entry.to_dict_with_scores())
+    return jsonify({'rankings':division_entries_list})
 
 
 @App.route('/division', methods=['GET'])
-@login_required
 def get_divisions():
     """Get a list of divisions"""
-    return jsonify({d.division_id: d.to_dict_simple() for d in
+    return jsonify({d.division_id: d.to_dict_with_machines() for d in
         Division.query.all()
     })
 

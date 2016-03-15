@@ -9,7 +9,7 @@ Edit Player Entries
     <uib-accordion-group ng-repeat="entry in division_entries">
       <uib-accordion-heading>
         <b>{{entry.entry_id}}</b> <span class='badge' style='background:red;font-size:16px;' ng-if='entry.voided'>VOIDED</span></span>
-<span style='padding:5px;border-style:solid;border-width:0;border-right-width:1px' ng-repeat='score in entry.scores'>{{truncateString(machines[score.machine_id].name)}}</span>
+<span style='padding:5px;border-style:solid;border-width:0;border-right-width:1px' ng-repeat='score in entry.scores'>{{truncateString(machines[score.machine_id].name,10)}}</span>
       </uib-accordion-heading>
       <table><td><switch class='red' ng-model="entry.voided" ng-change='setEntryVoidStatus(entry)'></switch></td><td valign=center>Click to <span ng-if='entry.voided == false'>Void</span><span ng-if='entry.voided == true'>UnVoid</span></td></table>
       <br>

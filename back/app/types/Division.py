@@ -20,11 +20,10 @@ class Division(DB.Model):
         'tournament.tournament_id'
     ))
     
-    # tournament = DB.relationship(
-    #     'Tournament',
-    #     backref=DB.backref('divisions'),
-    #     foreign_keys=[tournament_id]
-    # )
+    tournament = DB.relationship(
+         'Tournament',
+         foreign_keys=[tournament_id]
+    )
 
     machines = DB.relationship(
         'Machine',
@@ -38,7 +37,7 @@ class Division(DB.Model):
         if self.machines:
             division['machines']=[]
             for machine in self.machines:
-                division['machines'].append(machine.to_dict_simple())
+                division['machines'].append(machine.to_dict_with_player())
         return division
     
     def to_dict_simple(self):

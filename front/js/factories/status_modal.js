@@ -7,7 +7,6 @@ app.factory('StatusModal', ['$uibModal',
                                 var modalInstance = undefined;
                                 var timeoutPromise = undefined;
                                 launch_modal = function(){
-                                    console.log('statusing...');
                                     modalInstance = $uibModal.open({
                                         templateUrl: 'modals/status.html',
                                         backdrop: 'static',
@@ -16,7 +15,20 @@ app.factory('StatusModal', ['$uibModal',
                                         keyboard: false,
                                     });                                    
                                 };
-
+				launch_http_error_modal = function(next_state, title, error_message){
+                                    modalInstance = $uibModal.open({
+					controller: function($scope){
+					    $scope.error_message = error_message;
+					},
+                                        templateUrl: 'modals/http_error.html',
+                                        backdrop: 'static',
+                                        size: 'md',
+                                        openedClass: 'modal_decorations',                
+                                        keyboard: false,
+                                    });
+				    modalInstance.closed.then(function(){$state.go(next_state)});                                    
+                                };
+		
                                 
                                 return {
 	                            loading: function() {
@@ -29,7 +41,8 @@ app.factory('StatusModal', ['$uibModal',
                                         if(modalInstance!=undefined){
                                             modalInstance.close();
                                         }
-                                    }
+                                    },
+				    http_error: launch_http_error_modal
                                 };
                             }
                            ]);

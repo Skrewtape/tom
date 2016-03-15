@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html ng-app="TOMApp" ng-controller="IndexController">
-	<head>
+  <head>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 	        <title>Tournament Operations Manager | {{ Page.title() }}</title>
 		<link rel="stylesheet" href="screen.css">
-                <link rel="stylesheet" href="/tom/styles/angular-ui-switch/angular-ui-switch.css"/>
-                <link rel="stylesheet" href="/tom/styles/ngKeypad/dist/ng-keypad.css"/>
+                <link rel="stylesheet" href="/styles/angular-ui-switch/angular-ui-switch.css"/>
+                <link rel="stylesheet" href="/styles/ngKeypad/dist/ng-keypad.css"/>
                 <link href='http://fonts.googleapis.com/css?family=Terminal+Dosis:400,700' rel='stylesheet' type='text/css'>
                 <link href='https://fonts.googleapis.com/css?family=Audiowide|Michroma|Tenor+Sans|Press+Start+2P|Jura' rel='stylesheet' type='text/css'> 
 		<script type="text/javascript" src="app.js"></script>
-                <link rel="stylesheet" href="/tom/styles/loaders.css/loaders.css"/>                
+                <link rel="stylesheet" href="/styles/loaders.css/loaders.css"/>                
                 <style>
-
+		  
                   .fades.ng-enter {
                     transition:2.5s linear all;
                     opacity:1;
@@ -33,16 +34,28 @@
                   :-ms-input-placeholder {
                   font-style: italic;
                   }
-                  
-                  .navbar-nav > li > a.navbarlink:hover {
-                    background-color: silver;
+		  
+		  .nav-pills {
+                    font-family: 'Press Start 2P', cursive;
+		    font-size:20px;
+		  }
+
+		  .nav-pills > li {
+		  padding-right:10px;
                   }
+
+		  .nav-pills > li > a {
+                  border-style:solid;
+		  border-width:0;
+		  border-left-width:1px;
+                  }
+
                   
                   .modal-content {
                    //background-image: url("img/pacman_BEZEL.jpg");
                    //background-size: 600px 255px;
                    //background-origin: border-box;
-                   /background-repeat: no-repeat;
+                   //background-repeat: no-repeat;
                   }
                   
                   .ball-pulse > div {
@@ -55,7 +68,7 @@
                   border: 4px solid #c2e1f5;
                   border-radius: 6px;
                   font-family: 'Press Start 2P', cursive;
-                  font-size: 16px;
+                  font-size: 24px;
                   text-align: center;
                   padding:5px;
                   -webkit-filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.75));
@@ -156,53 +169,68 @@
                   
                 </style>
 	</head>
-	<body>
-            <nav class="navbar navbar-default">
-              <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <a class="navbar-brand twopfont" href="#">T.O.M</a>
-                <ul class="nav navbar-nav">
-                  <li>
+  <body>
+            <nav class="navbar navbar-default twopfont">
+                <ul class="nav nav-pills" >
+                  <li class='nav-item'>
                     <a
+		       style='border-width:0'
                       class='navbarlink'
                       ng-if='!Page.logged_in_user().user_id'
                       ng-click='login()'
-                   >Login</a>
+                       ><span style='color:red' class='glyphicon glyphicon-user'></span>
+		    </a>
                   </li>
                   <li>
                     <a
+		       style='border-width:0'
                        class='navbarlink'
                        ng-if='!!Page.logged_in_user().user_id'
                        ng-click='logout()'
-                   >Logout</a>
+                       ><span style='color:green;' class='glyphicon glyphicon-user'></span>
+		    </a>
                   </li>
                   <li>
                     <a
+		       ng-if='Page.has_role("desk")' 
                        class='navbarlink'
                        ui-sref='home.playerlist'
                    >Players</a>
                   </li>
                   <li>
                     <a
+		       ng-if='Page.has_role("desk")' 
                        class='navbarlink'
                        ui-sref='home.playeradd'
                    >Add Player</a>
                   </li>
                   <li>
                     <a
+		       ng-if='Page.has_role("admin")' 
                        class='navbarlink'
                        ui-sref='home.tournament'
                    >Tournaments</a>
                   </li>
                   <li>
                     <a
+		       ng-if='Page.has_role("desk")' 
                        class='navbarlink'
-                       ui-sref='home.ticket.playerselect'
+                       ui-sref='home.ticket'
                    >Tickets</a>
                   </li>                  
-                  
+                  <li>
+                    <a
+		       ng-if='Page.has_role("scorekeeper")' 
+                       class='navbarlink'
+                       ui-sref='home.scorekeeper'
+                   >Scorekeeping</a>
+                  </li>
+                  <li>
+                    <a
+                      class='navbarlink'
+                   >Player</a>
+                  </li>                  
                 </ul>
-              </div>              
             </nav>
             <div ui-view></div>
         <!--     <div class='navbar-header'> -->
@@ -231,5 +259,4 @@
         <!-- <div ncy-breadcrumb></div> -->
 	<!-- 	<div ui-view></div> -->
 	<!-- </body> -->
-        
 </html>

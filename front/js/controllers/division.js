@@ -7,23 +7,26 @@ app.controller(
 
         $scope.add_machine = function(division){
             StatusModal.loading();
+	    //possible errors : 400, 500, 409
             $http.put('[APIHOST]/division/'+division.division_id+'/machine/'+$scope.division.new_machine.machine_id).success(
                 function(data) {
-                    StatusModal.loaded();
                     $scope.division.new_machine_id = undefined;
                     $scope.division.machines.unshift(data);
+		    StatusModal.loaded();		    
                 }
             );                        
         };
-        
+
+        //possible errors : 400, 500, 409
         $scope.get_division = function(division_id){
-            $http.get('[APIHOST]/division/'+division_id).success(
+            $http.get('[APIHOST]/division/'+division_id,{timeout:5000}).success(
                 function(data) {
                     $scope.division = data;                
                 }
             );            
         };
 
+	//possible errors : 500	
         $scope.get_machines = function(){
             $http.get("[APIHOST]/machine").success(
                 function(data){
@@ -38,9 +41,9 @@ app.controller(
             );
         };
 
-
+	StatusModal.loading();
         $scope.get_machines();
-        
+        //possible errors : 400, 500, 409
         $scope.remove_machine = function(division_id,machine){
             StatusModal.loading();
             $http.delete('[APIHOST]/division/'+division_id+'/machine/'+machine.machine_id).success(

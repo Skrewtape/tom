@@ -1,0 +1,25 @@
+<div style='margin:auto;width:75%' class='arrow_box'>
+  Select Number of Tickets 
+</div>
+<div style='margin:auto;margin-top:25px;width:75%'>
+  <center>
+    
+    <a ng-if='entry_count < 2'
+			    style="font-size:32px;"
+			    class='btn btn-info'
+   ui-sref='home.ticket.process.selecttickets.process({numEntrys:1})'
+   >Purchase 1 Ticket In
+  <span ng-if='division_name == "all"'>{{tournament_name}}</span>
+  <span ng-if='division_name != "all"'>{{tournament_name}} {{division_name}}</span>
+</a>
+<br>
+<a ng-if='entry_count < 1'
+			style="font-size:32px;"
+   class='btn btn-info'
+   ui-sref='home.ticket.process.selecttickets.process({numEntrys:2})'
+   >Purchase 2 Tickets In
+  <span ng-if='division_name == "all"'>{{tournament_name}}</span>
+  <span ng-if='division_name != "all"'>{{tournament_name}} {{division_name}}</span>
+</a>
+</center>
+</div>

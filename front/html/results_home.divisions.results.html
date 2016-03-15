@@ -1,0 +1,23 @@
+  <div style='margin:auto;width:50%;margin-bottom:25px' class='arrow_box'>
+    Results For Tournament {{tournament_name}}<span ng-if='division_name != "all"'>, Division {{division_name}}</span>
+  </div>
+    <uib-accordion close-others="true">
+      <uib-accordion-group>
+	<uib-accordion-heading>
+	  <table style='width:100%;'>
+	    <td style='width:50px'>Rank</td><td style='width:100px'>Score</td><td>Player Name</td>
+	  </table>
+	</uib-accordion-heading>
+      </uib-accordion-group>
+      <uib-accordion-group ng-repeat='entry in rankings|orderBy:"rank"'>
+	<uib-accordion-heading>
+	  <table><td style='width:50px'>{{entry.rank}}</td><td style='width:100px'>{{entry.score}}</td><td>{{players[entry.player_id]['first_name']}} {{players[entry.player_id]['last_name']}}</td></table>
+	</uib-accordion-heading>
+	  <div ng-repeat='score in entry.scores'>
+	    #{{score.rank}} on {{machines[score.machine_id].name}}
+	    <br>
+	  </div>	
+      </uib-accordion-group>
+    </uib-accordion>
+
+  

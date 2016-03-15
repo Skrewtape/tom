@@ -1,0 +1,30 @@
+  <div style='margin:auto;width:50%' class='arrow_box'>
+    Results (By Machine)
+  </div>
+  <uib-accordion>
+    <uib-accordion-group ng-repeat='division in divisions|orderBy:"rank"'>
+	<uib-accordion-heading>
+	  {{tournaments[division.tournament_id].name}} Tournament <span ng-if='division.name!="all"'>, {{division.name}} Division</span>
+	</uib-accordion-heading>
+	<div ng-repeat='machine in division.machines'>
+      <a
+	 style='width:100%'
+         class='btn btn-info'
+         ui-sref='.results({machineId:machine.machine_id,machineName:machine.name})'
+	 >	
+	  {{machine.name}}</a>
+	    <br>
+	</div>	
+    </uib-accordion-group>
+  </uib-accordion>
+    <div ng-repeat='division in divisions' style='margin-top:25px;'>
+      <a
+	 style='width:50%'
+         class='btn btn-info'
+         ui-sref='.results({divisionId:division.division_id,tournamentName:tournaments[division.tournament_id].name,divisionName:division.name})'
+	 >
+	
+	Tournament {{tournaments[division.tournament_id].name}}<span ng-if='division.name!="all"'>, {{division.name}} Division</span></a>
+      <br>
+      </div>
+  

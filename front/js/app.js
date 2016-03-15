@@ -16,12 +16,12 @@ require('ngKeypad');
 app = angular.module(
 	'TOMApp',
 	[
-            'ngAnimate',
 	    'ui.bootstrap',
 	    'ui.router',
             'ncy-angular-breadcrumb',
             'uiSwitch',
-            'ngKeypad'
+            'ngKeypad',
+	    'ngAnimate'	    
 	]
 );
 
@@ -32,9 +32,11 @@ require('./routes.js');
 
 // Set up CORS stuff
 app.config(function($httpProvider) {
-	$httpProvider.defaults.useXDomain = true;
-	$httpProvider.defaults.withCredentials = true;
-	delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    $httpProvider.defaults.useXDomain = true;
+    $httpProvider.defaults.withCredentials = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    $httpProvider.interceptors.push('myHttpInterceptor');
+    $httpProvider.defaults.timeout = 5000;
 });
 
 // Close all modals when changing routes

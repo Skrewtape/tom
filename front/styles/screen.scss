@@ -1,5 +1,5 @@
 @import 'bootstrap-sass/assets/stylesheets/bootstrap.scss';
-
+@grid-float-breakpoint: 40;
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
 }
@@ -17,4 +17,69 @@ body > button {
 
 .modal-content {
     padding: 30px;
+}
+
+.input-group-xlg > .form-control,
+.input-group-xlg > .input-group-addon,
+.input-group-xlg > .input-group-btn > .btn {
+  height: 46px;
+  padding: 10px 16px;
+  font-size: 36px;
+  line-height: 2.66;
+  border-radius: 12px;
+}
+select.input-group-xlg > .form-control,
+select.input-group-xlg > .input-group-addon,
+select.input-group-xlg > .input-group-btn > .btn {
+  height: 92px;
+  line-height: 92px;
+}
+textarea.input-group-xlg > .form-control,
+textarea.input-group-xlg > .input-group-addon,
+textarea.input-group-xlg > .input-group-btn > .btn,
+select[multiple].input-group-xlg > .form-control,
+select[multiple].input-group-xlg > .input-group-addon,
+select[multiple].input-group-xlg > .input-group-btn > .btn {
+  height: auto;
+}
+
+.input-xlg,
+.form-horizontal .form-group-xlg .form-control {
+  height: 92px;
+  padding: 20px 32px;
+  font-size: 36px;
+  line-height: 2.66;
+  border-radius: 12px;
+}
+select.input-xlg {
+  height: 92px;
+  line-height: 92px;
+}
+textarea.input-xlg,
+select[multiple].input-xlg {
+  height: auto;
+}
+
+.input-group-addon.input-xlg {
+  padding: 20px 32px;
+  font-size: 36px;
+  border-radius: 12px;
+}
+
+input[type="date"].input-xlg,
+input[type="time"].input-xlg,
+input[type="datetime-local"].input-xlg,
+input[type="month"].input-xlg {
+  line-height: 92px;
+}
+
+.form-control-static.input-xlg{
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.input-xlg + .form-control-feedback {
+  width: 92px;
+  height: 92px;
+  line-height: 92px;
 }

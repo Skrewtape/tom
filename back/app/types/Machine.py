@@ -11,7 +11,7 @@ class Machine(DB.Model):
     name = DB.Column(DB.String(1000))
     search_name = DB.Column(DB.String(1000))
     year = DB.Column(DB.SmallInteger())
-
+    abbreviation = DB.Column(DB.String(10))
     manufacturer_id = DB.Column(DB.Integer, DB.ForeignKey(
         'manufacturer.manufacturer_id'
     ))
@@ -26,4 +26,10 @@ class Machine(DB.Model):
     
     def to_dict_with_relationships(self):
         return to_dict(self)
-    
+
+    def to_dict_with_player(self):
+        machine = to_dict(self)
+        if self.player:
+            machine['player'] = self.player[0].to_dict_simple()
+        return machine
+

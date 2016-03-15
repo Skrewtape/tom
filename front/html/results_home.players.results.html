@@ -1,0 +1,43 @@
+<div style='margin:auto;width:75%;margin-bottom:25px' class='arrow_box'>
+  {{player.first_name}} {{player.last_name}}<br>
+  #{{player.player_id}}
+</div>
+<center>
+  <b>Available Entries</b>
+  <div style='width:100%' class="list-group">
+    <a
+       ng-repeat='(div_id,entry) in available_entries'
+       class="list-group-item">
+       {{tournaments[divisions[div_id].tournament_id].name}} : <span ng-if='entry!=undefined && entry.length!=0'> 1 </span> <span ng-if='entry==undefined || entry.length==0'> 0 </span>
+    </a>
+    <hr>
+  <b>Top Entries</b>    
+  <uib-accordion close-others="true">
+    <uib-accordion-group ng-repeat="(div_id,div_entries) in entries">
+      <uib-accordion-heading ng-repeat='(entry_id,entry) in div_entries|orderBy:"rank"' ng-if="$first">
+	{{tournaments[divisions[entry.division_id].tournament_id].name}}
+      </uib-accordion-heading>
+      <table>
+        <tr ng-repeat='score in entry.scores'>
+          <td>
+	    {{}}
+          </td>
+          <td>
+            <input ng-change='score_and_machine_change(score)' type="text" ng-model="score.score" class="form-control">
+          </td>
+          <td>
+            <a
+               ng-if='score_modified[score.score_id] == "dirty"'
+               class='btn btn-info'
+               ng-click='change_score(score)' 
+               >save score</a>
+            <a class='btn btn-success'
+               ng-if='score_modified[score.score_id] == "updated"'>
+              Successfully updated score.
+            </a>
+          </td>
+        </tr>
+      </table>
+      
+    </uib-accordion-group>
+</center>

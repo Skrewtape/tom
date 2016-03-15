@@ -9,7 +9,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 from flask_principal import identity_changed, AnonymousIdentity, Identity
 from flask_restless.helpers import to_dict
 
-from werkzeug.exceptions import NotFound, Conflict
+from werkzeug.exceptions import Conflict,Unauthorized
 
 from app import App, DB, Admin_permission
 
@@ -18,6 +18,7 @@ from app.types import User, Role
 from app.routes.util import fetch_entity
 
 from sqlalchemy.exc import ArgumentError,InvalidRequestError,IntegrityError
+import time
 
 @App.route('/user', methods=['GET'])
 @login_required
@@ -41,20 +42,16 @@ def update_current_user():
     if hasattr(current_user,'user_id'):
         return update_user(user_id=current_user.user_id)
     else:
-        abort(401)
+        raise Unauthorized('User does not exist')
         
 @App.route('/user/<user_id>', methods=['PUT'])
 @login_required
 @fetch_entity(User, 'user')
+@Admin_permission.require(403)
 def update_user(user):
     """Update a user's data"""
-# The following is not needed
-#    if user.user_id != current_user.user_id:
-#        Admin_permission.test(403)
     input_data = json.loads(request.data)
 
-    Admin_permission.test(403)
-    
     if 'roles' not in input_data:
         abort(422)        
 
@@ -73,7 +70,6 @@ def update_user(user):
     return jsonify(user.to_dict_simple())
 
 @App.route('/user/current', methods=['GET'])
-@login_required
 def get_current_user():
     """Get information about the current logged in user"""
     # pylint: disable=unexpected-keyword-arg, no-value-for-parameter
@@ -81,7 +77,7 @@ def get_current_user():
     if hasattr(current_user,'user_id'):
         return get_user(user_id=current_user.user_id)
     else:
-        abort(401)
+        return jsonify({})
         
 @App.route('/user/<user_id>', methods=['GET'])
 @login_required
@@ -105,7 +101,8 @@ def login():
         identity_changed.send(current_app._get_current_object(), identity=Identity(user.user_id))
         return '', 200
     else:
-        return 'Invalid login', 401
+        time.sleep(15);
+        raise Unauthorized('Bad username or password')
 
 @App.route('/logout', methods=['PUT'])
 @login_required

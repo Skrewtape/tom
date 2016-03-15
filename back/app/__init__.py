@@ -37,6 +37,7 @@ Principal(App)
 DB = SQLAlchemy(App)
 
 Admin_permission = Permission(RoleNeed('admin'))
+Desk_permission = Permission(RoleNeed('desk'))
 Scorekeeper_permission = Permission(RoleNeed('scorekeeper'))
 
 from app import auth

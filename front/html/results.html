@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html ng-app="TOMApp" ng-controller="IndexController">
+	<head>
+	        <title>Tournament Operations Manager | {{ Page.title() }}</title>
+		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+		<link rel="stylesheet" href="screen.css">
+                <link rel="stylesheet" href="/styles/angular-ui-switch/angular-ui-switch.css"/>
+                <link rel="stylesheet" href="/styles/ngKeypad/dist/ng-keypad.css"/>
+                <link href='http://fonts.googleapis.com/css?family=Terminal+Dosis:400,700' rel='stylesheet' type='text/css'>
+                <link href='https://fonts.googleapis.com/css?family=Audiowide|Michroma|Tenor+Sans|Press+Start+2P|Jura' rel='stylesheet' type='text/css'> 
+		<script type="text/javascript" src="app.js"></script>
+                <link rel="stylesheet" href="/styles/loaders.css/loaders.css"/>                
+                <style>
+
+                  .fades.ng-enter {
+                    transition:2.5s linear all;
+                    opacity:1;
+                  }
+
+                  /* The finishing CSS styles for the enter animation */
+                  .fades.ng-enter.ng-enter-active {
+                    opacity:0;
+                  }
+                                    
+                  ::-webkit-input-placeholder {
+                  font-style: italic;
+                  }
+                  :-moz-placeholder {
+                  font-style: italic;
+                  }
+                  ::-moz-placeholder {
+                  font-style: italic;
+                  }
+                  :-ms-input-placeholder {
+                  font-style: italic;
+                  }
+		  
+		  .nav-pills {
+                    font-family: 'Press Start 2P', cursive;
+		    font-size:20px;
+		  }
+
+		  .nav-pills > li {
+		  padding-right:10px;
+                  }
+
+		  .nav-pills > li > a {
+                  border-style:solid;
+		  border-width:0;
+		  border-left-width:1px;
+                  }
+
+/*                  
+                  .nav-pills > li > a.navbarlink:hover {
+                    background-color: silver;
+                  }*/
+                  
+                  .modal-content {
+                   //background-image: url("img/pacman_BEZEL.jpg");
+                   //background-size: 600px 255px;
+                   //background-origin: border-box;
+                   /background-repeat: no-repeat;
+                  }
+                  
+                  .ball-pulse > div {
+                  background: orange;
+                  }
+
+                  .arrow_box {
+                  position: relative;
+                  background: #88b7d5;
+                  border: 4px solid #c2e1f5;
+                  border-radius: 6px;
+                  font-family: 'Press Start 2P', cursive;
+                  font-size: 16px;
+                  text-align: center;
+                  padding:5px;
+                  -webkit-filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.75));
+                  -moz-filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.75));
+                  -ms-filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.75));
+                  -o-filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.75));
+                  filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.75));
+                  }
+                  
+                  .arrow_box:after, .arrow_box:before {
+                  top: 100%;
+                  left: 50%;
+                  border: solid transparent;
+                  content: " ";
+                  height: 0;
+                  width: 0;
+                  position: absolute;
+                  pointer-events: none;
+                  }
+
+                  .arrow_box:after {
+                  border-color: rgba(136, 183, 213, 0);
+                  border-top-color: #88b7d5;
+                  border-width: 15px;
+                  margin-left: -15px;
+                  }
+                  
+                  .arrow_box:before {
+                  border-color: rgba(194, 225, 245, 0);
+                  border-top-color: #c2e1f5;
+                  border-width: 21px;
+                  margin-left: -21px;
+                  }
+
+                  .twopfontsmall {
+                  font-family: 'Press Start 2P', cursive;
+                  font-size: 8px;
+                  }
+
+                  .twopfont {
+                  font-family: 'Press Start 2P', cursive;
+                  }
+
+                  .burst-8 {
+                  background: red;
+                  width: 80px;
+                  height: 80px;
+                  position: relative;
+                  text-align: center;
+                  -webkit-transform: rotate(20deg);
+                  -moz-transform: rotate(20deg);
+                  -ms-transform: rotate(20deg);
+                  -o-transform: rotate(20eg);
+                  }
+
+                  .burst-8:before {
+                  content: "";
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  height: 80px;
+                  width: 80px;
+                  background: red;
+                  -webkit-transform: rotate(135deg);
+                  -moz-transform: rotate(135deg);
+                  -ms-transform: rotate(135deg);
+                  -o-transform: rotate(135deg);
+                  }
+
+                  .arrow_right_box {
+                  position: relative;
+                  background: #88b7d5;
+                  border: 4px solid #c2e1f5;
+                  }
+                  .arrow_right_box:after, .arrow_right_box:before {
+                  left: 100%;
+                  top: 50%;
+                  border: solid transparent;
+                  content: " ";
+                  height: 0;
+                  width: 0;
+                  position: absolute;
+                  pointer-events: none;
+                  }
+
+                  .arrow_right_box:after {
+                  border-color: rgba(136, 183, 213, 0);
+                  border-left-color: #88b7d5;
+                  border-width: 30px;
+                  margin-top: -30px;
+                  }
+                  .arrow_right_box:before {
+                  border-color: rgba(194, 225, 245, 0);
+                  border-left-color: #c2e1f5;
+                  border-width: 36px;
+                  margin-top: -36px;
+                  }
+                  
+                </style>
+	</head>
+	<body>
+            <nav class="navbar navbar-default">
+                <!-- Brand and toggle get grouped for better mobile display -->
+		<div class="btn-group" uib-dropdown is-open="status.isopen" >
+		  <button style='font-size:24px' id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
+		    Select Scores View<span class="caret"></span>
+		  </button>
+		  <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+		    <li style='font-size:24px' role="menuitem"><a ui-sref="results_home">Home</a></li>
+		    <li style='font-size:24px' class="divider"></li>
+		    <li style='font-size:24px' role="menuitem"><a ui-sref="results_home.divisions">Tournaments</a></li>
+		    <li style='font-size:24px' class="divider"></li>
+		    <li style='font-size:24px' role="menuitem"><a ui-sref="results_home.machines">Machines</a></li>
+		    <li style='font-size:24px' class="divider"></li>
+		    <li style='font-size:24px' role="menuitem"><a ui-sref="results_home.players">Players</a></li>
+		  </ul>
+		</div>
+                <!--<ul class="nav nav-pills">
+                  <li>
+                    <a
+		       style='font-size:42px'
+                       class='navbarlink'
+                       ui-sref='results_home.divisions'
+                   >Tournaments</a>
+                  </li>
+                  <li>
+                    <a
+                       class='navbarlink'
+                       ui-sref='results_home.machines'
+                   >Machines</a>
+                  </li>                  
+                  <li>
+                    <a
+                       class='navbarlink'
+                       ui-sref='results_home.players'
+                   >Players</a>
+                  </li>                  
+                </ul>-->
+            </nav>
+            <div ui-view></div>
+	</body>
+</html>

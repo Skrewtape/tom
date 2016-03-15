@@ -1,0 +1,69 @@
+remove indiv player link in admin mode/desk mode(?)
+Bugs
+---
+* change score in DB to be a bigger int
+* handle no player entered for machine select
+* display timestamps in admin level
+* on machine select, checks for "on this machine" come before "no more entrys" check
+* bad score just returns you to machine screen
+* on division select page, need feedback for which user is selected
+* division select in main needs to have blacked out more obvious
+* when getting the "player is already playing a machine" error, report the machine
+
+Features
+---
+* error handlers on all axax requests
+** need general 500 handler
+** loading screen problems ( loading screen comes up and goes off to lala land )
+* Number pad for score entry
+* Need reasonable "back" buttons
+** on score entry
+** on division change
+** on ticket number selection screen
+* scorekeeper is incompetent - on the scorekeeper page, need a "the system says the player is paying x, but they are standing right in front of me" button
+* undo score option on score confirmation page
+* add refresh button on machine list?
+* admin console needs a "delete entry" button
+* format score in score keeping with commas
+* cancel on loading screen after x amount of time and look at better timeouts for ajax
+* need to handle "entered wrong player" at the admin level (i.e. how do you handle it if a score was entered under the wrong player num?)
+* options for ordering machines for scorekeepers
+* add user
+* add new scores to entry in admin mode
+* need path so that after adding a player, they can buy a ticket and/or set player division
+* need a path to buy multiple tickets in different divisions at once/quickly and show a "reciepet/summary" for people entering info into square
+Phase 2
+---
+
+Workpad
+---
+* get
+controllers/division.js
+controllers/genericplayerselect.js
+controllers/index.js
+controllers/login.js
+controllers/playerlist.entryedit.js
+controllers/playerlist.js
+controllers/playerlist.playeredit.js
+controllers/playerlist.playeredit.process.js
+controllers/results_home.divisions.js
+controllers/results_home.divisions.results.js
+controllers/results_home.machines.js
+controllers/results_home.machines.results.js
+controllers/results_home.playerlist.results.js
+controllers/scorekeeper.complete.js
+controllers/scorekeeper.js
+controllers/scorekeeper.selectmachine.genericplayersearch_selected.process.js
+controllers/scorekeeper.selectmachine.js
+controllers/scorekeeper.selectmachine.recordscore.js
+controllers/scorekeeper.selectmachine.recordscore.process.js
+controllers/ticket.process.js
+controllers/ticket.process.selecttickets.js
+controllers/ticketplayerselect.js
+controllers/tournament.js
+factories/http_interceptors.js
+
+
+
+
+

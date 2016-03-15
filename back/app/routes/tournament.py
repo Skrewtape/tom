@@ -6,6 +6,7 @@ from app import App
 from app.types import Tournament,Division
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
+from werkzeug.exceptions import BadRequest
 
 @App.route('/tournament', methods=['POST'])
 @login_required
@@ -14,7 +15,7 @@ def add_tournament():
     """Add a player"""
     tournament_data = json.loads(request.data)
     if 'tournament_name' not in tournament_data:
-        abort(400)
+        raise BadRequest('tournament_name not found in post data')
     new_tournament = Tournament(
         name = tournament_data['tournament_name'],
         active = False
@@ -31,7 +32,6 @@ def add_tournament():
     return jsonify(new_tournament.to_dict_with_divisions())
 
 @App.route('/tournament', methods=['GET'])
-@login_required
 def get_tournaments():
     """Get a list of players"""
     

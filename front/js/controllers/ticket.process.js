@@ -1,5 +1,5 @@
 app.controller(
-    'ticketpurchase',
+    'ticket_process',
     function($scope, $http, $uibModal, $state, $location, Page, StatusModal) {        
         Page.set_title('Purchase Tickets');
         $scope.player_id =$state.params.playerId;

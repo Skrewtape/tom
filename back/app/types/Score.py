@@ -12,12 +12,10 @@ class Score(DB.Model):
         'entry.entry_id'
     ))
         
-    # entry = DB.relationship(
-    #     'Entry',
-    #     backref=DB.backref('scores'),
-    #     foreign_keys=[entry_id],
-    #     lazy='joined'
-    # )
+    entry = DB.relationship(
+        'Entry',
+        foreign_keys=[entry_id]
+    )
 
     machine_id = DB.Column(DB.Integer, DB.ForeignKey(
         'machine.machine_id'

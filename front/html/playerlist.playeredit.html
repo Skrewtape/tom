@@ -5,17 +5,24 @@
   <form name='myForm'>
     <tr ng-repeat="tournament in tournaments" ng-if='tournament.divisions.length > 1'>
       <td align=center>
-        <h3>{{tournament.name}} Tournament</h3>
+        <h1>{{tournament.name}} Tournament</h1>
         <div align=center ng-repeat="division in tournament.divisions| orderBy:'name'">           
-          <label>
-            <input  ng-disabled="divisionIsDisabled(tournament.tournament_id,division.name)" type="radio" ng-model="selected_division_in_tournament[tournament.tournament_id]" ng-value="division.division_id" ng-change="onChange(tournament.tournament_id, division.name)">
-            {{division.name}}
-          </label>
+<!--          <label >
+            <input align='center' style='height:34px;' ng-disabled="divisionIsDisabled(tournament.tournament_id,division.name)" type="radio" ng-model="selected_division_in_tournament[tournament.tournament_id]" ng-value="division.division_id" ng-change="onChange(tournament.tournament_id, division.name)">
+            <span style='font-size:34px'>{{division.name}}</span>
+</label>-->
+<div class="input-group-lg input-group">
+  <span  class="input-group-addon">
+    <input ng-disabled="divisionIsDisabled(tournament.tournament_id,division.name)" type="radio" ng-model="selected_division_in_tournament[tournament.tournament_id]" ng-value="division.division_id" ng-change="onChange(tournament.tournament_id, division.name)" aria-label="division_label">
+  </span>
+  <span class="form-control" aria-label="division_label">{{division.name}} Division</span>
+</div><!-- /input-group -->
         </div>
         <br>
-          <a
+        <a
+	   style='font-size:24px'
              class='btn btn-info'
-             ui-sref='home.playerlist.playeredit.process({playerId:player_id,tournamentId:tournament.tournament_id,divisionId:selected_division_in_tournament[tournament.tournament_id]})'
+             ui-sref='.process({playerId:player_id,tournamentId:tournament.tournament_id,divisionId:selected_division_in_tournament[tournament.tournament_id]})'
              ng-disabled='changed'
            >Save Division</a> 
       </td>
