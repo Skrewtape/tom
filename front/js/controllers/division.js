@@ -19,7 +19,7 @@ app.controller(
 
         //possible errors : 400, 500, 409
         $scope.get_division = function(division_id){
-            $http.get('[APIHOST]/division/'+division_id,{timeout:5000}).success(
+            $http.get('[APIHOST]/division/'+division_id).success(
                 function(data) {
                     $scope.division = data;                
                 }
