@@ -4,7 +4,7 @@ app.controller(
         Page.set_title('List Tournaments');        
         $scope.tournaments = undefined;
         $scope.tournament = {single_division:false,tournament_name:''};
-        $http.get('[APIHOST]/tournament').success(
+        $http.get('[APIHOST]/tournament',{timeout:5000}).success(
             function(data) {
                 $scope.tournaments = data;                
             }
@@ -13,13 +13,13 @@ app.controller(
         $scope.setTournamentActive = function(tournament){
             StatusModal.loading();
             if(tournament.active==true){
-                $http.put('[APIHOST]/tournament/'+tournament.tournament_id+'/begin').success(
+                $http.put('[APIHOST]/tournament/'+tournament.tournament_id+'/begin',{},{timeout:5000}).success(
                     function(active) {
                         StatusModal.loaded();
                     }
                 );                
             }else{
-                $http.put('[APIHOST]/tournament/'+tournament.tournament_id+'/end').success(
+                $http.put('[APIHOST]/tournament/'+tournament.tournament_id+'/end',{},{timeout:5000}).success(
                     function(deactive) {
                         StatusModal.loaded();                                                
                     }
@@ -29,7 +29,7 @@ app.controller(
         
         $scope.create_division = function(tournament){
             StatusModal.loading();
-            $http.post('[APIHOST]/division',{division_name: tournament.new_division_name,tournament_id: tournament.tournament_id}).success(
+            $http.post('[APIHOST]/division',{division_name: tournament.new_division_name,tournament_id: tournament.tournament_id},{timeout:5000}).success(
                 function(data){
                     StatusModal.loaded();
                     console.log('success');
@@ -42,7 +42,7 @@ app.controller(
         };
         $scope.create_tournament = function(){            
             StatusModal.loading();
-            $http.post('[APIHOST]/tournament',{tournament_name: $scope.tournament.tournament_name,single_division: $scope.tournament.single_division}).success(
+            $http.post('[APIHOST]/tournament',{tournament_name: $scope.tournament.tournament_name,single_division: $scope.tournament.single_division},{timeout:5000}).success(
                 function(data){
                     console.log('success');
                     tournament_name = $scope.tournament_name;

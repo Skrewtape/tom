@@ -7,9 +7,9 @@ app.controller(
 	    $scope.$close('hi there');
             $scope.modal = {};            
             StatusModal.loading();            
-            $http.put('[APIHOST]/login', $scope.data).success(
+            $http.put('[APIHOST]/login', $scope.data,{timeout:5000}).success(
                 function(put_data) {                                        
-                    $http.get('[APIHOST]/user/current').success(function (get_data) {
+                    $http.get('[APIHOST]/user/current',{timeout:5000}).success(function (get_data) {
                         console.log('logged in');
                         StatusModal.loaded();
                         Page.set_logged_in_user(get_data);

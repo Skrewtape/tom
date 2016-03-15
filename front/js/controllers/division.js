@@ -7,8 +7,7 @@ app.controller(
 
         $scope.add_machine = function(division){
             StatusModal.loading();
-	    //possible errors : 400, 500, 409
-            $http.put('[APIHOST]/division/'+division.division_id+'/machine/'+$scope.division.new_machine.machine_id).success(
+            $http.put('[APIHOST]/division/'+division.division_id+'/machine/'+$scope.division.new_machine.machine_id,{},{timeout:5000}).success(
                 function(data) {
                     $scope.division.new_machine_id = undefined;
                     $scope.division.machines.unshift(data);
@@ -19,8 +18,9 @@ app.controller(
 
         //possible errors : 400, 500, 409
         $scope.get_division = function(division_id){
-            $http.get('[APIHOST]/division/'+division_id).success(
+            $http.get('[APIHOST]/division/'+division_id,{timeout:5000}).success(
                 function(data) {
+		    StatusModal.loaded();
                     $scope.division = data;                
                 }
             );            
@@ -28,7 +28,7 @@ app.controller(
 
 	//possible errors : 500	
         $scope.get_machines = function(){
-            $http.get("[APIHOST]/machine").success(
+            $http.get("[APIHOST]/machine",{timeout:5000}).success(
                 function(data){
                     $scope.machines = data;
                     $scope.machines_array = [];

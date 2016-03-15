@@ -4,7 +4,7 @@ app.controller(
         $scope.player_id=$state.params.playerId;
 	$scope.available_entries = {};
 	$scope.get_tournaments = function(){
-            $http.get('[APIHOST]/tournament').success(
+            $http.get('[APIHOST]/tournament',{timeout:5000}).success(
                 function(data) {                    
                     $scope.tournaments = data;
 		    StatusModal.loaded();
@@ -14,7 +14,7 @@ app.controller(
 
 	
         $scope.get_divisions = function(){
-            $http.get('[APIHOST]/division').success(
+            $http.get('[APIHOST]/division',{timeout:5000}).success(
                 function(data) {                    
                     $scope.divisions = data;
 		    $scope.get_tournaments();
@@ -23,7 +23,7 @@ app.controller(
         };
 
         $scope.get_entries = function(){
-            $http.get("[APIHOST]/player/"+$state.params.playerId+"/entry/all").success(
+            $http.get("[APIHOST]/player/"+$state.params.playerId+"/entry/all",{timeout:5000}).success(
                 function(data){
 		    for(div_index in data){
 			div_entries = data[div_index];
@@ -47,7 +47,7 @@ app.controller(
         };
 
         $scope.get_machines = function(){
-            $http.get('[APIHOST]/machine').success(
+            $http.get('[APIHOST]/machine',{timeout:5000}).success(
                 function(data) {                    
 		    $scope.machines = data;
 		    $scope.get_entries();
@@ -57,7 +57,7 @@ app.controller(
 
 	
         $scope.get_player = function(){
-            $http.get('[APIHOST]/player/'+$scope.player_id).success(
+            $http.get('[APIHOST]/player/'+$scope.player_id,{timeout:5000}).success(
                 function(data) {                    
 		    $scope.player = data;
 		    $scope.get_machines();

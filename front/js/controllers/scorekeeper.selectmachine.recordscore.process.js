@@ -8,7 +8,7 @@ app.controller(
 	$scope.entry_id = $state.params.entryId;
 	
 	$scope.get_machine = function(){
-            $http.get('[APIHOST]/machine/'+$scope.machine_id).success(
+            $http.get('[APIHOST]/machine/'+$scope.machine_id,{timeout:5000}).success(
                 function(data) {                    
                     $scope.machine = data;
 		    StatusModal.loaded();
@@ -17,7 +17,7 @@ app.controller(
         };
 	
 	$scope.get_player = function(){
-            $http.get('[APIHOST]/player/'+$scope.player_id).success(
+            $http.get('[APIHOST]/player/'+$scope.player_id,{timeout:5000}).success(
                 function(data) {                    
 		    $scope.player = data;
 		    $scope.get_machine();
@@ -27,7 +27,7 @@ app.controller(
 
 	
 	$scope.set_score = function(){
-            $http.post('[APIHOST]/entry/'+$scope.entry_id+'/machine/'+$scope.machine_id+'/score/'+$scope.new_score).success(
+            $http.post('[APIHOST]/entry/'+$scope.entry_id+'/machine/'+$scope.machine_id+'/score/'+$scope.new_score,{},{timeout:5000}).success(
                 function(data) {                    
 		    $scope.entry = data;
 		    $scope.get_player();

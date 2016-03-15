@@ -19,14 +19,14 @@ app.controller(
 
 	
         $scope.get_player = function(){
-            $http.get('[APIHOST]/player/'+$scope.player_id).success(
+            $http.get('[APIHOST]/player/'+$scope.player_id,{timeout:5000}).success(
                 function(data) {                    
                     $scope.player = data;                    
                 }
             );
         };
 	
-	$http.get("[APIHOST]/player/"+$state.params.playerId+'/entry/open').success(
+	$http.get("[APIHOST]/player/"+$state.params.playerId+'/entry/open',{timeout:5000}).success(
             function(data){
 		console.log(data)
                 $scope.player_open_entries = data;

@@ -16,7 +16,7 @@ app.controller(
 	$scope.add_to_bobo_breadcrumbs({route:$state.current.name,title:breadcrumb_string,params:params})
 	
 	$scope.get_rankings = function(){
-            $http.get('[APIHOST]/division/'+$scope.division_id+'/rankings').success(
+            $http.get('[APIHOST]/division/'+$scope.division_id+'/rankings',{timeout:5000}).success(
                 function(data) {
                     $scope.rankings = data.rankings;
 		    StatusModal.loaded()
@@ -24,7 +24,7 @@ app.controller(
             );
         };
 	$scope.get_machines = function(){
-            $http.get('[APIHOST]/machine').success(
+            $http.get('[APIHOST]/machine',{timeout:5000}).success(
                 function(data) {
                     $scope.machines = data;
 		    $scope.get_rankings()
@@ -32,7 +32,7 @@ app.controller(
             );
         };
 	$scope.get_players = function(){
-            $http.get('[APIHOST]/player').success(
+            $http.get('[APIHOST]/player',{timeout:5000}).success(
                 function(data) {
 		    console.log(data)
                     $scope.players = data.players;

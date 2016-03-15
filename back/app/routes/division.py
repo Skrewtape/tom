@@ -54,7 +54,6 @@ def add_division():
 @App.route('/division/<division_id>', methods=['GET'])
 @fetch_entity(Division, 'division')
 def get_division(division):
-    time.sleep(15)
     return jsonify(division.to_dict_with_machines())
 
 @App.route('/division/<division_id>/rankings', methods=['GET'])

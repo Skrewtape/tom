@@ -5,7 +5,7 @@ app.controller(
         $scope.player_id =$state.params.playerId;
 
         $scope.get_tournaments = function(){
-            $http.get('[APIHOST]/tournament').success(
+            $http.get('[APIHOST]/tournament',{timeout:5000}).success(
                 function(data) {                    
                     $scope.tournaments = data;
                 }
@@ -13,7 +13,7 @@ app.controller(
         };
 
         $scope.get_player = function(){
-            $http.get('[APIHOST]/player/'+$scope.player_id).success(
+            $http.get('[APIHOST]/player/'+$scope.player_id,{timeout:5000}).success(
                 function(data) {                    
                     $scope.player = data;
                     $scope.get_tournaments();
@@ -23,7 +23,7 @@ app.controller(
         };
 
         
-        $http.get("[APIHOST]/player/"+$state.params.playerId+'/entry/open').success(
+        $http.get("[APIHOST]/player/"+$state.params.playerId+'/entry/open',{timeout:5000}).success(
             function(data){
                 $scope.player_open_entries = data;
                 $scope.get_player();

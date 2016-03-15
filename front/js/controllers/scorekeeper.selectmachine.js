@@ -4,7 +4,7 @@ app.controller(
         Page.set_title('Purchase Tickets');
 	$scope.division_id=$state.params.divisionId;
         $scope.get_division = function(){
-            $http.get('[APIHOST]/division/'+$scope.division_id).success(
+            $http.get('[APIHOST]/division/'+$scope.division_id,{timeout:5000}).success(
                 function(data) {                    
                     $scope.division = data;
                 }

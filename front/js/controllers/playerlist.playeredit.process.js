@@ -14,7 +14,7 @@ app.controller(
 	
         $scope.edit_player = function(){            
             if ($scope.has_tournament_division_changed($scope.tournament_id,$scope.division_id)){
-                $http.put('[APIHOST]/player/'+$scope.player_id,{linked_division:$scope.division_id}).success(
+                $http.put('[APIHOST]/player/'+$scope.player_id,{linked_division:$scope.division_id},{timeout:5000}).success(
                     function(data){
                         
                         $scope.division_set='true';
@@ -35,7 +35,7 @@ app.controller(
 
         
         StatusModal.loading();                
-        $http.get("[APIHOST]/player/"+$state.params.playerId).success(
+        $http.get("[APIHOST]/player/"+$state.params.playerId,{timeout:5000}).success(
             function(data){                                                
                 $scope.player = data;
                 $scope.edit_player();

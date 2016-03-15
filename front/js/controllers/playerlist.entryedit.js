@@ -8,7 +8,7 @@ app.controller(
         $scope.score_modified = {};
         $scope.setEntryVoidStatus = function(entry){
             StatusModal.loading();                
-            $http.put('[APIHOST]/entry/'+entry.entry_id,entry).success(
+            $http.put('[APIHOST]/entry/'+entry.entry_id,entry,{},{timeout:5000}).success(
                 function(data) {                    
                     StatusModal.loaded();
                 }
@@ -16,7 +16,7 @@ app.controller(
         };                      
         
         $scope.get_tournaments = function(){
-            $http.get('[APIHOST]/tournament').success(
+            $http.get('[APIHOST]/tournament',{timeout:5000}).success(
                 function(data) {                    
                     $scope.tournaments = data;
                     $scope.get_divisions();
@@ -25,7 +25,7 @@ app.controller(
         };
 
         $scope.get_divisions = function(){
-            $http.get('[APIHOST]/division').success(
+            $http.get('[APIHOST]/division',{timeout:5000}).success(
                 function(data) {                    
                     $scope.divisions = data;                    
                     $scope.get_player();
@@ -34,7 +34,7 @@ app.controller(
         };
                 
         $scope.get_player = function(){
-            $http.get("[APIHOST]/player/"+$state.params.playerId).success(
+            $http.get("[APIHOST]/player/"+$state.params.playerId,{timeout:5000}).success(
                 function(data){
                     $scope.player = data;                    
                     $scope.get_machines();
@@ -43,7 +43,7 @@ app.controller(
         };
 
         $scope.get_machines = function(){
-            $http.get("[APIHOST]/machine").success(
+            $http.get("[APIHOST]/machine",{timeout:5000}).success(
                 function(data){
                     $scope.machines = data;
                     $scope.machines_array = [];
@@ -77,7 +77,7 @@ app.controller(
         };
         
         $scope.get_entries = function(){
-            $http.get("[APIHOST]/player/"+$state.params.playerId+"/entry/all").success(
+            $http.get("[APIHOST]/player/"+$state.params.playerId+"/entry/all",{timeout:5000}).success(
                 function(data){
                     $scope.entries = data;
                     $scope.set_score_machine_dict($scope.entries);
@@ -88,7 +88,7 @@ app.controller(
         $scope.change_score = function(score){
             StatusModal.loading();
             console.log($scope.score_machine[score.score_id]);
-            $http.put('[APIHOST]/score/'+score.score_id,{machine_id: $scope.score_machine[score.score_id].machine_id,score: score.score}).success(
+            $http.put('[APIHOST]/score/'+score.score_id,{machine_id: $scope.score_machine[score.score_id].machine_id,score: score.score},{timeout:5000}).success(
                 function(data) {                    
                     StatusModal.loaded();
                     $scope.score_modified[score.score_id]='updated';

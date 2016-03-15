@@ -101,7 +101,6 @@ def login():
         identity_changed.send(current_app._get_current_object(), identity=Identity(user.user_id))
         return '', 200
     else:
-        time.sleep(15);
         raise Unauthorized('Bad username or password')
 
 @App.route('/logout', methods=['PUT'])

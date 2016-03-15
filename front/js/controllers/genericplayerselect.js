@@ -4,7 +4,7 @@ app.controller(
         Page.set_title('Purchase Tickets');                
 
 	//possible errors : 500
-        $http.get('[APIHOST]/player').success(
+        $http.get('[APIHOST]/player',{timeout:5000}).success(
             function(data) {
                 $scope.players = data.players;                
             }

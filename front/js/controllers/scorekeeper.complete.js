@@ -5,7 +5,7 @@ app.controller(
 	$scope.entry_id = $state.params.entryId;
 
 	$scope.get_machines = function(){
-            $http.get('[APIHOST]/machine').success(
+            $http.get('[APIHOST]/machine',{timeout:5000}).success(
                 function(data) {                    
                     $scope.machines = data;
 		    StatusModal.loaded();
@@ -15,7 +15,7 @@ app.controller(
 
 	
 	$scope.get_entry = function(){
-            $http.get('[APIHOST]/entry/'+$scope.entry_id).success(
+            $http.get('[APIHOST]/entry/'+$scope.entry_id,{timeout:5000}).success(
                 function(data) {                    
 		    $scope.entry = data;
 		    $scope.get_machines();
@@ -25,7 +25,7 @@ app.controller(
 
 	
 	$scope.get_player = function(){
-            $http.get('[APIHOST]/player/'+$scope.player_id).success(
+            $http.get('[APIHOST]/player/'+$scope.player_id,{timeout:5000}).success(
                 function(data) {                    
 		    $scope.player = data;
 		    $scope.get_entry();

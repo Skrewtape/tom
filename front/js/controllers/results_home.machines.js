@@ -3,7 +3,7 @@ app.controller(
     function($scope, $http, $uibModal, $state, $location, Page, StatusModal) {        
 
         $scope.get_divisions = function(){
-            $http.get('[APIHOST]/division').success(
+            $http.get('[APIHOST]/division',{timeout:5000}).success(
                 function(data) {                    
 		    console.log(data);
                     $scope.divisions = data;
@@ -13,7 +13,7 @@ app.controller(
         };
 
 	$scope.get_machines = function(){
-            $http.get('[APIHOST]/machine').success(
+            $http.get('[APIHOST]/machine',{timeout:5000}).success(
                 function(data) {                    
                     $scope.machines = data;
 		    $scope.get_divisions();		    
@@ -23,7 +23,7 @@ app.controller(
 
 	
         $scope.get_tournaments = function(){
-            $http.get('[APIHOST]/tournament').success(
+            $http.get('[APIHOST]/tournament',{timeout:5000}).success(
                 function(data) {
                     $scope.tournaments = data;
 		    $scope.get_machines();

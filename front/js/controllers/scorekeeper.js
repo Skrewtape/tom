@@ -4,7 +4,7 @@ app.controller(
         Page.set_title('Purchase Tickets');
 
         $scope.get_tournaments = function(){
-            $http.get('[APIHOST]/tournament').success(
+            $http.get('[APIHOST]/tournament',{timeout:5000}).success(
                 function(data) {                    
                     $scope.tournaments = data;
                 }

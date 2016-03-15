@@ -17,7 +17,7 @@ app.controller(
         };
 
 	StatusModal.loading()
-	$http.post("[APIHOST]/player/"+$state.params.playerId+'/entry/division/'+$scope.division_id+'/numEntrys/'+$scope.num_entrys).success(
+	$http.post("[APIHOST]/player/"+$state.params.playerId+'/entry/division/'+$scope.division_id+'/numEntrys/'+$scope.num_entrys,{},{timeout:5000}).success(
             function(data){
 		StatusModal.loaded()
 		$scope.status = "Ticket has been purchased for Tournament "+$scope.tournament_name;

@@ -16,7 +16,7 @@ app.controller(
             }
             StatusModal.loading();            
 
-            $http.post('[APIHOST]/player', $scope.new_player).success(
+            $http.post('[APIHOST]/player', $scope.new_player,{},{timeout:5000}).success(
                 function(created) {
                     $scope.new_player = {};
                     $scope.players.unshift(created);

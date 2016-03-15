@@ -7,7 +7,7 @@ app.controller(
 	$scope.add_to_bobo_breadcrumbs({route:$state.current.name,title:$scope.machine_name+" Scores"})
 
 	$scope.get_rankings = function(){
-            $http.get('[APIHOST]/machine/'+$scope.machine_id+'/rankings').success(
+            $http.get('[APIHOST]/machine/'+$scope.machine_id+'/rankings',{timeout:5000}).success(
                 function(data) {
                     $scope.rankings = data.rankings;
 		    StatusModal.loaded()
@@ -16,7 +16,7 @@ app.controller(
         };
 
 	$scope.get_entries = function(){
-            $http.get('[APIHOST]/entry/machineId/'+$scope.machine_id).success(
+            $http.get('[APIHOST]/entry/machineId/'+$scope.machine_id,{timeout:5000}).success(
                 function(data) {
 		    $scope.entries = data;
 		    $scope.get_rankings();
@@ -24,7 +24,7 @@ app.controller(
             );
         };	
 	$scope.get_players = function(){
-            $http.get('[APIHOST]/player').success(
+            $http.get('[APIHOST]/player',{timeout:5000}).success(
                 function(data) {
                     $scope.players = data.players;
 		    $scope.get_entries()

@@ -27,7 +27,7 @@ app.controller(
         
         $scope.logout = function() {
             StatusModal.loading();
-	    $http.put('[APIHOST]/logout').success(
+	    $http.put('[APIHOST]/logout',{},{timeout:5000}).success(
 		function() {
                     StatusModal.loaded();
                     Page.set_logged_in_user({});
@@ -48,7 +48,7 @@ app.controller(
             //$scope.openModal('myModalContent.html','LoginController');
         };
         
-        $http.get('[APIHOST]/user/current').success(function (data) {
+        $http.get('[APIHOST]/user/current',{timeout:5000}).success(function (data) {
             Page.set_logged_in_user(data);
             $scope.$broadcast('login_changed');
         });
@@ -101,7 +101,7 @@ app.controller(
                 close:$scope.close,
                 scope: $scope
             });            
-            $http.put('[APIHOST]/entry/'+entry_id+'/void').success(function (data) {                
+            $http.put('[APIHOST]/entry/'+entry_id+'/void',{},{timeout:5000}).success(function (data) {                
                 console.log('all gone');
                 console.log(data);
                 $scope.player_machine_setModal.close();

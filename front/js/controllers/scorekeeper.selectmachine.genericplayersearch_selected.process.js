@@ -6,7 +6,7 @@ app.controller(
 	$scope.division_id=$state.params.divisionId;
 		
 	$scope.process_machine_select = function(){
-            $http.put('[APIHOST]/machine/'+$scope.machine_id+'/player/'+$scope.player_id).success(
+            $http.put('[APIHOST]/machine/'+$scope.machine_id+'/player/'+$scope.player_id,{},{timeout:5000}).success(
                 function(data) {                    
                     $scope.machine = data;
 		    StatusModal.loaded();
@@ -15,7 +15,7 @@ app.controller(
 	};
 	
 	$scope.get_machine = function(){
-            $http.get('[APIHOST]/machine/'+$scope.machine_id).success(
+            $http.get('[APIHOST]/machine/'+$scope.machine_id,{timeout:5000}).success(
                 function(data) {                    
                     $scope.machine = data;
 		    $scope.process_machine_select();
@@ -61,7 +61,7 @@ app.controller(
 	    return true
 	}
 	$scope.get_player_open_entries = function(player){
-	    $http.get("[APIHOST]/player/"+$state.params.playerId+'/entry/active').success(
+	    $http.get("[APIHOST]/player/"+$state.params.playerId+'/entry/active',{timeout:5000}).success(
 		function(data){
                     player_active_entry = data;
 		    //$scope.check_player_open_entries(player_open_entries,player);
@@ -85,7 +85,7 @@ app.controller(
 	};
 	$scope.get_player = function(){
 	    StatusModal.loading()
-            $http.get('[APIHOST]/player/'+$scope.player_id).success(
+            $http.get('[APIHOST]/player/'+$scope.player_id,{timeout:5000}).success(
                 function(data) {                    
                     $scope.get_player_open_entries(data);
                 }

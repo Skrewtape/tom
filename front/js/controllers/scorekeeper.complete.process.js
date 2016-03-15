@@ -5,7 +5,7 @@ app.controller(
 
 	//possible errors : 400, 500, 409
 	$scope.complete_entry = function(){
-            $http.put('[APIHOST]/entry/'+$scope.entry_id+'/complete').success(
+            $http.put('[APIHOST]/entry/'+$scope.entry_id+'/complete',{},{timeout:5000}).success(
                 function(data) {                    
 		    $scope.entry = data;
 		    StatusModal.loaded();
