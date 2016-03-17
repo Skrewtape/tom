@@ -138,7 +138,10 @@ def add_entry(player,division,num_entrys):
     #division = Division.query.get(entry_data['division_id'])
     if not division.tournament.active:
         raise Conflict('tournament closed')
-    for x in range(0, num_entrys):
+    existing_entries = Entry.query.filter_by(player_id=player.player_id,division_id=division.division_id,completed=False,voided=False).count()    
+    if existing_entries + num_entrys > tom_config.max_num_concurrent_entries:
+        raise Conflict('already at max number of entries for user')
+    for entry_num in range(0, num_entrys):
         new_entry = Entry(
             division = division,
             active = True,
@@ -148,15 +151,11 @@ def add_entry(player,division,num_entrys):
             #FIXME : this should be configurable per tournament
             number_of_scores_per_entry = tom_config.scores_per_entry
         )
-        existing_entries = Entry.query.filter_by(player_id=player.player_id,division_id=division.division_id,completed=False,voided=False).count()    
-        print "existing entries is %d " % existing_entries
-        print "existing entries + new entries is %d %d" % (existing_entries,num_entrys)
-        if existing_entries + num_entrys > tom_config.max_num_concurrent_entries:
-            raise Conflict('already at max number of entries for user')
-        if( existing_entries >= 1):
+
+        if( existing_entries > 1 or entry_num > 0):
             new_entry.active=False    
-        player.entries.append(new_entry)
         DB.session.add(new_entry)
+        player.entries.append(new_entry)
         DB.session.commit()
     print "done adding entry - to_dict is done"
     return jsonify(new_entry.to_dict_simple())

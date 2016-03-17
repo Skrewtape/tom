@@ -5,7 +5,7 @@ from flask_restless.helpers import to_dict
 
 class Score(DB.Model):    
     score_id = DB.Column(DB.Integer, primary_key=True)
-    score = DB.Column(DB.Integer)    
+    score = DB.Column(DB.BIGINT)    
     rank = DB.Column(DB.Integer)
     
     entry_id = DB.Column(DB.Integer, DB.ForeignKey(
