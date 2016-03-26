@@ -21,8 +21,9 @@ def get_machines():
 @fetch_entity(Player, 'player')
 def set_machine_player(machine, player):
     """claim a machine - its mine - ARRRRR"""
+    #FIXME : need check that player has active entry in the division the machine is in
     if player.machine:
-        raise Conflict('Player already is playing a machine!')        
+        raise Conflict('Player already is playing the machine %s !' % player.machine.name)        
     player_entries = Entry.query.filter_by(player_id=player.player_id,completed=False,voided=False).all()        
     if player_entries is None:
         raise Conflict('Player does not have any entries')
@@ -40,7 +41,7 @@ def get_machine(machine):
 @App.route('/machine/<machine_id>/rankings', methods=['GET'])
 @fetch_entity(Machine, 'machine')
 def get_machine_rankings(machine):
-    machine_scores = Score.query.filter_by(machine_id=machine.machine_id).join(Entry,Score.entry).filter_by(voided=False,completed=True).order_by(Score.rank.desc()).all()
+    machine_scores = Score.query.filter_by(machine_id=machine.machine_id).join(Entry,Score.entry).filter_by(voided=False,completed=True).order_by(Score.rank.asc()).limit(200)
     machine_scores_list = []
     for machine_score in machine_scores:
         machine_scores_list.append(machine_score.to_dict_simple())

@@ -6,6 +6,7 @@ app.controller(
 	$scope.division_id=$state.params.divisionId;
 	$scope.new_score = $state.params.newScore;
 	$scope.entry_id = $state.params.entryId;
+	$scope.displayBackButton.status = false;
 	
 	$scope.get_machine = function(){
             $http.get('[APIHOST]/machine/'+$scope.machine_id,{timeout:5000}).success(

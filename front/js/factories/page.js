@@ -2,6 +2,7 @@
 app.factory('Page', function() {
     var title = '';
     var logged_in_user = {};
+    var mobile_navbar_title = '';
     return {
 	title: function() { return title; },
 	set_title: function(new_title) { title = new_title; },

@@ -59,7 +59,7 @@ def get_division(division):
 @App.route('/division/<division_id>/rankings', methods=['GET'])
 @fetch_entity(Division, 'division')
 def get_division_rankings(division):
-    division_entries = Entry.query.filter_by(division_id=division.division_id,voided=False,completed=True).order_by(Entry.rank.desc()).all()
+    division_entries = Entry.query.filter_by(division_id=division.division_id,voided=False,completed=True).order_by(Entry.rank.asc()).limit(150)
     division_entries_dict = {}
     division_entries_list = []
     for division_entry in division_entries:

@@ -170,48 +170,75 @@
                   border-width: 36px;
                   margin-top: -36px;
                   }
-                  
+		  div.navbar-collapse.collapse {		  
+		    display: block;
+		    overflow: hidden;
+		    max-height: 0px;
+		    -webkit-transition: max-height .3s ease;
+		    -moz-transition: max-height .3s ease;
+		    -o-transition: max-height .3s ease;
+		    transition: max-height .3s ease;
+		  }
+
+		  div.navbar-collapse.collapse.in {
+		    max-height: 2000px;
+		  }
+		  
+                  .navbar {
+		  font-size:20px;
+		  font-family: 'Press Start 2P', cursive;
+		  }
+
+
+		  .navbar-nav > li > a:hover {
+		  }
                 </style>
 	</head>
 	<body>
-            <nav class="navbar navbar-default">
-                <!-- Brand and toggle get grouped for better mobile display -->
-		<div class="btn-group" uib-dropdown is-open="status.isopen" >
-		  <button style='font-size:24px' id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
-		    Select Scores View<span class="caret"></span>
-		  </button>
-		  <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
-		    <li style='font-size:24px' role="menuitem"><a ui-sref="results_home">Home</a></li>
-		    <li style='font-size:24px' class="divider"></li>
-		    <li style='font-size:24px' role="menuitem"><a ui-sref="results_home.divisions">Tournaments</a></li>
-		    <li style='font-size:24px' class="divider"></li>
-		    <li style='font-size:24px' role="menuitem"><a ui-sref="results_home.machines">Machines</a></li>
-		    <li style='font-size:24px' class="divider"></li>
-		    <li style='font-size:24px' role="menuitem"><a ui-sref="results_home.players">Players</a></li>
-		  </ul>
-		</div>
-                <!--<ul class="nav nav-pills">
-                  <li>
-                    <a
-		       style='font-size:42px'
-                       class='navbarlink'
-                       ui-sref='results_home.divisions'
-                   >Tournaments</a>
-                  </li>
-                  <li>
-                    <a
-                       class='navbarlink'
-                       ui-sref='results_home.machines'
-                   >Machines</a>
-                  </li>                  
-                  <li>
-                    <a
-                       class='navbarlink'
-                       ui-sref='results_home.players'
-                   >Players</a>
-                  </li>                  
-                </ul>-->
-            </nav>
-            <div ui-view></div>
+	  <nav class="navbar navbar-default" role="navigation">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle" ng-click="navCollapsed.status = !navCollapsed.status">
+		<span class="sr-only">Toggle navigation</span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-toggle">{{mobile_nav_title.title}}</a>
+
+	    </div>
+	    
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" ng-class="!navCollapsed.status && 'in'">
+	      <ul class="nav navbar-nav">
+		<li ui-sref-active="active"><a ui-sref="results_home.divisions" ui-sref-opts="{reload: true}">Divisions</a></li>
+		<li ui-sref-active="active"><a ui-sref="results_home.machines" ui-sref-opts="{reload: true}">Machines</a></li>
+		<li ui-sref-active="active"><a ui-sref="results_home.players" ui-sref-opts="{reload: true}">Players</a></li>
+		<li ui-sref-active="active"><a ui-sref="results_home.player" ui-sref-opts="{reload: true}">Player</a></li>
+<!--		<li class='dropdown' style='padding-top:10px;'>		  
+		  <span uib-dropdown>
+		    <a style='padding-top:20px;margin-left:14px;' href id="simple-dropdown" uib-dropdown-toggle>
+		      Player <b class="caret"></b>
+		    </a>
+		    <ul uib-dropdown-menu aria-labelledby="simple-dropdown">
+		      <li>
+		      <form  class="navbar-form navbar-left" role="search" style='margin-left:14px;'>
+			<div class="form-group">
+			  <input type="number" style='width:100px'  placeholder="Id #">
+			  <button type="submit" class="btn btn-default"><span class='glyphicon glyphicon-search'></span></button>			  
+			</div>
+		      </form>
+		      </li>
+		    </ul>
+		  </span>
+		</li>-->
+	      </ul>	      
+	      <ul class="nav navbar-nav navbar-right">
+		<!--<li><a href="#">poop</a></li>-->
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+
+	  </nav>
+	  <div ui-view></div>
 	</body>
 </html>

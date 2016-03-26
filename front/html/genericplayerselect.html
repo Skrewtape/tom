@@ -1,25 +1,26 @@
 <div style='margin:auto;width:75%' class='arrow_box'>
-Player Select
+  Player Select
 </div>
-<div class='papa' style='width:50%;margin:auto;margin-top:55px;'>
-<center>
-  <input style='margin:auto;width:25%' popover-is-open="popoverIsOpen" popover-placement="right" uib-popover="{{keypad_player_name}}" class="keypad-display" ng-model='player.player_id' disabled/>
+<div class='papa' style='width:100%;margin:auto;margin-top:55px;'>
+  <center>   
+    <input
+       focus-if
+       name='thing'
+       type='number' popover-placement="top" uib-popover-template="popovertemplate" popover-is-open='popoverIsOpen' style='font-size:32px;width:75px;' popover-trigger='none' ng-change='onChange()' placeholder='ID #' ng-model='player.player_id'/><br>
+    <a       
+     class='btn btn-info'                 
+     style='font-size:32px;margin-top:15px'
+       ui-sref='.process({playerId:select_player.player_id})'
+       ng-disabled='submitPlayerDisabled'
+       >Select Player</a><br>
+<!--     <a 
+     class='btn btn-info'                 
+     style='font-size:32px;margin-top:15px'
+     ng-click='fuckIos()'
+     >Enter Player Number</a>-->
+    
   </center>
-<ng-keypad on-key-pressed='onKeyPressed'>
-  <ng-key ng-repeat="key in ['1','2','3','4','5','6','7','8','9']" ng-key-data='key'>{{key}}</ng-key>
-  <ng-key></ng-key>
-  <ng-key ng-key-data='0'>0</ng-key>
-  <ng-key ng-key-data='"<"'>del</ng-key>
-</ng-keypad>
-<center>
-<span ui-view></span>
-<br>
-<a 
-   class='btn btn-info'                 
-   style='font-size:32px'
-   ui-sref='.process({playerId:select_player.player_id})'
-   >Select Player</a>                    
-
-</center>
-
 </div>
+<script type="text/ng-template" id="myPopoverTemplate.html">
+  <div style='font-size:32px' >{{keypad_player_name}}</div>
+</script>

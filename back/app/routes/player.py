@@ -3,38 +3,44 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Player, Division, Entry, Score
+from app.types import Player, Division, Entry, Score, Tournament
 from app import App, Admin_permission, Desk_permission, DB
-from app.routes.util import fetch_entity
+from app.routes.util import fetch_entity, calculate_score_points_from_rank
 from werkzeug.exceptions import Conflict
 
 
 @App.route('/player/rank', methods=['GET'])
 def calculate_ranks():
-    DB.engine.execute('UPDATE entry set score=0')    
-    max_rank = 100
+    DB.engine.execute('UPDATE entry set refresh=true')    
+    max_rank = 200
     for division in Division.query.all():
         machines = division.machines    
         machine_rankings = {}
+        entries = Entry.query.filter_by(division_id=division.division_id,completed=True,voided=False).all()        
+        entries_dict = {}
+        for entry in entries:
+            entries_dict[entry.entry_id]=entry
+            
         for machine in machines:
-            machine_scores=Score.query.filter_by(machine_id=machine.machine_id).join(Entry, Score.entry).filter_by(division_id=division.division_id,completed=True,voided=False).order_by(Score.score.desc()).limit(max_rank)
+            machine_scores=Score.query.filter_by(machine_id=machine.machine_id).join(Entry).filter_by(division_id=division.division_id,completed=True,voided=False).join(Division).join(Tournament).filter_by(active=True).order_by(Score.score.desc()).all()#.limit(max_rank)            
             rank = 1
             for score in machine_scores:
-                score.rank = rank            
-                point_for_entry = max_rank+1-rank
-                if point_for_entry < 0:
-                    point_for_entry = 0
-                if score.entry.score:
-                    score.entry.score=score.entry.score+point_for_entry
+                score.rank = rank
+                point_for_entry = calculate_score_points_from_rank(rank)
+                entry = entries_dict[score.entry_id]
+                if entry.refresh:
+                    entry.refresh=False
+                    entry.score=point_for_entry
                 else:
-                    score.entry.score=point_for_entry
+                    entry.score=entry.score+point_for_entry
+                    
                 rank = rank + 1
         rank = 0
-                
-        machine_entries=Entry.query.filter_by(division_id=division.division_id,completed=True).order_by(Entry.score.desc()).limit(150)
+        machine_entries = sorted(entries_dict, key=lambda entry: entries_dict[entry].score,reverse=True)
         for entry in machine_entries:            
             rank = rank + 1
-            entry.rank = rank
+            entries_dict[entry].rank = rank
+
     DB.session.commit()    
 
     return jsonify()
@@ -82,9 +88,12 @@ def linked_divisions_to_dict(linked_divisions):
 @App.route('/player/<player_id>', methods=['GET'])
 @fetch_entity(Player, 'player')
 def get_player(player):
-    """Get a list of players"""
+    """Get a player"""
     player_dict = player.to_dict_simple()
-    player_dict['linked_division'] = linked_divisions_to_dict(player.linked_division)                
+    #FIXME : this should be in the model
+    player_dict['linked_division'] = linked_divisions_to_dict(player.linked_division)
+    if player.machine:
+        player_dict['machine'] = player.machine.to_dict_simple()                
     return jsonify(player_dict)
 
 
@@ -130,8 +139,8 @@ def edit_player(player):
 @App.route('/player/<player_id>/entry/all', methods=['GET'])
 @fetch_entity(Player, 'player')
 def get_all_player_entries(player):
-    """Get a list of all entries for a player"""
-    entries = Entry.query.filter_by(player_id=player.player_id).all()        
+    """Get a list of all entries for a player ( excluding voided and in progress entries )"""
+    entries = Entry.query.filter_by(player_id=player.player_id, completed=True, voided=False).all()        
     entries_grouped_dict = {}
     for entry in entries:
         if entry.division_id not in entries_grouped_dict:
@@ -153,8 +162,21 @@ def get_open_player_entries(player):
         entries_grouped_dict[entry.division_id][entry.entry_id]=entry.to_dict_with_scores()
     return jsonify(entries_grouped_dict)
 
+@App.route('/player/<player_id>/entry/unstarted', methods=['GET'])
+@fetch_entity(Player, 'player')
+def get_unstarted_player_entries(player):
+    """Get a list of unstarted(i.e. not active, not completed, not voided) entries for a player"""
+    print "hi there"
+    entries = Entry.query.filter_by(player_id=player.player_id,completed=False,voided=False,active=False).all()        
+    entries_grouped_dict = {}
+    for entry in entries:
+        if entry.division_id not in entries_grouped_dict:
+            entries_grouped_dict[entry.division_id]={}
+        entries_grouped_dict[entry.division_id][entry.entry_id]=entry.to_dict_with_scores()
+    return jsonify(entries_grouped_dict)
+
+
 @App.route('/player/<player_id>/entry/active', methods=['GET'])
-@login_required
 @fetch_entity(Player, 'player')
 def get_active_player_entries(player):
     """Get a list of open(i.e. not completed, not voided) entries for a player"""

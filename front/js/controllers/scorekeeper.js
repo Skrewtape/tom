@@ -1,7 +1,7 @@
 app.controller(
     'scorekeeper',
     function($scope, $http, $uibModal, $state, $location, Page, StatusModal) {        
-        Page.set_title('Purchase Tickets');
+        Page.set_title('Scorekeeping');
 
         $scope.get_tournaments = function(){
             $http.get('[APIHOST]/tournament',{timeout:5000}).success(

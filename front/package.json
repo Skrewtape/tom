@@ -38,10 +38,12 @@
     "bootstrap-sass": "~3.2.0",
     "grunt-cli": "^0.1.13",
     "jquery": "~2.1.1",
-    "jquery-browserify": "~1.8.1",
+      "jquery-browserify": "~1.8.1",
+      "ng-focus-if":"~1.0.5",
     "loaders.css": "^0.1.2",
     "moment": "~2.8.4",
     "ngKeypad": "git+https://github.com/alvarowolfx/ng-keypad.git",
+    "angular-fcsa-number":  "git+https://github.com/FCSAmerica/angular-fcsa-number.git",
     "underscore": "^1.8.3"
   }
 }

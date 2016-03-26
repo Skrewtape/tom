@@ -3,41 +3,124 @@
   #{{player.player_id}}
 </div>
 <center>
-  <b>Available Entries</b>
-  <div style='width:100%' class="list-group">
-    <a
-       ng-repeat='(div_id,entry) in available_entries'
-       class="list-group-item">
-       {{tournaments[divisions[div_id].tournament_id].name}} : <span ng-if='entry!=undefined && entry.length!=0'> 1 </span> <span ng-if='entry==undefined || entry.length==0'> 0 </span>
-    </a>
+      <ul class="list-group" ng-if="count_keys(unstarted_entries) > 0">
+	<li class='list-group-item list-group-item-info'>Unstarted Entries</li>
+	<li
+	   ng-repeat='(div_id,entrys) in unstarted_entries'
+	   class="list-group-item">
+	  {{tournaments[divisions[div_id].tournament_id].name}} <span ng-if='divisions[div_id].name != "all"'> {{divisions[div_id].name}}</span>: <span ng-repeat='entry in entrys' ng-if='$last'>{{$index+1}}</span>
+	</li>
+      </ul>
+
+  <div style='width:100%' class="list-group" ng-if="count_keys(unstarted_entries) == 0">
+    No unstarted entries
+  </div>
     <hr>
-  <b>Top Entries</b>    
-  <uib-accordion close-others="true">
-    <uib-accordion-group ng-repeat="(div_id,div_entries) in entries">
-      <uib-accordion-heading ng-repeat='(entry_id,entry) in div_entries|orderBy:"rank"' ng-if="$first">
-	{{tournaments[divisions[entry.division_id].tournament_id].name}}
+<div ng-if='count_keys(active_entries) > 0 '>
+  <div ui-view="tickets_in_progress"></div>
+</div>
+<div ng-if='count_keys(entries) > 0 '>
+<div ui-view="top_tickets"></div>
+</div>
+<div ng-if='count_keys(entries) > 0 '>
+<div ui-view="all_tickets"></div>
+</div>
+<!--<uib-accordion close-others="true">
+  <div ng-repeat="(div_id,div_entries) in inprogress_entries">
+  <uib-accordion-group ng-repeat='(entry_id,entry) in div_entries|orderBy:"rank"' ng-if="$first">
+      <uib-accordion-heading>
+	{{tournaments[divisions[entry.division_id].tournament_id].name}} - entry #{{entry_id}}
       </uib-accordion-heading>
-      <table>
-        <tr ng-repeat='score in entry.scores'>
+      <table class='table'>
+	<tr>
+	  <td>
+	    Game
+	  </td>
+	  <td>
+	    Score
+	  </td>
+	  <td>
+	    Rank
+	  </td>
+	  <td>
+	    Points
+	  </td>
+	</tr>
+        <tr ng-if='entry.scores == undefined'>
+	  <td colspan=4>
+	    <center>No scores recorded yet.</center>
+	  </td>
+	</tr>
+        <tr ng-repeat='score in entry.scores' ng-if='entry.scores != undefined'>	  
           <td>
-	    {{}}
+      	    {{machines[score.machine_id].name}}
           </td>
           <td>
-            <input ng-change='score_and_machine_change(score)' type="text" ng-model="score.score" class="form-control">
+	    {{score.score}}
           </td>
           <td>
-            <a
-               ng-if='score_modified[score.score_id] == "dirty"'
-               class='btn btn-info'
-               ng-click='change_score(score)' 
-               >save score</a>
-            <a class='btn btn-success'
-               ng-if='score_modified[score.score_id] == "updated"'>
-              Successfully updated score.
-            </a>
+	    {{score.rank}}
           </td>
+	  <td>
+	    {{calc_machine_score_points(score.rank)}}
+	  </td>
         </tr>
-      </table>
-      
-    </uib-accordion-group>
+	<tr>
+	  <td colspan=3></td>
+	  <td><b>{{entry.score}}</b></td>
+	</tr>
+      </table>      
+  </uib-accordion-group>
+  </div>
+</uib-accordion>
+</div>
+  <b>Top Entries</b>    
+<uib-accordion close-others="true">
+  <div ng-repeat="(div_id,div_entries) in entries">
+  <uib-accordion-group ng-repeat='(entry_id,entry) in div_entries|orderBy:"rank"' ng-if="$first">
+      <uib-accordion-heading>
+	{{tournaments[divisions[entry.division_id].tournament_id].name}} - entry #{{entry_id}}
+      </uib-accordion-heading>
+      <table class='table'>
+	<tr>
+	  <td>
+	    Game
+	  </td>
+	  <td>
+	    Score
+	  </td>
+	  <td>
+	    Rank
+	  </td>
+	  <td>
+	    Points
+	  </td>
+	</tr>
+        <tr ng-if='entry.scores == undefined'>
+	  <td colspan=4>
+	    <center>No scores recorded yet.</center>
+	  </td>
+	</tr>
+        <tr ng-repeat='score in entry.scores' ng-if='entry.scores != undefined'>	  
+          <td>
+      	    {{machines[score.machine_id].name}}
+          </td>
+          <td>
+	    {{score.score}}
+          </td>
+          <td>
+	    {{score.rank}}
+          </td>
+	  <td>
+	    {{calc_machine_score_points(score.rank)}}
+	  </td>
+        </tr>
+	<tr>
+	  <td colspan=3></td>
+	  <td><b>{{entry.score}}</b></td>
+	</tr>
+      </table>      
+  </uib-accordion-group>
+  </div>
+</uib-accordion>-->
 </center>

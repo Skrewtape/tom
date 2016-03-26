@@ -27,25 +27,39 @@
   </table>
 </center>
 <div style='margin:auto;width:75%;margin-top:25px'>
-<center>
+  <center>
+    <div style='font-size:32px;height:40px'>
+      {{formatted_score.score}}
+    </div>
   <table>
-    <td>
+    <tr>
+    <td colspan=2>
 <!--<input type="text" pattern="[0-9]*">-->
-      <div class='form-group input-group input-group-lg' style='margin-left:auto;margin-right:auto;margin-top:25px;margin-bottom:25px;'>        
-        <span class="input-group-addon" id="new_score">Score</span>
-        <input
+<!--      <div class='form-group input-group input-group-lg' style='margin-left:auto;margin-right:auto;margin-top:25px;margin-bottom:25px;'>        
+        <span class="input-group-addon" id="new_score">Score</span>-->
+<input
+   focus-if   
+	   style='font-size:1px;width:1px;height:1px;position:absolute;top:-100px;left:-100px'
            type='number'
            class='form-control'
            aria-describedby='new_score'
            name='new_score'
            ng-model='new_score'
+	   ng-change='onChange()'
            />
-  </div>  </td><td><a
+  </div>  </td></tr><tr><td><a
 		      class='btn btn-info btn-lg'
 		         style='font-size:32px'
-	     ui-sref='.process({newScore:new_score,entryId:player_active_entry.entry_id})'
+		      ui-sref='.process({newScore:new_score,entryId:player_active_entry.entry_id})'
+		      ng-disabled='disabledScoreKeeping'
 		      >Add Score</a>
+      <a
+	 class='btn btn-danger btn-lg'
+	 style='font-size:32px'
+	 ng-click='voidEntry(player_active_entry.entry_id,player)'
+	 >VOID TICKET</a>            
     </td>
+    </tr>
   </table>
   </center>
 </div>

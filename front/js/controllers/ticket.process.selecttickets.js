@@ -1,7 +1,7 @@
 app.controller(
     'ticket_process_selecttickets',
     function($scope, $http, $uibModal, $state, $location, Page, StatusModal) {        
-        Page.set_title('Division');        
+        Page.set_title('Purchase Tickets');        
 	$scope.player_id = $state.params.playerId;
         $scope.tournament_name = $state.params.tournamentName;
         $scope.division_name = $state.params.divisionName;

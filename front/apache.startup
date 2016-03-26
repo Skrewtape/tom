@@ -1,0 +1,1 @@
+sudo launchctl unload  /System/Library/LaunchDaemons/org.apache.httpd.plist 

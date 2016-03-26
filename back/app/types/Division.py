@@ -28,7 +28,7 @@ class Division(DB.Model):
     machines = DB.relationship(
         'Machine',
         secondary=Division_machine_mapping,
-        backref=DB.backref('divisions'),
+        backref=DB.backref('division'),
         lazy='joined'
     )
 

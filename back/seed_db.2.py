@@ -143,7 +143,7 @@ def add_scores_to_entry(division,player,active=True,num=5,void=False):
         entry.active=False
     else:
         entry.completed = False
-        entry.active=True
+        entry.active=active
     entry.voided = void
 
     player.entries.append(entry)
@@ -168,19 +168,20 @@ def init_players(division):
     #    player.delete()
     #    DB.session.commit()
         
-    for play_num in range(0,150):
+    for play_num in range(0,200):
         first_name = first_names[random.randrange(0,len(first_names))]
         last_name = first_names[random.randrange(0,len(first_names))]
         player = create_player(first_name,last_name)
         print " adding player %d " % play_num
         DB.session.add(player)
         DB.session.commit()
-        #for division in divisions:
-        #division = divisions[0]
-        #player.linked_division.append(division)
-        #add_scores_to_entry(division,player,active=True, num=play_num)
-        add_scores_to_entry(division,player,active=True)
-        #add_scores_to_entry(division,player,active=False,num=0)
+        for division in divisions:
+            #division = divisions[0]
+            #player.linked_division.append(division)
+            add_scores_to_entry(division,player,active=True, num=4)
+            add_scores_to_entry(division,player,active=False,num=0)
+            for i in range(5):
+                add_scores_to_entry(division,player,active=False)
         DB.session.commit()            
         print " player %d is done \n" % play_num
             

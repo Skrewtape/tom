@@ -1,45 +1,50 @@
 remove indiv player link in admin mode/desk mode(?)
 Bugs
 ---
-* handle no player entered for machine select/ticket buy
 * on machine select, checks for "on this machine" come before "no more entrys" check
-* bad score just returns you to machine screen
 * on division select page, need feedback for which user is selected
-** on all multi-page paths, need better feedback of where you are in the process/what has been selected
 * division select in main needs to have blacked out more obvious
-* when getting the "player is already playing a machine" error, report the machine
-
+* better formatting ( don't show when not appropriate ) on player page
+* oops - can't enter score on desktop
 Features
 ---
-* change player select to use input=number
-* Need reasonable "back" buttons
-** on score entry
-** on division change
-** on ticket number selection screen
-* player is asshole
-* scorekeeper is incompetent - on the scorekeeper page, need a "the system says the player is paying x, but they are standing right in front of me" button
-** need to associate scorekeeper with score
-** need to notify scorekeeper when they fucked up?
-* undo score option on score confirmation page
-** add undo for other post/put operations?
-* add refresh button on machine list?
-* admin console needs a "delete entry" button
-* format score in score keeping with commas
-* cancel on loading screen after x amount of time and look at better timeouts for ajax
+* results display
+* need a player lookup page
+** void ( for scorekeeper and desk person)
+** change linked divison ( for desk )
+** edit entries ( for elizabeth )
+** show player info - done
+* recording score - change wording of buttons/flow to "review score/submit score"
+* need path so that after adding a player, they can buy a ticket and/or set player division
+* need "debug button" in loading screen, plus need to add "breadcrumbs" to statusmodal which can be dumped on debug button
+* need a path to buy multiple tickets in different divisions at once/quickly and show a "reciepet/summary" for people entering info into square
+* undo
+** undo info will be kept at angular level? flask level?  if at flask level, you can have an "undo" action?  yeah - this needs to be at flask level
+** added to machine
+** void ticket ( for scorekeeper - no for now)
+** purchasing ticket ( no for now )
+** linking division - NO, too complicated
+* options for ordering machines for scorekeepers
 * need to handle "entered wrong player" at the admin level (i.e. how do you handle it if a score was entered under the wrong player num?)
 ** record and display timestamps in admin level
-* options for ordering machines for scorekeepers
-* add user
 * add new scores to entry in admin mode
-* need path so that after adding a player, they can buy a ticket and/or set player division
-* need a path to buy multiple tickets in different divisions at once/quickly and show a "reciepet/summary" for people entering info into square
-
-
-Phase 2
----
+* player is asshole
+** related "machine is out of service"
+* scorekeeper is incompetent - on the scorekeeper page, need a "the system says the player is paying x, but they are standing right in front of me" button
+** need to associate scorekeeper with score
+** need to notify scorekeeper when they fucked up?  needs a "check every x seconds for message for this scorekeeper" function
+* add refresh button on machine list?
+* admin console needs a "delete entry" button
+* cancel on loading screen after x amount of time and look at better timeouts for ajax (still needed?)
+* add user
+* clean up all the crap I threw in for format score in score keeping with commas
+* clean up UI for player select (i.e. add input group for input, etc )
 
 Workpad
 ---
+* voiding from machinelist
+** playerslect with "get active entry" button
+** display entry with "void ticket" button
 
 
 

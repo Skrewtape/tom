@@ -193,7 +193,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
 	}
 	).state(
         'home.ticket', {
-            url: 'ticket',
+            url: 'ticket/:pageTitle',
             views: {
                 '@': {
                     templateUrl: 'genericplayerselect.html',
@@ -229,7 +229,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             },
 	}).state(
         'home.scorekeeper.selectmachine.genericplayerselect_selected', {
-            url: '/playerselect/machineId/:machineId',
+            url: '/playerselect/machineId/:machineId/pageTitle/:pageTitle',
             views: {
                 '@': {
                     templateUrl: 'genericplayerselect.html',
@@ -241,7 +241,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             },
 	}).state(
         'home.scorekeeper.selectmachine.genericplayerselect_selected.process', {
-            url: '/playerId/:playerId',
+            url: '/playerId/:playerId/pageTitle/:pageTitle',
             views: {
                 '@': {
                     templateUrl: 'scorekeeper.selectmachine.genericplayerselect_selected.process.html',
@@ -258,6 +258,18 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 '@': {
                     templateUrl: 'scorekeeper.selectmachine.recordscore.html',
                     controller: 'scorekeeper_selectmachine_recordscore',
+                }
+            },
+            ncyBreadcrumb: {
+                label: 'Ticket Purchase',
+            },
+	}).state(
+        'home.scorekeeper.selectmachine.recordscore.void', {
+            url: '/void/entryId/:entryId',
+            views: {
+                '@': {
+                    templateUrl: 'scorekeeper.selectmachine.recordscore.void.html',
+                    controller: 'scorekeeper_selectmachine_recordscore_void',
                 }
             },
             ncyBreadcrumb: {
@@ -288,6 +300,18 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 label: 'Ticket Purchase',
             },
 	}).state(
+        'home.scorekeeper.selectmachine.complete.void', {
+            url: '/void',
+            views: {
+                '@': {
+                    templateUrl: 'scorekeeper.complete.void.html',
+                    controller: 'scorekeeper_complete_void',
+                }
+            },
+            ncyBreadcrumb: {
+                label: 'Ticket Purchase',
+            },
+	}).state(
         'home.scorekeeper.selectmachine.complete.process', {
             url: '/process',
             views: {
@@ -305,7 +329,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             views: {
                 '@': {
                     templateUrl: 'results_home.html',
-                    controller: 'results_home',
+                    controller: 'results_home'
                 }
             },
             ncyBreadcrumb: {
@@ -349,7 +373,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             },
 	}).state(
         'results_home.machines.results', {
-            url: '/results/machineId/:machineId/machineName/:machineName',
+            url: '/results/machineId/:machineId/machineName/:machineName/divisionId/:divisionId',
             views: {
                 '@': {
                     templateUrl: 'results_home.machines.results.html',
@@ -372,12 +396,87 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 label: 'Ticket Purchase',
             },
 	}).state(
+            'home.playersearch', {
+            url: 'playersearch',
+            views: {
+                '@': {
+                    templateUrl: 'playerselect.html',
+                    controller: 'genericplayerselect',
+                },
+		'player_info@home.playersearch': {
+                    templateUrl: 'playerselect-player_info.html'
+                }
+            },
+            ncyBreadcrumb: {
+                label: 'Ticket Purchase',
+            },
+	}).state(
+            'home.playersearch.results', {
+            url: '/playerId/:playerId',
+            views: {
+                '@': {
+                    templateUrl: 'results_home.players.results.html',
+                    controller: 'results_home_players_results',
+                },
+		'tickets_in_progress@home.playersearch.results': {
+                    templateUrl: 'entry_result.html',
+                    controller: function($scope){
+			$scope.title = "Tickets In Progress";
+			$scope.display_entries = $scope.active_entries;
+		    }           
+                },
+		'top_tickets@home.playersearch.results': {
+                    templateUrl: 'entry_result.html',
+                    controller: function($scope){
+			$scope.title = "Top Tickets";
+			$scope.orderBy = "rank";
+			$scope.top_entry = true;
+			$scope.display_entries = $scope.entries;
+		    }           
+                },
+		'all_tickets@home.playersearch.results': {
+                    templateUrl: 'entry_result.html',
+                    controller: function($scope){
+			$scope.title = "All Tickets";
+			$scope.orderBy = "entry_id";
+			$scope.display_entries = $scope.entries;
+		    }           
+                }
+            },
+            ncyBreadcrumb: {
+                label: 'Ticket Purchase',
+            },
+	}).state(
             'results_home.players.results', {
             url: '/results/playerId/:playerId',
             views: {
                 '@': {
                     templateUrl: 'results_home.players.results.html',
                     controller: 'results_home_players_results',
+                },
+		'tickets_in_progress@results_home.players.results': {
+                    templateUrl: 'entry_result.html',
+                    controller: function($scope){
+			$scope.title = "Tickets In Progress";
+			$scope.display_entries = $scope.active_entries;
+		    }           
+                },
+		'top_tickets@results_home.players.results': {
+                    templateUrl: 'entry_result.html',
+                    controller: function($scope){
+			$scope.title = "Top Tickets";
+			$scope.orderBy = "rank";
+			$scope.top_entry = true;
+			$scope.display_entries = $scope.entries;
+		    }           
+                },
+		'all_tickets@results_home.players.results': {
+                    templateUrl: 'entry_result.html',
+                    controller: function($scope){
+			$scope.title = "All Tickets";
+			$scope.orderBy = "entry_id";
+			$scope.display_entries = $scope.entries;
+		    }           
                 }
             },
             ncyBreadcrumb: {

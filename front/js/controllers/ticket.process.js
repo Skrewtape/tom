@@ -1,9 +1,8 @@
 app.controller(
     'ticket_process',
     function($scope, $http, $uibModal, $state, $location, Page, StatusModal) {        
-        Page.set_title('Purchase Tickets');
+        Page.set_title('Select Tournament');
         $scope.player_id =$state.params.playerId;
-
         $scope.get_tournaments = function(){
             $http.get('[APIHOST]/tournament',{timeout:5000}).success(
                 function(data) {                    

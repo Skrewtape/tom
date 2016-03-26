@@ -10,21 +10,10 @@
       <a
 	 style='width:100%'
          class='btn btn-info'
-         ui-sref='.results({machineId:machine.machine_id,machineName:machine.name})'
+         ui-sref='.results({machineId:machine.machine_id,machineName:machine.name,divisionId:division.division_id})'
 	 >	
-	  {{machine.name}}</a>
+	{{machine.name}}</a>
 	    <br>
 	</div>	
     </uib-accordion-group>
   </uib-accordion>
-    <div ng-repeat='division in divisions' style='margin-top:25px;'>
-      <a
-	 style='width:50%'
-         class='btn btn-info'
-         ui-sref='.results({divisionId:division.division_id,tournamentName:tournaments[division.tournament_id].name,divisionName:division.name})'
-	 >
-	
-	Tournament {{tournaments[division.tournament_id].name}}<span ng-if='division.name!="all"'>, {{division.name}} Division</span></a>
-      <br>
-      </div>
-  

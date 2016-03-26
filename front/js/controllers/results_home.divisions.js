@@ -1,7 +1,8 @@
 app.controller(
     'results_home_divisions',
     function($scope, $http, $uibModal, $state, $location, Page, StatusModal) {        
-
+	$scope.change_nav_menu();
+	$scope.change_nav_title('Divisions');
         $scope.get_divisions = function(){
             $http.get('[APIHOST]/division',{timeout:5000}).success(
                 function(data) {                    

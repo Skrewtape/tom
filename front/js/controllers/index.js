@@ -7,9 +7,30 @@ app.controller(
     function($scope, $location, $http, Page,
              $state, $injector, $uibModal, StatusModal, $filter) {
 	$scope.Page = Page;
+	$scope.mobile_nav_title = {};
+	$scope.mobile_nav_title.title = ' ';
+	$scope.navCollapsed = {};
+	$scope.navCollapsed.status = true;
         $scope.alerts = [];
 	$scope.bobo_breadcrumbs=[];
-
+	$scope.back_string = '^';
+	$scope.back = function(){
+	    $state.go($scope.back_string);
+	}
+	$scope.change_nav_menu = function(){
+	    $scope.navCollapsed.status = true;
+	}
+	$scope.change_nav_title = function(title){
+	    $scope.mobile_nav_title.title = title;
+	}
+	$scope.active_state = function(state_to_compare){
+	    if (state_to_compare == $state.current.name){
+		return true;
+	    } else {
+		return false;
+	    }
+	}
+	
 	$scope.add_to_bobo_breadcrumbs = function(breadcrumb){
 	    if($scope.bobo_breadcrumbs.length > 8){
 		$scope.bobo_breadcrumbs.pop();
@@ -93,18 +114,15 @@ app.controller(
             return $filter('limitTo')(name,trunc_length);            
         };
 	//possible errors : 400, 500, 409        
-        $scope.voidEntry = function(entry_id){
+        $scope.voidEntry = function(entry_id,player){
+	    $scope.entry_id_to_void = entry_id;	    
+	    $scope.player = player;
             $scope.player_machine_setModal = $uibModal.open({
-                templateUrl: 'modals/status.html',
+                templateUrl: 'modals/void_entry_from_score.html',
                 backdrop: 'static',
                 keyboard: false,
                 close:$scope.close,
                 scope: $scope
-            });            
-            $http.put('[APIHOST]/entry/'+entry_id+'/void',{},{timeout:5000}).success(function (data) {                
-                console.log('all gone');
-                console.log(data);
-                $scope.player_machine_setModal.close();
             });            
         };
     }
@@ -127,8 +145,10 @@ require('./scorekeeper.js');
 require('./scorekeeper.selectmachine.js');
 require('./scorekeeper.selectmachine.genericplayersearch_selected.process.js');
 require('./scorekeeper.selectmachine.recordscore.js');
+require('./scorekeeper.selectmachine.recordscore.void.js');
 require('./scorekeeper.selectmachine.recordscore.process.js');
 require('./scorekeeper.complete.js');
+require('./scorekeeper.complete.void.js');
 require('./scorekeeper.complete.process.js');
 require('./results_home.js');
 require('./results_home.divisions.js');

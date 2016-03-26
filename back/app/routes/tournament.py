@@ -39,6 +39,12 @@ def get_tournaments():
         Tournament.query.all()
     })
 
+@App.route('/tournament/<tournament_id>', methods=['GET'])
+@fetch_entity(Tournament, 'tournament')
+def get_tournament(tournament):
+    """Get a tournament"""    
+    return jsonify(tournament.to_dict_with_divisions())
+
 
 @App.route('/tournament/<tournament_id>/begin', methods=['PUT'])
 @login_required

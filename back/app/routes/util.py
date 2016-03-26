@@ -26,7 +26,15 @@ from flask_restless.helpers import to_dict
 #         player_dict['entries'].append(entry_dict(i))
 #     return player_dict
 
-
+def calculate_score_points_from_rank(rank):
+    if rank == 1:
+        return 100
+    if rank == 2:
+        return 90    
+    if rank > 87:
+        return 0
+    return 88-rank
+    
 def fetch_entity(model_class, arg_name):
     """Generate a wrapper to turn an id into a model object"""
     def wrap(decorated_f):

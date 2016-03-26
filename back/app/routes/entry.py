@@ -5,7 +5,7 @@ from flask_login import login_required
 from app import App
 from app.types import Entry, Score, Player, Division, Machine
 from app import App, Admin_permission, Scorekeeper_permission, DB
-from app.routes.util import fetch_entity
+from app.routes.util import fetch_entity, calculate_score_points_from_rank
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
 
@@ -26,7 +26,7 @@ def void_entry(entry):
     if existing_entry:
         existing_entry.active = True        
     DB.session.commit()    
-    return jsonify(entry.to_dict())
+    return jsonify(entry.to_dict_simple())
 
 
 
@@ -115,6 +115,31 @@ def complete_entry(entry):
     DB.session.commit()
     return jsonify(entry.to_dict_with_scores())
 
+@App.route('/entry/<entry_id>/estimate_score_ranks', methods=['GET'])
+@fetch_entity(Entry, 'entry')
+def estimate_entry_score_ranks(entry):
+    """Estimate the rank of scores in a entry still in progress"""
+    if entry.completed == True or entry.voided == True or entry.active == False:
+        raise Conflict('entry is already completed or voided')
+    score_dicts = {}
+    for score in entry.scores:
+        cur_score_dict = score.to_dict_simple()
+        lower_score = Score.query.filter(Score.machine_id == score.machine_id, Score.rank != None, Score.score < score.score).order_by(Score.score.desc()).first()        
+        higher_score = Score.query.filter(Score.machine_id == score.machine_id, Score.rank != None, Score.score > score.score).order_by(Score.score.asc()).first()        
+        lower_score_dict = {}
+        if lower_score:
+            cur_score_dict['estimated_rank'] = lower_score.rank
+            cur_score_dict['estimated_points'] = calculate_score_points_from_rank(lower_score.rank)
+        else:
+            if higher_score:
+                cur_score_dict['estimated_rank'] = higher_score.rank+1
+                cur_score_dict['estimated_points'] = calculate_score_points_from_rank(higher_score.rank+1)                
+            else:
+                cur_score_dict['estimated_rank'] = 1
+                cur_score_dict['estimated_points'] = calculate_score_points_from_rank(1)                                
+        score_dicts[score.score_id] = cur_score_dict
+    return jsonify(score_dicts)
+
 
 @App.route('/entry/machineId/<machine_id>', methods=['GET'])
 def get_entries_for_machine(machine_id):
@@ -139,6 +164,7 @@ def add_entry(player,division,num_entrys):
     if not division.tournament.active:
         raise Conflict('tournament closed')
     existing_entries = Entry.query.filter_by(player_id=player.player_id,division_id=division.division_id,completed=False,voided=False).count()    
+    print "adding entry and existing entries are %s" % existing_entries
     if existing_entries + num_entrys > tom_config.max_num_concurrent_entries:
         raise Conflict('already at max number of entries for user')
     for entry_num in range(0, num_entrys):
@@ -152,7 +178,7 @@ def add_entry(player,division,num_entrys):
             number_of_scores_per_entry = tom_config.scores_per_entry
         )
 
-        if( existing_entries > 1 or entry_num > 0):
+        if( existing_entries >= 1 or entry_num > 0):
             new_entry.active=False    
         DB.session.add(new_entry)
         player.entries.append(new_entry)

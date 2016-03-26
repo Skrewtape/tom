@@ -153,7 +153,7 @@
                   position: absolute;
                   pointer-events: none;
                   }
-
+		  
                   .arrow_right_box:after {
                   border-color: rgba(136, 183, 213, 0);
                   border-left-color: #88b7d5;
@@ -166,74 +166,111 @@
                   border-width: 36px;
                   margin-top: -36px;
                   }
-                  
+		  div.navbar-collapse.collapse {		  
+		  display: block;
+		    overflow: hidden;
+		    max-height: 0px;
+		    -webkit-transition: max-height .3s ease;
+		    -moz-transition: max-height .3s ease;
+		    -o-transition: max-height .3s ease;
+		    transition: max-height .3s ease;
+		  }
+
+		  div.navbar-collapse.collapse.in {
+		    max-height: 2000px;
+		  }
+
                 </style>
 	</head>
   <body>
     <nav class="navbar navbar-default twopfont">
-                <ul class="nav nav-pills" >
-                  <li class='nav-item'>
+      <ul class="nav nav-pills" ng-if='state_name == "home"'>	
+        <li class='nav-item' ng-if='!Page.logged_in_user().user_id'>
                     <a
 		       style='border-width:0'
-                      class='navbarlink'
-                      ng-if='!Page.logged_in_user().user_id'
-                      ng-click='login()'
+                       class='navbarlink'
+                       ng-click='login()'
                        ><span style='color:red' class='glyphicon glyphicon-user'></span>
 		    </a>
-                  </li>
-                  <li>
-                    <a
-		       style='border-width:0'
-                       class='navbarlink'
-                       ng-if='!!Page.logged_in_user().user_id'
-                       ng-click='logout()'
-                       ><span style='color:green;' class='glyphicon glyphicon-user'></span>
-		    </a>
-                  </li>
-                  <li>
-                    <a
-		       ng-if='Page.has_role("desk")' 
-                       class='navbarlink'
-                       ui-sref='home.playerlist'
-                   >Players</a>
-                  </li>
-                  <li>
-                    <a
-		       ng-if='Page.has_role("desk")' 
-                       class='navbarlink'
-                       ui-sref='home.playeradd'
-                   >Add Player</a>
-                  </li>
-                  <li>
-                    <a
-		       ng-if='Page.has_role("admin")' 
-                       class='navbarlink'
-                       ui-sref='home.tournament'
-                   >Tournaments</a>
-                  </li>
-                  <li>
-                    <a
-		       ng-if='Page.has_role("desk")' 
-                       class='navbarlink'
-                       ui-sref='home.ticket'
-                   >Tickets</a>
-                  </li>                  
-                  <li>
-                    <a
-		       ng-if='Page.has_role("scorekeeper")' 
-                       class='navbarlink'
-                       ui-sref='home.scorekeeper'
-                   >Scorekeeping</a>
-                  </li>
-                  <li>
-                    <a
-                      class='navbarlink'
-                   >Player</a>
-                  </li>                  
-                </ul>
-            </nav>
-            <div ui-view></div>
-        <!--     <div class='navbar-header'> -->
+        </li>
+        <li                        ng-if='!!Page.logged_in_user().user_id'>
+          <a
+	     style='border-width:0'
+             class='navbarlink'
+             ng-click='logout()'
+             ><span style='color:green;' class='glyphicon glyphicon-user'></span>
+	  </a>
+        </li>
+        <li 		       ng-if='Page.has_role("desk")' >
+          <a
+             class='navbarlink'
+             ui-sref='home.playerlist'
+             >Players</a>
+        </li>
+        <li  ng-if='Page.has_role("desk")' >
+          <a
+             class='navbarlink'
+             ui-sref='home.playeradd'
+             >Add Player</a>
+        </li>
+        <li ng-if='Page.has_role("admin")' >
+          <a
+             class='navbarlink'
+             ui-sref='home.tournament'
+             >Tournaments</a>
+        </li>
+        <li ng-if='Page.has_role("desk")' >
+          <a
+             class=navbarlink
+             ui-sref='home.ticket({pageTitle:"Purchase Tickets"})'
+             >Tickets</a>
+        </li>                  
+        <li 	       ng-if='Page.has_role("scorekeeper")' >
+          <a
+	     
+             class='navbarlink'
+             ui-sref='home.scorekeeper'
+             >Scorekeeping</a>
+        </li>
+        <li>
+          <a
+	     ui-sref='home.playersearch'
+             class='navbarlink'
+             >Player</a>
+        </li>                  
+      </ul>
+      <ul class="nav nav-pills" ng-if='state_name != "home"'>	
+        <li class='nav-item' ng-if='!Page.logged_in_user().user_id'>
+          <a
+	     style='border-width:0'
+             class='navbarlink'
+             ng-click='login()'
+             ><span style='color:red' class='glyphicon glyphicon-user'></span>
+	  </a>
+        </li>
+        <li                        ng-if='!!Page.logged_in_user().user_id'>
+          <a
+	     style='border-width:0'
+             class='navbarlink'
+             ng-click='logout()'
+             ><span style='color:green;' class='glyphicon glyphicon-user'></span>
+	  </a>
+        </li>
+        <li ng-if='displayBackButton.status == true'>
+          <a
+	     style='border-width:0;margin-top:7px'
+             class='navbarlink badge'
+             ng-click='back()'
+             >Back
+	  </a>
+        </li>
+	<li style='margin-top:10px'>
+	  {{Page.title()}}
+	</li>
+      </ul>	    
+    </nav>
+    <div ui-view></div>
+    <!--     <div class='navbar-header'> -->
         <!--       <span class='twopfont'>T.O.M</span> -->
         <!--     </div> -->
         <!--     <button -->

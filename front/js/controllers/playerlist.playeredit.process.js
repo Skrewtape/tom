@@ -7,6 +7,7 @@ app.controller(
         $scope.player_id =$state.params.playerId;
         $scope.tournament_id =$state.params.tournamentId;
         $scope.division_id =$state.params.divisionId;
+	$scope.displayBackButton.status = false;
 
 	$scope.goto_next_state = function(){
 	    $state.go('^.^');
@@ -16,7 +17,8 @@ app.controller(
             if ($scope.has_tournament_division_changed($scope.tournament_id,$scope.division_id)){
                 $http.put('[APIHOST]/player/'+$scope.player_id,{linked_division:$scope.division_id},{timeout:5000}).success(
                     function(data){
-                        
+			$scope.player = data;
+			$scope.linked_division = data.linked_division[0];
                         $scope.division_set='true';
                         StatusModal.loaded();            
                     }

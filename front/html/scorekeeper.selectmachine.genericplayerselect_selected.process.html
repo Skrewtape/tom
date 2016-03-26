@@ -3,8 +3,9 @@
 </div>
 <center>  
   <div ng-if='machine!=undefined && player!=undefined' style='margin-top:25px;font-size:32px'>
-    {{player.first_name}} {{player.last_name}} is now playing {{machine.name}}
-  <br>
+    {{player.first_name}} {{player.last_name}} (#{{player.player_id}}) is now playing {{machine.name}}
+    <br>
+    
   <a
      class='btn btn-info'
      style='font-size:32px'

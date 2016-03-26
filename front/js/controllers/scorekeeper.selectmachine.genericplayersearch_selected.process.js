@@ -4,7 +4,8 @@ app.controller(
         $scope.player_id=$state.params.playerId;
 	$scope.machine_id=$state.params.machineId;
 	$scope.division_id=$state.params.divisionId;
-		
+	$scope.displayBackButton.status = false;
+	
 	$scope.process_machine_select = function(){
             $http.put('[APIHOST]/machine/'+$scope.machine_id+'/player/'+$scope.player_id,{},{timeout:5000}).success(
                 function(data) {                    
@@ -40,7 +41,9 @@ app.controller(
 	
 	$scope.check_player_machine = function(player){
 	    if(player.machine_id!=null){
-		error_message = player.first_name+' '+player.last_name+' is already playing a game!!';
+		error_message = player.first_name+' '+player.last_name+' is already playing a game ('+player.machine.name+')!';
+		console.log('error!');
+		console.log(player);
 		$scope.openModalWithMessage('modals/error.html',error_message).closed.then(function(){
 		    $state.go('^.^');
 		})

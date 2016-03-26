@@ -12,9 +12,13 @@
       <uib-accordion-group ng-repeat='entry in rankings|orderBy:"rank"'>
 	<uib-accordion-heading>
 	  <table><td style='width:50px'>{{entry.rank}}</td><td style='width:100px'>{{entry.score}}</td><td>{{players[entry.player_id]['first_name']}} {{players[entry.player_id]['last_name']}}</td></table>
+	  
 	</uib-accordion-heading>
+	<div>
+	  <a ui-sref='results_home.players.results({playerId:entry.player_id})'>Player Page</a><br><br>
+	</div>
 	  <div ng-repeat='score in entry.scores'>
-	    #{{score.rank}} on {{machines[score.machine_id].name}}
+	    #{{score.rank}} on <a ui-sref='results_home.machines.results({machineId:score.machine_id,machineName:machines[score.machine_id].name,divisionId:division_id})'>{{machines[score.machine_id].name}}</a>
 	    <br>
 	  </div>	
       </uib-accordion-group>
