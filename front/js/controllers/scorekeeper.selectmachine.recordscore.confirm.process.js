@@ -1,5 +1,5 @@
 app.controller(
-    'scorekeeper_selectmachine_recordscore_process',
+    'scorekeeper_selectmachine_recordscore_confirm_process',
     function($scope, $http, $uibModal, $state, $location, Page, StatusModal, $filter) {
         $scope.player_id=$state.params.playerId;
 	$scope.machine_id=$state.params.machineId;

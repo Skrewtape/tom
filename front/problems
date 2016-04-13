@@ -1,4 +1,11 @@
 remove indiv player link in admin mode/desk mode(?)
+refactor
+---
+* need error handlers on everything?  or remove them now that I have general handlers?
+* need reusable code for getting/putting/posting
+* clean up and split routes.js into indiv files
+* refactor ui-router routes
+
 Bugs
 ---
 * on machine select, checks for "on this machine" come before "no more entrys" check
@@ -6,46 +13,79 @@ Bugs
 * division select in main needs to have blacked out more obvious
 * better formatting ( don't show when not appropriate ) on player page
 * oops - can't enter score on desktop
-Features
+
+Backlog
 ---
-* results display
-* need a player lookup page
-** void ( for scorekeeper and desk person)
-** change linked divison ( for desk )
-** edit entries ( for elizabeth )
-** show player info - done
-* recording score - change wording of buttons/flow to "review score/submit score"
-* need path so that after adding a player, they can buy a ticket and/or set player division
-* need "debug button" in loading screen, plus need to add "breadcrumbs" to statusmodal which can be dumped on debug button
-* need a path to buy multiple tickets in different divisions at once/quickly and show a "reciepet/summary" for people entering info into square
-* undo
-** undo info will be kept at angular level? flask level?  if at flask level, you can have an "undo" action?  yeah - this needs to be at flask level
-** added to machine
-** void ticket ( for scorekeeper - no for now)
-** purchasing ticket ( no for now )
-** linking division - NO, too complicated
-* options for ordering machines for scorekeepers
-* need to handle "entered wrong player" at the admin level (i.e. how do you handle it if a score was entered under the wrong player num?)
-** record and display timestamps in admin level
-* add new scores to entry in admin mode
-* player is asshole
+* add queueing system
+** player login
+* herb style
+* need undo player added to machine
+* player is asshole - 2 hours
+** display "asshole" list to admin - done
+* add "disable player" functionality
+** Need disable user link
+** need to throw exception on back when doing the following with a non-active user
+*** add score - done
+*** add entry - done
+*** ranking - done
+
 ** related "machine is out of service"
+
+* replace genericplayerselect with playerselect
+* need to handle "entered wrong player" at the admin level (i.e. how do you handle it if a score was entered under the wrong player num?)
+** record and display timestamps in admin level - 1 hour
+** handle entry "streaming" via ajax - 1 hour
+* add "remove" ticket from ticket purchase reciept
+* admin console needs a "delete entry" button - 1 hour 
+* add new scores to entry in admin mode - 1 hour
+* add user - 2 hour
+* options for ordering machines for scorekeepers - 1 hour
 * scorekeeper is incompetent - on the scorekeeper page, need a "the system says the player is paying x, but they are standing right in front of me" button
 ** need to associate scorekeeper with score
 ** need to notify scorekeeper when they fucked up?  needs a "check every x seconds for message for this scorekeeper" function
 * add refresh button on machine list?
-* admin console needs a "delete entry" button
-* cancel on loading screen after x amount of time and look at better timeouts for ajax (still needed?)
-* add user
+* need to associate scorekeeper with score - 1 hour
 * clean up all the crap I threw in for format score in score keeping with commas
 * clean up UI for player select (i.e. add input group for input, etc )
 
+
 Workpad
 ---
-* voiding from machinelist
-** playerslect with "get active entry" button
-** display entry with "void ticket" button
+herb style vs papa style
+* entry is limited to x number of scores
+* rank of scores is based on going through all machine scores
+* rank of entry is based on sum of all machines scores for that entry
+* in order to do herb style, player gets one entry and infinite machine scores on the entry
+* rank of scores is based on going through all machine scores
+* rank of entry is based on top score from X machines
 
+* current algoritm
+foreach division {
+ foreach machine in division {
+  list scores in order;
+  assign rank to machine;
+  calculate points for machine score and add to entry score;
+ }
+ foreach entry in division {
+  list entrys in order of score;
+  set rank of entry;  
+ }
+}
+
+*new algo
+NOTE : in memory entry tracking needs to keep track of highest score per machine
+foreach division {
+ foreach machine in division {
+  list scores in order;
+  assign rank to machine;
+  #calculate points for machine score and add to entry score;
+  check if entry has a higher score for this machine - if no, add to entry score 
+ }
+ foreach entry in division {
+  list entrys in order of score;
+  set rank of entry;  
+ }
+}
 
 
 

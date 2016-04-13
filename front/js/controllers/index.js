@@ -47,7 +47,7 @@ app.controller(
         };
         
         $scope.logout = function() {
-            StatusModal.loading();
+            StatusModal.loading('logout');
 	    $http.put('[APIHOST]/logout',{},{timeout:5000}).success(
 		function() {
                     StatusModal.loaded();
@@ -125,6 +125,78 @@ app.controller(
                 scope: $scope
             });            
         };
+
+	$scope.generic_http_req = function(url,method,scope_to_set,postput_data){
+	    if(method !='get'){
+		return $http[method](url,postput_data,{timeout:5000}).then(
+		    function(data) {                    
+			if(data.data[scope_to_set]==undefined){
+			    $scope[scope_to_set] = data.data;
+			} else {
+			    $scope[scope_to_set] = data.data[scope_to_set];
+			}
+		    }
+		);
+
+	    } else {
+		return $http[method](url,{timeout:5000}).then(
+		    function(data) {
+			if(data.data[scope_to_set]==undefined){
+			    $scope[scope_to_set] = data.data;
+			} else {
+			    $scope[scope_to_set] = data.data[scope_to_set];
+			}
+		    }
+		);
+	    }
+	}
+	
+	$scope.generic_http = function(url,scope_to_set,method,post_put_data,promise){
+	    if(promise == undefined){
+		// return $http[method](url,{timeout:5000}).success(
+		//     function(data) {                    
+		// 	$scope[scope_to_set] = data;
+		//     }
+		// );
+		return $scope.generic_http_req(url,method,scope_to_set,post_put_data);
+	    } else {
+		return promise.then(function(){
+		    $scope.generic_http_req(url,method,scope_to_set,post_put_data);
+		})
+	    }
+	}	
+	
+	$scope.get_players = function(promise){
+	    url_string = '[APIHOST]/player';
+	    return $scope.generic_http(url_string,'players','get',promise);	    
+	}
+
+	$scope.get_asshole_players = function(promise){
+	    url_string = '[APIHOST]/player/asshole';
+	    return $scope.generic_http(url_string,'asshole_players','get',promise);	    
+	}
+
+	$scope.get_player = function(player_id,promise){
+	    url_string = '[APIHOST]/player/'+player_id;
+	    return $scope.generic_http(url_string,'player','get',promise);
+        };
+
+	$scope.deactivate_player = function(player_id,promise){
+	    url_string = '[APIHOST]/player/'+player_id+'/deactivate';
+	    return $scope.generic_http(url_string,'player','put',promise);
+        };	
+	
+	$scope.clear_machine = function(player_id,machine_id,promise){
+	    url_string = '[APIHOST]/machine/'+machine_id+'/player/'+player_id+'/clear';
+	    return $scope.generic_http(url_string,'machine','put',promise);
+        };
+
+	$scope.get_all_params = function($local_scope){
+	    for(param in $state.params){
+		$local_scope[param] = $state.params[param];
+	    }
+	}
+	
     }
     //    ]
 );
@@ -144,9 +216,13 @@ require('./ticket.process.selecttickets.process.js');
 require('./scorekeeper.js');
 require('./scorekeeper.selectmachine.js');
 require('./scorekeeper.selectmachine.genericplayersearch_selected.process.js');
+require('./scorekeeper.selectmachine.voidplayersearch.process.js');
+require('./home.scorekeeper.selectmachine.recordscore.player_is_an_asshole.js');
+require('./home.scorekeeper.selectmachine.recordscore.player_is_an_asshole.process.js');
 require('./scorekeeper.selectmachine.recordscore.js');
+require('./scorekeeper.selectmachine.recordscore.confirm.js');
 require('./scorekeeper.selectmachine.recordscore.void.js');
-require('./scorekeeper.selectmachine.recordscore.process.js');
+require('./scorekeeper.selectmachine.recordscore.confirm.process.js');
 require('./scorekeeper.complete.js');
 require('./scorekeeper.complete.void.js');
 require('./scorekeeper.complete.process.js');
@@ -156,21 +232,13 @@ require('./results_home.divisions.results.js');
 require('./results_home.machines.js');
 require('./results_home.machines.results.js');
 require('./results_home.playerlist.results.js');
-// require('./ticketPlayerSelect.js');
-// require('./ticketTournamentSelect.js');
-// require('./ticketPurchase.js');
+require('./home.playeradd.purchase-multiple-tickets.js');
+require('./home.playeradd.purchase-multiple-tickets.process.js');
+require('./home.godassholesearch.js')
+require('./home.godplayersearch.deactivate_player.js')
+require('./home.godplayersearch.deactivate_player.process.js');
 
-// require('./scorekeeper_tournament.js');
-// require('./scorekeeper_division.js');
-// require('./scorekeeper_machine.js');
-// require('./scorekeeper_startgame.js');
-// require('./scorekeeper_score.js');
-// require('./scorekeeper_completegame.js');
-// require('./generic_playersearch.js');
-// require('./ticketPurchaseComplete.js');
-// require('./reports.js');
-// require('./reports_division.js');
-// require('./reports_machine.js');
-// require('./reports_players.js');
-// require('./reports_player.js');
-//require('./stats.js');
+require('./home.poop.js')
+require('./home.poop.shoop.js')
+require('./home.poop.shoop.loop.js')
+

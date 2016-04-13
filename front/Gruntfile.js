@@ -23,7 +23,8 @@ module.exports = function(grunt) {
                 replacements: [
                     {
                         from: '[APIHOST]',
-                        //to: 'http://localhost:8000',
+                        //to: 'http://localhost:8000'
+			//to: 'http://127.0.0.1:8000'
 			to: 'http://192.168.1.178:8000',
 			//to: 'http://192.168.1.36:8000',
 			//to: 'http://192.168.5.32:8000',
@@ -63,6 +64,19 @@ module.exports = function(grunt) {
             },
         },
         clean: ['dist'],
+	ngtemplates: {
+	    TOMApp: {
+		cwd: 'html/',
+		src: '**.html',
+		dest: 'dist/templates.js'
+	    }
+	},
+	concat: {
+	    main: {
+		src: [ 'dist/app.js','dist/templates.js' ],
+		dest: 'dist/app.js' 
+	    }
+	},
         prettify: {
             main: {
                 expand: true,
@@ -83,11 +97,16 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks('grunt-prettify');
-
+    grunt.loadNpmTasks('grunt-angular-templates');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    
     grunt.registerTask('build', [
+	'clean',
         'copy',
         'compass',
         'browserify',
+	'ngtemplates:TOMApp',
+	'concat'
     ]);
 
     grunt.registerTask('default', [

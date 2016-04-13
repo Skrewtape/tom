@@ -36,6 +36,7 @@ Principal(App)
 
 DB = SQLAlchemy(App)
 
+Void_permission = Permission(RoleNeed('void'))
 Admin_permission = Permission(RoleNeed('admin'))
 Desk_permission = Permission(RoleNeed('desk'))
 Scorekeeper_permission = Permission(RoleNeed('scorekeeper'))

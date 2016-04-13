@@ -6,10 +6,6 @@
   <div style='font-size:24px;padding-top:25px' ng-if='division_set == "null"' align=center >  Player division has not been changed</div>
   <div style='font-size:24px;padding-top:25px' ng-if='division_set == "false"' align=center >  Player division has NOT been set </div>
   <div>
-    <a
-       style='font-size:24px'
-       class='btn btn-info'
-       ui-sref='^.^'
-       >Proceed</a> 
+    <div ui-view="playeredit"></div>
   </div>
 </center>

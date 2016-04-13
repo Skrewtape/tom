@@ -13,6 +13,7 @@ from werkzeug.exceptions import Conflict
 def calculate_ranks():
     DB.engine.execute('UPDATE entry set refresh=true')    
     max_rank = 200
+                
     for division in Division.query.all():
         machines = division.machines    
         machine_rankings = {}
@@ -22,7 +23,8 @@ def calculate_ranks():
             entries_dict[entry.entry_id]=entry
             
         for machine in machines:
-            machine_scores=Score.query.filter_by(machine_id=machine.machine_id).join(Entry).filter_by(division_id=division.division_id,completed=True,voided=False).join(Division).join(Tournament).filter_by(active=True).order_by(Score.score.desc()).all()#.limit(max_rank)            
+            #machine_scores=Score.query.filter_by(machine_id=machine.machine_id).join(Entry).filter_by(division_id=division.division_id,completed=True,voided=False).join(Division).join(Tournament).filter_by(active=True).order_by(Score.score.desc()).all()#.limit(max_rank)            
+            machine_scores=Score.query.filter_by(machine_id=machine.machine_id).join(Entry).filter_by(division_id=division.division_id,completed=True,voided=False).join(Player).filter_by(active=True).join(Division).join(Tournament).filter_by(active=True).order_by(Score.score.desc()).all()#.limit(max_rank)            
             rank = 1
             for score in machine_scores:
                 score.rank = rank
@@ -41,6 +43,12 @@ def calculate_ranks():
             rank = rank + 1
             entries_dict[entry].rank = rank
 
+    for asshole in Player.query.filter_by(active=False).all():
+        for asshole_entry in asshole.entries:
+            asshole_entry.rank = 0
+            asshole_entry.score = 0
+            for score in asshole_entry.scores:
+                 score.rank = 0
     DB.session.commit()    
 
     return jsonify()
@@ -52,6 +60,23 @@ def get_players():
     return jsonify(players=[
         p.to_dict_simple() for p in
         Player.query.order_by(Player.first_name.asc(), Player.last_name.asc()).all()
+    ])
+
+@App.route('/player/asshole', methods=['GET'])
+def get_asshole_players():
+    """Get a list of players"""
+    return jsonify(asshole_players=[
+        p.to_dict_simple() for p in
+        Player.query.filter(Player.player_is_an_asshole_count > 0).order_by(Player.first_name.asc(), Player.last_name.asc()).all()
+    ])
+
+
+@App.route('/player/latest_players/<num_players>', methods=['GET'])
+def get_latest_players(num_players):
+    """Get a list of latest 10 players"""
+    return jsonify(players=[
+        p.to_dict_simple() for p in
+        Player.query.order_by(Player.player_id.desc()).limit(int(num_players))
     ])
 
 
@@ -176,11 +201,19 @@ def get_unstarted_player_entries(player):
     return jsonify(entries_grouped_dict)
 
 
+@Admin_permission.require(403)
+@App.route('/player/<player_id>/deactivate', methods=['PUT'])
+@fetch_entity(Player, 'player')
+def deactivate_player(player):
+    """Bad player! No cookie!"""
+    player.active=False
+    DB.session.commit()        
+    return jsonify(player.to_dict_simple())
+
 @App.route('/player/<player_id>/entry/active', methods=['GET'])
 @fetch_entity(Player, 'player')
 def get_active_player_entries(player):
     """Get a list of open(i.e. not completed, not voided) entries for a player"""
-    print "hi there"
     entries = Entry.query.filter_by(player_id=player.player_id,completed=False,voided=False,active=True).all()        
     entries_grouped_dict = {}
     for entry in entries:

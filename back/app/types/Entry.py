@@ -35,7 +35,7 @@ class Entry(DB.Model):
     )
 
     scores = DB.relationship("Score",
-                          lazy='joined'
+                             lazy='joined'
     )
     
     def to_dict_simple(self):

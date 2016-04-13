@@ -1,0 +1,22 @@
+  <div style='margin:auto;width:50%' class='arrow_box'>
+    Player List  
+  </div>
+  <div class='form-group input-group' style='margin-left:auto;margin-right:auto;margin-top:25px;margin-bottom:25px;width:50%'>        
+    <span style='font-size:20px' class="input-group-addon" id="player-search-name">Search For</span>
+    <input
+     type='text'
+       class='form-control'
+       aria-describedby='player-search-name'
+       name='filter'
+       ng-model='player_filter'
+     />
+  </div>
+  <div style='width:50%;margin:auto'>
+    <div class="list-group">
+      <a ng-repeat="player in asshole_players|filter:player_filter"
+	 ui-sref='home.playerlist.entryedit({playerId:player.player_id})'
+	 class="list-group-item">{{player.first_name}} {{player.last_name}} ({{player.player_is_an_asshole_count}})
+	<span class='badge'>{{player.player_id}}</span>
+      </a>
+    </div>
+

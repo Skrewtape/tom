@@ -1,0 +1,38 @@
+<div style='margin:auto;width:75%' class='arrow_box'>
+  Ticket Summary
+</div>
+<div ng-if='player_active_entry != undefined' ng-repeat='score in player_active_entry.scores' style='margin:auto;margin-top:25px;margin-bottom:25px;width:75%'>
+  <center>
+    <span style='font-size:32px;' class='badge'>{{machines[score.machine_id].name}}</span> : <span style='font-size:32px'>{{score.score}}</span>
+    </center>
+</div>
+<div ng-if='player_active_entry == undefined'>
+  <center>
+    No Active Entries for player {{player.first_name}} {{player.last_name}} (#{{player.player_id}})
+  </center>
+</div>
+  
+<div ng-if='player_active_entry != undefined'>
+<div  style='margin:auto;width:75%' class='arrow_box'>
+  Player Info
+</div>
+<center>
+  <table style='font-size:32px;padding-top:25px;'>
+    <tr>
+      <td align=right> Player : 
+      </td>
+      <td>{{player.first_name}} {{player.last_name}} (#{{player.player_id}})
+      </td>
+    </tr>
+  </table>
+</center>
+<div style='margin:auto;width:75%;margin-top:25px'>
+  <center>
+      <a
+	 class='btn btn-danger btn-lg'
+	 style='font-size:32px'
+	 ng-click='voidEntry(player_active_entry.entry_id,player)'
+	 >VOID TICKET</a>            
+  </center>
+</div>
+</div>

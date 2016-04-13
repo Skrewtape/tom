@@ -33,14 +33,20 @@ require('./controllers/index.js');
 require('./factories/index.js');
 // require('./directives/index.js');
 require('./routes.js');
-
+require('./routes_add_player.js');
+require('./routes_add_score.js');
+require('./routes_scorekeeping.js');
+require('./routes_scorekeeping_playerselect.js');
+require('./routes_godassholesearch.js');
+require('./routes_add_player.js');
+require('./routes_home.poop.js');
 // Set up CORS stuff
 app.config(function($httpProvider) {
     $httpProvider.defaults.useXDomain = true;
     $httpProvider.defaults.withCredentials = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
     $httpProvider.interceptors.push('myHttpInterceptor');
-    $httpProvider.defaults.timeout = 5000;
+    //$httpProvider.defaults.timeout = 5000;
 });
 
 app.directive('stringToNumber', function() {
@@ -68,8 +74,6 @@ app.run(function($rootScope, $uibModalStack) {
 			   $rootScope.displayBackButton = {};
 		       }
 		       $rootScope.displayBackButton.status = true;
-		       console.log('poop');
-		       console.log($rootScope.displayBackButton.status);
 		       $rootScope.state_name = toState.name;
 		   });
 });

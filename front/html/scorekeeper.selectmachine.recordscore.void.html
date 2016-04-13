@@ -2,9 +2,16 @@
   Entry Voided!
 </div>
 <center>
-<a
+  <a
+   ng-if='active_state("home.scorekeeper.selectmachine.recordscore.void")'  
    style='font-size:32px'
    class='btn btn-info'
    ui-sref='^.^'
-   >Proceed</a>
+     >Proceed</a>
+  <a
+   ng-if='active_state("home.scorekeeper.selectmachine.voidplayersearch.process.void")'  
+   style='font-size:32px'
+   class='btn btn-info'
+   ui-sref='^.^.^'
+   >Proceed</a>  
 </center>

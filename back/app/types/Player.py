@@ -15,10 +15,12 @@ class Player(DB.Model):
     # pylint: disable=no-init
     # pylint can't find SQLAlchemy's __init__() method for some reason
     player_id = DB.Column(DB.Integer,primary_key=True)
+    player_is_an_asshole_count = DB.Column(DB.Integer)
     first_name = DB.Column(DB.String(1000))
     last_name = DB.Column(DB.String(1000))
     search_name = DB.Column(DB.String(1000))
     email = DB.Column(DB.String(120))
+    active = DB.Column(DB.Boolean, default=True)
     @DB.validates('email')
     def validate_email_wrapper(self,key,address):
         return util.validate_email(key,address)

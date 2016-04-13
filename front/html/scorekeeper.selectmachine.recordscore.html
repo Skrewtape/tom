@@ -39,7 +39,7 @@
         <span class="input-group-addon" id="new_score">Score</span>-->
 <input
    focus-if   
-	   style='font-size:1px;width:1px;height:1px;position:absolute;top:-100px;left:-100px'
+	   style='font-size:24px;'
            type='number'
            class='form-control'
            aria-describedby='new_score'
@@ -50,14 +50,20 @@
   </div>  </td></tr><tr><td><a
 		      class='btn btn-info btn-lg'
 		         style='font-size:32px'
-		      ui-sref='.process({newScore:new_score,entryId:player_active_entry.entry_id})'
+		      ui-sref='.confirm({newScore:new_score,entryId:player_active_entry.entry_id})'
 		      ng-disabled='disabledScoreKeeping'
 		      >Add Score</a>
       <a
 	 class='btn btn-danger btn-lg'
 	 style='font-size:32px'
 	 ng-click='voidEntry(player_active_entry.entry_id,player)'
-	 >VOID TICKET</a>            
+	 >VOID TICKET</a>
+      <br>
+      <a
+	 class='btn btn-danger btn-lg'
+	 style='font-size:32px'
+	 ui-sref='.player_is_an_asshole'
+	 >Player Is An Asshole</a>      
     </td>
     </tr>
   </table>

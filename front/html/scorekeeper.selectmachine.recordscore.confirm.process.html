@@ -10,12 +10,12 @@
    style='font-size:32px'
    ng-if='entry.scores.length < entry.number_of_scores_per_entry'
    class='btn btn-info'
-   ui-sref='^.^'
+   ui-sref='^.^.^'
    >Proceed</a>
 <a
    style='font-size:32px'
    ng-if='entry.scores.length >= entry.number_of_scores_per_entry'
    class='btn btn-info'
-   ui-sref='^.^.complete({entryId:entry.entry_id,playerId:player.player_id})'
+   ui-sref='^.^.^.complete({entryId:entry.entry_id,playerId:player.player_id})'
    >Complete</a>
 </center>

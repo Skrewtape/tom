@@ -213,6 +213,7 @@
              ui-sref='home.playeradd'
              >Add Player</a>
         </li>
+	
         <li ng-if='Page.has_role("admin")' >
           <a
              class='navbarlink'
@@ -233,11 +234,29 @@
              >Scorekeeping</a>
         </li>
         <li>
-          <a
-	     ui-sref='home.playersearch'
+          <a ng-if='!Page.has_role("admin")'
+	     ui-sref='home.adminplayersearch'
              class='navbarlink'
              >Player</a>
-        </li>                  
+          <a ng-if='Page.has_role("admin")'
+	     ui-sref='home.godplayersearch'
+             class='navbarlink'
+             >Player</a>	  
+        </li>
+	<li ng-if='Page.has_role("admin")'>
+          <a 
+	     ui-sref='home.godassholesearch'
+             class='navbarlink'
+             >Assholes</a>	  	  
+	</li>
+        <li>
+          <a
+	     style='border-width:0'
+             class='navbarlink'
+             ui-sref='home.poop'
+             >testing
+	  </a>	  
+        </li>		
       </ul>
       <ul class="nav nav-pills" ng-if='state_name != "home"'>	
         <li class='nav-item' ng-if='!Page.logged_in_user().user_id'>
@@ -264,6 +283,7 @@
              >Back
 	  </a>
         </li>
+
 	<li style='margin-top:10px'>
 	  {{Page.title()}}
 	</li>

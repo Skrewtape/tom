@@ -5,29 +5,32 @@ app.controller(
         $scope.changed = true;
         $scope.selected_division_in_tournament={};
         $scope.player_id =$state.params.playerId;
-        
+
         $scope.get_tournaments = function(){
             $http.get('[APIHOST]/tournament',{timeout:5000}).success(
                 function(data) {                    
                     $scope.tournaments = data;
-                    console.log(data);
+		    StatusModal.loaded()
                 }
             );
-        };
-        
-        $http.get("[APIHOST]/player/"+$state.params.playerId,{timeout:5000}).success(
-            function(data){                                
-                $scope.player = data;
-                console.log(data);                
-                for(linked_div_index in $scope.player.linked_division){
-                    linked_div = $scope.player.linked_division[linked_div_index];
-                    $scope.selected_division_in_tournament[linked_div.tournament_id]=linked_div.division_id;
-                }
-                $scope.get_tournaments();
-            }
-        );
+        };        
+	
+	$scope.get_player = function(){
+            $http.get("[APIHOST]/player/"+$scope.player_id,{timeout:5000}).success(
+		function(data){                                
+                    $scope.player = data;
+                    for(linked_div_index in $scope.player.linked_division){
+			linked_div = $scope.player.linked_division[linked_div_index];
+			$scope.selected_division_in_tournament[linked_div.tournament_id]=linked_div.division_id;
+                    }		
+                    $scope.get_tournaments();
+		}
+            );	
+        }
 
-        
+	StatusModal.loading('playerlist.playeredit.js - get player');
+	$scope.get_player();
+	
         $scope.divisionIsDisabled = function(tourn_id, div_name){
             for(linked_div_index in $scope.player.linked_division){
                 linked_div = $scope.player.linked_division[linked_div_index];
@@ -39,6 +42,7 @@ app.controller(
             }
             return false;
         };
+
         $scope.onChange = function(tourn_id, div_name){
             $scope.changed = false;
             for(linked_div_index in $scope.player.linked_division){

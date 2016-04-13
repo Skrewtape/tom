@@ -8,6 +8,12 @@ Loading
           <div></div>
           <div></div>         
         </div>
+	<span ng-if='displayDebugMsg == true'>Debug Msg : {{debug_msg}}</span>
+	<br>
+	<br>
+	<a
+	   ng-click='displayDebugMsg=!displayDebugMsg'
+	   >Show Debug Msg</a>
 </div>
 <!--<div class="modal-footer">
 	<button type="button" class="btn btn-modal" ng-click="$close()" ng-disabled="!modal.message">OK</button>

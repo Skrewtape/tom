@@ -1,6 +1,7 @@
 app.factory('myHttpInterceptor', function($q,$injector) {
     return {
 	'responseError': function(rejection) {
+	    console.log('stand by for an error message');
 	    console.log(rejection);
 	    var StatusModal = $injector.get('StatusModal');
 	    StatusModal.loaded();

@@ -92,6 +92,7 @@ def get_user(user):
 @App.route('/login', methods=['PUT'])
 def login():
     """Check credentials and login a user"""
+    print "logging in"
     input_data = json.loads(request.data)
     user = User.query.filter_by(username=input_data['username']).first()
     if user and not user.verify_password(input_data['password']):

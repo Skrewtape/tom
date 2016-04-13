@@ -36,7 +36,7 @@ app.controller(
         };        
 
         
-        StatusModal.loading();                
+        StatusModal.loading('playerlist.playeredit.process.js - get player');	
         $http.get("[APIHOST]/player/"+$state.params.playerId,{timeout:5000}).success(
             function(data){                                                
                 $scope.player = data;

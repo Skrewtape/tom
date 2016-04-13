@@ -1,4 +1,54 @@
 /*global app*/
+player_link_process_config = {   url: '/process/tournamentId/:tournamentId/divisionId/:divisionId',
+				 views: {
+				     '@': {
+					 templateUrl: 'playerlist.playeredit.process.html',
+					 controller: 'playereditprocess',
+				     }
+				 },
+				 ncyBreadcrumb: {
+				     label: 'Edit Player',
+				 },
+			     };
+
+player_link_config = { url: '/edit/:playerId',
+		       views: {
+			   '@': {
+			       templateUrl: 'playerlist.playeredit.html',
+			       controller: 'playeredit',
+			   }
+		       },
+		       ncyBreadcrumb: {
+			   label: 'Edit Player',
+		       },
+		     };
+
+
+player_link_process_admin_config = {   url: '/process/tournamentId/:tournamentId/divisionId/:divisionId/admin',
+				 views: {
+				     '@': {
+					 templateUrl: 'playerlist.playeredit.process.html',
+					 controller: 'playereditprocess',
+				     }
+				 },
+				 ncyBreadcrumb: {
+				     label: 'Edit Player',
+				 },
+			     };
+
+player_link_admin_config = { url: '/edit/:playerId/admin',
+		       views: {
+			   '@': {
+			       templateUrl: 'playerlist.playeredit.html',
+			       controller: 'playeredit',
+			   }
+		       },
+		       ncyBreadcrumb: {
+			   label: 'Edit Player',
+		       },
+		     };
+
+
 app.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
 
@@ -28,31 +78,34 @@ app.config(function($stateProvider, $urlRouterProvider) {
             },
 	}
 	).state(
-        'home.playerlist.playeredit', {
-            url: '/edit/:playerId',
-            views: {
-                '@': {
-                    templateUrl: 'playerlist.playeredit.html',
-                    controller: 'playeredit',
-                }
-            },
-            ncyBreadcrumb: {
-                label: 'Edit Player',
-            },
-	}
+        'home.playerlist.playeredit',
+	    { url: '/edit/:playerId',
+	      views: {
+		  '@': {
+		      templateUrl: 'playerlist.playeredit.html',
+		      controller: 'playeredit',
+		  }
+	      },
+	      ncyBreadcrumb: {
+		  label: 'Edit Player',
+	      },
+	    }
 	).state(
-        'home.playerlist.playeredit.process', {
-            url: '/process/tournamentId/:tournamentId/divisionId/:divisionId',
-            views: {
-                '@': {
-                    templateUrl: 'playerlist.playeredit.process.html',
-                    controller: 'playereditprocess',
-                }
-            },
-            ncyBreadcrumb: {
-                label: 'Edit Player',
-            },
-	}
+        'home.playerlist.playeredit.process', 
+	    {   url: '/process/tournamentId/:tournamentId/divisionId/:divisionId',
+		views: {
+		    '@': {
+			templateUrl: 'playerlist.playeredit.process.html',
+			controller: 'playereditprocess',
+		    },
+		    'playeredit@home.playerlist.playeredit.process' :{
+			templateUrl: 'playeredit-purchase_multiple_tickets.html'
+		    }
+		},
+		ncyBreadcrumb: {
+		    label: 'Edit Player',
+		},
+	    }
 	).state(
         'home.playerlist.entryedit', {
             url: '/edit/:playerId/entry',
@@ -73,32 +126,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 '@': {
                     templateUrl: 'playeradd.html',
                     controller: 'playeradd',
-                }
-            },
-            ncyBreadcrumb: {
-                label: 'Add Player',
-            },
-	}
-	).state(
-        'home.playeradd.playeredit', {
-            url: '/playeredit/playerId/:playerId',
-            views: {
-                '@': {
-                    templateUrl: 'playerlist.playeredit.html',
-                    controller: 'playeredit',
-                }
-            },
-            ncyBreadcrumb: {
-                label: 'Add Player',
-            },
-	}
-	).state(
-        'home.playeradd.playeredit.process', {
-          url: '/process/tournamentId/:tournamentId/divisionId/:divisionId',
-            views: {
-                '@': {
-                    templateUrl: 'playerlist.playeredit.process.html',
-                    controller: 'playereditprocess',
                 }
             },
             ncyBreadcrumb: {
@@ -204,90 +231,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 label: 'Ticket Purchase',
             },
 	}).state(
-        'home.scorekeeper', {
-            url: 'scorekeeper',
-            views: {
-                '@': {
-                    templateUrl: 'scorekeeper.html',
-                    controller: 'scorekeeper',
-                }
-            },
-            ncyBreadcrumb: {
-                label: 'Ticket Purchase',
-            },
-	}).state(
-        'home.scorekeeper.selectmachine', {
-            url: '/selectmachine/division/:divisionId/tournament/:tournamendId',
-            views: {
-                '@': {
-                    templateUrl: 'scorekeeper.selectmachine.html',
-                    controller: 'scorekeeperselectmachine',
-                }
-            },
-            ncyBreadcrumb: {
-                label: 'Ticket Purchase',
-            },
-	}).state(
-        'home.scorekeeper.selectmachine.genericplayerselect_selected', {
-            url: '/playerselect/machineId/:machineId/pageTitle/:pageTitle',
-            views: {
-                '@': {
-                    templateUrl: 'genericplayerselect.html',
-                    controller: 'genericplayerselect',
-                }
-            },
-            ncyBreadcrumb: {
-                label: 'Ticket Purchase',
-            },
-	}).state(
-        'home.scorekeeper.selectmachine.genericplayerselect_selected.process', {
-            url: '/playerId/:playerId/pageTitle/:pageTitle',
-            views: {
-                '@': {
-                    templateUrl: 'scorekeeper.selectmachine.genericplayerselect_selected.process.html',
-                    controller: 'scorekeeper_selectmachine_genericplayerselect_selected_process',
-                }
-            },
-            ncyBreadcrumb: {
-                label: 'Ticket Purchase',
-            },
-	}).state(
-        'home.scorekeeper.selectmachine.recordscore', {
-            url: '/recordscore/:machineId/playerId/:playerId',
-            views: {
-                '@': {
-                    templateUrl: 'scorekeeper.selectmachine.recordscore.html',
-                    controller: 'scorekeeper_selectmachine_recordscore',
-                }
-            },
-            ncyBreadcrumb: {
-                label: 'Ticket Purchase',
-            },
-	}).state(
-        'home.scorekeeper.selectmachine.recordscore.void', {
-            url: '/void/entryId/:entryId',
-            views: {
-                '@': {
-                    templateUrl: 'scorekeeper.selectmachine.recordscore.void.html',
-                    controller: 'scorekeeper_selectmachine_recordscore_void',
-                }
-            },
-            ncyBreadcrumb: {
-                label: 'Ticket Purchase',
-            },
-	}).state(
-        'home.scorekeeper.selectmachine.recordscore.process', {
-            url: '/entryId/:entryId/newScore/:newScore',
-            views: {
-                '@': {
-                    templateUrl: 'scorekeeper.selectmachine.recordscore.process.html',
-                    controller: 'scorekeeper_selectmachine_recordscore_process',
-                }
-            },
-            ncyBreadcrumb: {
-                label: 'Ticket Purchase',
-            },
-	}).state(
         'home.scorekeeper.selectmachine.complete', {
             url: '/playerId/:playerId/entryId/:entryId',
             views: {
@@ -341,7 +284,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
             views: {
                 '@': {
                     templateUrl: 'results_home.divisions.html',
-                    controller: 'results_home_divisions',
+                    controller: 'results_home.divisions',
                 }
             },
             ncyBreadcrumb: {
@@ -396,6 +339,92 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 label: 'Ticket Purchase',
             },
 	}).state(
+            'home.godplayersearch', {
+            url: 'godplayersearch',
+            views: {
+                '@': {
+                    templateUrl: 'playerselect.html',
+                    controller: 'genericplayerselect',
+                },
+		'player_info@home.godplayersearch': {
+                    templateUrl: 'playerselect-player_info.html'
+                },
+		'link_player@home.godplayersearch': {
+                    templateUrl: 'playerselect-link_player.html'
+                },
+		'edit_entries@home.godplayersearch': {
+                    templateUrl: 'playerselect-edit_entry.html'
+                },
+		'deactivate_player@home.godplayersearch': {
+                    templateUrl: 'playerselect-deactivate_player.html'
+                }
+            },
+            ncyBreadcrumb: {
+                label: 'Ticket Purchase',
+            },
+	}).state(
+            'home.godplayersearch.deactivate_player', {
+            url: '/deactivate_player/playerId/:playerId',
+            views: {
+                '@': {
+                    templateUrl: 'home.godplayersearch.deactivate_player.html',
+                    controller: 'home.godplayersearch.deactivate_player',
+                }
+            }
+	}).state(
+            'home.godplayersearch.deactivate_player.process', {
+            url: '/process',
+            views: {
+                '@': {
+                    templateUrl: 'home.godplayersearch.deactivate_player.process.html',
+                    controller: 'home.godplayersearch.deactivate_player.process',
+                }
+            }
+	}).state(
+            'home.adminplayersearch', {
+            url: 'adminplayersearch',
+            views: {
+                '@': {
+                    templateUrl: 'playerselect.html',
+                    controller: 'genericplayerselect',
+                },
+		'player_info@home.adminplayersearch': {
+                    templateUrl: 'playerselect-player_info.html'
+                },
+		'link_player@home.adminplayersearch': {
+                    templateUrl: 'playerselect-link_player.html'
+                }
+            },
+            ncyBreadcrumb: {
+                label: 'Ticket Purchase',
+            },
+	}).state(
+        'home.adminplayersearch.playeredit',
+	    { url: '/edit/:playerId',
+	      views: {
+		  '@': {
+		      templateUrl: 'playerlist.playeredit.html',
+		      controller: 'playeredit',
+		  }
+	      },
+	      ncyBreadcrumb: {
+		  label: 'Edit Player',
+	      },
+	    }
+	).state(
+        'home.adminplayersearch.playeredit.process', 
+	    {   url: '/process/tournamentId/:tournamentId/divisionId/:divisionId/admin',
+		views: {
+		    '@': {
+			templateUrl: 'playerlist.playeredit.process.html',
+			controller: 'playereditprocess',
+		    }
+		},
+		ncyBreadcrumb: {
+		    label: 'Edit Player',
+		},
+	    }
+	).state(
             'home.playersearch', {
             url: 'playersearch',
             views: {
@@ -405,6 +434,45 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 },
 		'player_info@home.playersearch': {
                     templateUrl: 'playerselect-player_info.html'
+                }
+            },
+            ncyBreadcrumb: {
+                label: 'Ticket Purchase',
+            },
+	}).state(
+            'home.scorekeeper.selectmachine.voidplayersearch', {
+            url: '/voidplayersearch',
+            views: {
+                '@': {
+                    templateUrl: 'playerselect.html',
+                    controller: 'genericplayerselect',
+                },
+		'void_ticket@home.scorekeeper.selectmachine.voidplayersearch': {
+                    templateUrl: 'playerselect-void_ticket.html'
+                }
+            },
+            ncyBreadcrumb: {
+                label: 'Ticket Purchase',
+            },
+	}).state(
+            'home.scorekeeper.selectmachine.voidplayersearch.process', {
+            url: '/voidplayersearch_process/playerId/:playerId',
+            views: {
+                '@': {
+                    templateUrl: 'home_scorekeeper_selectmachine_voidplayersearch_process.html',
+                    controller: 'home_scorekeeper_selectmachine_voidplayersearch_process',
+                }
+            },
+            ncyBreadcrumb: {
+                label: 'Ticket Purchase',
+            },
+	}).state(
+            'home.scorekeeper.selectmachine.voidplayersearch.process.void', {
+            url: '/void/entryId/:entryId',
+            views: {
+                '@': {
+                    templateUrl: 'scorekeeper.selectmachine.recordscore.void.html',
+                    controller: 'scorekeeper_selectmachine_recordscore_void',
                 }
             },
             ncyBreadcrumb: {
@@ -484,3 +552,4 @@ app.config(function($stateProvider, $urlRouterProvider) {
             },
 	});
 });
+

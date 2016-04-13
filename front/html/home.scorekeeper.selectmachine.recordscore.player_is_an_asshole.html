@@ -1,0 +1,12 @@
+<div style='margin:auto;width:75%' class='arrow_box'>
+  {{player_id}} is not the current player!
+</div>
+<center>
+  <span>{{player.first_name}} {{player.last_name}} (#{{player.player_id}}) is not the player currently on {{player.machine.name}}.</span>
+  <br>
+  <a
+     class='btn btn-danger btn-lg'
+     style='font-size:32px'
+     ui-sref='.process'
+     >Remove Player {{player.player_id}} from {{player.machine.name}}</a>      
+</center>

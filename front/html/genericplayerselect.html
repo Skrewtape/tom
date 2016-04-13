@@ -1,5 +1,6 @@
 <div style='margin:auto;width:75%' class='arrow_box'>
-  Player Select
+  Player Select<br>
+  <div ui-view='genericplayerselect_message'></div>
 </div>
 <div class='papa' style='width:100%;margin:auto;margin-top:55px;'>
   <center>   
@@ -22,5 +23,9 @@
   </center>
 </div>
 <script type="text/ng-template" id="myPopoverTemplate.html">
-  <div style='font-size:32px' >{{keypad_player_name}}</div>
+  <div style='font-size:32px' ><center>{{keypad_player_name}}
+    <br>
+    <span style='font-size:15px' ng-if='player_is_asshole != false'>{{player_is_asshole}}</span>
+    </center>
+  </div>
 </script>

@@ -41,6 +41,7 @@ app.controller(
                 });
         };
         $scope.create_tournament = function(){            
+	    console.log('here we go');
             StatusModal.loading();
             $http.post('[APIHOST]/tournament',{tournament_name: $scope.tournament.tournament_name,single_division: $scope.tournament.single_division},{timeout:5000}).success(
                 function(data){

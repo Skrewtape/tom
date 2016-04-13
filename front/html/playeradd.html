@@ -50,14 +50,19 @@
     </thead>
     <tbody>
       <tr ng-repeat='player in players'>
-        <td>          
+        <td>
+	  {{player.first_name}} {{player.last_name}}
+          <span style='float:right' class="badge"> {{player.player_id}} </span>
+	  <br>	
           <a
              class='btn btn-info'
              ui-sref='.playeredit({playerId:player.player_id})' 
-             ><span
-                 class='glyphicon glyphicon-pencil'
-                 ></span><span style='padding-left:10px'>{{player.first_name}} {{player.last_name}}</span></a>
-          <span style='float:right' class="badge"> {{player.player_id}} </span>
+             >Link Player To Division</a>
+	  <br>
+	  <a
+             class='btn btn-info'
+             ui-sref='home.playeradd.purchase_multiple_tickets({playerId:player.player_id})'
+             >Add Tickets</a>
         </td>
       </tr>
     </tbody>

@@ -10,9 +10,14 @@
     <div ui-view="player_info"></div>
     <div ui-view="link_player"></div>
     <div ui-view="void_ticket"></div>
-    <div ui-view="edit_entries"></div>    
+    <div ui-view="edit_entries"></div>
+    <div ui-view="deactivate_player"></div>    
   </center>
 </div>
 <script type="text/ng-template" id="myPopoverTemplate.html">
-  <div style='font-size:32px' >{{keypad_player_name}}</div>
+  <div style='font-size:32px' ><center>{{keypad_player_name}}
+    <br>
+    <span style='font-size:15px' ng-if='player_is_asshole != false'>{{player_is_asshole}}</span>
+    </center>
+  </div>
 </script>

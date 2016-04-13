@@ -1,0 +1,95 @@
+* home
+home
+
+* Add player
+home.add_user
+home.add_user.process
+home.add_user.process.buy_multiple_tickets
+home.add_user.process.buy_multiple_tickets.process
+home.add_user.process.link_division
+home.add_user.process.link_division.process
+
+* Add/remove/activate/deactivate tournament/divisions/machines
+home.tournaments
+home.tournaments.add_tournament
+home.tournaments.add_tournament.process
+home.tournaments.edit_tournament
+home.tournaments.divisions
+home.tournaments.divisions.add_division
+home.tournaments.divisions.add_division.process
+home.tournaments.divisions.edit_division
+
+* Add user
+home.add_user
+home.add_user.process
+
+* Link player to division
+home.select_player.info.link_division
+home.select_player.info.link_division.process
+
+* buy ticket for player
+home.select_player.buy_ticket
+home.select_player.buy_ticket.process
+home.select_player.buy_ticket.link_division
+home.select_player.buy_ticket.link_division.process
+
+* lookup player
+home.select_player
+home.select_player.info
+
+* deactivate player
+home.select_player.info.deactivate_player
+home.select_player.info.deactivate_player.confirm
+home.select_player.info.deactivate_player.confirm.process
+
+* edit player entries
+home.select_player.info.player_entries
+
+* view all entries for a given time period
+home.entry_list
+
+* see list of assholes
+home.asshole_list
+home.asshole_list.deactivate_player
+home.asshole_list.deactivate_player.confirm
+home.asshole_list.deactivate_player.confirm.process
+
+* void ticket
+home.select_player.void
+
+* record score for player
+home.scorekeeping
+home.scorekeeping.select_machine
+home.scorekeeping.select_machine.record_score
+home.scorekeeping.select_machine.record_score.confirm
+home.scorekeeping.select_machine.record_score.confirm.process
+home.scorekeeping.select_machine.void
+home.scorekeeping.select_machine.record_score.void
+
+
+* add player to machine
+home.scorekeeping.select_machine
+home.scorekeeping.select_machine.add_player_to_machine
+home.scorekeeping.select_machine.add_player_to_machine.process
+home.scorekeeping.select_machine.add_player_to_machine.process.undo
+home.scorekeeping.select_machine.add_player_to_machine.process.undo.process
+
+* complete ticket
+home.scorekeeping.select_machine.record_score.confirm.process.complete
+home.scorekeeping.select_machine.record_score.confirm.process.complete.process
+home.scorekeeping.select_machine.record_score.confirm.process.complete.void
+
+* mark machine as "out of order"
+home.scorekeeping.select_machine.machine_out_of_order
+home.scorekeeping.select_machine.machine_out_of_order.select_machine
+home.scorekeeping.select_machine.machine_out_of_order.select_machine.confirm
+home.scorekeeping.select_machine.machine_out_of_order.select_machine.confirm.process
+
+* mark player as asshole
+home.scorekeeping.select_machine.record_score.player_is_asshole
+home.scorekeeping.select_machine.record_score.player_is_asshole.process
+home.scorekeeping.select_machine.record_score.confirm.player_is_asshole
+home.scorekeeping.select_machine.record_score.confirm.player_is_asshole.process
+
+* get division rankings
+* get machine rankings

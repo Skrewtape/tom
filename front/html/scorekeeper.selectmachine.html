@@ -11,7 +11,7 @@
 	 ng-if='machine.player == undefined'
 	 style='font-size:32px;width:100%'
      class='btn btn-info'
-     ui-sref='home.scorekeeper.selectmachine.genericplayerselect_selected({machineId:machine.machine_id,pageTitle:"Scorekeeping"})'
+     ui-sref='home.scorekeeper.selectmachine.genericplayerselect_selected({machineName:machine.name,machineId:machine.machine_id,pageTitle:"Scorekeeping"})'
        >{{machine.name}}</a>
       <!-- link for machine in use -->
       <a
@@ -22,6 +22,11 @@
 	 >{{machine.name}}</a>
       <br>
     </span>
+    <a
+   style='font-size:32px'	 
+   class='btn btn-danger'
+   ui-sref='home.scorekeeper.selectmachine.voidplayersearch({pageTitle:"Void Player"})'
+   >Void Ticket</a>
+
   </center>
 </div>
-

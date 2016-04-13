@@ -18,7 +18,7 @@ from random import randint
 
 ROLE_MAP = {}
 
-ALL_ROLES = ['admin', 'scorekeeper', 'desk', 'pooper']
+ALL_ROLES = ['admin', 'scorekeeper', 'desk', 'pooper','void']
 machines = []
 tournaments = []
 divisions = []
@@ -38,9 +38,9 @@ def init_users():
     for info in [
             ['avi', 'finkel.org', ALL_ROLES],
             ['elizabeth', 'papa.org', ALL_ROLES],
-            ['admin', 'papa.org', ['admin']],
-            ['scorekeeper', 'papa.org', ['scorekeeper','pooper']],
-            ['desk', 'papa.org', ['desk','pooper']],
+            ['admin', 'papa.org', ['admin','void']],
+            ['scorekeeper', 'papa.org', ['scorekeeper','pooper','void']],
+            ['desk', 'papa.org', ['desk','pooper','void']],
     ]:
         user = app.types.User(
             username=info[0],
@@ -168,7 +168,7 @@ def init_players(division):
     #    player.delete()
     #    DB.session.commit()
         
-    for play_num in range(0,200):
+    for play_num in range(0,100):
         first_name = first_names[random.randrange(0,len(first_names))]
         last_name = first_names[random.randrange(0,len(first_names))]
         player = create_player(first_name,last_name)

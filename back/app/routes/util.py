@@ -27,6 +27,8 @@ from flask_restless.helpers import to_dict
 #     return player_dict
 
 def calculate_score_points_from_rank(rank):
+    if rank == 0:
+        return 0
     if rank == 1:
         return 100
     if rank == 2:

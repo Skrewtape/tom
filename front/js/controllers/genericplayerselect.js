@@ -1,6 +1,6 @@
 app.controller(
     'genericplayerselect',
-    function($scope, $http, $timeout, $state, $location, $filter, Page) {        
+    function($scope, $http, $timeout, $state, $location, $filter, Page, StatusModal) {        
         $scope.page_title =$state.params.pageTitle;
 	$scope.change_nav_title('Player');
 	$scope.focusInput={};
@@ -9,21 +9,22 @@ app.controller(
 	$scope.popovertemplate='myPopoverTemplate.html';
 	$scope.popoverIsOpen = false;
 	$scope.submitPlayerDisabled=true;
+	$scope.machine_name = $state.params.machineName;
 	//possible errors : 500
-	console.log('here comes the goods');
+	StatusModal.loading('genericplayerselect.js - get players')
         $http.get('[APIHOST]/player',{timeout:5000}).success(
             function(data) {
-                $scope.players = data.players;                
+                $scope.players = data.players;
+		StatusModal.loaded();
             }
         );
         $scope.player = {player_id:''};
 	$scope.fuckIos = function(){
 	    var input = document.querySelector("#poop");
-	    console.log(input);
 	    input.focus();
-	    console.log('guck');
 	}
 	$scope.onChange = function(){
+	    $scope.player_is_asshole=false;
             $scope.selected_players = $filter('filter')($scope.players,$scope.player.player_id,true)
 	    //$scope.selected_players = $filter('orderBy')($scope.selected_players_list,'player_id');
 	    if($scope.player.player_id == "" || $scope.selected_players.length==0){
@@ -40,6 +41,9 @@ app.controller(
                 $scope.popoverIsOpen = true;
                 $scope.select_player = $scope.selected_players[0];
 		$scope.submitPlayerDisabled=false;
+		if($scope.selected_players[0].player_is_an_asshole_count > 2){
+		    $scope.player_is_asshole="(Player is Jagoff)";
+		}
             } 
 	}
 //	$scope.fuckIos();
