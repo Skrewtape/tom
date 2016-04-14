@@ -4,9 +4,8 @@ module.exports = function(grunt) {
         copy: {
             main: {
                 files : [
-                    { expand: true, cwd: 'html/', src: '**', dest: 'dist/' },
                     { expand: true, cwd: 'img/', src: '**', dest: 'dist/img/' },
-                    { expand: true, cwd: 'node_modules/', src: '**/*.css', dest: 'dist/styles/' },
+                    { expand: true, cwd: 'src/app/', src: 'index.html', dest: 'dist/' },		    
                     {
                         expand: true,
                         cwd: 'node_modules/bootstrap-sass/assets/fonts/bootstrap/',
@@ -34,8 +33,8 @@ module.exports = function(grunt) {
             },
         },
         watch: {
-            main: {
-                files: ['html/**/*', 'js/**/*', 'styles/**/*'],
+            main: {		
+                files: ['src/**/*',  'styles/**/*'],
                 tasks: ['default'],
                 options: {
                     livereload: true,
@@ -59,21 +58,21 @@ module.exports = function(grunt) {
                     },
                     transform: ['browserify-ngannotate'],
                 },
-                src: 'js/app.js',
+                src: 'src/app/app.js',
                 dest: 'dist/app.js',
             },
         },
         clean: ['dist'],
 	ngtemplates: {
 	    TOMApp: {
-		cwd: 'html/',
-		src: '**.html',
+		cwd: 'src/app',
+		src: '**/**.html',
 		dest: 'dist/templates.js'
 	    }
 	},
 	concat: {
 	    main: {
-		src: [ 'dist/app.js','dist/templates.js' ],
+		src: [ 'dist/app.js','src/app/login.js','dist/templates.js' ],
 		dest: 'dist/app.js' 
 	    }
 	},
