@@ -58,11 +58,6 @@ app.controller(
 	    )
 	};
 
-        $scope.login = function() {
-            $scope.openModalWithController('login.html','LoginController');
-	    
-        };
-        
         $http.get('[APIHOST]/user/current',{timeout:5000}).success(function (data) {
             Page.set_logged_in_user(data);			
         });
