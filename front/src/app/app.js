@@ -1,6 +1,7 @@
 /*global angular:true, app:true, _:true*/
 //angular = require('./lib/angular-index.js');
 
+//poop
 _ = require('underscore');
 angular = require('angular');
 require('jquery-browserify');
@@ -19,18 +20,39 @@ app = angular.module(
 	'TOMApp',
 	[
 	    'ui.bootstrap',
-	    'ui.router'
+	    'ui.router',
+	    'tom_services'
 	]
 );
 
 app.controller(
-	'IndexController',    
+    'LoginController',
+    function($scope, $http, $uibModal, $location, $state, Page, StatusModal) {
+        $scope.data = {};
+        $scope.login = function() {
+	    StatusModal.loading();            
+            $http.put('[APIHOST]/login', $scope.data,{timeout:5000}).success(
+                function(put_data) {                                        
+                    $http.get('[APIHOST]/user/current',{timeout:5000}).success(function (data) {
+                        console.log('logged in');
+                        StatusModal.loaded();
+                        Page.set_logged_in_user(data);			
+			$state.go('home');
+                    })
+                }
+            )
+        };
+    }
+);
+
+app.controller(
+    'IndexController',    
     function($scope, $location, $http, 
-             $state, $injector, $uibModal) {
+             $state, $injector, $uibModal, Page) {
+	$scope.Page = Page;
         $scope.logout = function() {
 	    $http.put('[APIHOST]/logout',{},{timeout:5000}).success(
 		function() {
-		    //FIXME : uh, should this be a blank object?
 		    $location.path('/');
 		}
 	    )
@@ -42,28 +64,8 @@ app.controller(
         };
         
         $http.get('[APIHOST]/user/current',{timeout:5000}).success(function (data) {
-	    
+            Page.set_logged_in_user(data);			
         });
-
-        $scope.openModalWithController = function(templateUrl, controller){
-            return $uibModal.open({
-                templateUrl: templateUrl,
-		controller: controller,		
-                backdrop: 'static',
-                keyboard: false,
-                scope: $scope                
-            });            
-	};
-
-        $scope.openModalWithMessage = function(templateUrl,error_message){
-	    $scope.error_message = error_message;
-            return $uibModal.open({
-                templateUrl: templateUrl,
-                backdrop: 'static',
-                keyboard: false,
-                scope: $scope                
-            });            
-        };        	
     }
 );
 
@@ -81,11 +83,27 @@ app.controller(
 // require('./routes_home.poop.js');
 
 // Set up CORS stuff
+
+app.factory('myHttpInterceptor', function($q,$injector) {
+    return {
+	'responseError': function(rejection) {
+	    var StatusModal = $injector.get('StatusModal');
+	    StatusModal.loaded();
+	    if(rejection.status == -1){
+		rejection.data={};
+		rejection.data.message="HTTP Timeout while getting "+rejection.config.url
+	    }
+	    StatusModal.http_error(rejection.data.message);
+	    return $q.reject(rejection);
+	}
+    };
+});
+
 app.config(function($httpProvider) {
     $httpProvider.defaults.useXDomain = true;
     $httpProvider.defaults.withCredentials = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    //$httpProvider.interceptors.push('myHttpInterceptor');
+    $httpProvider.interceptors.push('myHttpInterceptor');
 });
 
 // app.directive('stringToNumber', function() {
@@ -116,4 +134,5 @@ app.run(function($rootScope, $uibModalStack) {
     // 		       $rootScope.state_name = toState.name;
     // 		   });
 });
+
 

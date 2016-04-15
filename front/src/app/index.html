@@ -183,6 +183,7 @@
                 </style>
 	</head>
   <body>
-    <div ui-view='navbar_home'></div>
+    <div ng-if='"home"|isState' ui-view='navbar_home'></div>
+    <div ng-if='("home"|isState) == false' ui-view='navbar_home'></div>
     <div ui-view></div>
  </html>

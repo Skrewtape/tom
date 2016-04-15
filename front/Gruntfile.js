@@ -65,14 +65,14 @@ module.exports = function(grunt) {
         clean: ['dist'],
 	ngtemplates: {
 	    TOMApp: {
-		cwd: 'src/app',
+		cwd: 'src',
 		src: '**/**.html',
-		dest: 'dist/templates.js'
+		dest: 'dist/app_html_templates.js'
 	    }
 	},
 	concat: {
 	    main: {
-		src: [ 'dist/app.js','src/app/login.js','dist/templates.js' ],
+		src: [ 'dist/app.js','src/services/**.js','src/app/routes.js','dist/app_html_templates.js','dist/service_html_templates.js','src/app/**/*.js','!src/app/app.js' ],
 		dest: 'dist/app.js' 
 	    }
 	},
