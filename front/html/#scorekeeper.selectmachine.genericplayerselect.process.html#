@@ -1,3 +1,0 @@
-<div style='margin:auto;width:75%' class='arrow_box'>
-<span style='font-size:32px'>  {{player.first_name}} {{player.last_name}} (#{{player.player_id}}) is now playing {{machine.name}} poop</span>
-</div>

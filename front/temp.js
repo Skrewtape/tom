@@ -1,1 +1,0 @@
-[{"name":"cpus","type":"SCALAR","scalar":{"value":10},"role":"stttts"},{"name":"mem","type":"SCALAR","scalar":{"value":60000},"role":"stttts"},{"name":"disk","type":"SCALAR","scalar":{"value":80000},"role":"stttts"},{"name":"ports","type":"RANGES","role":"stttts","ranges":{"range":[	{"begin":5000,"end":7000}]}}]
