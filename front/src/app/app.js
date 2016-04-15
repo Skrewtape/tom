@@ -48,12 +48,15 @@ app.controller(
 app.controller(
     'IndexController',    
     function($scope, $location, $http, 
-             $state, $injector, $uibModal, Page) {
+             $state, $injector, $uibModal, Page, StatusModal) {
 	$scope.Page = Page;
         $scope.logout = function() {
+	    StatusModal.loading();            	    
 	    $http.put('[APIHOST]/logout',{},{timeout:5000}).success(
-		function() {
-		    $location.path('/');
+		function() {		    
+		    Page.set_logged_in_user({});
+		    $state.go('home');
+		    StatusModal.loaded();            
 		}
 	    )
 	};
