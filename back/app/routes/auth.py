@@ -100,7 +100,9 @@ def login():
     if user is not None:
         login_user(user)
         identity_changed.send(current_app._get_current_object(), identity=Identity(user.user_id))
-        return '', 200
+        user_dict = user.to_dict_simple()
+        user_dict['roles'] = [r.name for r in user.roles]
+        return jsonify(user_dict)
     else:
         raise Unauthorized('Bad username or password')
 

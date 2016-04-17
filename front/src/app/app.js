@@ -14,6 +14,7 @@ require('angular-ui-router');
 require('bootstrap-sass/assets/javascripts/bootstrap');
 //require('ngKeypad');
 require('angular-fcsa-number');
+require('angular-resource');
 //require('ng-focus-if');
 //require('mobile-angular-ui');
 app = angular.module(
@@ -28,20 +29,17 @@ app = angular.module(
 
 app.controller(
     'LoginController',
-    function($scope, $http, $uibModal, $location, $state, Page, StatusModal) {
+    function($scope, $http, $uibModal, $location, $state, Page, StatusModal,TimeoutResources) {
 	$scope.Page.set_title('Login');
         $scope.login = function() {
 	    StatusModal.loading();            
-            $http.put('[APIHOST]/login', $scope.data,{timeout:5000}).success(
-                function(put_data) {                                        
-                    $http.get('[APIHOST]/user/current',{timeout:5000}).success(function (data) {
-                        console.log('logged in');
-                        StatusModal.loaded();
-                        Page.set_logged_in_user(data);			
-			$state.go('home');
-                    })
-                }
-            )
+	    $scope.login = TimeoutResources.loginResource().login;
+	    $scope.player = $scope.login($scope.data);
+	    $scope.player.$promise.then(function(data){
+		Page.set_logged_in_user($scope.player);
+		StatusModal.loaded();
+ 		$state.go('home');		
+	    });
         };
     }
 );
