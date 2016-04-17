@@ -1,0 +1,17 @@
+{
+  "name": "tom-ui",
+  "description": "",
+  "main": "index.js",
+  "license": "All Rights Reserved",
+  "homepage": "https://github.com/Skrewtape/tom",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "mobile-angular-ui": "^1.2.1"
+  }
+}

@@ -11,6 +11,9 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 },
 		'navbar_home': {
 		    templateUrl: 'app/navbar_home.html',
+		},
+		'navbar': {
+		    templateUrl: 'app/navbar.html',
 		}
             }
 	}).state(

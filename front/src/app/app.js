@@ -15,20 +15,21 @@ require('bootstrap-sass/assets/javascripts/bootstrap');
 //require('ngKeypad');
 require('angular-fcsa-number');
 //require('ng-focus-if');
-
+//require('mobile-angular-ui');
 app = angular.module(
 	'TOMApp',
 	[
 	    'ui.bootstrap',
 	    'ui.router',
-	    'tom_services'
+	    'tom_services',
+	    'mobile-angular-ui'
 	]
 );
 
 app.controller(
     'LoginController',
     function($scope, $http, $uibModal, $location, $state, Page, StatusModal) {
-        $scope.data = {};
+	$scope.Page.set_title('Login');
         $scope.login = function() {
 	    StatusModal.loading();            
             $http.put('[APIHOST]/login', $scope.data,{timeout:5000}).success(
@@ -119,8 +120,12 @@ app.config(function($httpProvider) {
 // });
 // Close all modals when changing routes
 app.run(function($rootScope, $uibModalStack) {
-    $rootScope.$on('$routeChangeSuccess', function() {
-        $uibModalStack.dismissAll();	
+//    $rootScope.$on('$routeChangeSuccess', function() {
+//        $uibModalStack.dismissAll();	
+//    });
+    $rootScope.$on('$stateChangeStart', function(){
+	$rootScope.$broadcast('$routeChangeSuccess');
+//	$rootScope.broadcast('$routeChangeStart');
     });
 
     // $rootScope.$on('$stateChangeStart',

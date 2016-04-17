@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+        pkg: [grunt.file.readJSON('package.json')],
         copy: {
             main: {
                 files : [
@@ -12,6 +12,12 @@ module.exports = function(grunt) {
                         src: '*',
                         dest: 'dist/bootstrap/'
                     },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/mobile-angular-ui/dist/fonts/',
+                        src: '*',
+                        dest: 'dist/fonts'
+                    }		    
                 ]
             },
         },
@@ -72,7 +78,7 @@ module.exports = function(grunt) {
 	},
 	concat: {
 	    main: {
-		src: [ 'dist/app.js','src/services/**.js','src/app/routes.js','dist/app_html_templates.js','dist/service_html_templates.js','src/app/**/*.js','!src/app/app.js' ],
+		src: [ 'dist/app.js','dist/_bower.js','src/services/**.js','src/app/routes.js','dist/app_html_templates.js','dist/service_html_templates.js','src/app/**/*.js','!src/app/app.js' ],
 		dest: 'dist/app.js' 
 	    }
 	},
@@ -87,6 +93,17 @@ module.exports = function(grunt) {
                 },
             },
         },
+	bower_concat: {
+	    all: {
+		dest: {
+		    'js': 'dist/_bower.js',
+		    'css': 'dist/_bower.css'
+		},
+		bowerOptions: {
+		    relative: false
+		}
+	    }
+	}
     });
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -98,11 +115,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-prettify');
     grunt.loadNpmTasks('grunt-angular-templates');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    
+    grunt.loadNpmTasks('grunt-bower-concat');    
     grunt.registerTask('build', [
 	'clean',
         'copy',
         'compass',
+	'bower_concat',
         'browserify',
 	'ngtemplates:TOMApp',
 	'concat'
