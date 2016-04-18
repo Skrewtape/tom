@@ -6,13 +6,14 @@ angular.module('tom_services.status_modal')
 	      '$timeout',
 	      '$state',
 	      function($uibModal,$timeout,$state) {
-		  var modalInstance = undefined;
+		  var statusModalInstance = undefined;
+		  var errorModalInstance = undefined;
 		  var timeoutPromise = undefined;
 		  var debug_msg = 'shit';
 		  
-		  close_modal = function(){
-                      if(modalInstance!=undefined){
-                          modalInstance.close();
+		  close_status_modal = function(){
+		      if(statusModalInstance!=undefined){
+                          statusModalInstance.close();
                       }				    
 		  }
 
@@ -40,7 +41,7 @@ angular.module('tom_services.status_modal')
 		  };        			  
 		  
                   launch_status_modal = function(){
-                      modalInstance = $uibModal.open({
+                      statusModalInstance = $uibModal.open({
                           templateUrl: 'services/status.html',
                           backdrop: 'static',
                           size: 'md',
@@ -56,6 +57,7 @@ angular.module('tom_services.status_modal')
                   };
 		  
 		  launch_http_error_modal = function(error_message){
+		      close_status_modal();
                       modalInstance = $uibModal.open({
 			  controller: function($scope){
 			      $scope.error_message = error_message;
@@ -66,7 +68,7 @@ angular.module('tom_services.status_modal')
                           openedClass: 'modal_decorations',                
                           keyboard: false,
                       });
-		      modalInstance.closed.then(function(){$state.go('home')});                                    
+		      modalInstance.closed.then(function(){console.log('closing http error');$state.go('app')});                                    
                   };
 		  
                   
@@ -79,7 +81,7 @@ angular.module('tom_services.status_modal')
 			  launch_status_modal()
                       },
 	              loaded: function(new_title) {
-			  $timeout(close_modal,500);
+			  $timeout(close_status_modal,500);
                       },
 		      http_error: launch_http_error_modal,
 		      modalWithMessage: openModalWithMessage

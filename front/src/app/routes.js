@@ -1,9 +1,9 @@
 app.config(function($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/app');
     
     $stateProvider.state(
-        'home', {
-            url: '/',
+        'app', {
+            url: '/app',
             views: {
                 '@': {
                     templateUrl: 'app/home.html',
@@ -17,12 +17,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
 		}
             }
 	}).state(
-        'home.login', {
-            url: 'login',
+        'app.login', {
+            url: '/login',
             views: {
                 '@': {
-                    templateUrl: 'app/login.html',
-                    controller: 'LoginController',
+                    templateUrl: 'app/login/login.html',
+                    controller: 'app.login',
                 }
             }
 	})

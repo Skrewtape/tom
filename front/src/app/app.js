@@ -22,26 +22,11 @@ app = angular.module(
 	[
 	    'ui.bootstrap',
 	    'ui.router',
+	    'mobile-angular-ui',
 	    'tom_services',
-	    'mobile-angular-ui'
-	]
-);
+	    'app.login'
 
-app.controller(
-    'LoginController',
-    function($scope, $http, $uibModal, $location, $state, Page, StatusModal,TimeoutResources) {
-	$scope.Page.set_title('Login');
-        $scope.login = function() {
-	    StatusModal.loading();            
-	    $scope.login = TimeoutResources.loginResource().login;
-	    $scope.player = $scope.login($scope.data);
-	    $scope.player.$promise.then(function(data){
-		Page.set_logged_in_user($scope.player);
-		StatusModal.loaded();
- 		$state.go('home');		
-	    });
-        };
-    }
+	]
 );
 
 app.controller(
@@ -54,14 +39,14 @@ app.controller(
 	    $http.put('[APIHOST]/logout',{},{timeout:5000}).success(
 		function() {		    
 		    Page.set_logged_in_user({});
-		    $state.go('home');
+		    $state.go('app');
 		    StatusModal.loaded();            
 		}
 	    )
 	};
 
         $http.get('[APIHOST]/user/current',{timeout:5000}).success(function (data) {
-            Page.set_logged_in_user(data);			
+           Page.set_logged_in_user(data);			
         });
     }
 );
@@ -85,7 +70,7 @@ app.factory('myHttpInterceptor', function($q,$injector) {
     return {
 	'responseError': function(rejection) {
 	    var StatusModal = $injector.get('StatusModal');
-	    StatusModal.loaded();
+	    console.log('got a bad http');
 	    if(rejection.status == -1){
 		rejection.data={};
 		rejection.data.message="HTTP Timeout while getting "+rejection.config.url
