@@ -84,10 +84,16 @@ def get_current_user():
 @fetch_entity(User, 'user')
 def get_user(user):
     """Get information about a particular user"""
+    #user_dict = user.to_dict_simple()
+    #user_dict['roles'] = [r.name for r in user.roles]
+    return jsonify(get_user_shared(user))
+
+def get_user_shared(user):
+    """Get information about a particular user"""
     user_dict = user.to_dict_simple()
-    if Admin_permission.can() or user.user_id == current_user.user_id:
-        user_dict['roles'] = [r.name for r in user.roles]
-    return jsonify(user_dict)
+    user_dict['roles'] = [r.name for r in user.roles]
+    return user_dict
+
 
 @App.route('/login', methods=['PUT'])
 def login():
@@ -102,7 +108,7 @@ def login():
         identity_changed.send(current_app._get_current_object(), identity=Identity(user.user_id))
         user_dict = user.to_dict_simple()
         user_dict['roles'] = [r.name for r in user.roles]
-        return jsonify(user_dict)
+        return jsonify(get_user_shared(user))
     else:
         raise Unauthorized('Bad username or password')
 
