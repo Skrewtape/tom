@@ -22,12 +22,9 @@ def add_tournament():
     )    
     DB.session.add(new_tournament)
     if 'single_division' in tournament_data:
-        if tournament_data['single_division']:
-            new_division = Division(name='all',
-                                    tournament_id=new_tournament.tournament_id)
-            DB.session.add(new_division)
-            new_tournament.divisions.append(new_division)
-            
+        new_tournament.single_division=True
+    else:
+        new_tournament.single_division=False                
     DB.session.commit()        
     return jsonify(new_tournament.to_dict_with_divisions())
 

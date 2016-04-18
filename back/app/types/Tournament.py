@@ -10,6 +10,7 @@ class Tournament(DB.Model):
     tournament_id = DB.Column(DB.Integer, primary_key=True)
     name = DB.Column(DB.String(1000))
     active = DB.Column(DB.Boolean)
+    single_division = DB.Column(DB.Boolean)
 
     divisions = DB.relationship('Division',lazy='joined')
 
