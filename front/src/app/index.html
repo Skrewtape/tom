@@ -185,7 +185,6 @@
 		  div.navbar-collapse.collapse.in {
 		    max-height: 2000px;
 		  }*/
-
                 </style>
 	</head>
   <body>
@@ -209,8 +208,6 @@
 	    </span>
 	    <a class="list-group-item" href="#/link2">Add Player
 	      <i class="fa fa-chevron-right pull-right"></i></a>
-	    <a class="list-group-item" href="#/link2">Tournaments
-	      <i class="fa fa-chevron-right pull-right"></i></a>
 	    <a class="list-group-item" href="#/link2">Tickets
 	      <i class="fa fa-chevron-right pull-right"></i></a>
 	    <a class="list-group-item" href="#/link2">Scorekeeping
@@ -219,8 +216,12 @@
 	      <i class="fa fa-chevron-right pull-right"></i></a>
 	    <a class="list-group-item" href="#/link2">Players
 	      <i class="fa fa-chevron-right pull-right"></i></a>
+	    <span ng-if='Page.has_role("admin")'>
+	    <a class="list-group-item" ui-sref='app.tournament_add'>Add Tournaments
+	      <i class="fa fa-chevron-right pull-right"></i></a>
 	    <a class="list-group-item" href="#/link2">Assholes
-	      <i class="fa fa-chevron-right pull-right"></i></a>	    	    
+	      <i class="fa fa-chevron-right pull-right"></i></a>
+	    </span>
 	  </div>
 	</div>
       </div>

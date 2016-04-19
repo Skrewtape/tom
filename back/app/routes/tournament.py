@@ -21,7 +21,7 @@ def add_tournament():
         active = False
     )    
     DB.session.add(new_tournament)
-    if 'single_division' in tournament_data:
+    if 'single_division' in tournament_data and tournament_data['single_division']:
         new_tournament.single_division=True
     else:
         new_tournament.single_division=False                

@@ -1,4 +1,4 @@
-app.config(function($stateProvider, $urlRouterProvider) {
+angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/app');
     
     $stateProvider.state(
@@ -17,7 +17,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
 		}
             }
 	}).state(
-        'app.login', {
+	    //FIXME : move this to the login dir
+            'app.login', {
             url: '/login',
             views: {
                 '@': {

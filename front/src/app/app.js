@@ -24,8 +24,8 @@ app = angular.module(
 	    'ui.router',
 	    'mobile-angular-ui',
 	    'tom_services',
-	    'app.login'
-
+	    'app.login',
+	    'app.tournament_add'
 	]
 );
 
@@ -34,6 +34,7 @@ app.controller(
     function($scope, $location, $http, 
              $state, $injector, $uibModal, Page, StatusModal) {
 	$scope.Page = Page;
+	//FIXME : change this to use $resource
         $scope.logout = function() {
 	    StatusModal.loading();            	    
 	    $http.put('[APIHOST]/logout',{},{timeout:5000}).success(
@@ -45,9 +46,13 @@ app.controller(
 	    )
 	};
 
-        $http.get('[APIHOST]/user/current',{timeout:5000}).success(function (data) {
-           Page.set_logged_in_user(data);			
-        });
+	//FIXME : change this to use $resource
+	if(Page.logged_in_user().username == undefined){
+	    console.log('getting current user');
+            $http.get('[APIHOST]/user/current',{timeout:5000}).success(function (data) {
+		Page.set_logged_in_user(data);			
+            });
+	}
     }
 );
 

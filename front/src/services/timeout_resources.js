@@ -8,6 +8,18 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'login': { method:'PUT' , 'timeout': 5000}
 			     });
-	}	
+	},
+	addTournamentResource: function(){
+	    return $resource('[APIHOST]/tournament', null,
+			     {
+				 'addTournament': {method:'POST', 'timeout': 5000}
+			     })
+	},
+	getTournamentsResource: function(){
+	    return $resource('[APIHOST]/tournament', null,
+			     {
+				 'getTournaments': {method:'GET', 'timeout': 5000}
+			     })
+	}
     };
 });

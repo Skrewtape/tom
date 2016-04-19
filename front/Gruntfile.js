@@ -101,6 +101,9 @@ module.exports = function(grunt) {
 		},
 		bowerOptions: {
 		    relative: false
+		},
+		dependencies: {
+		    'mobileangularui-checkbox': 'mobile-angular-ui'
 		}
 	    }
 	}
