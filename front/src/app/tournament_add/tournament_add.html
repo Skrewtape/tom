@@ -1,22 +1,17 @@
 <div ui-content-for="title">
-  <span>Tournaments</span>
+  <span>Create Tournament</span>
 </div>
-<div ui-content-for="navbarAction">
-  <div class="btn">
-    <a ui-sref='^'>
-      <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back
+<div  ui-content-for="navbarAction">
+    <a ui-sref='^' style='font-size:35px'>
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"> </i> Back
     </a>
-  </div>
 </div>
 <div class="scrollable">
-  <div class="scrollable-content">
-	  <h2>
-	    Add Tournament
-	  </h2>
-	  
+  <div style='background:#AAAAAA' ui-view='tournament_add_progress'></div>
+  <div class="scrollable-content"  style='padding:10px'>
 	    <form>
-	      <div class='form-group form-group-lg input-group input-group-lg'>        
-		<span class="input-group-addon" id="tournament_name">Tournament Name</span>
+	      <div class='form-group form-group-xlg input-group input-group-xlg'>        
+		<span  class="input-group-addon" id="tournament_name">Tournament Name</span>
 		<input
 		   type='text'
 		   class='form-control'
@@ -24,20 +19,26 @@
 		   ng-model='tournament.tournament_name'
 		   />
 	      </div>
-	      <input
+	      <table style='margin-top:15px'>
+		<td>
+	      <input		 
 	      	 type='checkbox'
 	      	 name='single_division'
 	      	 ng-model='tournament.single_division'
-	      	 style='margin-left:10px;margin-right:10px;height:40px;width:40px;vertical-align:middle'
+	      	 style='margin-left:10px;margin-right:10px;margin-top:0px;height:40px;width:40px;vertical-align:middle;font-size:28px'
 	      	 />
-	      <label for='single_division'>
-	      	Is this a single division tournament?
-	      </label>
+		</td>
+		<td>
+	      	    <span style='font-size:25px'>Is this a single division tournament?</span>
+		</td>
+	      </table>	      
 	      <br>
 	    </form>
+	    <br>
 	    <a
-	       class='btn btn-info'
-	       ng-click='create_tournament()'
+	       ng-disabled='tournament.tournament_name == undefined || tournament.tournament_name == ""'
+	       class='btn btn-info btn-xlg'
+	       ui-sref='app.tournament_add.process({tournamentInfo:tournament})'
 	       > Create Tournament</a>
   </div>
 </div>

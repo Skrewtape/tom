@@ -32,7 +32,7 @@ app = angular.module(
 app.controller(
     'IndexController',    
     function($scope, $location, $http, 
-             $state, $injector, $uibModal, Page, StatusModal) {
+             $state, $injector, $uibModal, Page, StatusModal, $rootScope) {
 	$scope.Page = Page;
 	//FIXME : change this to use $resource
         $scope.logout = function() {
@@ -71,7 +71,7 @@ app.controller(
 
 // Set up CORS stuff
 
-app.factory('myHttpInterceptor', function($q,$injector) {
+app.factory('myHttpInterceptor', function($q,$injector,$rootScope) {
     return {
 	'responseError': function(rejection) {
 	    var StatusModal = $injector.get('StatusModal');
@@ -80,7 +80,8 @@ app.factory('myHttpInterceptor', function($q,$injector) {
 		rejection.data={};
 		rejection.data.message="HTTP Timeout while getting "+rejection.config.url
 	    }
-	    StatusModal.http_error(rejection.data.message);
+	    $rootScope.loading = false;
+	    StatusModal.http_error(rejection.data.message);	    
 	    return $q.reject(rejection);
 	}
     };

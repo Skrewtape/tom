@@ -3,17 +3,34 @@
   <head>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 	        <title>Tournament Operations Manager | {{ Page.title() }}</title>
-		<link rel="stylesheet" href="screen.css">
+
+		<link rel="stylesheet" href="screen.css">		
 		<link rel="stylesheet" href="_bower.css">
+
 		
                 <!--<link rel="stylesheet" href="/styles/angular-ui-switch/angular-ui-switch.css"/>
                 <link rel="stylesheet" href="/styles/ngKeypad/dist/ng-keypad.css"/>-->
-                <link href='http://fonts.googleapis.com/css?family=Terminal+Dosis:400,700' rel='stylesheet' type='text/css'>
-                <link href='https://fonts.googleapis.com/css?family=Audiowide|Michroma|Tenor+Sans|Press+Start+2P|Jura' rel='stylesheet' type='text/css'> 
 		<script type="text/javascript" src="app.js"></script>
                 <link rel="stylesheet" href="/styles/loaders.css/loaders.css"/>                
                 <style>
-		  
+		  /* numbered buttons */
+		  #status-buttons                 {  }
+		  #status-buttons a               { color:#000000; display:inline-block; font-size:22px; text-align:center;  text-transform:uppercase; }
+		  #status-buttons a:hover         { text-decoration:none; }
+
+		  /* we will style the span as the circled number */
+		  #status-buttons span            { background:#FFFFFF; display:block; height:30px; width:30px; padding:0px;  border-radius:10%; }
+
+		  #status-buttons a.active span   { background:#AAAAAA; }
+
+		  .btn-xlg,
+		  .btn-group-xlg > .btn {
+		  padding: 10px 16px;
+		  font-size: 28px;
+		  line-height: 1.3333333;
+		  border-radius: 12px;
+		  }
+
 		  /*
                   .fades.ng-enter {
                     transition:2.5s linear all;
@@ -198,7 +215,7 @@
       <div class="scrollable">
 	<h1 class="scrollable-header app-name">TOM <small>1.0</small></h1>
 	<div class="scrollable-content">
-	  <div class="list-group" ui-turn-off='uiSidebarLeft'>
+	  <div class="list-group" style='font-size:35px' ui-turn-off='uiSidebarLeft'>
 	    <a ng-if='Page.logged_in_user().username == undefined' class="list-group-item" ui-sref="app.login">
 	      login
 	      <i class="fa fa-chevron-right pull-right"></i></a>
@@ -217,8 +234,8 @@
 	    <a class="list-group-item" href="#/link2">Players
 	      <i class="fa fa-chevron-right pull-right"></i></a>
 	    <span ng-if='Page.has_role("admin")'>
-	    <a class="list-group-item" ui-sref='app.tournament_add'>Add Tournaments
-	      <i class="fa fa-chevron-right pull-right"></i></a>
+	    <div class="list-group-item active">Admin</div>
+	    <a class="list-group-item" ui-sref='app.tournament_add'>New Tournament<i class="fa fa-chevron-right pull-right"></i></a>
 	    <a class="list-group-item" href="#/link2">Assholes
 	      <i class="fa fa-chevron-right pull-right"></i></a>
 	    </span>
@@ -228,22 +245,22 @@
     </div>
     <div class="app">
       <div class="navbar navbar-app navbar-absolute-top">
-	<div class="navbar-brand navbar-brand-center" ui-yield-to="title">
+	<div class="navbar-brand navbar-brand-center" ui-yield-to="title" style='font-size:35px'>
 	  TOM
 	</div>
-	<div class="btn-group pull-left">
-	  <div ui-toggle="uiSidebarLeft" class="btn sidebar-toggle">
+	<div class="btn-group pull-left" >
+	  <div ui-toggle="uiSidebarLeft" class="btn sidebar-toggle" style='font-size:35px'>
 	    <i class="fa fa-bars"></i> Menu
 	  </div>
 	</div>
 	<div class="btn-group pull-right" ui-yield-to="navbarAction">
 	</div>
       </div>
-      <div class="app-body" ng-class="{loading: loading}">
+      <div class="app-body" ng-class="{loading: loading}" >
 	<div ng-show="loading" class="app-content-loading">
 	  <i class="fa fa-spinner fa-spin loading-spinner"></i>
 	</div>
-	<div class="app-content">
+	<div ng-show="!loading" class="app-content" style='background:white'>
 	  <div ui-view></div>
 	</div>
       </div>

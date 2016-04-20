@@ -3,83 +3,139 @@
     display: none !important;
 }
 
-body {
-    margin: 20px;
-}
-/*
-body > button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-}
+
+		  .sidebar-left {
+		  background: #555555;
+		  width: 500px;
+		  left: 0;
+		  right: auto;
+		  -webkit-transition: width 400ms ease;
+		  -o-transition: width 400ms ease;
+		  transition: width 400ms ease;
+		  }
+
+		  .sidebar-left-in .app {
+		  width: 100%;
+		  -webkit-transform: translate(500px, 0);
+		  -ms-transform: translate(500px, 0);
+		  -o-transform: translate(500px, 0);
+		  transform: translate(500px, 0);
+		  -webkit-transition: -webkit-transform 400ms ease;
+		  -moz-transition: -moz-transform 400ms ease;
+		  -o-transition: -o-transform 400ms ease;
+		  transition: transform 400ms ease;
+		  }
+ .form-control-static.input-xlg,{
+   padding-left: 0;
+   padding-right: 0;
+ }
 
 
-.modal-content {
-    padding: 30px;
-}
+ .input-xlg {
+   height: 46px;
+   padding: 10px 16px;
+   font-size: 18px;
+   line-height: 1.3333333;
+   border-radius: 6px;
+ }
 
-.input-group-xlg > .form-control,
-.input-group-xlg > .input-group-addon,
-.input-group-xlg > .input-group-btn > .btn {
-  height: 46px;
-  padding: 10px 16px;
-  font-size: 36px;
-  line-height: 2.66;
-  border-radius: 12px;
-}
-select.input-group-xlg > .form-control,
-select.input-group-xlg > .input-group-addon,
-select.input-group-xlg > .input-group-btn > .btn {
-  height: 92px;
-  line-height: 92px;
-}
-textarea.input-group-xlg > .form-control,
-textarea.input-group-xlg > .input-group-addon,
-textarea.input-group-xlg > .input-group-btn > .btn,
-select[multiple].input-group-xlg > .form-control,
-select[multiple].input-group-xlg > .input-group-addon,
-select[multiple].input-group-xlg > .input-group-btn > .btn {
-  height: auto;
-}
 
-.input-xlg,
-.form-horizontal .form-group-xlg .form-control {
-  height: 92px;
-  padding: 20px 32px;
-  font-size: 36px;
-  line-height: 2.66;
-  border-radius: 12px;
-}
-select.input-xlg {
-  height: 92px;
-  line-height: 92px;
-}
-textarea.input-xlg,
-select[multiple].input-xlg {
-  height: auto;
-}
+ select.input-xlg {
+   height: 46px;
+   line-height: 46px;
+ }
 
-.input-group-addon.input-xlg {
-  padding: 20px 32px;
-  font-size: 36px;
-  border-radius: 12px;
-}
 
-input[type="date"].input-xlg,
-input[type="time"].input-xlg,
-input[type="datetime-local"].input-xlg,
-input[type="month"].input-xlg {
-  line-height: 92px;
-}
+ textarea.input-xlg,
+ select[multiple].input-xlg {
+   height: auto;
+ }
 
-.form-control-static.input-xlg{
-  padding-right: 0;
-  padding-left: 0;
-}
 
-.input-xlg + .form-control-feedback {
-  width: 92px;
-  height: 92px;
-  line-height: 92px;
-}
-*/
+ .form-group-xlg .form-control {
+   height: 46px;
+   padding: 10px 16px;
+   font-size: 18px;
+   line-height: 1.3333333;
+   border-radius: 6px;
+ }
+
+
+ .form-group-xlg select.form-control {
+   height: 46px;
+   line-height: 46px;
+ }
+
+
+ .form-group-xlg textarea.form-control,
+ .form-group-xlg select[multiple].form-control {
+   height: auto;
+ }
+
+
+ .form-group-xlg .form-control-static {
+   height: 46px;
+   min-height: 38px;
+   padding: 11px 16px;
+   font-size: 18px;
+   line-height: 1.3333333;
+ }
+
+
+ .input-xlg + .form-control-feedback,
+ .input-group-xlg + .form-control-feedback,
+ .form-group-xlg .form-control + .form-control-feedback {
+     width: 96px;
+     line-height: 96px;
+     height: 96px;
+
+ }
+
+
+ .btn-xlg,
+ .btn-group-xlg > .btn {
+   padding: 10px 16px;
+   font-size: 28px;
+   line-height: 1.3333333;
+   border-radius: 12px;
+ }
+
+
+ .input-group-xlg > .form-control,
+ .input-group-xlg > .input-group-addon,
+ .input-group-xlg > .input-group-btn > .btn {
+
+     height: 66px;
+     padding: 10px 16px;
+     font-size: 28px;
+     line-height: 1.3333333;
+     border-radius: 12px;
+
+ }
+
+
+ select.input-group-xlg > .form-control,
+ select.input-group-xlg > .input-group-addon,
+ select.input-group-xlg > .input-group-btn > .btn {
+   height: 46px;
+   line-height: 46px;
+ }
+
+
+ textarea.input-group-xlg > .form-control,
+ textarea.input-group-xlg > .input-group-addon,
+ textarea.input-group-xlg > .input-group-btn > .btn,
+ select[multiple].input-group-xlg > .form-control,
+ select[multiple].input-group-xlg > .input-group-addon,
+ select[multiple].input-group-xlg > .input-group-btn > .btn {
+   height: auto;
+ }
+
+
+ .input-group-addon.input-xlg {
+   padding: 10px 16px;
+   font-size: 18px;
+   border-radius: 6px;
+ }
+
+
