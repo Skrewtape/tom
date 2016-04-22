@@ -15,7 +15,7 @@ class Division(DB.Model):
     # pylint can't find SQLAlchemy's __init__() method for some reason
     division_id = DB.Column(DB.Integer, primary_key=True)
     name = DB.Column(DB.String(1000))
-
+    number_of_scores_per_entry = DB.Column(DB.Integer)
     tournament_id = DB.Column(DB.Integer, DB.ForeignKey(
         'tournament.tournament_id'
     ))

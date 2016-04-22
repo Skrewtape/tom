@@ -6,6 +6,7 @@ from app import App
 from app.types import Tournament,Division
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
+from app.routes import division
 from werkzeug.exceptions import BadRequest
 
 @App.route('/tournament', methods=['POST'])
@@ -21,11 +22,13 @@ def add_tournament():
         active = False
     )    
     DB.session.add(new_tournament)
+    DB.session.commit()
     if 'single_division' in tournament_data and tournament_data['single_division']:
         new_tournament.single_division=True
+        division.shared_add_division('{"division_name":"%s_all","tournament_id":"%d", "number_of_scores_per_entry":"%d"}' % (new_tournament.name,new_tournament.tournament_id, tournament_data['number_of_scores_per_entry']))
     else:
         new_tournament.single_division=False                
-    DB.session.commit()        
+    DB.session.commit()
     return jsonify(new_tournament.to_dict_with_divisions())
 
 @App.route('/tournament', methods=['GET'])

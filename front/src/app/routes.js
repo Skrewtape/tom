@@ -8,13 +8,8 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                 '@': {
                     templateUrl: 'app/home.html',
                     controller: 'IndexController',
-                },
-		'navbar_home': {
-		    templateUrl: 'app/navbar_home.html',
-		},
-		'navbar': {
-		    templateUrl: 'app/navbar.html',
-		}
+                }
+
             }
 	}).state(
 	    //FIXME : move this to the login dir

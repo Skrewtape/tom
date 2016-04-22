@@ -3,28 +3,6 @@
     display: none !important;
 }
 
-
-		  .sidebar-left {
-		  background: #555555;
-		  width: 500px;
-		  left: 0;
-		  right: auto;
-		  -webkit-transition: width 400ms ease;
-		  -o-transition: width 400ms ease;
-		  transition: width 400ms ease;
-		  }
-
-		  .sidebar-left-in .app {
-		  width: 100%;
-		  -webkit-transform: translate(500px, 0);
-		  -ms-transform: translate(500px, 0);
-		  -o-transform: translate(500px, 0);
-		  transform: translate(500px, 0);
-		  -webkit-transition: -webkit-transform 400ms ease;
-		  -moz-transition: -moz-transform 400ms ease;
-		  -o-transition: -o-transform 400ms ease;
-		  transition: transform 400ms ease;
-		  }
  .form-control-static.input-xlg,{
    padding-left: 0;
    padding-right: 0;
@@ -62,9 +40,11 @@
 
 
  .form-group-xlg select.form-control {
-   height: 46px;
-   line-height: 46px;
+   height: 56px;
+   line-height: 56px;
+   font-size:28px;
  }
+
 
 
  .form-group-xlg textarea.form-control,

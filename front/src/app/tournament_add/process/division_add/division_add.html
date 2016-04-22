@@ -1,0 +1,41 @@
+<div ui-content-for="title">
+  <span>Add Divisions</span>
+</div>
+<div class="scrollable">
+  <div style='background:#AAAAAA' ui-view='tournament_add_progress'></div>
+  <div class="scrollable-content"  style='padding:10px'>
+    <span class='big-web-font'>Add Division To {{tournament.name}} : </span><br>
+    <form>      
+      <div class='form-group form-group-xlg input-group input-group-xlg'>        
+	<span  class="input-group-addon" id="division_name">Division Name</span>	
+	<input
+	   type='text'
+	   class='form-control'
+	   aria-describedby='division_name'
+	   ng-model='form_division.division_name'
+	   />
+      </div>
+      <br>
+      <div class='form-group form-group-xlg input-group input-group-xlg'>        
+	<span  class="input-group-addon" id="number_of_scores_per_entry">Scores Per Ticket</span>
+	<input
+	   type='number'
+	   class='form-control'
+	   aria-describedby='number_of_scores_per_entry'
+	   ng-model='form_division.number_of_scores_per_entry'
+	   style='width:100px'
+	   />
+      </div>
+      <a
+	 ng-disabled='form_division.division_name == undefined || form_division.division_name == ""'
+	 class='btn btn-info btn-xlg'
+	 ng-click='add_division()'
+	 > Add Division</a>
+      <br>
+      
+      <hr style='align:center;width:50%;margin:auto' />
+    <div ng-repeat='tournament_division in tournament.divisions'>
+      Name : {{tournament_division.name}}, Scores Per Ticket : {{tournament_division.number_of_scores_per_entry}}
+      </div>
+  </div>
+</div>

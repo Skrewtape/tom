@@ -28,9 +28,9 @@ module.exports = function(grunt) {
                 replacements: [
                     {
                         from: '[APIHOST]',
-                        //to: 'http://localhost:8000'
+                        to: 'http://localhost:8000'
 			//to: 'http://127.0.0.1:8000'
-			to: 'http://192.168.1.178:8000',
+			//to: 'http://192.168.1.178:8000',
 			//to: 'http://192.168.1.36:8000',
 			//to: 'http://192.168.5.32:8000',
                         //to: 'http://72.77.58.216:8000',

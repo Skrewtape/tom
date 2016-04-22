@@ -25,14 +25,35 @@
 	      	 type='checkbox'
 	      	 name='single_division'
 	      	 ng-model='tournament.single_division'
-	      	 style='margin-left:10px;margin-right:10px;margin-top:0px;height:40px;width:40px;vertical-align:middle;font-size:28px'
+		 class='big-web-font'
+	      	 style='margin-left:10px;margin-right:10px;margin-top:0px;height:40px;width:40px;vertical-align:middle;'
 	      	 />
 		</td>
 		<td>
-	      	    <span style='font-size:25px'>Is this a single division tournament?</span>
+	      	    <span class='big-web-font'>Is this a single division tournament?</span>
 		</td>
 	      </table>	      
 	      <br>
+	      <div class='form-group form-group-xlg input-group input-group-xlg' ng-if='tournament.single_division == true'>        
+		<span  class="input-group-addon" id="number_of_scores_per_entry">Scores Per Ticket</span>
+		<input
+		   type='number'
+		   class='form-control'
+		   aria-describedby='number_of_scores_per_entry'
+		   ng-model='tournament.number_of_scores_per_entry'
+		   style='width:100px'
+		   />
+	      </div>	      
+	      <table>
+		<td class='form-group-xlg'>
+		  <select class='form-control'>		    
+		    <option value="volvo">Papa single player</option>
+		  </select>
+		</td>
+		<td class='big-web-font' style='padding-left:10px'>
+		  Type of Tournament
+		</td>
+	      </table>
 	    </form>
 	    <br>
 	    <a

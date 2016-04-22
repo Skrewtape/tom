@@ -2,7 +2,5 @@
   Steps : 
   <a ui-sref-active="active" ui-sref="app.tournament_add"><span>1</span></a>
   <a ui-sref-active="active" ui-sref="app.tournament_add.process"><span>2</span></a>
-  <a ui-sref-active="active" ui-sref="app.tournament_add.process.division_add"><span>3</span></a>
-  <a ui-sref-active="active" ui-sref="app.tournament_add.process.division_add.process"><span>4</span></a>
-  <a ui-sref-active="active" ui-sref="app.tournament_add.process.division_add.machine_add"><span>5</span></a>        
+  <a ng-if='tournament.single_division != true' ui-sref-active="active" ui-sref="app.tournament_add.process.division_add"><span>3</span></a>
 </div>

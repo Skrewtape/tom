@@ -32,9 +32,17 @@ app = angular.module(
 app.controller(
     'IndexController',    
     function($scope, $location, $http, 
-             $state, $injector, $uibModal, Page, StatusModal, $rootScope) {
+             $state, $injector, $uibModal, Page, StatusModal) {
 	$scope.Page = Page;
-	//FIXME : change this to use $resource
+
+	$scope.checkForBlankParams = function(param){
+	    console.log(param);
+
+	    if(Object.keys(param).length === 0 && JSON.stringify(param) === JSON.stringify({})){
+		StatusModal.http_error("Oops.  Looks like you tried to reload a page which submits data.  That is a no no!");	         return true;
+	    }
+	}
+	//FIXME : change this to use $resource	
         $scope.logout = function() {
 	    StatusModal.loading();            	    
 	    $http.put('[APIHOST]/logout',{},{timeout:5000}).success(

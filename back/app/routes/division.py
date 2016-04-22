@@ -39,17 +39,39 @@ def add_machine_to_division(division,machine):
 @login_required
 @Admin_permission.require(403)
 def add_division():
+    # """Add a player"""
+    return shared_add_division(request.data)
+    # if 'division_name' not in division_data or 'tournament_id' not in division_data:
+    #     raise BadRequest('Did not specify division_name or tournament_id in post data')
+    # new_division = Division(
+    #     name = division_data['division_name'],
+    #     tournament_id = division_data['tournament_id']
+    # )
+    # # if 'number_of_scores_per_entry' in division_data:
+    # #     new_division.number_of_scores_per_entry = division_data['number_of_scores_per_entry']
+    # # else:
+    # #     new_division.number_of_scores_per_entry = 4
+    # DB.session.add(new_division)
+    # DB.session.commit()
+    # return jsonify(new_division.to_dict_with_machines())
+
+def shared_add_division(post_data):
     """Add a player"""
-    division_data = json.loads(request.data)
+    division_data = json.loads(post_data)
     if 'division_name' not in division_data or 'tournament_id' not in division_data:
         raise BadRequest('Did not specify division_name or tournament_id in post data')
     new_division = Division(
         name = division_data['division_name'],
         tournament_id = division_data['tournament_id']
-    )    
+    )
+    if 'number_of_scores_per_entry' in division_data:
+        new_division.number_of_scores_per_entry = division_data['number_of_scores_per_entry']
+    else:
+        new_division.number_of_scores_per_entry = 4
     DB.session.add(new_division)
     DB.session.commit()
     return jsonify(new_division.to_dict_with_machines())
+
 
 @App.route('/division/<division_id>', methods=['GET'])
 @fetch_entity(Division, 'division')
