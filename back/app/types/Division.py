@@ -4,7 +4,7 @@ from app import DB
 from flask_restless.helpers import to_dict
 
 Division_machine_mapping = DB.Table(
-    'division_machine',
+    'division_machines',
     DB.Column('division_id', DB.Integer, DB.ForeignKey('division.division_id')),
     DB.Column('machine_id',  DB.Integer, DB.ForeignKey('machine.machine_id'))
 )
@@ -25,19 +25,24 @@ class Division(DB.Model):
          foreign_keys=[tournament_id]
     )
 
+    # machines = DB.relationship(
+    #     'Machine',
+    #     secondary=Division_machine_mapping,
+    #     backref=DB.backref('division'),
+    #     lazy='joined'
+    # )
+
     machines = DB.relationship(
-        'Machine',
-        secondary=Division_machine_mapping,
-        backref=DB.backref('division'),
+        'DivisionMachine',
         lazy='joined'
     )
-
+    
     def to_dict_with_machines(self):
         division = to_dict(self)
         if self.machines:
             division['machines']=[]
             for machine in self.machines:
-                division['machines'].append(machine.to_dict_with_player())
+                division['machines'].append(machine.to_dict_simple())
         return division
     
     def to_dict_simple(self):

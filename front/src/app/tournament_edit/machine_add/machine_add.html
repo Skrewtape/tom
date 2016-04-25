@@ -1,0 +1,41 @@
+<div ui-content-for="title">
+  <span>Add Machines</span>
+</div>
+<div  ui-content-for="navbarAction">
+    <a ui-sref='^' style='font-size:35px'>
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"> </i> Back
+    </a>
+</div>
+<div class="scrollable">
+  <div class="scrollable-content"  style='padding:10px'>   
+    <span class='big-web-font'> Change {{tournament_name}} Tournament <span ng-if='single_division=="false"' class='big-web-font'>, {{division.name}} division </span> Machines </span>
+    <form>
+      <table style='width:75%'>
+	
+	<td>
+	  <div class='form-group form-group-xlg input-group input-group-xlg'>        	
+	    <span  class="input-group-addon" id="machine_name">Machine Name</span>
+	    <input
+	       type='text'
+	       class='form-control'
+	       aria-describedby='machine_name'
+	       ng-model='selected_machine'
+	       uib-typeahead="machine as machine.name for machine in all_machines | filter:$viewValue | limitTo:8"
+	       />
+	  </div>
+	</td>
+	<td>
+	  <a class='btn' ng-click='machine_add()' ng-disabled='selected_machine.name==undefined' ><i style='color:green;font-size:38px' class="fa fa-plus-circle pull-left" aria-hidden="true"> </i></a>	     
+	</td>
+      </table>
+    </form>
+    <br>
+    <hr style='align:center:width:50%'/>
+    <br>
+    <div ng-repeat='division_machine in division.machines|orderBy:"-division_machine_id"' class='big-web-font'>
+      <a ng-if='division_machine.removed == false' class='btn' ng-click='machine_remove(division_machine.division_machine_id)'><i style='color:red;font-size:38px' class="fa fa-times-circle pull-right" aria-hidden="true"> </i></a>
+      <a ng-if='division_machine.removed == true' class='btn' ng-click='machine_enable(division_machine.division_machine_id)'><i style='color:green;font-size:38px' class="fa fa-plus-circle pull-right" aria-hidden="true"> </i></a>
+      {{division_machine.name}} 
+    </div>
+  </div>
+</div>

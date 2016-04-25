@@ -28,10 +28,65 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     })
 	},
 	addDivisionResource: function(){
-	    return $resource('[APIHOST]/division', null,
+	    return $resource('[APIHOST]/division', null,			     
 			     {
+				 //FIXME : need to standardize return format - specifically
+				 //        need to always return dict's, even in things that
+				 //        are sub-objects (i.e. list of machines under division
+				 //        should be a dict, not an array ).  We can do 
+				 //        response massaging at the resourc
 				 'addDivision': {method:'POST', 'timeout': 5000}
 			     })
+	},
+	getDivisionResource: function(){
+	    return $resource('[APIHOST]/division/:division_id', null,
+			     {
+				 'getDivision': {method:'GET', 'timeout': 5000}
+			     })
+	},
+	getAllMachinesResource: function(){
+	    return $resource('[APIHOST]/machine', null,
+			     {
+				 'getAllMachines': {method:'GET', 'timeout': 5000}
+			     })
+	},
+	getAllMachinesArrayResource: function(){
+	    return $resource('[APIHOST]/machine', null,
+			     {
+				 'getAllMachinesArray': {
+				     method:'GET',
+				     'timeout': 5000,
+				     isArray:true,
+				     transformResponse:function(data,headersGetter){
+					 machines_array = [];
+					 machines_dict = angular.fromJson(data);
+					 for(machine_index in machines_dict){
+					     machine = machines_dict[machine_index];
+					     machines_array.push(machine);
+					 }
+					 return machines_array;
+				     }
+				 }
+			     })
+	},
+	addMachineToDivisionResource: function(){
+	    return $resource('[APIHOST]/division/:division_id/machine/:machine_id', {division_id:'@division_id',machine_id:'@machine_id'},
+			     {
+				 'addMachineToDivision': {method:'PUT', 'timeout': 5000}
+			     })
+	},
+	removeMachineFromDivisionResource: function(){
+	    return $resource('[APIHOST]/division_machine/:division_machine_id', {division_machine_id:'@division_machine_id'},
+			     {
+				 'removeMachineFromDivision': {method:'DELETE', 'timeout': 5000}
+			     })
+	},
+	enableMachineInDivisionResource: function(){
+	    return $resource('[APIHOST]/division_machine/:division_machine_id', {division_machine_id:'@division_machine_id'},
+			     {
+				 'enableMachineInDivision': {method:'PUT', 'timeout': 5000}
+			     })
 	}
+	
     };
 });

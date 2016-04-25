@@ -25,7 +25,8 @@ app = angular.module(
 	    'mobile-angular-ui',
 	    'tom_services',
 	    'app.login',
-	    'app.tournament_add'
+	    'app.tournament_add',
+	    'app.tournament_edit'
 	]
 );
 
@@ -120,9 +121,9 @@ app.run(function($rootScope, $uibModalStack) {
 //    $rootScope.$on('$routeChangeSuccess', function() {
 //        $uibModalStack.dismissAll();	
 //    });
+
     $rootScope.$on('$stateChangeStart', function(){
 	$rootScope.$broadcast('$routeChangeSuccess');
-//	$rootScope.broadcast('$routeChangeStart');
     });
 
     // $rootScope.$on('$stateChangeStart',

@@ -3,23 +3,46 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Division, Machine, Entry
+from app.types import DivisionMachine, Division, Machine, Entry
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
 from werkzeug.exceptions import BadRequest
 import time
 
-@App.route('/division/<division_id>/machine/<machine_id>', methods=['DELETE'])
+# @App.route('/division/<division_id>/machine/<machine_id>', methods=['DELETE'])
+# @login_required
+# @Admin_permission.require(403)
+# @fetch_entity(Division, 'division')
+# @fetch_entity(Machine, 'machine')
+# def delete_division_machine(division,machine):
+#     """delete machine from division"""        
+#     #FIXME : add check for machine before removing
+#     division.machines.remove(machine)
+#     DB.session.commit()
+#     return jsonify(machine.to_dict_simple())
+
+@App.route('/division_machine/<divisionmachine_id>', methods=['DELETE'])
 @login_required
 @Admin_permission.require(403)
-@fetch_entity(Division, 'division')
-@fetch_entity(Machine, 'machine')
-def delete_division_machine(division,machine):
+@fetch_entity(DivisionMachine, 'divisionmachine')
+def delete_division_machine(divisionmachine):
     """delete machine from division"""        
     #FIXME : add check for machine before removing
-    division.machines.remove(machine)
+    divisionmachine.removed=True
     DB.session.commit()
-    return jsonify(machine.to_dict_simple())
+    return jsonify(divisionmachine.to_dict_simple())
+
+@App.route('/division_machine/<divisionmachine_id>', methods=['PUT'])
+@login_required
+@Admin_permission.require(403)
+@fetch_entity(DivisionMachine, 'divisionmachine')
+def enable_division_machine(divisionmachine):
+    """delete machine from division"""        
+    #FIXME : add check for machine before removing
+    divisionmachine.removed=False
+    DB.session.commit()
+    return jsonify(divisionmachine.to_dict_simple())
+
 
 @App.route('/division/<division_id>/machine/<machine_id>', methods=['PUT'])
 @login_required
@@ -29,9 +52,14 @@ def delete_division_machine(division,machine):
 def add_machine_to_division(division,machine):
     """add machine to division"""    
     #FIXME : add check for machine before adding
-    division.machines.append(machine)
+    new_division_machine = DivisionMachine(
+        machine_id = machine.machine_id,
+        division_id = division.division_id
+    )
+    
+    division.machines.append(new_division_machine)
     DB.session.commit()
-    return jsonify(machine.to_dict_simple())
+    return jsonify(new_division_machine.to_dict_simple())
 
 
 

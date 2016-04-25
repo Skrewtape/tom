@@ -78,7 +78,7 @@ module.exports = function(grunt) {
 	},
 	concat: {
 	    main: {
-		src: [ 'dist/app.js','dist/_bower.js','src/services/**.js','src/app/routes.js','dist/app_html_templates.js','dist/service_html_templates.js','src/app/**/*.js','!src/app/app.js' ],
+		src: [ 'dist/app.js','src/services/**.js','src/app/routes.js','dist/app_html_templates.js','dist/service_html_templates.js','src/app/**/*.js','!src/app/app.js','dist/_bower.js' ],
 		dest: 'dist/app.js' 
 	    }
 	},
@@ -101,9 +101,6 @@ module.exports = function(grunt) {
 		},
 		bowerOptions: {
 		    relative: false
-		},
-		dependencies: {
-		    'mobileangularui-checkbox': 'mobile-angular-ui'
 		}
 	    }
 	}

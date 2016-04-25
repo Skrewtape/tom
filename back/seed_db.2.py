@@ -19,6 +19,7 @@ from random import randint
 ROLE_MAP = {}
 
 ALL_ROLES = ['admin', 'scorekeeper', 'desk', 'pooper','void']
+division_machines = []
 machines = []
 tournaments = []
 divisions = []
@@ -72,12 +73,13 @@ def init_machines():
             machine.abbreviation = elems[3]
         machines.append(machine)
         DB.session.add(machine)
+        DB.session.commit()        
 
-
-def create_tournament(name):
+def create_tournament(name, single_division=True):
     global tournaments
     tournament = app.types.Tournament(name=name)
     tournament.active = True
+    tournament.single_division = single_division
     tournaments.append(tournament)
     DB.session.add(tournament)
     return tournament
@@ -85,14 +87,22 @@ def create_tournament(name):
 def create_division(name):
     global divisions
     division = app.types.Division(name=name)
+    division.number_of_scores_per_entry=5
     divisions.append(division)
     DB.session.add(division)
     return division
 
 def add_machines_to_division(division,machines):
+    
     for machine in machines:
-        division.machines.append(machine)        
-
+        new_division_machine = app.types.DivisionMachine(
+            machine_id = machine.machine_id,
+            division_id = division.division_id
+        )
+        DB.session.add(new_division_machine)
+        division.machines.append(new_division_machine)        
+    DB.session.commit()
+    
 def create_player(first_name,last_name):
     player = app.types.Player(first_name=first_name,last_name=last_name,search_name="%s%s" % (first_name,last_name))    
     DB.session.add(player)
@@ -104,7 +114,7 @@ def create_entry(division,active,completed,voided,num_scores_per_entry):
     return entry
 
 def init_tournaments():    
-    main = create_tournament('main')
+    main = create_tournament('main', False)
     classics_1 = create_tournament('classics 1')
     classics_2 = create_tournament('classics 2')
     classics_3 = create_tournament('classics 3')

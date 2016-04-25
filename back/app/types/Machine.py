@@ -24,12 +24,4 @@ class Machine(DB.Model):
     def to_dict_simple(self):
         return to_dict(self)
     
-    def to_dict_with_relationships(self):
-        return to_dict(self)
-
-    def to_dict_with_player(self):
-        machine = to_dict(self)
-        if self.player:
-            machine['player'] = self.player[0].to_dict_simple()
-        return machine
 
