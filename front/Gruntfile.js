@@ -28,9 +28,9 @@ module.exports = function(grunt) {
                 replacements: [
                     {
                         from: '[APIHOST]',
-                        to: 'http://localhost:8000'
+                        //to: 'http://localhost:8000'
 			//to: 'http://127.0.0.1:8000'
-			//to: 'http://192.168.1.178:8000',
+			to: 'http://192.168.1.178:8000',
 			//to: 'http://192.168.1.36:8000',
 			//to: 'http://192.168.5.32:8000',
                         //to: 'http://72.77.58.216:8000',
@@ -78,7 +78,7 @@ module.exports = function(grunt) {
 	},
 	concat: {
 	    main: {
-		src: [ 'dist/app.js','src/services/**.js','src/app/routes.js','dist/app_html_templates.js','dist/service_html_templates.js','src/app/**/*.js','!src/app/app.js','dist/_bower.js' ],
+		src: [ 'dist/app.js','src/services/**.js','src/directives/**.js','src/app/routes.js','dist/app_html_templates.js','dist/service_html_templates.js','src/app/**/*.js','!src/app/app.js','dist/_bower.js' ],
 		dest: 'dist/app.js' 
 	    }
 	},

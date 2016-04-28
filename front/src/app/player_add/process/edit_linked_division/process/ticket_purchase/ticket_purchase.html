@@ -1,0 +1,23 @@
+<div ui-content-for="title">
+  <span>Player Division Saved</span>
+</div>
+
+<div class="scrollable">
+  <div ui-view='tournament_add_progress'></div>
+  <div class="scrollable-content">
+    <div style='background-color:white' class='big-web-font'>
+      Player {{player.first_name}} {{player.last_name}} (#{{player.player_id}}) linked to<br>
+      {{tournament.name}} tournament, division {{division.name}}.
+      <br>
+      <a
+	 class='btn btn-info btn-xlg'
+	 ui-sref='app.player_add.process.edit_linked_division({playerId:player.player_id})'
+	 >Buy Tickets For Player</a>
+      <br>
+      <a
+	 class='btn btn-info btn-xlg'
+	 ui-sref='app.player_add'
+	 >Done</a>
+      <br>      
+  </div>
+</div>

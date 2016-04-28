@@ -15,10 +15,16 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 				 'addTournament': {method:'POST', 'timeout': 5000}
 			     })
 	},
-	getTournamentsResource: function(){
+	getAllTournamentsResource: function(){
 	    return $resource('[APIHOST]/tournament', null,
 			     {
-				 'getTournaments': {method:'GET', 'timeout': 5000}
+				 'getAllTournaments': {method:'GET', 'timeout': 5000}
+			     })
+	},
+	getActiveTournamentsResource: function(){
+	    return $resource('[APIHOST]/tournament/active', null,
+			     {
+				 'getActiveTournaments': {method:'GET', 'timeout': 5000}
 			     })
 	},
 	getTournamentResource: function(){
@@ -44,6 +50,12 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 				 'getDivision': {method:'GET', 'timeout': 5000}
 			     })
 	},
+/*	getAllDivisionResource: function(){
+	    return $resource('[APIHOST]/division', null,
+			     {
+				 'getAllDivisions': {method:'GET', 'timeout': 5000}
+			     })
+	},*/
 	getAllMachinesResource: function(){
 	    return $resource('[APIHOST]/machine', null,
 			     {
@@ -86,7 +98,30 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'enableMachineInDivision': {method:'PUT', 'timeout': 5000}
 			     })
-	}
-	
+	},
+	addPlayerResource: function(){
+	    return $resource('[APIHOST]/player', null,			     
+			     {
+				 'addPlayer': {method:'POST', 'timeout': 5000}
+			     })
+	},
+	getPlayerResource: function(){
+	    return $resource('[APIHOST]/player/:player_id', null,			     
+			     {
+				 'getPlayer': {method:'GET', 'timeout': 5000}
+			     })
+	},
+	editPlayerResource: function(){
+	    return $resource('[APIHOST]/player/:player_id', {player_id:'@player_id'},			     
+			     {
+				 'editPlayer': {method:'PUT','timeout': 5000}
+			     })
+	},
+	toggleTournamentActiveResource: function(){
+	    return $resource('[APIHOST]/tournament/:tournament_id/:action', {player_id:'@tournament_id',action:'@action'},			     
+			     {
+				 'toggleTournamentActive': {method:'PUT','timeout': 5000}
+			     })
+	}	
     };
 });

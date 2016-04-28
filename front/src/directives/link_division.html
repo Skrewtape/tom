@@ -1,0 +1,30 @@
+      <form>
+	<table>	  
+	  <tbody ng-repeat='tournament in tournaments' ng-if='tournament.single_division == false'>
+	    <th colspan=2>Player {{player.first_name}} {{player.last_name}} (#{{player.player_id}}) <br>{{tournament.name}} Tournament</th>
+	    <tr ng-repeat='division in tournament.divisions | orderBy: "name"'>
+	      <td>
+		<input
+		   ng-disabled='$parent.$parent.$parent.$parent.division_disabled_for_player(division)'
+	      	   type='radio'
+	      	   ng-model='$parent.$parent.$parent.$parent.linked_division'
+		   ng-value='division.division_id'
+		   class='big-web-font'
+	      	   style='margin-left:10px;margin-right:10px;margin-top:0px;height:40px;width:40px;vertical-align:middle;'
+		   ng-change='$parent.$parent.$parent.$parent.check_for_division_warning(division)'
+	      	   />
+	      </td>
+	      <td>
+	      	<span class='big-web-font'>{{division.name}} Division</span>
+	      </td>
+	    </tr>
+	  </tbody>
+	</table>	      
+      </form>
+
+      <a
+	 class='btn btn-info btn-xlg'
+	 ui-sref='.process({playerId:player.player_id,divisionId:$parent.linked_division})'
+	 >Save Player Division</a>
+      <br>
+

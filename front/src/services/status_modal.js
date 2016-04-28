@@ -38,7 +38,19 @@ angular.module('tom_services.status_modal')
 			      }
 			  }	    
 		      });            
+		  };
+
+		  openOkModalWithMessage = function(message){
+		      return $uibModal.open({
+			  templateUrl: 'services/ok_modal.html',
+			  backdrop: 'static',
+			  keyboard: false,
+			  controller: function($scope){
+			      $scope.message = message;
+			  }	    
+		      });            
 		  };        			  
+		  
 		  
                   launch_status_modal = function(){
                       statusModalInstance = $uibModal.open({

@@ -33,11 +33,20 @@ def add_tournament():
 
 @App.route('/tournament', methods=['GET'])
 def get_tournaments():
-    """Get a list of players"""
+    """Get a list of tournaments"""
     
     return jsonify({t.tournament_id: t.to_dict_with_divisions() for t in
         Tournament.query.all()
     })
+
+@App.route('/tournament/active', methods=['GET'])
+def get_active_tournaments():
+    """Get a list of active tournaments"""
+    
+    return jsonify({t.tournament_id: t.to_dict_with_divisions() for t in
+        Tournament.query.filter_by(active=True).all()
+    })
+
 
 @App.route('/tournament/<tournament_id>', methods=['GET'])
 @fetch_entity(Tournament, 'tournament')

@@ -24,9 +24,11 @@ app = angular.module(
 	    'ui.router',
 	    'mobile-angular-ui',
 	    'tom_services',
+	    'tom_directives',
 	    'app.login',
 	    'app.tournament_add',
-	    'app.tournament_edit'
+	    'app.tournamentselect_machine_add',
+	    'app.player_add'
 	]
 );
 

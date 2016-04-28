@@ -1,0 +1,53 @@
+<div ui-content-for="title">
+  <span>Add Player</span>
+</div>
+<div  ui-content-for="navbarAction">
+    <a ui-sref='^' style='font-size:35px'>
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"> </i> Back
+    </a>
+</div>
+<div class="scrollable">
+  <div style='background:#AAAAAA' ui-view='player_add_progress'></div>
+  <div class="scrollable-content"  style='padding:10px'>
+	    <form>
+	      <div class='form-group form-group-xlg input-group input-group-xlg'>        
+		<span class="input-group-addon" id="player-first-name">First Name</span>
+		<input
+		   type='text'
+		   class='form-control'
+		   aria-describedby='player-first-name'
+		   name='filter'
+		   ng-model='new_player.first_name'
+		   />		
+	      </div>
+	      <div class='form-group form-group-xlg input-group input-group-xlg'>        
+		<span class="input-group-addon" id="player-last-name">Last Name</span>
+		<input
+		   type='text'
+		   class='form-control'
+		   aria-describedby='player-last-name'
+		   name='filter'
+		   ng-model='new_player.last_name'
+		   />		
+	      </div>
+	      <div class='form-group form-group-xlg input-group input-group-xlg'>        
+		<span class="input-group-addon" id="player-email">Email</span>
+		<input
+		   placeholder='email is optional'
+		   type='text'
+		   class='form-control'
+		   aria-describedby='player-email'
+		   name='filter'
+		   ng-model='new_player.email'
+		   />		
+	      </div>
+	      
+	      <br>
+	    </form>
+	    <a
+	       ng-disabled='new_player.first_name == undefined || new_player.first_name == ""'
+	       class='btn btn-info btn-xlg'
+	       ui-sref='app.player_add.process({newPlayerInfo:new_player})'
+	       > Add Player</a>
+  </div>
+</div>

@@ -1,6 +1,6 @@
-angular.module('app.tournament_edit.machine_add',[]);
-angular.module('app.tournament_edit.machine_add').controller(
-    'app.tournament_edit.machine_add',
+angular.module('app.tournamentselect_machine_add.machine_add',[]);
+angular.module('app.tournamentselect_machine_add.machine_add').controller(
+    'app.tournamentselect_machine_add.machine_add',
     function($scope, $http, $uibModal, $location, $state, Page, StatusModal,TimeoutResources) {
 	StatusModal.loading();
 
@@ -9,9 +9,10 @@ angular.module('app.tournament_edit.machine_add').controller(
 	$scope.single_division=$state.params.singleDivision;	
 
 	$scope.division = TimeoutResources.getDivisionResource().getDivision({division_id:$scope.division_id});	    	
-
+	
 	$scope.all_machines_promise = $scope.division.$promise.then(function(data){
-	    $scope.all_machines = TimeoutResources.getAllMachinesArrayResource().getAllMachinesArray();	    	
+	    $scope.all_machines = TimeoutResources.getAllMachinesArrayResource().getAllMachinesArray();
+	    return $scope.all_machines.$promise;
 	})
 	$scope.all_machines_promise.then(function(data){
 	    StatusModal.loaded();

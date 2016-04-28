@@ -106,7 +106,7 @@ def linked_divisions_to_dict(linked_divisions):
     if len(linked_divisions) == 0:
         return None
     if len(linked_divisions) == 1:
-        return [linked_divisions[0].to_dict_simple()]
+        return linked_divisions[0].to_dict_simple()
     return [x.to_dict_simple() for x in linked_divisions]
     
 
@@ -117,10 +117,24 @@ def get_player(player):
     player_dict = player.to_dict_simple()
     #FIXME : this should be in the model
     player_dict['linked_division'] = linked_divisions_to_dict(player.linked_division)
-    if player.machine:
-        player_dict['machine'] = player.machine.to_dict_simple()                
+    if player.division_machine:
+        player_dict['division_machine'] = player.division_machine.to_dict_simple()                
     return jsonify(player_dict)
 
+
+def find_linked_division_with_tournament_id(player, tournament_id):
+    for x in player.linked_division:
+        if x.tournament_id == tournament_id:
+            return x
+
+def check_old_division_can_be_removed(old_division,new_division):
+    if old_division and old_division.name < new_division.name:                
+        raise Conflict('Tried to specify a lower division than current division')
+    
+def void_entrys_from_old_linked_division(player,old_division):
+    if old_division is not None:
+        for entry in Entry.query.filter_by(player_id=player.player_id, division_id=old_division.division_id).all(): 
+            entry.voided = True                                
 
 @App.route('/player/<player_id>', methods=['PUT'])
 @login_required
@@ -138,26 +152,23 @@ def edit_player(player):
 
     player_dict = player.to_dict_simple()
     
-    if 'linked_division' in player_data:
-        #FIXME : add busniess logic to prevent moving down a division
+    if 'division_id' in player_data:
+        #FIXME : be able to handle multiple tourneys with multiple divisions
         old_division = None
-        new_division = Division.query.filter_by(division_id=player_data['linked_division']).first()        
+        new_division = Division.query.filter_by(division_id=player_data['division_id']).first()        
+
         if new_division is None:            
-            #FIXME : need to make sure this actually works
             raise BadRequest('Bad division specified for linked division')            
-        linked_divisions_in_tournament = [x for x in player.linked_division
-                                          if x.tournament_id == new_division.tournament_id]
-        if linked_divisions_in_tournament:            
-            old_division = linked_divisions_in_tournament[0]
-            if old_division.name < new_division.name:                
-                raise Conflict('Tried to specify a lower division than current division')
-            player.linked_division.remove(linked_divisions_in_tournament[0])            
+
+        new_tournament_id = new_division.tournament_id
+        old_division = find_linked_division_with_tournament_id(player, new_tournament_id)
+        check_old_division_can_be_removed(old_division,new_division)
         player.linked_division.append(new_division)
-        if old_division is not None:
-            for entry in Entry.query.filter_by(player_id=player.player_id,
-                                               division_id=old_division.division_id).all(): 
-                entry.voided = True                                
+        if old_division:
+            player.linked_division.remove(old_division)                                
+        void_entrys_from_old_linked_division(player,old_division)        
         player_dict['linked_division'] = linked_divisions_to_dict(player.linked_division)            
+
     DB.session.commit()
     return jsonify(player_dict)
 
