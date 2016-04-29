@@ -1,0 +1,17 @@
+<div ui-content-for="title">
+  <span>Activate Tournaments</span>
+</div>
+<div  ui-content-for="navbarAction">
+    <a ui-sref='^' style='font-size:35px'>
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"> </i> Back
+    </a>
+</div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+    <div class="scrollable-content"  style='padding:10px'>
+      <div ng-repeat='tournament in tournaments'>
+	<ui-switch ng-change='toggle_tournament(tournament)' class='pull-left' ng-model='tournament_state[tournament.tournament_id]'></ui-switch>	<span style='padding-left:10px' class='big-web-font'>Activate {{tournament.name}} Tournament</span>
+      </div>
+    </div>
+  </div>
+</div>

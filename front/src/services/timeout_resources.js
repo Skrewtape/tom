@@ -118,7 +118,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     })
 	},
 	toggleTournamentActiveResource: function(){
-	    return $resource('[APIHOST]/tournament/:tournament_id/:action', {player_id:'@tournament_id',action:'@action'},			     
+	    return $resource('[APIHOST]/tournament/:tournament_id/:action', {tournament_id:'@tournament_id',action:'@action'},			     
 			     {
 				 'toggleTournamentActive': {method:'PUT','timeout': 5000}
 			     })

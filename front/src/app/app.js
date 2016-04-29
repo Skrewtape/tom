@@ -5,18 +5,11 @@
 _ = require('underscore');
 angular = require('angular');
 require('jquery-browserify');
-//require('angular-animate');
 require('angular-ui-bootstrap');
-//require('angular-breadcrumb');
-//require('angular-touch');
 require('angular-ui-router');
-//require('angular-ui-switch');
 require('bootstrap-sass/assets/javascripts/bootstrap');
-//require('ngKeypad');
 require('angular-fcsa-number');
 require('angular-resource');
-//require('ng-focus-if');
-//require('mobile-angular-ui');
 app = angular.module(
 	'TOMApp',
 	[
@@ -28,7 +21,8 @@ app = angular.module(
 	    'app.login',
 	    'app.tournament_add',
 	    'app.tournamentselect_machine_add',
-	    'app.player_add'
+	    'app.player_add',
+	    'app.tournament_activate',/*REPLACEMECHILD*/
 	]
 );
 
@@ -66,21 +60,6 @@ app.controller(
 	}
     }
 );
-
-
-//require('./controllers/index.js');
-//require('./factories/index.js');
-// require('./directives/index.js');
-// require('./routes.js');
-// require('./routes_add_player.js');
-// require('./routes_add_score.js');
-// require('./routes_scorekeeping.js');
-// require('./routes_scorekeeping_playerselect.js');
-// require('./routes_godassholesearch.js');
-// require('./routes_add_player.js');
-// require('./routes_home.poop.js');
-
-// Set up CORS stuff
 
 app.factory('myHttpInterceptor', function($q,$injector,$rootScope) {
     return {

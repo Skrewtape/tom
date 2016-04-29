@@ -23,6 +23,7 @@ $new_module = $module_path_array[$#module_path_array];
 $parent_module = $module_path_array[$#module_path_array-1];
 $parent_module_file_path = $path_to_src_dir.'/'.join('/',@module_path_array[0..$#module_path_array-1]);
 $module_file_path = $path_to_src_dir.'/'.join('/',@module_path_array);
+$module_relative_file_path = join('/',@module_path_array);
 $routes_path = $path_to_src_dir.'/'.join('/',@module_path_array[0..1]);
 
 if(-e $module_file_path){
@@ -68,6 +69,7 @@ angular.module('TOMApp').config(function(\$stateProvider, \$urlRouterProvider) {
     \$urlRouterProvider.otherwise('/app');
     
     \$stateProvider//REPLACE_ME
+})
 END_NEW_ROUTES
 
 my $routes_string = <<"END_CONTROLLER";
@@ -76,7 +78,7 @@ my $routes_string = <<"END_CONTROLLER";
  	 url: '/$new_module',
  	 views: {
  	     '\@': {
- 	       templateUrl: '$new_module.html',
+ 	       templateUrl: '$module_relative_file_path/$new_module.html',
  	       controller: '$full_module_name',
  	     }
  	   }
