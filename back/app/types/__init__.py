@@ -10,3 +10,4 @@ from app.types.Player import Player
 from app.types.Entry import Entry
 from app.types.Score import Score
 from app.types.Token import Token
+from app.types.Metadivision import Metadivision

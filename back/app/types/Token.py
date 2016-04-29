@@ -21,6 +21,7 @@ from flask_restless.helpers import to_dict
 # use case : purchase 1 or more tokens for meta-tournament (i.e. classics)
 #
 # lookup list of tourneys and meta tourneys, and merge the list (i.e. remove any tourneys in meta list, replace with meta tourney)
+## when looking up divisions, if it has a metadivision id, potentially display that name
 # create tokens(s), linked to 
 # use case : void ticket while 1 or more tokens still available ( for active tourney )
 # use case : void ticket while 1 or more tokens still available ( for meta tourney )
