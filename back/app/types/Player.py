@@ -34,11 +34,11 @@ class Player(DB.Model):
         'division_machine.division_machine_id'
     ))
 
-    division_machine = DB.relationship(
-        'DivisionMachine',
-        backref=DB.backref('player'),
-        foreign_keys=[division_machine_id]        
-    )
+    # division_machine = DB.relationship(
+    #     'DivisionMachine',
+    #     backref=DB.backref('player'),
+    #     foreign_keys=[division_machine_id]        
+    # )
 
     # active_tournaments_entries = DB.relationship(
     #     'Entry',

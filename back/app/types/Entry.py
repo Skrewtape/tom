@@ -20,6 +20,10 @@ class Entry(DB.Model):
     player_id = DB.Column(DB.Integer, DB.ForeignKey(
         'player.player_id'
     ))
+    team_id = DB.Column(DB.Integer, DB.ForeignKey(
+        'team.team_id'
+    ))
+    
     division_id = DB.Column(DB.Integer, DB.ForeignKey(
         'division.division_id'
     ))
@@ -33,7 +37,7 @@ class Entry(DB.Model):
         backref=DB.backref('entries'),
         foreign_keys=[player_id]
     )
-
+    
     scores = DB.relationship("Score",
                              lazy='joined'
     )

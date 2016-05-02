@@ -19,9 +19,7 @@ class DivisionMachine(DB.Model):
     division = DB.relationship(
         'Division',
         foreign_keys=[division_id]
-    )
-
-    
+    )    
     machine = DB.relationship(
         'Machine',
         foreign_keys=[machine_id]

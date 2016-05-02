@@ -6,3 +6,6 @@ import app.routes.division
 import app.routes.machine
 import app.routes.entry
 import app.routes.test
+import app.routes.metadivision
+import app.routes.token
+import app.routes.team
