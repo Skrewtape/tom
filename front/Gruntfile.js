@@ -1,5 +1,14 @@
 module.exports = function(grunt) {
     grunt.initConfig({
+	shell: {
+	    makeRevHistory: {
+		command: ["git log --pretty=format:'%H<msgst>%b<msge>' | fgrep -v '<msgst><msge>' | fgrep '<msgst>' | cut -b1-40 | git log --stdin --no-walk > dist/rev.txt",
+			  "echo '<pre>' > dist/rev.html",
+			  "cat dist/rev.txt >> dist/rev.html",
+			  "echo '<pre>' >> dist/rev.html"
+			 ].join('&&')
+	    }
+	},
         pkg: [grunt.file.readJSON('package.json')],
         copy: {
             main: {
@@ -123,7 +132,8 @@ module.exports = function(grunt) {
 	'bower_concat',
         'browserify',
 	'ngtemplates:TOMApp',
-	'concat'
+	'concat',
+	'shell:makeRevHistory'
     ]);
 
     grunt.registerTask('default', [
