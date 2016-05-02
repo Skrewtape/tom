@@ -50,12 +50,12 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 				 'getDivision': {method:'GET', 'timeout': 5000}
 			     })
 	},
-/*	getAllDivisionResource: function(){
+	getAllDivisionsResource: function(){
 	    return $resource('[APIHOST]/division', null,
 			     {
 				 'getAllDivisions': {method:'GET', 'timeout': 5000}
 			     })
-	},*/
+	},
 	getAllMachinesResource: function(){
 	    return $resource('[APIHOST]/machine', null,
 			     {
@@ -133,6 +133,12 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	    return $resource('[APIHOST]/metadivision', null,			     
 			     {
 				 'getAllMetadivisions': {method:'GET', 'timeout': 5000}
+			     })	    
+	},
+	addTokensResource: function(){
+	    return $resource('[APIHOST]/token', null,			     
+			     {
+				 'addTokens': {method:'POST', 'timeout': 5000}
 			     })	    
 	}
     };

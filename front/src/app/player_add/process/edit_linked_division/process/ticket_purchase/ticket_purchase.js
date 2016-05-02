@@ -1,8 +1,15 @@
-angular.module('app.player_add.process.edit_linked_division.process.ticket_purchase',[]);
+angular.module('app.player_add.process.edit_linked_division.process.ticket_purchase',['app.player_add.process.edit_linked_division.process.ticket_purchase.process',/*REPLACEMECHILD*/]);
 angular.module('app.player_add.process.edit_linked_division.process.ticket_purchase').controller(
     'app.player_add.process.edit_linked_division.process.ticket_purchase',
     function($scope, $state, StatusModal, TimeoutResources) {
 	$scope.player_id=$state.params.playerId;
+	$scope.max_unstarted_tickets = 5;
+	$scope.added_tokens = {metadivisions:{},divisions:{}};
+	
+	$scope.change_division_tickets = function(type,division_id,amount){
+	    $scope.player_tokens[type][division_id]=$scope.player_tokens[type][division_id]+amount;
+	    $scope.added_tokens[type][division_id]=$scope.added_tokens[type][division_id]+amount;	    
+	}
 
 	$scope.get_metadivision_for_division = function(division_id){
 	    for(metadivision_index in $scope.metadivisions){
@@ -17,24 +24,13 @@ angular.module('app.player_add.process.edit_linked_division.process.ticket_purch
 	}
 	
 	$scope.division_in_metadivision = function(division_id){
-	    if($scope.get_metadivision_for_division(division_id) == undefined){
+	    if($scope.get_metadivision_for_division(division_id) == undefined){		
 		return false
 	    }
+	    
 	    return true;
 	}
-	
-	$scope.get_division_from_tournament = function(division_id){
-	    for(tournament_index in $scope.tournaments){
-		tournament = $scope.tournaments[tournament_index];
-		for(division_index in tournament.divisions){
-		    division = tournament.divisions[division_index];
-		    if(division_id == division.division_id){
-			return division;
-		    }
-		}
-	    }
-	}
-	
+		
         StatusModal.loading();
 	$scope.metadivisions = TimeoutResources.getAllMetadivisionsResource().getAllMetadivisions();	    	    
 	$scope.player_promise = $scope.metadivisions.$promise.then(function(data){
@@ -50,6 +46,12 @@ angular.module('app.player_add.process.edit_linked_division.process.ticket_purch
 	    return $scope.player_tokens.$promise
 	})
 	$scope.player_tokens_promise.then(function(data){
+	    for(id in $scope.player_tokens.metadivisions){
+		$scope.added_tokens.metadivisions[id]=0;
+	    }
+	    for(id in $scope.player_tokens.divisions){
+		$scope.added_tokens.divisions[id]=0;
+	    }	    
 	    StatusModal.loaded();
 	})
 	

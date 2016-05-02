@@ -33,7 +33,6 @@ app.controller(
 	$scope.Page = Page;
 
 	$scope.checkForBlankParams = function(param){
-	    console.log(param);
 
 	    if(Object.keys(param).length === 0 && JSON.stringify(param) === JSON.stringify({})){
 		StatusModal.http_error("Oops.  Looks like you tried to reload a page which submits data.  That is a no no!");	         return true;
@@ -53,7 +52,6 @@ app.controller(
 
 	//FIXME : change this to use $resource
 	if(Page.logged_in_user().username == undefined){
-	    console.log('getting current user');
             $http.get('[APIHOST]/user/current',{timeout:5000}).success(function (data) {
 		Page.set_logged_in_user(data);			
             });
@@ -65,7 +63,6 @@ app.factory('myHttpInterceptor', function($q,$injector,$rootScope) {
     return {
 	'responseError': function(rejection) {
 	    var StatusModal = $injector.get('StatusModal');
-	    console.log('got a bad http');
 	    if(rejection.status == -1){
 		rejection.data={};
 		rejection.data.message="HTTP Timeout while getting "+rejection.config.url

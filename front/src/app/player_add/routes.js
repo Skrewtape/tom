@@ -66,5 +66,19 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                     templateUrl: 'app/player_add/player_add_progress.html',		    
 		}
             },
-	})
+	}).state('app.player_add.process.edit_linked_division.process.ticket_purchase.process', 
+        { 
+ 	 url: '/process',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/player_add/process/edit_linked_division/process/ticket_purchase/process/process.html',
+ 	       controller: 'app.player_add.process.edit_linked_division.process.ticket_purchase.process',
+ 	     },
+	     'player_add_progress@app.player_add.process.edit_linked_division.process.ticket_purchase.process':{
+                 templateUrl: 'app/player_add/player_add_progress.html',		    
+	     }
+ 	 },
+	    params: {addedTokens:{}}
+       })//REPLACE_ME
+
 });

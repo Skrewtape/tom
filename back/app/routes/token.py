@@ -3,7 +3,7 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Entry, Score, Player, Division, Machine, Token, Team, Metadivision
+from app.types import Entry, Score, Player, Division, Machine, Token, Team, Metadivision, Tournament
 from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank
 from app import tom_config
@@ -14,7 +14,7 @@ def get_existing_token_info(jsontoken,player_id=None,team_id=None):
     if jsontoken.has_key('division_id'):
         query =  Token.query.filter_by(division_id=jsontoken['division_id'])
     if jsontoken.has_key('metadivision_id'):
-        query = Token.query.filter_by(division_id=jsontoken['metadivision_id'])
+        query = Token.query.filter_by(metadivision_id=jsontoken['metadivision_id'])
     if player_id:
         query = query.filter_by(player_id=player_id)
     if team_id:
@@ -79,18 +79,19 @@ def create_entry_if_needed(jsontoken,token,player_id=None,team_id=None):
     if jsontoken.has_key('metadivision_id'):
         metadivision_id = jsontoken['metadivision_id']
         division_id = None
-        
-    if player_id:
-        query = Entry.query.filter_by(division_id=division_id,player_id=player_id,active=True)
-    if team_id:
-        query = Entry.query.filter_by(division_id=division_id,team_id=team_id,active=True)        
-    if query.count() > 0:
-        return
+
     if metadivision_id:
         # WE ASSUME ONLY ONE DIVISION IN A METADIVISION IS ACTIVE AT ONCE
-        division = Division.query.filter_by(metadivision_id=metadivision_id,active=True).first()
+        division = Division.query.filter_by(metadivision_id=metadivision_id).join(Tournament).filter_by(active=True).first()
     if division_id:
-        division = Division.query.filter_by(division_id=division_id).first()    
+        division = Division.query.filter_by(division_id=division_id).first()            
+    if player_id:
+        query = Entry.query.filter_by(division_id=division.division_id,player_id=player_id,active=True)
+    if team_id:
+        query = Entry.query.filter_by(division_id=division.division_id,team_id=team_id,active=True)        
+    if query.count() > 0:
+        print "no need to create"
+        return
 
     new_entry = Entry(
         division = division,
@@ -115,15 +116,22 @@ def create_entry_if_needed(jsontoken,token,player_id=None,team_id=None):
 def get_tokens_for_player(player_id):
     tokens = Token.query.filter_by(player_id=player_id).all()
     token_dict = {'divisions':{},'metadivisions':{}}
+    divisions = Division.query.all()
+    metadivisions = Metadivision.query.all()    
+    for division in divisions:
+        token_dict['divisions'][division.division_id]=0
+    for metadivision in metadivisions:
+        token_dict['metadivisions'][metadivision.metadivision_id]=0
     for token in tokens:        
-        if token_dict['divisions'].has_key(token.division_id) is False:
-            token_dict['divisions'][token.division_id] = 0
-        token_dict['divisions'][token.division_id]=token_dict['divisions'][token.division_id] + 1      
+        if token.division_id != None:
+            token_dict['divisions'][token.division_id]=token_dict['divisions'][token.division_id] + 1      
+        if token.metadivision_id != None:
+            token_dict['metadivisions'][token.metadivision_id]=token_dict['metadivisions'][token.metadivision_id] + 1      
     return jsonify(token_dict)
 
 @App.route('/token', methods=['POST'])
 def add_token():
-    tokens_data = json.loads(request.data)    
+    tokens_data = json.loads(request.data)
     check_players_teams_valid_for_add_token_request(tokens_data)
     if tokens_data.has_key('player_id'):
         player_id = tokens_data['player_id']
@@ -141,13 +149,15 @@ def add_token():
             check_division_metadivision_valid_for_add_token_request(jsontoken,player_id=player_id)            
             check_linked_division(None)
             tokens = create_tokens(jsontoken,player_id=player_id)
-            create_entry_if_needed(jsontoken, tokens.pop(), player_id=player_id)
+            if len(tokens) > 0:
+                create_entry_if_needed(jsontoken, tokens.pop(), player_id=player_id)
         if team_id:
             jsontoken = get_existing_token_info(jsontoken,team_id=team_id)
             check_division_metadivision_valid_for_add_token_request(jsontoken,team_id=team_id)        
             check_linked_division(None)
             tokens = create_tokens(jsontoken,team_id=team_id)
-            create_entry_if_needed(jsontoken, tokens.pop(), team_id=team_id)            
+            if len(tokens) > 0:
+                create_entry_if_needed(jsontoken, tokens.pop(), team_id=team_id)            
     DB.session.commit()
     
          
