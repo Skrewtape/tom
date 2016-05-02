@@ -122,6 +122,18 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'toggleTournamentActive': {method:'PUT','timeout': 5000}
 			     })
-	}	
+	},
+	getTokensForPlayerResource: function(){
+	    return $resource('[APIHOST]/token/player_id/:player_id', null,			     
+			     {
+				 'getTokensForPlayer': {method:'GET', 'timeout': 5000}
+			     })	    
+	},
+	getAllMetadivisionsResource: function(){
+	    return $resource('[APIHOST]/metadivision', null,			     
+			     {
+				 'getAllMetadivisions': {method:'GET', 'timeout': 5000}
+			     })	    
+	}
     };
 });

@@ -9,6 +9,15 @@ from app.routes.util import fetch_entity
 from werkzeug.exceptions import BadRequest
 import time
 
+@App.route('/metadivision', methods=['GET'])
+def get_metadivisions():
+    """Get a list of all metadivisions"""
+    
+    return jsonify({m.metadivision_id: m.to_dict_with_divisions() for m in
+        Metadivision.query.all()
+    })
+
+
 @login_required
 @Admin_permission.require(403)
 @App.route('/metadivision', methods=['POST'])

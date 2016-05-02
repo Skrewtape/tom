@@ -56,7 +56,5 @@ class Token(DB.Model):
          foreign_keys=[team_id]
     )
     
-    
-
-    pass
-
+    def to_dict_simple(self):
+        return to_dict(self)        

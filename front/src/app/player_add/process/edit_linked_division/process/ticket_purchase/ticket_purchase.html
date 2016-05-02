@@ -1,23 +1,32 @@
 <div ui-content-for="title">
-  <span>Player Division Saved</span>
+  <span>Purchase Tickets</span>
 </div>
 
 <div class="scrollable">
   <div ui-view='tournament_add_progress'></div>
   <div class="scrollable-content">
     <div style='background-color:white' class='big-web-font'>
-      Player {{player.first_name}} {{player.last_name}} (#{{player.player_id}}) linked to<br>
-      {{tournament.name}} tournament, division {{division.name}}.
-      <br>
-      <a
-	 class='btn btn-info btn-xlg'
-	 ui-sref='app.player_add.process.edit_linked_division({playerId:player.player_id})'
-	 >Buy Tickets For Player</a>
-      <br>
-      <a
-	 class='btn btn-info btn-xlg'
-	 ui-sref='app.player_add'
-	 >Done</a>
-      <br>      
+      Purchase tickets for {{player.first_name}} {{player.last_name}}.
+      <hr>
+      <div ng-repeat='tournament in tournaments'>
+	<div ng-if='tournament.single_division == true'>
+	  <!-- COME BACK : need to figure out best way to handle metadivisions/divisions for disabling buttons-->
+	    <a
+	       ng-disabled='player_tokens[tournament.divisions[0].division_id] > 1'
+	       class='btn btn-info btn-xlg'
+	       ng-click=''
+	       >
+	      Add
+	      <span ng-if='division_in_metadivision(tournament.divisions[0].division_id)'>{{get_metadivision_for_division(tournament.divisions[0].division_id).name}}</span>
+	      <span ng-if='division_in_metadivision(tournament.divisions[0].division_id) == false'>{{tournament.name}} poop </span>
+	      tournament ticket
+	    </a>
+	</div>
+	<div ng-if='tournament.single_division == false  && division.division_id == player.linked_division.division_id'' ng-repeat='division in tournament.divisions'>
+	  Purchase a {{division.name}} division ticket
+	</div>
+	<hr>
+      </div>
+    </div>
   </div>
 </div>

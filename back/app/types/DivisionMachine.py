@@ -16,6 +16,9 @@ class DivisionMachine(DB.Model):
     division_id = DB.Column(DB.Integer, DB.ForeignKey(
         'division.division_id'
     ))
+    player_id = DB.Column(DB.Integer, DB.ForeignKey(
+        'player.player_id'
+    ))    
     division = DB.relationship(
         'Division',
         foreign_keys=[division_id]
@@ -24,6 +27,8 @@ class DivisionMachine(DB.Model):
         'Machine',
         foreign_keys=[machine_id]
     )
+    player = DB.relationship('Player')    
+
     
     def to_dict_simple(self):
         division_machine = to_dict(self)

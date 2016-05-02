@@ -3,22 +3,55 @@ angular.module('app.player_add.process.edit_linked_division.process.ticket_purch
     'app.player_add.process.edit_linked_division.process.ticket_purchase',
     function($scope, $state, StatusModal, TimeoutResources) {
 	$scope.player_id=$state.params.playerId;
-	$scope.division_id=$state.params.divisionId;
-	if($scope.checkForBlankParams($scope.player_id) == true){
-	    return;
+
+	$scope.get_metadivision_for_division = function(division_id){
+	    for(metadivision_index in $scope.metadivisions){
+		metadivision = $scope.metadivisions[metadivision_index];
+		for(division_index in metadivision.divisions){
+		    if (division_index == division_id){
+			return metadivision;
+		    }
+		}
+	    }
+	    return undefined;
 	}
+	
+	$scope.division_in_metadivision = function(division_id){
+	    if($scope.get_metadivision_for_division(division_id) == undefined){
+		return false
+	    }
+	    return true;
+	}
+	
+	$scope.get_division_from_tournament = function(division_id){
+	    for(tournament_index in $scope.tournaments){
+		tournament = $scope.tournaments[tournament_index];
+		for(division_index in tournament.divisions){
+		    division = tournament.divisions[division_index];
+		    if(division_id == division.division_id){
+			return division;
+		    }
+		}
+	    }
+	}
+	
         StatusModal.loading();
-	$scope.player = TimeoutResources.editPlayerResource().editPlayer({player_id:$scope.player_id},{division_id:$scope.division_id});	    
-	$scope.division_promise = $scope.player.$promise.then(function(data){
-	    $scope.division = TimeoutResources.getDivisionResource().getDivision({division_id:$scope.division_id});	    
-	    return $scope.division.$promise;
+	$scope.metadivisions = TimeoutResources.getAllMetadivisionsResource().getAllMetadivisions();	    	    
+	$scope.player_promise = $scope.metadivisions.$promise.then(function(data){
+	    $scope.player = TimeoutResources.getPlayerResource().getPlayer({player_id:$scope.player_id});
+	    return $scope.player.$promise;
+	})
+	$scope.tournaments_promise = $scope.player_promise.then(function(data){
+	    $scope.tournaments = TimeoutResources.getActiveTournamentsResource().getActiveTournaments();	    
+	    return $scope.tournaments.$promise;
 	});
-	$scope.tournament_promise = $scope.division_promise.then(function(data){
-	    $scope.tournament = TimeoutResources.getTournamentResource().getTournament({tournament_id:$scope.division.tournament_id});	    
-	    return $scope.tournament.$promise;
-	});
-	$scope.tournament_promise.then(function(data){
+	$scope.player_tokens_promise = $scope.tournaments_promise.then(function(data){
+	    $scope.player_tokens = TimeoutResources.getTokensForPlayerResource().getTokensForPlayer({player_id:$scope.player_id});	    	    
+	    return $scope.player_tokens.$promise
+	})
+	$scope.player_tokens_promise.then(function(data){
 	    StatusModal.loaded();
 	})
+	
     }
 );

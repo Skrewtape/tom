@@ -30,15 +30,7 @@ class Player(DB.Model):
         secondary=Player_Division_mapping        
     )
     
-    division_machine_id = DB.Column(DB.Integer, DB.ForeignKey(
-        'division_machine.division_machine_id'
-    ))
-
-    # division_machine = DB.relationship(
-    #     'DivisionMachine',
-    #     backref=DB.backref('player'),
-    #     foreign_keys=[division_machine_id]        
-    # )
+    division_machine = DB.relationship('DivisionMachine', uselist=False)
 
     # active_tournaments_entries = DB.relationship(
     #     'Entry',

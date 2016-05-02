@@ -22,6 +22,10 @@ def get_existing_token_info(jsontoken,player_id=None,team_id=None):
     jsontoken['existing_tokens_for_division'] = query.count()
     return jsontoken
 
+def check_linked_division(division_id, player_id=None, team_id=None):
+    #FIXME : this should have actual contents
+    pass
+
 def check_division_metadivision_valid_for_add_token_request(jsontoken,player_id=None,team_id=None):
     
     if player_id:
@@ -105,7 +109,18 @@ def create_entry_if_needed(jsontoken,token,player_id=None,team_id=None):
     DB.session.add(new_entry)
     Token.query.filter_by(token_id=token.token_id).delete()
     DB.session.commit()
-        
+
+
+@App.route('/token/player_id/<player_id>', methods=['GET'])
+def get_tokens_for_player(player_id):
+    tokens = Token.query.filter_by(player_id=player_id).all()
+    token_dict = {'divisions':{},'metadivisions':{}}
+    for token in tokens:        
+        if token_dict['divisions'].has_key(token.division_id) is False:
+            token_dict['divisions'][token.division_id] = 0
+        token_dict['divisions'][token.division_id]=token_dict['divisions'][token.division_id] + 1      
+    return jsonify(token_dict)
+
 @App.route('/token', methods=['POST'])
 def add_token():
     tokens_data = json.loads(request.data)    
@@ -124,11 +139,13 @@ def add_token():
         if player_id:
             jsontoken = get_existing_token_info(jsontoken,player_id=player_id)
             check_division_metadivision_valid_for_add_token_request(jsontoken,player_id=player_id)            
+            check_linked_division(None)
             tokens = create_tokens(jsontoken,player_id=player_id)
             create_entry_if_needed(jsontoken, tokens.pop(), player_id=player_id)
         if team_id:
             jsontoken = get_existing_token_info(jsontoken,team_id=team_id)
             check_division_metadivision_valid_for_add_token_request(jsontoken,team_id=team_id)        
+            check_linked_division(None)
             tokens = create_tokens(jsontoken,team_id=team_id)
             create_entry_if_needed(jsontoken, tokens.pop(), team_id=team_id)            
     DB.session.commit()
