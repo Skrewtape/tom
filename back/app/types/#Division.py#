@@ -12,7 +12,10 @@ Division_machine_mapping = DB.Table(
 class Division(DB.Model):
     """Model object for a division in a tournament"""
     # pylint: disable=no-init
-    # pylint can't find SQLAlchemy's __init__() method for some reason
+    # pylint can't find SQLAlchemy's __init__() method for some reason    
+    metadivision_id = DB.Column(DB.Integer, DB.ForeignKey(
+        'metadivision.metadivision_id'
+    ))
     division_id = DB.Column(DB.Integer, primary_key=True)
     name = DB.Column(DB.String(1000))
     number_of_scores_per_entry = DB.Column(DB.Integer)
@@ -23,6 +26,10 @@ class Division(DB.Model):
     tournament = DB.relationship(
          'Tournament',
          foreign_keys=[tournament_id]
+    )
+    metadivision = DB.relationship(
+         'Metadivision',
+         foreign_keys=[metadivision_id]
     )
 
     # machines = DB.relationship(
