@@ -1,8 +1,88 @@
 /*global app*/
 //poop page
 angular.module('tom_services.timeout_resources', ['ngResource']);
-angular.module('tom_services.timeout_resources').factory('TimeoutResources', function($resource) {
+angular.module('tom_services.timeout_resources').factory('TimeoutResources', function($resource,$q) {
+    var all_active_tournaments_resource = $resource('[APIHOST]/tournament/active', null,
+     		      {
+     			  'getActiveTournaments': {method:'GET', 'timeout': 5000}
+     		      })    
+    var resource_results = {};
+    var resources = {};    
+    var timestamps = {};
+
+    var resolved_promise = function(){
+	var defer = $q.defer()
+	defer.resolve();
+	return defer.promise;
+    }
+
+    var check_resource_is_fresh = function(resource){
+	if(timestamps[resource]!= undefined && Date.now() - 300000 > timestamps[resource]){
+	    return true;
+	} else {
+	    return false;
+	}
+    }
+
+    var generic_get_resource = function(res_name,scope_name,args){
+	if(args == undefined){
+	    args={}
+	}
+	resource_results[scope_name] = resources[res_name][res_name](args);
+	timestamps[res_name] = Date.now();
+	return resource_results[scope_name].$promise;	
+    }
+
+    var generic_resource = function(res_name,scope_name){
+	return function(promise,args){
+	    if(check_resource_is_fresh(res_name)){
+		return resolved_promise();
+	    }
+	    if(promise != undefined){
+		return promise.then(function(data){
+		    return generic_get_resource(res_name,scope_name,args);
+		})
+	    } else {
+		return generic_get_resource(res_name,scope_name,args);
+	    }
+	}
+    }
+    
+    resource_results['tournaments'] = undefined;
+    resource_results['metadivisions'] = undefined;
+    resource_results['player'] = undefined;
+    resource_results['player_token'] = undefined;
+    resources['getActiveTournaments'] = $resource('[APIHOST]/tournament/active', null,
+     						    {
+     							'getActiveTournaments': {method:'GET', 'timeout': 5000}
+     						    })    
+    resources['getAllMetadivisions'] = $resource('[APIHOST]/metadivision', null,			     
+						 {
+						     'getAllMetadivisions': {method:'GET', 'timeout': 5000}
+						 })
+    resources['getPlayer'] =  $resource('[APIHOST]/player/:player_id', null,			     
+					{
+					    'getPlayer': {method:'GET', 'timeout': 5000}
+					})
+    resources['getPlayerTokens']= $resource('[APIHOST]/token/player_id/:player_id', null,			     
+					       {
+						   'getPlayerTokens': {method:'GET', 'timeout': 5000}
+					       })	    	
+    
     return {
+	GetAllResources: function(){
+	    return resource_results;
+	},
+	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions'),
+	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments'),
+	GetPlayer: generic_resource('getPlayer','player'),
+	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens'),	
+	getAllMetadivisionsResource: function(){
+	    return $resource('[APIHOST]/metadivision', null,			     
+			     {
+				 'getAllMetadivisions': {method:'GET', 'timeout': 5000}
+			     })	    
+	},	
 	loginResource: function (){
 	    return $resource('[APIHOST]/login', null,
 			     {
@@ -127,12 +207,6 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	    return $resource('[APIHOST]/token/player_id/:player_id', null,			     
 			     {
 				 'getTokensForPlayer': {method:'GET', 'timeout': 5000}
-			     })	    
-	},
-	getAllMetadivisionsResource: function(){
-	    return $resource('[APIHOST]/metadivision', null,			     
-			     {
-				 'getAllMetadivisions': {method:'GET', 'timeout': 5000}
 			     })	    
 	},
 	addTokensResource: function(){

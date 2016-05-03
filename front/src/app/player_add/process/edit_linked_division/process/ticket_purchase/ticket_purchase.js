@@ -1,57 +1,23 @@
 angular.module('app.player_add.process.edit_linked_division.process.ticket_purchase',['app.player_add.process.edit_linked_division.process.ticket_purchase.process',/*REPLACEMECHILD*/]);
 angular.module('app.player_add.process.edit_linked_division.process.ticket_purchase').controller(
     'app.player_add.process.edit_linked_division.process.ticket_purchase',
-    function($scope, $state, StatusModal, TimeoutResources) {
+    function($scope, $state, StatusModal, TimeoutResources, Utils) {
 	$scope.player_id=$state.params.playerId;
 	$scope.max_unstarted_tickets = 5;
-	$scope.added_tokens = {metadivisions:{},divisions:{}};
-	
-	$scope.change_division_tickets = function(type,division_id,amount){
-	    $scope.player_tokens[type][division_id]=$scope.player_tokens[type][division_id]+amount;
-	    $scope.added_tokens[type][division_id]=$scope.added_tokens[type][division_id]+amount;	    
-	}
+	$scope.added_tokens = {metadivisions:{},divisions:{}};	
+	$scope.change_division_tickets = Utils.change_division_tickets;
 
-	$scope.get_metadivision_for_division = function(division_id){
-	    for(metadivision_index in $scope.metadivisions){
-		metadivision = $scope.metadivisions[metadivision_index];
-		for(division_index in metadivision.divisions){
-		    if (division_index == division_id){
-			return metadivision;
-		    }
-		}
-	    }
-	    return undefined;
-	}
-	
-	$scope.division_in_metadivision = function(division_id){
-	    if($scope.get_metadivision_for_division(division_id) == undefined){		
-		return false
-	    }
-	    
-	    return true;
-	}
-		
+	$scope.get_metadivision_for_division = Utils.get_metadivision_for_division;
+	$scope.division_in_metadivision = Utils.division_in_metadivision
+
         StatusModal.loading();
-	$scope.metadivisions = TimeoutResources.getAllMetadivisionsResource().getAllMetadivisions();	    	    
-	$scope.player_promise = $scope.metadivisions.$promise.then(function(data){
-	    $scope.player = TimeoutResources.getPlayerResource().getPlayer({player_id:$scope.player_id});
-	    return $scope.player.$promise;
-	})
-	$scope.tournaments_promise = $scope.player_promise.then(function(data){
-	    $scope.tournaments = TimeoutResources.getActiveTournamentsResource().getActiveTournaments();	    
-	    return $scope.tournaments.$promise;
-	});
-	$scope.player_tokens_promise = $scope.tournaments_promise.then(function(data){
-	    $scope.player_tokens = TimeoutResources.getTokensForPlayerResource().getTokensForPlayer({player_id:$scope.player_id});	    	    
-	    return $scope.player_tokens.$promise
-	})
+	$scope.metadivisions_promise = TimeoutResources.GetAllMetadivisions()
+	$scope.player_promise = TimeoutResources.GetPlayer($scope.metadivisions_promise,{player_id:$scope.player_id})	
+	$scope.tournaments_promise = TimeoutResources.GetActiveTournaments($scope.player_promise);
+	$scope.player_tokens_promise = TimeoutResources.GetPlayerTokens($scope.tournaments_promise,{player_id:$scope.player_id});	
 	$scope.player_tokens_promise.then(function(data){
-	    for(id in $scope.player_tokens.metadivisions){
-		$scope.added_tokens.metadivisions[id]=0;
-	    }
-	    for(id in $scope.player_tokens.divisions){
-		$scope.added_tokens.divisions[id]=0;
-	    }	    
+	    $scope.resources = TimeoutResources.GetAllResources();
+	    Utils.build_added_tokens($scope.resources.player_tokens,$scope.added_tokens);
 	    StatusModal.loaded();
 	})
 	
