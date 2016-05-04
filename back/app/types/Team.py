@@ -17,3 +17,6 @@ class Team(DB.Model):
         'Player',
         secondary=Team_Player_mapping        
     )
+    
+    def to_dict_simple(self):
+        return to_dict(self)

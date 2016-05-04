@@ -27,4 +27,4 @@ def add_team():
     DB.session.add(new_team)
     DB.session.commit()
     
-    return jsonify({})    
+    return jsonify(new_team.to_dict_simple())    

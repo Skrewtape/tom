@@ -1,0 +1,19 @@
+<div ui-content-for="title">
+  <span>Team Added</span>
+</div>
+<div  ui-content-for="navbarAction">
+    <a ui-sref='^' style='font-size:35px'>
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"> </i> Back
+    </a>
+</div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+  <div class="big-web-font scrollable-content"  style='padding:10px'>
+    Team {{resources.team.team_name}} created!<br>
+      <a       
+	 class='btn btn-info btn-xlg'
+	 ui-sref='app'
+	 >Go Home</a>    
+    </div>
+  </div>
+</div>

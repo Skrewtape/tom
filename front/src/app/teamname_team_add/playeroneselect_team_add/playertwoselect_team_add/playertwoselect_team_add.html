@@ -1,0 +1,23 @@
+<div ui-content-for="title">
+  <span>Select Player 2</span>
+</div>
+<div  ui-content-for="navbarAction">
+    <a ui-sref='^' style='font-size:35px'>
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"> </i> Back
+    </a>
+</div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+    <div class="big-web-font scrollable-content"  style='padding:10px' ng-controller='player_select'>
+      Player 2 : 
+      <player-select>
+      </player-select>
+      <br>
+      <a       
+	 class='btn btn-info btn-xlg'
+	 ui-sref='.review_team_add({playerTwoId:select_player.player_id})'
+	 ng-disabled='submitPlayerDisabled'
+	 >Next</a><br>
+    </div>
+  </div>
+</div>

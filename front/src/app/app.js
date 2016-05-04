@@ -22,7 +22,7 @@ app = angular.module(
 	    'app.tournament_add',
 	    'app.tournamentselect_machine_add',
 	    'app.player_add',
-	    'app.tournament_activate','app.playerselect_ticket_purchase',/*REPLACEMECHILD*/
+	    'app.tournament_activate','app.playerselect_ticket_purchase','app.teamname_team_add',/*REPLACEMECHILD*/
 	]
 );
 

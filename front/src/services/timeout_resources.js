@@ -32,29 +32,48 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	timestamps[res_name] = Date.now();
 	return resource_results[scope_name].$promise;	
     }
+    var generic_putpost_resource = function(res_name,scope_name,url_args,post_args){
+	if(url_args == undefined){
+	    url_args={}
+	}
+	if(post_args == undefined){
+	    post_args={}
+	}	
+	resource_results[scope_name] = resources[res_name][res_name](url_args, post_args);
+	timestamps[res_name] = Date.now();
+	return resource_results[scope_name].$promise;	
+    }
+    
 
     function isFunction(functionToCheck) {
 	var getType = {};
 	return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
     }
-    
-    var generic_resource = function(res_name,scope_name){
-	return function(promise,args){
+
+    var generic_resource = function(res_name,scope_name,type){
+	return function(promise,url_args,post_args){
 	    if(check_resource_is_fresh(res_name)){
 		return resolved_promise();
 	    }
-	    if(promise != undefined){
-		return promise.then(function(data){
-		    for(arg_key in args){
-			if(isFunction(args[arg_key])){
-			    args[arg_key] = args[arg_key]();
-			}
-		    }		    
-		    return generic_get_resource(res_name,scope_name,args);
-		})
-	    } else {
-		return generic_get_resource(res_name,scope_name,args);
-	    }
+	    if(promise == undefined){
+		if(type == "get"){
+		    return generic_get_resource(res_name,scope_name,url_args);
+		} else {
+		    return generic_putpost_resource(res_name,scope_name,url_args,post_args);
+		}
+	    }	    
+	    return promise.then(function(data){
+	     	for(arg_key in url_args){
+	     	    if(isFunction(url_args[arg_key])){
+	     		url_args[arg_key] = url_args[arg_key]();
+	     	    }
+	     	}
+		if(type == "get"){
+	     	    return generic_get_resource(res_name,scope_name,url_args);
+		} else {
+	     	    return generic_putpost_resource(res_name,scope_name,url_args,post_args);
+		}
+	    })
 	}
     }
     
@@ -88,6 +107,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'getIfpaPlayer': {method:'GET', 'timeout': 5000}
 			     })
+    resources['addTeam'] = $resource('[APIHOST]/team', null,			     
+			     {
+				 'addTeam': {method:'POST', 'timeout': 5000}
+			     })    
     
     
     return {
@@ -97,12 +120,13 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetPlayerNameSmushed: function(){
 		return resource_results.player.first_name+resource_results.player.last_name;
 	},
-	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions'),
-	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments'),
-	GetPlayer: generic_resource('getPlayer','player'),
-	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens'),
-	GetAllPlayers: generic_resource('getAllPlayers','players'),
-	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player'),
+	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions','get'),
+	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments','get'),
+	GetPlayer: generic_resource('getPlayer','player','get'),
+	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens','get'),
+	GetAllPlayers: generic_resource('getAllPlayers','players','get'),
+	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get'),
+	AddTeam: generic_resource('addTeam','team','post'),
 	getAllMetadivisionsResource: function(){
 	    return $resource('[APIHOST]/metadivision', null,			     
 			     {
