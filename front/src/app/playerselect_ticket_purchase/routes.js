@@ -27,7 +27,8 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	       templateUrl: 'app/playerselect_ticket_purchase/ticket_purchase/process/process.html',
  	       controller: 'app.playerselect_ticket_purchase.ticket_purchase.process',
  	     }
- 	   }
+ 	 },
+	    params: {addedTokens:{}}
        })//REPLACE_ME
 
 

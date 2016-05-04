@@ -34,7 +34,6 @@ angular.module('tom_directives.player_select').controller(
 		return;
 	    } 
 	    if($scope.selected_players.length>0){
-		console.log($scope.player.player_id);
                 first_name = $scope.selected_players[0].first_name;
                 last_name = $scope.selected_players[0].last_name;
                 $scope.keypad_player_name = first_name +' '+last_name;
