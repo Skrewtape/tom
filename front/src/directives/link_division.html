@@ -1,17 +1,20 @@
       <form>
 	<table>	  
-	  <tbody ng-repeat='tournament in tournaments' ng-if='tournament.single_division == false'>
-	    <th colspan=2>Player {{player.first_name}} {{player.last_name}} (#{{player.player_id}}) <br>{{tournament.name}} Tournament</th>
+	  <tbody ng-repeat='tournament in resources.tournaments' ng-if='tournament.single_division == false'>
+	    <th colspan=2>Player {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}})
+	      <br>IFPA Ranking : {{resources.ifpa_player.rank}}
+	      <br>{{tournament.name}} Tournament
+	    </th>
 	    <tr ng-repeat='division in tournament.divisions | orderBy: "name"'>
 	      <td>
 		<input
-		   ng-disabled='$parent.$parent.$parent.$parent.division_disabled_for_player(division)'
+		   ng-disabled='division_disabled_for_player(division)'
 	      	   type='radio'
-	      	   ng-model='$parent.$parent.$parent.$parent.linked_division'
+	      	   ng-model='linked_division.value'
 		   ng-value='division.division_id'
 		   class='big-web-font'
 	      	   style='margin-left:10px;margin-right:10px;margin-top:0px;height:40px;width:40px;vertical-align:middle;'
-		   ng-change='$parent.$parent.$parent.$parent.check_for_division_warning(division)'
+		   ng-change='check_for_division_warning(division)'
 	      	   />
 	      </td>
 	      <td>
@@ -24,7 +27,7 @@
 
       <a
 	 class='btn btn-info btn-xlg'
-	 ui-sref='.process({playerId:player.player_id,divisionId:$parent.linked_division})'
+	 ui-sref='.process({playerId:resources.player.player_id,divisionId:linked_division.value})'
 	 >Save Player Division</a>
       <br>
 

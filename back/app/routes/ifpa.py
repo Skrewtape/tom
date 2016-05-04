@@ -1,0 +1,15 @@
+import json
+import requests
+from flask import jsonify, request
+from flask_login import login_required
+from app import App
+from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
+import re
+
+@App.route('/ifpa/<player_name>', methods=['GET'])
+def get_ifpa_ranking(player_name):
+    content=requests.get('http://www.ifpapinball.com/ajax/searchplayer.php?search=%s' % player_name).content
+    players = re.findall('player.php\?p=\d+\"\>([^\<]+)',content.lower())
+    rank = re.search('(\d+)th|(\d+)nd|(\d+)st', content.lower())
+    count = len(players)
+    return jsonify({'count':count,'players':players,'rank':rank.group(0)})

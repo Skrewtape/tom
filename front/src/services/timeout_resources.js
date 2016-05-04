@@ -33,6 +33,11 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	return resource_results[scope_name].$promise;	
     }
 
+    function isFunction(functionToCheck) {
+	var getType = {};
+	return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+    }
+    
     var generic_resource = function(res_name,scope_name){
 	return function(promise,args){
 	    if(check_resource_is_fresh(res_name)){
@@ -40,6 +45,11 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	    }
 	    if(promise != undefined){
 		return promise.then(function(data){
+		    for(arg_key in args){
+			if(isFunction(args[arg_key])){
+			    args[arg_key] = args[arg_key]();
+			}
+		    }		    
 		    return generic_get_resource(res_name,scope_name,args);
 		})
 	    } else {
@@ -53,6 +63,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resource_results['player'] = undefined;
     resource_results['player_token'] = undefined;
     resource_results['players'] = undefined;
+    resource_results['ifpa_player'] = undefined;
     resources['getActiveTournaments'] = $resource('[APIHOST]/tournament/active', null,
      						    {
      							'getActiveTournaments': {method:'GET', 'timeout': 5000}
@@ -73,16 +84,25 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'getAllPlayers': {method:'GET', 'timeout': 5000}
 			     })
+    resources['getIfpaPlayer'] = $resource('[APIHOST]/ifpa/:player_name', null,			     
+			     {
+				 'getIfpaPlayer': {method:'GET', 'timeout': 5000}
+			     })
+    
     
     return {
 	GetAllResources: function(){
 	    return resource_results;
+	},
+	GetPlayerNameSmushed: function(){
+		return resource_results.player.first_name+resource_results.player.last_name;
 	},
 	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions'),
 	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments'),
 	GetPlayer: generic_resource('getPlayer','player'),
 	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens'),
 	GetAllPlayers: generic_resource('getAllPlayers','players'),
+	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player'),
 	getAllMetadivisionsResource: function(){
 	    return $resource('[APIHOST]/metadivision', null,			     
 			     {

@@ -9,3 +9,4 @@ import app.routes.test
 import app.routes.metadivision
 import app.routes.token
 import app.routes.team
+import app.routes.ifpa
