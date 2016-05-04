@@ -20,7 +20,9 @@ def add_tournament():
     new_tournament = Tournament(
         name = tournament_data['tournament_name'],
         active = False
-    )    
+    )
+    if 'team_tournament' in tournament_data and tournament_data['team_tournament']:    
+        new_tournament.team_tournament = True
     DB.session.add(new_tournament)
     DB.session.commit()
     if 'single_division' in tournament_data and tournament_data['single_division']:
