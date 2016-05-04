@@ -1,0 +1,25 @@
+<br>
+
+<input
+       focus-if
+       name='thing'
+       type='number' popover-placement="right" uib-popover-template="popovertemplate" popover-is-open='popoverIsOpen' style='font-size:32px;width:75px;' popover-trigger='none' ng-change='onChange()' placeholder='ID #' ng-model='player.player_id'/><br>
+<!--    <a       
+     class='btn btn-info'                 
+     style='font-size:32px;margin-top:15px'
+       ui-sref='.process({playerId:select_player.player_id})'
+       ng-disabled='submitPlayerDisabled'
+       >Select Player</a><br>-->
+<!--     <a 
+     class='btn btn-info'                 
+     style='font-size:32px;margin-top:15px'
+     ng-click='fuckIos()'
+     >Enter Player Number</a>-->
+
+<script type="text/ng-template" id="myPopoverTemplate.html">
+  <div style='font-size:32px' ><center>{{keypad_player_name}}
+      <br>
+      <span style='font-size:15px' ng-if='player_is_asshole != false'>{{player_is_asshole}}</span>
+    </center>
+  </div>
+</script>

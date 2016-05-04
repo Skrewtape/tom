@@ -52,6 +52,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resource_results['metadivisions'] = undefined;
     resource_results['player'] = undefined;
     resource_results['player_token'] = undefined;
+    resource_results['players'] = undefined;
     resources['getActiveTournaments'] = $resource('[APIHOST]/tournament/active', null,
      						    {
      							'getActiveTournaments': {method:'GET', 'timeout': 5000}
@@ -67,7 +68,11 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resources['getPlayerTokens']= $resource('[APIHOST]/token/player_id/:player_id', null,			     
 					       {
 						   'getPlayerTokens': {method:'GET', 'timeout': 5000}
-					       })	    	
+					       })
+    resources['getAllPlayers'] = $resource('[APIHOST]/player', null,			     
+			     {
+				 'getAllPlayers': {method:'GET', 'timeout': 5000}
+			     })
     
     return {
 	GetAllResources: function(){
@@ -76,7 +81,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions'),
 	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments'),
 	GetPlayer: generic_resource('getPlayer','player'),
-	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens'),	
+	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens'),
+	GetAllPlayers: generic_resource('getAllPlayers','players'),
 	getAllMetadivisionsResource: function(){
 	    return $resource('[APIHOST]/metadivision', null,			     
 			     {
