@@ -11,20 +11,22 @@
 	  <span class='badge big-web-font pull-right' style='margin-top:0px'>{{added_tokens.metadivisions[division.metadivision_id]}}</span>
 	</button>
       </div><!-- end ng-if='division.metadivision_id != undefined'> -->
-      <div ng-if='division.metadivision_id == undefined'>
+      <div ng-if='division.metadivision_id == undefined'>	
 	<button
-	   ng-disabled='resources.player_tokens.divisions[division.division_id] >= max_unstarted_tickets'
+	  ng-if='tournament.team_tournament==false || (tournament.team_tournament==true && resources.player_teams.teams.length != 0)' 
+	  ng-disabled='resources.player_tokens.divisions[division.division_id] >= max_unstarted_tickets'
 	  style='width:90%'
 	  class='btn btn-info btn-xlg'
 	  ng-click='change_division_tickets(resources.player_tokens,added_tokens,"divisions",division.division_id,1)'
 	  >
-	  <span class='pull-left'>Add {{tournament.name}} tournament, <span ng-if='tournament.single_division==false'>{{division.name}}</span> ticket</span>
+	  <span class='pull-left'>Add {{tournament.name}} tournament <span ng-if='tournament.single_division==false'>,{{division.name}} Division</span> ticket</span>
 	  <span class='badge big-web-font pull-right' style='margin-top:0px'>{{added_tokens.divisions[division.division_id]}}</span>
 	</button>
       </div><!--end ng-if='division.metadivision_id == undefined'> -->	    
     </div><!--end ng-if='tournament.single_division == true  || division.division_id == player.linked_division.division_id'> -->
   </div><!-- end ng-repeat='division in tournament.divisions'> -->
 </div><!-- end ng-repeat='tournament in tournaments'> -->
+
 <div ng-repeat='tournament in resources.tournaments' style='width:70%'>      
   <div ng-repeat='division in tournament.divisions'>
     <div ng-if='tournament.single_division == true  || division.division_id == resources.player.linked_division.division_id'>
@@ -37,13 +39,15 @@
 	<br>
       </div>
       <div ng-if='division.metadivision_id == undefined'>
-	<a
-	   ng-if='added_tokens.divisions[division.division_id]>0'
-	  ng-click='change_division_tickets(resources.player_tokens,added_tokens,"divisions",division.division_id,-1)'
-	  style='font-size:35px' ><i class="pull-left fa fa-minus-circle" aria-hidden="true"> </i></a>	      
-	<span class='pull-left'>{{tournament.name}} tournament, <span ng-if='tournament.single_division==false'>{{division.name}}</span></span>
-	<span class='badge big-web-font pull-right' style='margin-top:0px'>{{added_tokens.divisions[division.division_id]}}</span>
-	<br>
+	<div ng-if='tournament.team_tournament==false || (tournament.team_tournament==true && resources.player_teams.teams.length != 0)' >
+	  <a
+	     ng-if='added_tokens.divisions[division.division_id]>0'
+	    ng-click='change_division_tickets(resources.player_tokens,added_tokens,"divisions",division.division_id,-1)'
+	    style='font-size:35px' ><i class="pull-left fa fa-minus-circle" aria-hidden="true"> </i></a>	      
+	  <span class='pull-left'>{{tournament.name}} tournament <span ng-if='tournament.single_division==false'>, {{division.name}} Division</span></span>
+	  <span class='badge big-web-font pull-right' style='margin-top:0px'>{{added_tokens.divisions[division.division_id]}}</span>
+	  <br>
+	</div>
       </div>	    
     </div>
   </div>

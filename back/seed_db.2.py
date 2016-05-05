@@ -75,11 +75,12 @@ def init_machines():
         DB.session.add(machine)
         DB.session.commit()        
 
-def create_tournament(name, single_division=True):
+def create_tournament(name, single_division=True, team_tournament=False):
     global tournaments
     tournament = app.types.Tournament(name=name)
     tournament.active = True
     tournament.single_division = single_division
+    tournament.team_tournament = team_tournament
     tournaments.append(tournament)
     DB.session.add(tournament)
     return tournament

@@ -9,6 +9,11 @@ from app.routes.util import fetch_entity, calculate_score_points_from_rank
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
 
+@App.route('/team/player/<player_id>', methods=['get'])
+def get_player_teams(player_id):
+    teams = Team.query.filter(Team.players.any(Player.player_id.__eq__(player_id)))
+    return jsonify({'teams':[x.to_dict_simple() for x in teams]})
+
 @App.route('/team', methods=['POST'])
 def add_team():
     team_data = json.loads(request.data)    

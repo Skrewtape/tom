@@ -30,7 +30,4 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	 },
 	    params: {addedTokens:{}}
        })//REPLACE_ME
-
-
-
 })

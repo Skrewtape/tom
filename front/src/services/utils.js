@@ -13,8 +13,6 @@ angular.module('tom_services.utils').factory('Utils', function() {
     }
     return {
 	change_division_tickets: function(player_tokens,added_tokens,type,division_id,amount){
-	    console.log('in it');
-	    console.log(added_tokens);
 	    player_tokens[type][division_id]=player_tokens[type][division_id]+amount;
 	    added_tokens[type][division_id]=added_tokens[type][division_id]+amount;
 	},
@@ -32,6 +30,9 @@ angular.module('tom_services.utils').factory('Utils', function() {
 	    for(id in player_tokens.divisions){
 		added_tokens.divisions[id]=0;
 	    }
+	},
+	is_team_division: function(div_id,divisions,tournaments){
+	    return tournaments[divisions[div_id].tournament_id].team_tournament
 	}
     }
 })

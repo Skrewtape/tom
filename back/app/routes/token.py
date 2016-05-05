@@ -90,7 +90,6 @@ def create_entry_if_needed(jsontoken,token,player_id=None,team_id=None):
     if team_id:
         query = Entry.query.filter_by(division_id=division.division_id,team_id=team_id,active=True)        
     if query.count() > 0:
-        print "no need to create"
         return
 
     new_entry = Entry(
@@ -116,8 +115,12 @@ def create_entry_if_needed(jsontoken,token,player_id=None,team_id=None):
 def get_tokens_for_player(player_id):
     tokens = Token.query.filter_by(player_id=player_id).all()
     token_dict = {'divisions':{},'metadivisions':{}}
+    #FIXME : need only active divisions
     divisions = Division.query.all()
-    metadivisions = Metadivision.query.all()    
+    tournaments = Tournaments.query.all()
+    metadivisions = Metadivision.query.all()
+    #FIXME : need to send an object, not a token count
+    #        metadivision_name (if metadivision), team_division (if team_division), count
     for division in divisions:
         token_dict['divisions'][division.division_id]=0
     for metadivision in metadivisions:
@@ -128,6 +131,8 @@ def get_tokens_for_player(player_id):
         if token.metadivision_id != None:
             token_dict['metadivisions'][token.metadivision_id]=token_dict['metadivisions'][token.metadivision_id] + 1      
     return jsonify(token_dict)
+
+
 
 @App.route('/token', methods=['POST'])
 def add_token():
@@ -143,15 +148,15 @@ def add_token():
 
     #FIXME : check that each tokens_data['tokens'] is in a seprate division
     for jsontoken in tokens_data['tokens']:
-
-        if player_id:
+        if jsontoken.has_key('team_id') is False:
             jsontoken = get_existing_token_info(jsontoken,player_id=player_id)
             check_division_metadivision_valid_for_add_token_request(jsontoken,player_id=player_id)            
             check_linked_division(None)
             tokens = create_tokens(jsontoken,player_id=player_id)
             if len(tokens) > 0:
                 create_entry_if_needed(jsontoken, tokens.pop(), player_id=player_id)
-        if team_id:
+        if jsontoken.has_key('team_id') is True:
+            team_id = jsontoken['team_id']
             jsontoken = get_existing_token_info(jsontoken,team_id=team_id)
             check_division_metadivision_valid_for_add_token_request(jsontoken,team_id=team_id)        
             check_linked_division(None)
