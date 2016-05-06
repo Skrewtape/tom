@@ -2,15 +2,11 @@
 angular.module('tom_directives.player_select', []);
 angular.module('tom_directives.player_select').controller(
     'player_select',function($scope, $state, StatusModal, TimeoutResources, $filter){
-        // $http.get('[APIHOST]/player',{timeout:5000}).success(
-        //     function(data) {
-        //         $scope.players = data.players;
-	// 	StatusModal.loaded();
-        //     }
-        // );
 	$scope.popovertemplate='myPopoverTemplate.html';
 	$scope.submitPlayerDisabled=true;
 	StatusModal.loading();
+	TimeoutResources.FlushResourceCache("player");
+	TimeoutResources.FlushResourceCache("players");	
 	$scope.all_players_promise = TimeoutResources.GetAllPlayers();
 	$scope.all_players_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();

@@ -1,7 +1,6 @@
 angular.module('app.player_add.process.edit_linked_division.process.ticket_purchase.process',[/*REPLACEMECHILD*/]);
 angular.module('app.player_add.process.edit_linked_division.process.ticket_purchase.process').controller(
     'app.player_add.process.edit_linked_division.process.ticket_purchase.process',
-    function($scope, $state, StatusModal, TimeoutResources) {
     function($scope, $state, StatusModal, TimeoutResources, Utils) {
 	$scope.added_tokens=$state.params.addedTokens;
 	$scope.player_id=$state.params.playerId;

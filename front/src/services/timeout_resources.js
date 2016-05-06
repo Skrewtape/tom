@@ -16,6 +16,17 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	return defer.promise;
     }
 
+    var flush_resource_cache = function(resource_to_flush){
+	if(resource_to_flush != undefined){
+	    timestamps[resource_to_flush] = undefined;
+	    return;
+	}
+
+	for(timestamp_key in timestamps){
+	    timestamps[timestamp_key] = undefined;
+	}
+    }
+    
     var check_resource_is_fresh = function(resource){
 	if(timestamps[resource]!= undefined && Date.now() - 300000 > timestamps[resource]){
 	    return true;
@@ -50,9 +61,12 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
     }
 
-    var generic_resource = function(res_name,scope_name,type){
-	return function(promise,url_args,post_args){
-	    if(check_resource_is_fresh(res_name)){
+    var generic_resource = function(res_name,scope_name,type,cache_resource){
+	return function(promise,url_args,post_args,runtime_cache_override){
+	    if(runtime_cache_override!=undefined){
+		cache_resource==runtime_cache_override;
+	    }
+	    if(cache_resource==true && check_resource_is_fresh(res_name)){
 		return resolved_promise();
 	    }
 	    if(promise == undefined){
@@ -137,17 +151,18 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetPlayerNameSmushed: function(){
 		return resource_results.player.first_name+resource_results.player.last_name;
 	},
-	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions','get'),
-	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments','get'),
-	GetPlayer: generic_resource('getPlayer','player','get'),
-	GetPlayerTeams: generic_resource('getPlayerTeams','player_teams','get'),
-	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens','get'),
-	GetPlayerTeamTokens: generic_resource('getPlayerTeamTokens','player_team_tokens','get'),
-	GetAllPlayers: generic_resource('getAllPlayers','players','get'),
-	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get'),
-	AddTeam: generic_resource('addTeam','team','post'),
-	AddTokens: generic_resource('addTokens','add_tokens_result','post'),
-	GetAllDivisions: generic_resource('getAllDivisions','divisions','get'),	
+	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions','get',true),
+	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments','get',true),
+	GetPlayer: generic_resource('getPlayer','player','get', true),
+	GetPlayerTeams: generic_resource('getPlayerTeams','player_teams','get', true),
+	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens','get', false),
+	GetPlayerTeamTokens: generic_resource('getPlayerTeamTokens','player_team_tokens','get',false),
+	GetAllPlayers: generic_resource('getAllPlayers','players','get',true),
+	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get',false),
+	AddTeam: generic_resource('addTeam','team','post',false),
+	AddTokens: generic_resource('addTokens','add_tokens_result','post', false),
+	GetAllDivisions: generic_resource('getAllDivisions','divisions','get', true),
+	FlushResourceCache:flush_resource_cache,
 	getAllMetadivisionsResource: function(){
 	    return $resource('[APIHOST]/metadivision', null,			     
 			     {
