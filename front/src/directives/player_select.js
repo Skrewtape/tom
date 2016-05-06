@@ -5,8 +5,8 @@ angular.module('tom_directives.player_select').controller(
 	$scope.popovertemplate='myPopoverTemplate.html';
 	$scope.submitPlayerDisabled=true;
 	StatusModal.loading();
-	TimeoutResources.FlushResourceCache("player");
-	TimeoutResources.FlushResourceCache("players");	
+	//TimeoutResources.FlushResourceCache("player");
+	//TimeoutResources.FlushResourceCache("players");	
 	$scope.all_players_promise = TimeoutResources.GetAllPlayers();
 	$scope.all_players_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
