@@ -1,8 +1,11 @@
       <form>
 	<table>	  
 	  <tbody ng-repeat='tournament in resources.tournaments' ng-if='tournament.single_division == false'>
-	    <th colspan=2>Player {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}})
-	      <br>IFPA Ranking : {{resources.ifpa_player.rank}}
+	    <th colspan=2>Player {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}})	      
+	      <br>IFPA Ranking :
+	      <span ng-if='resources.ifpa_player.count > 0'>{{resources.ifpa_player.rank}}</span>
+	      <span ng-if='resources.ifpa_player.count == 0'>No IFPA results found</span>
+	      
 	      <br>{{tournament.name}} Tournament
 	    </th>
 	    <tr ng-repeat='division in tournament.divisions | orderBy: "name"'>

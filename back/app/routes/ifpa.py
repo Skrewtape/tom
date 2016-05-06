@@ -12,4 +12,7 @@ def get_ifpa_ranking(player_name):
     players = re.findall('player.php\?p=\d+\"\>([^\<]+)',content.lower())
     rank = re.search('(\d+)th|(\d+)nd|(\d+)st', content.lower())
     count = len(players)
-    return jsonify({'count':count,'players':players,'rank':rank.group(0)})
+    ifpa_results = {'count':count,'players':players,'rank':''}    
+    if count > 0:
+        ifpa_results['rank'] = rank.group(0)
+    return jsonify(ifpa_results)

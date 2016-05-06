@@ -5,11 +5,6 @@ angular.module('tom_directives.link_division').controller(
 	$scope.player_id=$state.params.playerId;
 	$scope.linked_division = {value:undefined};
         StatusModal.loading();
-	//$scope.tournaments = TimeoutResources.getActiveTournamentsResource().getActiveTournaments();	
-	//$scope.player_promise = $scope.tournaments.$promise.then(function(data){
-	//    $scope.player = TimeoutResources.getPlayerResource().getPlayer({player_id:$scope.player_id});
-	//    return $scope.player.$promise;
-	//})
 	$scope.player_promise = TimeoutResources.GetPlayer(undefined,{player_id:$scope.player_id});
         $scope.tournaments_promise = TimeoutResources.GetActiveTournaments($scope.player_promise);
 	//FIXME : guyh - need a cleaner way to pass results from previous TimeoutResources call as params for current call
