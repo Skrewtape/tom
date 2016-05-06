@@ -1,4 +1,4 @@
-<div ui-content-for="title">
+<!--<div ui-content-for="title">
   <span>Purchase Tickets</span>
 </div>
 
@@ -13,6 +13,21 @@
 	 class='btn btn-info btn-xlg'
 	 ui-sref='app'
 	 > Return To Home</button>            
+    </div>
+  </div>
+</div>-->
+
+<div ui-content-for="title">
+  <span>Select Tickets To Purchase</span>
+</div>
+<div class="scrollable">
+  <div ui-view='player_add_progress'></div>
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+  <div class="scrollable-content"  style='padding:10px'>
+    <div style='background-color:white' class='big-web-font'>
+      Purchase tickets for {{resources['player'].first_name}} {{resources['player'].last_name}}.
+      <hr>
+      <purchase-tickets />
     </div>
   </div>
 </div>

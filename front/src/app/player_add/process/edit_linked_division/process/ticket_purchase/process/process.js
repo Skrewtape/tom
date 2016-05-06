@@ -2,6 +2,7 @@ angular.module('app.player_add.process.edit_linked_division.process.ticket_purch
 angular.module('app.player_add.process.edit_linked_division.process.ticket_purchase.process').controller(
     'app.player_add.process.edit_linked_division.process.ticket_purchase.process',
     function($scope, $state, StatusModal, TimeoutResources) {
+    function($scope, $state, StatusModal, TimeoutResources, Utils) {
 	$scope.added_tokens=$state.params.addedTokens;
 	$scope.player_id=$state.params.playerId;
 	if($scope.checkForBlankParams($scope.added_tokens) == true){
@@ -10,32 +11,14 @@ angular.module('app.player_add.process.edit_linked_division.process.ticket_purch
 	tokensToPost = {};
 	tokensToPost.player_id = $scope.player_id;
 	tokensToPost.tokens = [];
-	for(div_id in $scope.added_tokens.divisions){
-	    num_tokens = $scope.added_tokens.divisions[div_id]
-	    tokensToPost.tokens.push({division_id:div_id,num_tokens:num_tokens});
-	}
-	for(metadiv_id in $scope.added_tokens.metadivisions){
-	    num_tokens = $scope.added_tokens.metadivisions[metadiv_id]
-	    tokensToPost.tokens.push({metadivision_id:metadiv_id,num_tokens:num_tokens});
-	}	
 	StatusModal.loading();
-	$scope.metadivisions = TimeoutResources.getAllMetadivisionsResource().getAllMetadivisions();	    	    
-
-	$scope.divisions_promise = $scope.metadivisions.$promise.then(function(data){
-	    $scope.divisions = TimeoutResources.getAllDivisionsResource().getAllDivisions();	    
-	    return $scope.divisions.$promise;
-	});
-	$scope.tournaments_promise = $scope.divisions_promise.then(function(data){
-	    $scope.tournaments = TimeoutResources.getActiveTournamentsResource().getActiveTournaments();	    
-	    return $scope.tournaments.$promise;
-	});
-	
-	$scope.tokens_submit_promise = $scope.tournaments_promise.then(function(data){
-	    
-	    $scope.tokens = TimeoutResources.addTokensResource().addTokens(tokensToPost);
-	    return $scope.tokens.$promise;
-	});
+	$scope.metadivisions_promise = TimeoutResources.GetAllMetadivisions();
+	$scope.player_teams_promise = TimeoutResources.GetPlayerTeams($scope.metadivisions_promise,{player_id:$scope.player_id})		
+	$scope.divisions_promise = TimeoutResources.GetAllDivisions($scope.player_teams_promise)			
+	$scope.tournaments_promise = TimeoutResources.GetActiveTournaments($scope.divisions_promise);
+	$scope.tokens_submit_promise = TimeoutResources.AddTokens($scope.tournaments_promise,undefined,$scope.added_tokens);	
 	$scope.tokens_submit_promise.then(function(data){
+	    $scope.resources = TimeoutResources.GetAllResources();
 	    StatusModal.loaded();
 	})
     }

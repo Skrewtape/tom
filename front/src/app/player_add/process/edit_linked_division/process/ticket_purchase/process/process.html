@@ -1,20 +1,24 @@
 <div ui-content-for="title">
-  <span>Add Player</span>
+  <span>Tickets Purchased</span>
 </div>
 <div class="scrollable">
   <div style='background:#AAAAAA' ui-view='player_add_progress'></div>
   <div class="big-web-font scrollable-content"  style='padding:10px'>
     The following tickets were added
-    <div  ng-repeat='(metadiv_id,added_token) in added_tokens.metadivisions' ng-if='added_tokens.metadivisions[metadiv_id]!=0'>
-      {{metadivisions[metadiv_id].name}} : {{added_tokens.metadivisions[metadiv_id]}}<br>
+    <div  ng-repeat='(metadiv_id,metadiv_count) in added_tokens.metadivisions' ng-if='metadiv_count !=0'>
+      {{resources.metadivisions[metadiv_id].name}} : {{added_tokens.metadivisions[metadiv_id]}}<br>
     </div>
-    <div  ng-repeat='(div_id,added_token) in added_tokens.divisions' ng-if='added_tokens.divisions[div_id]!=0'>
-      {{tournaments[divisions[div_id].tournament_id].name}} tournament
-      <span ng-if='tournaments[divisions[div_id].tournament_id].single_division==false'>, {{divisions[div_id].name}} division</span>
+    <div  ng-repeat='(div_id,div_count) in added_tokens.divisions' ng-if='div_count != 0'>
+      {{resources.tournaments[resources.divisions[div_id].tournament_id].name}} tournament
+      <span ng-if='resources.tournaments[divisions[div_id].tournament_id].single_division==false'>, {{resources.divisions[div_id].name}} division</span>
       : {{added_tokens.divisions[div_id]}}<br>
     </div>
+   <div  ng-repeat='(div_id,team_count) in added_tokens.teams' ng-if='team_count!=0'>
+      {{resources.tournaments[resources.divisions[div_id].tournament_id].name}} tournament
+      : {{added_tokens.teams[div_id]}}<br>
+    </div>    
     <hr>
-    You have successfully finished adding a player!<br>
+    You have successfully finished adding a player!<br>   
     <button
        class='btn btn-info btn-xlg'
        ui-sref='app'
