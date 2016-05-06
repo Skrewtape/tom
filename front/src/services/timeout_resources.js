@@ -99,6 +99,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 					       {
 						   'getPlayerTokens': {method:'GET', 'timeout': 5000}
 					       })
+    resources['getPlayerTeamTokens']= $resource('[APIHOST]/token/teams/:player_id', null,			     
+					       {
+						   'getPlayerTeamTokens': {method:'GET', 'timeout': 5000}
+					       })    
     resources['getAllPlayers'] = $resource('[APIHOST]/player', null,			     
 			     {
 				 'getAllPlayers': {method:'GET', 'timeout': 5000}
@@ -114,7 +118,16 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resources['addTeam'] = $resource('[APIHOST]/team', null,			     
 			     {
 				 'addTeam': {method:'POST', 'timeout': 5000}
-			     })    
+			     })
+
+    resources['getAllDivisions'] =  $resource('[APIHOST]/division', null,
+			 {
+			     'getAllDivisions': {method:'GET', 'timeout': 5000}
+			 })
+    resources['addTokens'] =  $resource('[APIHOST]/token', null,			     
+					{
+					    'addTokens': {method:'POST', 'timeout': 5000}
+					})	    
     
     
     return {
@@ -129,9 +142,12 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetPlayer: generic_resource('getPlayer','player','get'),
 	GetPlayerTeams: generic_resource('getPlayerTeams','player_teams','get'),
 	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens','get'),
+	GetPlayerTeamTokens: generic_resource('getPlayerTeamTokens','player_team_tokens','get'),
 	GetAllPlayers: generic_resource('getAllPlayers','players','get'),
 	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get'),
 	AddTeam: generic_resource('addTeam','team','post'),
+	AddTokens: generic_resource('addTokens','add_tokens_result','post'),
+	GetAllDivisions: generic_resource('getAllDivisions','divisions','get'),	
 	getAllMetadivisionsResource: function(){
 	    return $resource('[APIHOST]/metadivision', null,			     
 			     {

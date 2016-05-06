@@ -1,0 +1,21 @@
+<button
+    ng-disabled='resources[resourceType][tokenType][division[divisionIdName]] >= max_unstarted_tickets'
+    style='width:80%'
+    class='btn btn-info btn-xlg'
+    ng-click='change_division_tickets(resources[resourceType], added_tokens, tokenType, division[divisionIdName],1)'>
+    <span class='pull-left'>Add
+      <span ng-if='division.metadivision_id != undefined'>
+	{{get_metadivision_for_division(resources[tokenType],division['division_id']).name}}
+      </span>
+      <span ng-if='division.metadivision_id == undefined'>
+	{{tournament.name}}
+      </span>
+      tournament
+      <span ng-if='tournament.single_division == false'>
+	,{{division.name}} division
+      </span>
+      ticket
+    </span>
+    <!--<span class='badge big-web-font pull-right' style='margin-top:0px'>{{added_tokens[tokenType][division[divisionIdName]]}} </span>-->
+  </button>
+ <div class='big-web-font pull-right' style='width:15%;margin-left:10px;margin-top:0px'>{{max_unstarted_tickets - resources[resourceType][tokenType][division[divisionIdName]]}} Left</div> 

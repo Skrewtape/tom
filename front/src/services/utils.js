@@ -1,6 +1,6 @@
 angular.module('tom_services.utils', []);
 angular.module('tom_services.utils').factory('Utils', function() {
-    var get_metadivision_for_division = function(metadivisions,division_id){
+    var get_metadivision_for_division = function(metadivisions,division_id){	
 	for(metadivision_index in metadivisions){
 	    metadivision = metadivisions[metadivision_index];
 	    for(division_index in metadivision.divisions){
@@ -23,13 +23,17 @@ angular.module('tom_services.utils').factory('Utils', function() {
 	    }	    
 	    return true;
 	},
-	build_added_tokens: function(player_tokens,added_tokens){	    
+	build_added_tokens: function(player_tokens,team_tokens,added_tokens){	    
 	    for(id in player_tokens.metadivisions){
 		added_tokens.metadivisions[id]=0;
 	    }
 	    for(id in player_tokens.divisions){
 		added_tokens.divisions[id]=0;
 	    }
+	    for(id in team_tokens.teams){
+		added_tokens.teams[id]=0;
+	    }
+	    
 	},
 	is_team_division: function(div_id,divisions,tournaments){
 	    return tournaments[divisions[div_id].tournament_id].team_tournament
