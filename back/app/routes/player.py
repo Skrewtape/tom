@@ -175,6 +175,19 @@ def edit_player(player):
 @App.route('/player/<player_id>/entry/all', methods=['GET'])
 @fetch_entity(Player, 'player')
 def get_all_player_entries(player):
+    """Get a list of all entries for a player ( including voided and in progress entries )"""
+    entries = Entry.query.filter_by(player_id=player.player_id).all()        
+    entries_grouped_dict = {}
+    for entry in entries:
+        if entry.division_id not in entries_grouped_dict:
+            entries_grouped_dict[entry.division_id]={}
+        entries_grouped_dict[entry.division_id][entry.entry_id]=entry.to_dict_with_scores()
+    return jsonify(entries_grouped_dict)
+
+
+@App.route('/player/<player_id>/entry', methods=['GET'])
+@fetch_entity(Player, 'player')
+def get_most_player_entries(player):
     """Get a list of all entries for a player ( excluding voided and in progress entries )"""
     entries = Entry.query.filter_by(player_id=player.player_id, completed=True, voided=False).all()        
     entries_grouped_dict = {}

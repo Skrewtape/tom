@@ -30,22 +30,15 @@ def void_entry(entry):
 
 
 
-@App.route('/entry/<entry_id>', methods=['PUT'])
+@App.route('/entry/<entry_id>/void/<voided_state>', methods=['PUT'])
 @login_required
 @Admin_permission.require(403)
 @fetch_entity(Entry, 'entry')
-def edit_entry(entry):
-    """edit a entry"""
-    entry_data = json.loads(request.data)    
-    print entry_data
-    if 'entry_id' not in entry_data:
-        raise BadRequest('did not specify entry_id')
-    old_entry = Entry.query.filter_by(entry_id=entry_data['entry_id']).first()        
-    if not old_entry:
-        raise BadRequest('entry_id specified (%s) is invalid' % entry_data['entry_id'])
-    old_entry.voided = entry_data['voided']
+def toggle_entry_voided(entry,voided_state):
+    """set a entry voided state"""
+    entry.voided = True if voided_state=="void" else False
     DB.session.commit()
-    return jsonify(old_entry.to_dict_simple())
+    return jsonify(entry.to_dict_simple())
 
 @App.route('/score/<score_id>', methods=['DELETE'])
 @login_required
@@ -109,7 +102,7 @@ def get_entry(entry):
 def complete_entry(entry):
     """Complete specific entry"""    
     if entry.completed == True or entry.voided == True or entry.active == False:
-        raise Conflict('entry is already completed or voided')
+        raise Conflict('entry is already completed or voided or inactive')
     entry.completed = True
     entry.active = False
     DB.session.commit()

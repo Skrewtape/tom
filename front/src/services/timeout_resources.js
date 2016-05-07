@@ -35,7 +35,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	}
     }
 
-    var generic_get_resource = function(res_name,scope_name,args){
+    var generic_getdelete_resource = function(res_name,scope_name,args){
 	if(args == undefined){
 	    args={}
 	}
@@ -71,7 +71,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	    }
 	    if(promise == undefined){
 		if(type == "get"){
-		    return generic_get_resource(res_name,scope_name,url_args);
+		    return generic_getdelete_resource(res_name,scope_name,url_args);
 		} else {
 		    return generic_putpost_resource(res_name,scope_name,url_args,post_args);
 		}
@@ -83,7 +83,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	     	    }
 	     	}
 		if(type == "get"){
-	     	    return generic_get_resource(res_name,scope_name,url_args);
+	     	    return generic_getdelete_resource(res_name,scope_name,url_args);
 		} else {
 	     	    return generic_putpost_resource(res_name,scope_name,url_args,post_args);
 		}
@@ -138,11 +138,30 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			 {
 			     'getAllDivisions': {method:'GET', 'timeout': 5000}
 			 })
+    resources['getActiveMachines'] =  $resource('[APIHOST]/machine/active', null,
+			 {
+			     'getActiveMachines': {method:'GET', 'timeout': 5000}
+			 })    
+    resources['getAllPlayerEntries'] =  $resource('[APIHOST]/player/:player_id/entry/all', null,
+			 {
+			     'getAllPlayerEntries': {method:'GET', 'timeout': 5000}
+			 })    
     resources['addTokens'] =  $resource('[APIHOST]/token', null,			     
 					{
 					    'addTokens': {method:'POST', 'timeout': 5000}
-					})	    
-    
+					})
+    resources['changeScore'] =  $resource('[APIHOST]/score/:score_id', null,			     
+					{
+					    'changeScore': {method:'PUT', 'timeout': 5000}
+					})	        
+    resources['deleteScore'] =  $resource('[APIHOST]/score/:score_id', null,			     
+					{
+					    'deleteScore': {method:'DELETE', 'timeout': 5000}
+					})
+    resources['voidEntryToggle'] =  $resource('[APIHOST]/entry/:entry_id/void/:void_state', null,			     
+					  {
+					      'voidEntryToggle': {method:'PUT', 'timeout': 5000}
+					  })
     
     return {
 	GetAllResources: function(){
@@ -158,10 +177,15 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens','get', false),
 	GetPlayerTeamTokens: generic_resource('getPlayerTeamTokens','player_team_tokens','get',false),
 	GetAllPlayers: generic_resource('getAllPlayers','players','get',false),
+	GetActiveMachines: generic_resource('getActiveMachines','machines','get',false),
+	GetAllPlayerEntries: generic_resource('getAllPlayerEntries','player_entries','get',false),
 	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get',false),
 	AddTeam: generic_resource('addTeam','team','post',false),
 	AddTokens: generic_resource('addTokens','add_tokens_result','post', false),
 	GetAllDivisions: generic_resource('getAllDivisions','divisions','get', true),
+	ChangeScore: generic_resource('changeScore','score','post', false),
+	DeleteScore: generic_resource('deleteScore','score','get', false),
+	VoidEntryToggle: generic_resource('voidEntryToggle','entry','put', false),	
 	FlushResourceCache:flush_resource_cache,
 	getAllMetadivisionsResource: function(){
 	    return $resource('[APIHOST]/metadivision', null,			     

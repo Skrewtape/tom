@@ -4,7 +4,7 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Machine, Player, Entry, Score
+from app.types import Machine, Player, Entry, Score, Division
 from app.routes import entry
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
@@ -13,10 +13,22 @@ from app import tom_config
 
 @App.route('/machine', methods=['GET'])
 def get_machines():
-    """Get a list of players"""
+    """Get a list of all machines"""
     return jsonify({m.machine_id: m.to_dict_simple() for m in
                     Machine.query.all()
     })
+
+@App.route('/machine/active', methods=['GET'])
+def get_active_machines():
+    """Get a list of all active machines"""
+    divisions = Division.query.all()
+    active_machines = {}
+    for division in divisions:
+        for machine in division.machines:
+            active_machines[machine.machine_id]=machine.to_dict_simple()
+    return jsonify(active_machines)
+    
+
 
 @App.route('/machine/<machine_id>/player/<player_id>', methods=['PUT'])
 @login_required
