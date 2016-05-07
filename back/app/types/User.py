@@ -19,15 +19,11 @@ class User(DB.Model):
     """Model object for a user"""
     user_id = DB.Column(DB.Integer, primary_key=True)
     username = DB.Column(DB.String(80), unique=True, nullable=False)
-    email = DB.Column(DB.String(120), unique=True, nullable=False)
+    #email = DB.Column(DB.String(120), unique=True, nullable=False)
     password_crypt = DB.Column(DB.String(134))
-    @DB.validates('email')
-    def validate_email_wrapper(self,key,address):
-        return util.validate_email(key,address)
-#    def validate_email(self,key,address):
-#        if re.match(r"[^@]+@[^@]+\.[^@]+",address):
-#            return address
-#        raise ArgumentError
+    #@DB.validates('email')
+    #def validate_email_wrapper(self,key,address):
+    #    return util.validate_email(key,address)
         
     @DB.validates('username')
     def validate_username(self,key,username):

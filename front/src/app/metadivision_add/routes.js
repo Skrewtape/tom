@@ -18,7 +18,10 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	       templateUrl: 'app/metadivision_add/process/process.html',
  	       controller: 'app.metadivision_add.process',
  	     }
- 	   }
+ 	 },
+	    params:{
+		newMetadivision: {}
+	    }
        })//REPLACE_ME
 
 

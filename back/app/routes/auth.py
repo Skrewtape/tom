@@ -32,7 +32,8 @@ def get_users():
 @Admin_permission.require(403)
 def get_roles():
     """Get a list of roles"""
-    return jsonify(roles=[r.to_dict_simple() for r in Role.query.all()])
+    #return jsonify(roles=[r.to_dict_simple() for r in Role.query.all()])
+    return jsonify({r.role_id:r.to_dict_simple() for r in Role.query.all()})
 
 @App.route('/user/current', methods=['PUT'])
 def update_current_user():
@@ -132,24 +133,32 @@ def register():
     try:
         user_data = json.loads(request.data)
         #Ideally this would not be hardcoded
-        for key in ['username','email','password']:
+        for key in ['username','password']:
             if not key in user_data:
                 abort(422)        
         user = User.query.filter_by(username=user_data['username']).first()
         if user is not None:
             raise Conflict('Duplicate username')
-        user = User.query.filter_by(email=user_data['email']).first()
-        if user is not None:
-            return 'Duplicate email', 409
+        #user = User.query.filter_by(email=user_data['email']).first()
+        #if user is not None:
+        #    return 'Duplicate email', 409
         password = user_data['password']
         user_data.pop('password', None)
         new_user = User(
-            username=user_data['username'],
-            email=user_data['email'],
+            username=user_data['username']#,
+            #email=user_data['email'],
         )
         new_user.crypt_password(password)
-        DB.session.add(new_user)
-        DB.session.commit()
+        if 'roles' not in user_data:
+            abort(422)        
+        results = DB.session.add(new_user)
+        for role_id,role_name in user_data['roles'].iteritems():
+            role = Role.query.filter_by(role_id=role_id).first()
+            if role is not None:            
+                new_user.roles.append(role)
+            else:
+                abort(422)
+        DB.session.commit()                        
         return jsonify(new_user.to_dict_simple())
     except IntegrityError as e:    
         abort(422)

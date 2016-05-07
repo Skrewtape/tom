@@ -1,5 +1,5 @@
 <div ui-content-for="title">
-  <span>Add Player</span>
+  <span>Add Metadivision</span>
 </div>
 <div  ui-content-for="navbarAction">
     <a ui-sref='^' style='font-size:35px'>
@@ -9,6 +9,36 @@
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
     <div class="scrollable-content"  style='padding:10px'>
+      <div class='form-group form-group-xlg input-group input-group-xlg'>        
+	<span  class="input-group-addon" id="metadivision_name">Metadivision Name</span>
+	<input
+	   type='text'
+	   class='form-control'
+	   aria-describedby='metadivision_name'
+	   ng-model='new_metadivision.metadivision_name'
+	   />
+      </div>
+      
+      <div ng-repeat='division in resources.divisions'>
+	<table style='margin-top:15px'>
+	  <td>
+	    <input		 
+	       type='checkbox'
+	       name='single_division'
+	       ng-model='new_metadivision.divisions[division.division_id]'
+	       class='big-web-font'
+	       style='margin-left:10px;margin-right:10px;margin-top:0px;height:40px;width:40px;vertical-align:middle;'
+	       />
+	  </td>
+	  <td>
+	    <span class='big-web-font'>{{division.name}} division</span>
+	  </td>
+	</table>	
+      </div>
+      <button
+	 ng-disabled='new_metadivision.metadivision_name == undefined'
+	 class='btn btn-info btn-xlg'
+	 ui-sref='.process({newMetadivision:new_metadivision})'
+	 > Create Metadivision</button><br>
     </div>
-  </div>
 </div>

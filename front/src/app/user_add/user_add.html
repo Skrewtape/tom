@@ -1,0 +1,52 @@
+<div ui-content-for="title">
+  <span>Add Player</span>
+</div>
+<div  ui-content-for="navbarAction">
+    <a ui-sref='^' style='font-size:35px'>
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"> </i> Back
+    </a>
+</div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+  <div class="scrollable-content"  style='padding:10px'>
+      <div class='form-group form-group-xlg input-group input-group-xlg'>        
+	<span  class="input-group-addon" id="username">User Name</span>
+	<input
+	   type='text'
+	   class='form-control'
+	   aria-describedby='username'
+	   ng-model='new_user.username'
+	   />
+      </div>
+      <div class='form-group form-group-xlg input-group input-group-xlg'>        
+	<span  class="input-group-addon" id="user_password">Password</span>
+	<input
+	   type='text'
+	   class='form-control'
+	   aria-describedby='user_password'
+	   ng-model='new_user.password'
+	   />
+      </div>
+      <div ng-repeat='role in resources.roles'>
+	<table style='margin-top:15px'>
+	  <td>
+	    <input		 
+	       type='checkbox'
+	       name='roles'
+	       ng-model='new_user.roles[role.role_id]'
+	       class='big-web-font'
+	       style='margin-left:10px;margin-right:10px;margin-top:0px;height:40px;width:40px;vertical-align:middle;'
+	       />
+	  </td>
+	  <td>
+	    <span class='big-web-font'>{{role.name}}</span>
+	  </td>
+	</table>
+      </div>
+      <a 
+	 ng-disabled='new_user.username == undefined'
+	 class='btn btn-info btn-xlg'
+	 ui-sref='.process({newUser:new_user})'
+	 >Add User</a><br>
+  </div>
+</div>

@@ -18,7 +18,7 @@ from random import randint
 
 ROLE_MAP = {}
 
-ALL_ROLES = ['admin', 'scorekeeper', 'desk', 'pooper','void']
+ALL_ROLES = ['admin', 'scorekeeper', 'desk']
 division_machines = []
 machines = []
 tournaments = []
@@ -39,13 +39,13 @@ def init_users():
     for info in [
             ['avi', 'finkel.org', ALL_ROLES],
             ['elizabeth', 'papa.org', ALL_ROLES],
-            ['admin', 'papa.org', ['admin','void']],
-            ['scorekeeper', 'papa.org', ['scorekeeper','pooper','void']],
-            ['desk', 'papa.org', ['desk','pooper','void']],
+            ['admin', 'papa.org', ['admin']],
+            ['scorekeeper', 'papa.org', ['scorekeeper']],
+            ['desk', 'papa.org', ['desk']],
     ]:
         user = app.types.User(
-            username=info[0],
-            email=info[0] + '@' + info[1],
+            username=info[0]#,
+            #email=info[0] + '@' + info[1],
         )
         user.crypt_password(info[0])
         for role_name in info[2]:

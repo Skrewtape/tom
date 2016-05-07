@@ -30,12 +30,12 @@ def add_metadivision():
     )
     if metadivision_data.has_key('divisions') is False:
         raise BadRequest('Did not specify divisions while creating metadivision')
-    for jsondivision in metadivision_data['divisions']:        
-        division = Division.query.filter_by(division_id=jsondivision['division_id']).first()
+    for div_id,jsondivision in metadivision_data['divisions'].iteritems():        
+        division = Division.query.filter_by(division_id=int(div_id)).first()
         if division is None:
             raise BadRequest('bad division specified for creating metadivision')
-    for jsondivision in metadivision_data['divisions']:
-        division = Division.query.filter_by(division_id=jsondivision['division_id']).first()
+    for div_id,jsondivision in metadivision_data['divisions'].iteritems():
+        division = Division.query.filter_by(division_id=int(div_id)).first()
         new_metadivision.divisions.append(division)
     DB.session.add(new_metadivision)
     DB.session.commit()

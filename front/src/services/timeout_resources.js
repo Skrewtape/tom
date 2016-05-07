@@ -162,6 +162,20 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 					  {
 					      'voidEntryToggle': {method:'PUT', 'timeout': 5000}
 					  })
+    resources['addMetadivision'] =  $resource('[APIHOST]/metadivision', null,			     
+					  {
+					      'addMetadivision': {method:'POST', 'timeout': 5000}
+					  })
+    resources['getRoles'] =  $resource('[APIHOST]/role', null,			     
+					  {
+					      'getRoles': {method:'GET', 'timeout': 5000}
+					  })
+    resources['addUser'] =  $resource('[APIHOST]/user', null,			     
+					  {
+					      'addUser': {method:'POST', 'timeout': 5000}
+					  })
+    
+    
     
     return {
 	GetAllResources: function(){
@@ -185,7 +199,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetAllDivisions: generic_resource('getAllDivisions','divisions','get', true),
 	ChangeScore: generic_resource('changeScore','score','post', false),
 	DeleteScore: generic_resource('deleteScore','score','get', false),
-	VoidEntryToggle: generic_resource('voidEntryToggle','entry','put', false),	
+	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false),
+	AddMetadivision: generic_resource('addMetadivision','meta_division','post', false),	
+	GetRoles: generic_resource('getRoles','roles','get', true),
+	AddUser: generic_resource('addUser','user','post', false),
 	FlushResourceCache:flush_resource_cache,
 	getAllMetadivisionsResource: function(){
 	    return $resource('[APIHOST]/metadivision', null,			     
