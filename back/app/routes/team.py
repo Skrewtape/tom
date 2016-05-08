@@ -11,6 +11,7 @@ from werkzeug.exceptions import Conflict, BadRequest
 
 @App.route('/team/player/<player_id>', methods=['get'])
 def get_player_teams(player_id):
+    #FIXME : this should be a shared function
     teams = Team.query.filter(Team.players.any(Player.player_id.__eq__(player_id)))
     return jsonify({'teams':[x.to_dict_simple() for x in teams]})
 

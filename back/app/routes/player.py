@@ -3,7 +3,7 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Player, Division, Entry, Score, Tournament
+from app.types import Player, Division, Entry, Score, Tournament, Team
 from app import App, Admin_permission, Desk_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank
 from werkzeug.exceptions import Conflict
@@ -255,6 +255,11 @@ def get_active_player_entries(player):
 def get_active_player_entries_count(player):
     """Get a list of open(i.e. not completed, not voided) entries for a player"""
     entries = Entry.query.filter_by(player_id=player.player_id,completed=False,voided=False,active=True).all()
+    teams = Team.query.filter(Team.players.any(Player.player_id.__eq__(player.player_id))).all()
+    if len(teams) > 0:        
+        team_entries = Entry.query.filter_by(team_id=teams[0].team_id,completed=False,voided=False,active=True).all()
+    else:
+        team_entries = []
     #FIXME : should only get active divisions
     divisions = Division.query.all()
     entries_grouped_dict = {}
@@ -262,4 +267,7 @@ def get_active_player_entries_count(player):
         entries_grouped_dict[division.division_id]=0
     for entry in entries:
         entries_grouped_dict[entry.division_id] = 1
+    for entry in team_entries:
+        entries_grouped_dict[entry.division_id] = 1
+        
     return jsonify(entries_grouped_dict)

@@ -8,7 +8,38 @@
 </div>
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
-    <div class="scrollable-content"  style='padding:10px'>
+  <div class="scrollable-content big-web-font"  style='padding:10px'>
+    {{resources.player.first_name}}    {{resources.player.last_name}}      (#{{resources.player.player_id}}) <span ng-if='team_id != undefined'><br>
+      On team {{resources.player_teams.teams[0].team_name}}</span><br>
+    <span ng-if='resources.player.linked_division != null'> Linked to {{resources.player.linked_division.name}}</span><hr>
+    <u>Active Tickets</u> : 
+    <div ng-repeat='tournament in resources.tournaments'>
+      <div ng-repeat='division in tournament.divisions'>
+	<span ng-if='division.metadivision_id == undefined'>{{tournament.name}}</span>
+	<span ng-if='division.metadivision_id != undefined'>{{resources.metadivisions[division.metadivision_id].name}}</span>
+
+	Tournament <span ng-if='tournament.single_division == false'>, {{division.name}}</span> : {{resources.player_active_entries_count[division.division_id]}}
+      </div>
+    </div>
+    <u>Unstarted Tickets</u> : 
+    <div ng-repeat='tournament in resources.tournaments' ng-if='tournament.team_tournament == false'>
+      <div ng-repeat='division in tournament.divisions'>
+	
+	<span ng-if='division.metadivision_id == undefined'>{{tournament.name}}</span>
+	<span ng-if='division.metadivision_id != undefined'>{{resources.metadivisions[division.metadivision_id].name}}</span>
+	Tournament <span ng-if='tournament.single_division == false'>, {{division.name}}</span> :
+	<span ng-if='division.metadivision_id == undefined'>
+	  {{resources.player_tokens.divisions[division.division_id]}}
+	</span>
+	<span ng-if='division.metadivision_id != undefined'>
+	  {{resources.player_tokens.metadivisions[division.metadivision_id]}}	  
+	</span>
+      </div>
+    </div>
+    <div ng-repeat='tournament in resources.tournaments' ng-if='tournament.team_tournament == true && resources.player_team_tokens.teams != undefined'>
+      <div ng-repeat='division in tournament.divisions'>
+	  {{tournament.name}} Tournament : {{resources.player_team_tokens.teams[division.division_id]}}
+      </div>
     </div>
   </div>
 </div>

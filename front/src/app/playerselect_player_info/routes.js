@@ -12,7 +12,7 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	   }
        }).state('app.playerselect_player_info.player_info', 
         { 
- 	 url: '/player_info',
+ 	 url: '/player_info/:playerId',
  	 views: {
  	     '@': {
  	       templateUrl: 'app/playerselect_player_info/player_info/player_info.html',
