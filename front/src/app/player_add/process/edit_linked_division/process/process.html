@@ -3,11 +3,10 @@
 </div>
 
 <div class="scrollable">
-  <div ui-view='player_add_progress'></div>
   <div class="scrollable-content">
     <div style='background-color:white' class='big-web-font'>
-      Player {{player.first_name}} {{player.last_name}} (#{{player.player_id}}) linked to<br>
-      {{tournament.name}} tournament, division {{division.name}}.
+      Player {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}}) linked to<br>
+      {{resources.tournament.name}} tournament, division {{resources.divisions[division_id].name}}.
       <br>
       <a
 	 class='btn btn-info btn-xlg'

@@ -14,7 +14,6 @@ angular.module('app.playerselect_player_edit.player_edit.link_division.process')
 	$scope.tournament_promise = TimeoutResources.GetTournament($scope.player_promise,{tournament_id:TimeoutResources.GetPlayerLinkedTournamentId})
 	$scope.tournament_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
-	    console.log($scope.resources.edited_player);
 	    StatusModal.loaded();	    
 	})
     }
