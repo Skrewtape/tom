@@ -15,12 +15,7 @@ angular.module('tom_directives.link_division').controller(
 	    if($scope.resources.player.linked_division==null){
 		return;
 	    }
-	    $scope.linked_division.value = data.linked_division.division_id;
-	    //for(linked_div_index in $scope.player.linked_division){
-	    //	linked_div = $scope.player.linked_division[linked_div_index];
-	    //	$scope.selected_division[linked_div.tournament_id]=linked_div;
-	    //}
-
+	    $scope.linked_division.value = $scope.resources.player.linked_division.division_id;
 	})
 
 	$scope.check_for_division_warning = function(division){

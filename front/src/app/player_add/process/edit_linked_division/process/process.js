@@ -4,7 +4,7 @@ angular.module('app.player_add.process.edit_linked_division.process').controller
     function($scope, $state, StatusModal, TimeoutResources) {
 	$scope.player_id=$state.params.playerId;
 	$scope.division_id=$state.params.divisionId;
-	if($scope.checkForBlankParams($scope.player_id) == true){
+	if($scope.checkForBlankParams($scope.division_id) == true){
 	    return;
 	}
         StatusModal.loading();

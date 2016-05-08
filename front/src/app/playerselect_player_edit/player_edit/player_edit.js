@@ -1,4 +1,4 @@
-angular.module('app.playerselect_player_edit.player_edit',[/*REPLACEMECHILD*/]);
+angular.module('app.playerselect_player_edit.player_edit',['app.playerselect_player_edit.player_edit.link_division',/*REPLACEMECHILD*/]);
 angular.module('app.playerselect_player_edit.player_edit').controller(
     'app.playerselect_player_edit.player_edit',
     function($scope, $state, StatusModal, TimeoutResources, Utils) {
@@ -10,8 +10,9 @@ angular.module('app.playerselect_player_edit.player_edit').controller(
 	$scope.setEntryVoidStatus = Utils.setEntryVoidStatus
 	$scope.score_machine={}
 	StatusModal.loading()
-	
-	$scope.player_promise = TimeoutResources.GetPlayer(undefined,{player_id:$scope.player_id})
+
+	$scope.division_promise = TimeoutResources.GetAllDivisions()
+	$scope.player_promise = TimeoutResources.GetPlayer($scope.division_promise,{player_id:$scope.player_id})
 	$scope.machines_promise = TimeoutResources.GetActiveMachines($scope.player_promise)	
 	$scope.player_entries_promise = TimeoutResources.GetAllPlayerEntries($scope.machines_promise,{player_id:$scope.player_id})	
 	$scope.player_entries_promise.then(function(data){

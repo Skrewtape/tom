@@ -1,0 +1,23 @@
+<div ui-content-for="title">
+  <span>Player Division Saved</span>
+</div>
+
+<div class="scrollable">
+  <div class="scrollable-content">
+    <div style='background-color:white' class='big-web-font'>
+      Player {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}}) linked to<br>
+      {{resources.tournament.name}} tournament, division {{resources.divisions[division_id].name}}.
+      <br>
+      <a
+	 class='btn btn-info btn-xlg'
+	 ui-sref='app.playerselect_player_edit.player_edit({playerId:player_id})'
+	 >Return to Player Edit Page</a>
+      <br>
+      <a
+	 class='btn btn-info btn-xlg'
+	 ui-sref='app'
+	 >Done</a>
+      <br>      
+  </div>
+</div>
+

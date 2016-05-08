@@ -19,7 +19,30 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	       controller: 'app.playerselect_player_edit.player_edit',
  	     }
  	   }
+       }).state('app.playerselect_player_edit.player_edit.link_division', 
+        { 
+ 	 url: '/link_division',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/playerselect_player_edit/player_edit/link_division/link_division.html',
+ 	       controller: 'app.playerselect_player_edit.player_edit.link_division',
+ 	     }
+ 	   }
+       }).state('app.playerselect_player_edit.player_edit.link_division.process', 
+        { 
+ 	 url: '/process',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/playerselect_player_edit/player_edit/link_division/process/process.html',
+ 	       controller: 'app.playerselect_player_edit.player_edit.link_division.process',
+ 	     }
+ 	   },
+	    params: {
+		divisionId: {}
+	    }
        })//REPLACE_ME
+
+
 
 
 })

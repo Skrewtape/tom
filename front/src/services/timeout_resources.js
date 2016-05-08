@@ -28,6 +28,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     }
     
     var check_resource_is_fresh = function(resource){
+	return false
 	if(timestamps[resource]!= undefined && Date.now() - 300000 > timestamps[resource]){
 	    return true;
 	} else {
@@ -174,6 +175,14 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 					  {
 					      'addUser': {method:'POST', 'timeout': 5000}
 					  })
+    resources['editPlayer'] =  $resource('[APIHOST]/player/:player_id', {player_id:'@player_id'},			     
+			     {
+				 'editPlayer': {method:'PUT','timeout': 5000}
+			     })	
+    resources['getTournament'] = $resource('[APIHOST]/tournament/:tournament_id', null,
+			     {
+				 'getTournament': {method:'GET', 'timeout': 5000}
+			     })
     
     
     
@@ -182,27 +191,34 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	    return resource_results;
 	},
 	GetPlayerNameSmushed: function(){
-		return resource_results.player.first_name+resource_results.player.last_name;
+	    return resource_results.player.first_name+resource_results.player.last_name;
 	},
-	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions','get',true),
+	GetPlayerLinkedTournamentId: function(){
+	    return resource_results.player.linked_division.tournament_id;
+	    //return 1;
+	},
+	AddMetadivision: generic_resource('addMetadivision','meta_division','post', false),	
+	AddTeam: generic_resource('addTeam','team','post',false),
+	AddTokens: generic_resource('addTokens','add_tokens_result','post', false),
+	AddUser: generic_resource('addUser','user','post', false),
+	ChangeScore: generic_resource('changeScore','score','post', false),
+	DeleteScore: generic_resource('deleteScore','score','get', false),
+	EditPlayer: generic_resource('editPlayer','edited_player','post', false),
+	GetActiveMachines: generic_resource('getActiveMachines','machines','get',false),
 	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments','get',true),
+	GetAllDivisions: generic_resource('getAllDivisions','divisions','get', true),
+	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions','get',true),	
+	GetAllPlayers: generic_resource('getAllPlayers','players','get',false),
+	GetAllPlayerEntries: generic_resource('getAllPlayerEntries','player_entries','get',false),
+	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get',false),
 	GetPlayer: generic_resource('getPlayer','player','get', false),
 	GetPlayerTeams: generic_resource('getPlayerTeams','player_teams','get', false),
 	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens','get', false),
 	GetPlayerTeamTokens: generic_resource('getPlayerTeamTokens','player_team_tokens','get',false),
-	GetAllPlayers: generic_resource('getAllPlayers','players','get',false),
-	GetActiveMachines: generic_resource('getActiveMachines','machines','get',false),
-	GetAllPlayerEntries: generic_resource('getAllPlayerEntries','player_entries','get',false),
-	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get',false),
-	AddTeam: generic_resource('addTeam','team','post',false),
-	AddTokens: generic_resource('addTokens','add_tokens_result','post', false),
-	GetAllDivisions: generic_resource('getAllDivisions','divisions','get', true),
-	ChangeScore: generic_resource('changeScore','score','post', false),
-	DeleteScore: generic_resource('deleteScore','score','get', false),
-	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false),
-	AddMetadivision: generic_resource('addMetadivision','meta_division','post', false),	
 	GetRoles: generic_resource('getRoles','roles','get', true),
-	AddUser: generic_resource('addUser','user','post', false),
+	GetTournament: generic_resource('getTournament','tournament','get',true),	
+	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false),
+	
 	FlushResourceCache:flush_resource_cache,
 	getAllMetadivisionsResource: function(){
 	    return $resource('[APIHOST]/metadivision', null,			     

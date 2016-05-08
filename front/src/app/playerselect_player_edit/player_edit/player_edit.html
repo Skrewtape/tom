@@ -8,7 +8,17 @@
 </div>
 <div class="scrollable">
   <div class="scrollable-content big-web-font"  style='padding:10px'>
-    Edit entries for {{resources.player.first_name}} {{resources.player.last_name}}.
+    Player {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}})
+    <hr>
+    <span ng-if='resources.player.linked_division.name != undefined'>Player is in {{resources.player.linked_division.name}} division </span>
+    <span ng-if='resources.player.linked_division.name == undefined'>Player is not linked to any division </span>
+    
+    <a
+       class='btn btn-info'
+       ui-sref='.link_division'
+       >Change Linked Division</a><br>
+    <hr>
+    Edit entries :  
     <br>
     <div style='margin-left:auto;margin-right:auto;' ng-repeat="(division_id,division_entries) in resources.player_entries">
       <div ng-repeat='(entry_id,entry) in division_entries' class='panel'>
