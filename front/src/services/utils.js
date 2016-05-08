@@ -25,6 +25,13 @@ angular.module('tom_services.utils').factory('Utils', function($filter,StatusMod
 	    })	                
 	    
 	},
+	count_keys:function(object_to_count){
+            x = 0;
+            for(i in object_to_count){
+                x++;
+            }
+            return x;
+        },
         remove_score:function(score){
             StatusModal.loading();
 	    score.removed = true;

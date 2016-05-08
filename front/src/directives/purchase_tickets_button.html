@@ -1,5 +1,5 @@
 <button
-    ng-disabled='resources[resourceType][tokenType][division[divisionIdName]] >= max_unstarted_tickets'
+    ng-disabled='resources[resourceType][tokenType][division[divisionIdName]] + resources.player_active_entries_count[division.division_id] >= max_unstarted_tickets'
     style='width:80%'
     class='btn btn-info btn-xlg'
     ng-click='change_division_tickets(resources[resourceType], added_tokens, tokenType, division[divisionIdName],1)'>
@@ -18,4 +18,4 @@
     </span>
     <!--<span class='badge big-web-font pull-right' style='margin-top:0px'>{{added_tokens[tokenType][division[divisionIdName]]}} </span>-->
   </button>
- <div class='big-web-font pull-right' style='width:15%;margin-left:10px;margin-top:0px'>{{max_unstarted_tickets - resources[resourceType][tokenType][division[divisionIdName]]}} Left</div> 
+ <div class='big-web-font pull-right' style='width:15%;margin-left:10px;margin-top:0px'>{{max_unstarted_tickets - resources[resourceType][tokenType][division[divisionIdName]] -  resources.player_active_entries_count[division.division_id]}} Left</div> 

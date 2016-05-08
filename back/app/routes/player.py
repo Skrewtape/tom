@@ -238,10 +238,28 @@ def deactivate_player(player):
 @fetch_entity(Player, 'player')
 def get_active_player_entries(player):
     """Get a list of open(i.e. not completed, not voided) entries for a player"""
-    entries = Entry.query.filter_by(player_id=player.player_id,completed=False,voided=False,active=True).all()        
+    entries = Entry.query.filter_by(player_id=player.player_id,completed=False,voided=False,active=True).all()
+    #FIXME : should only get active divisions
+    divisions = Division.query.all()
     entries_grouped_dict = {}
+    for division in divisions:
+        entries_grouped_dict[division.division_id]={}
     for entry in entries:
         if entry.division_id not in entries_grouped_dict:
             entries_grouped_dict[entry.division_id]={}
         entries_grouped_dict[entry.division_id][entry.entry_id]=entry.to_dict_with_scores()
+    return jsonify(entries_grouped_dict)
+
+@App.route('/player/<player_id>/entry/active_count', methods=['GET'])
+@fetch_entity(Player, 'player')
+def get_active_player_entries_count(player):
+    """Get a list of open(i.e. not completed, not voided) entries for a player"""
+    entries = Entry.query.filter_by(player_id=player.player_id,completed=False,voided=False,active=True).all()
+    #FIXME : should only get active divisions
+    divisions = Division.query.all()
+    entries_grouped_dict = {}
+    for division in divisions:
+        entries_grouped_dict[division.division_id]=0
+    for entry in entries:
+        entries_grouped_dict[entry.division_id] = 1
     return jsonify(entries_grouped_dict)

@@ -183,7 +183,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'getTournament': {method:'GET', 'timeout': 5000}
 			     })
-    
+    resources['getPlayerActiveEntriesCount'] = $resource('[APIHOST]/player/:player_id/entry/active_count', null,
+			     {
+				 'getPlayerActiveEntriesCount': {method:'GET', 'timeout': 5000}
+			     })    
     
     
     return {
@@ -212,6 +215,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetAllPlayerEntries: generic_resource('getAllPlayerEntries','player_entries','get',false),
 	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get',false),
 	GetPlayer: generic_resource('getPlayer','player','get', false),
+	GetPlayerActiveEntriesCount: generic_resource('getPlayerActiveEntriesCount','player_active_entries_count','get', false),
 	GetPlayerTeams: generic_resource('getPlayerTeams','player_teams','get', false),
 	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens','get', false),
 	GetPlayerTeamTokens: generic_resource('getPlayerTeamTokens','player_team_tokens','get',false),

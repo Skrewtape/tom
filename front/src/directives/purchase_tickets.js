@@ -26,7 +26,8 @@ angular.module('tom_directives.purchase_tickets').controller(
 	$scope.division_in_metadivision = Utils.division_in_metadivision
 	
         StatusModal.loading();
-	$scope.metadivisions_promise = TimeoutResources.GetAllMetadivisions()
+	$scope.player_active_entries_count_promise = TimeoutResources.GetPlayerActiveEntriesCount(undefined,{player_id:$scope.player_id})	
+	$scope.metadivisions_promise = TimeoutResources.GetAllMetadivisions($scope.player_active_entries_count_promise)
 	$scope.player_teams_promise = TimeoutResources.GetPlayerTeams($scope.metadivisions_promise,{player_id:$scope.player_id})	
 	$scope.player_promise = TimeoutResources.GetPlayer($scope.player_teams_promise,{player_id:$scope.player_id})	
 	$scope.tournaments_promise = TimeoutResources.GetActiveTournaments($scope.player_promise);
@@ -39,6 +40,7 @@ angular.module('tom_directives.purchase_tickets').controller(
 	    if($scope.resources.player_teams.teams.length>0){
 		$scope.added_tokens.team_id = $scope.resources.player_teams.teams[0].team_id;
 	    }
+	    console.log($scope.resources.player_active_entries_count);
 	    StatusModal.loaded();
 	})
 	

@@ -26,6 +26,7 @@ def check_linked_division(division_id, player_id=None, team_id=None):
     pass
         
 def check_add_token_for_max_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None,team_id=None):    
+    #FIXME : need to take into account active entries
     if player_id:
         existing_token_count = get_existing_token_info(div_id=div_id,metadiv_id=metadiv_id,player_id=player_id)
     if team_id:
@@ -139,7 +140,6 @@ def add_token():
         team_id = tokens_data['team_id']
     else:
         team_id = None
-    #FIXME : change so we can accept the added_tokens structure from angular
     for div_id in tokens_data['divisions']:
         if Division.query.filter_by(division_id=div_id) is None:
             raise BadRequest('Bad division specified for token create')
