@@ -15,18 +15,18 @@ def calculate_ranks():
     max_rank = 200
                 
     for division in Division.query.all():
-        machines = division.machines    
-        machine_rankings = {}
+        division_machines = division.machines    
+        #machine_rankings = {}
         entries = Entry.query.filter_by(division_id=division.division_id,completed=True,voided=False).all()        
         entries_dict = {}
         for entry in entries:
             entries_dict[entry.entry_id]=entry
             
-        for machine in machines:
+        for division_machine in division_machines:
             #machine_scores=Score.query.filter_by(machine_id=machine.machine_id).join(Entry).filter_by(division_id=division.division_id,completed=True,voided=False).join(Division).join(Tournament).filter_by(active=True).order_by(Score.score.desc()).all()#.limit(max_rank)            
-            machine_scores=Score.query.filter_by(machine_id=machine.machine_id).join(Entry).filter_by(division_id=division.division_id,completed=True,voided=False).join(Player).filter_by(active=True).join(Division).join(Tournament).filter_by(active=True).order_by(Score.score.desc()).all()#.limit(max_rank)            
+            division_machine_scores=Score.query.filter_by(division_machine_id=division_machine.machine_id).join(Entry).filter_by(division_id=division.division_id,completed=True,voided=False).join(Player).filter_by(active=True).join(Division).join(Tournament).filter_by(active=True).order_by(Score.score.desc()).all()#.limit(max_rank)            
             rank = 1
-            for score in machine_scores:
+            for score in division_machine_scores:
                 score.rank = rank
                 point_for_entry = calculate_score_points_from_rank(rank)
                 entry = entries_dict[score.entry_id]
@@ -38,8 +38,8 @@ def calculate_ranks():
                     
                 rank = rank + 1
         rank = 0
-        machine_entries = sorted(entries_dict, key=lambda entry: entries_dict[entry].score,reverse=True)
-        for entry in machine_entries:            
+        division_machine_entries = sorted(entries_dict, key=lambda entry: entries_dict[entry].score,reverse=True)
+        for entry in division_machine_entries:            
             rank = rank + 1
             entries_dict[entry].rank = rank
 

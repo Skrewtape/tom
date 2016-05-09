@@ -17,13 +17,13 @@ class Score(DB.Model):
         foreign_keys=[entry_id]
     )
 
-    machine_id = DB.Column(DB.Integer, DB.ForeignKey(
-        'machine.machine_id'
+    division_machine_id = DB.Column(DB.Integer, DB.ForeignKey(
+        'divisionmachine.division_machine_id'
     ))
-    machine = DB.relationship(
-        'Machine',
-        backref=DB.backref('entries'),
-        foreign_keys=[machine_id]
+    
+    division_machine = DB.relationship(
+        'DivisionMachine',
+        foreign_keys=[division_machine_id]
     )
     
     def to_dict_simple(self):

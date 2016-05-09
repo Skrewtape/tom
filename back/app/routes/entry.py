@@ -3,32 +3,23 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Entry, Score, Player, Division, Machine
+from app.types import Entry, Score, Player, Division, Machine, DivisionMachine
 from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
 
+def check_player_can_start_new_entry(player_id,division_id):
+    # if division tournament is team, lookup team_id for player
+    # make sure no active entries for player
+    # make sure player has more than 0 tokens for division
+    pass
 
-@App.route('/entry/<entry_id>/void', methods=['PUT'])
-@login_required
-@Void_permission.require(403)
-@fetch_entity(Entry, 'entry')
-def void_entry(entry):
-    """Add a score for the entry"""
-    if not entry.division.tournament.active:
-        raise Conflict('tournament closed')    
-    if entry.completed == True or entry.voided == True:
-        raise Conflict('entry specified is already completed or voided')                
-    entry.voided = True
-    entry.player.machine_id = None
-    existing_entry = Entry.query.filter_by(player_id=entry.player_id, voided=False, completed=False, division_id=entry.division_id).first()
-    if existing_entry:
-        existing_entry.active = True        
-    DB.session.commit()    
-    return jsonify(entry.to_dict_simple())
-
-
+def create_active_entry(player_id,division_id):
+    # if division tournament is team, lookup team_id for player
+    # create entry ( set active )
+    # delete token
+    pass
 
 @App.route('/entry/<entry_id>/void/<voided_state>', methods=['PUT'])
 @login_required
@@ -58,40 +49,39 @@ def remove_score(score):
 def edit_score(score):
     """change a score"""   
     score_data = json.loads(request.data)        
-    if 'machine_id' in score_data:
-        score.machine_id = score_data['machine_id']
+    if 'division_machine_id' in score_data:
+        score.division_machine_id = score_data['division_machine_id']
     if 'score' in score_data:
         score.score = score_data['score']         
     DB.session.commit()
     return jsonify(score.to_dict_simple())
 
-def add_score(entry,machine,new_score_value):
+def add_score(entry,division_machine,new_score_value):
     if len(entry.scores) >= entry.number_of_scores_per_entry:
         raise Conflict('Entry already has enough scores')
-    if any(score.machine_id ==  machine.machine_id for score in entry.scores):
+    if any(score.division_machine_id ==  division_machine.division_machine_id for score in entry.scores):
         raise Conflict('Can not play the same game twice in one ticket')
     if entry.player.active is False:
         raise Conflict('Player is no longer active.  Please see the front desk')        
     division = Division.query.filter_by(division_id=entry.division_id).all()    
-    if machine not in division[0].machines:
+    if division_machine not in division[0].machines:
         raise Conflict('machine is not in division')            
     player = Player.query.filter_by(player_id=entry.player_id).all()[0]
-    player.machine = None
     new_score = Score(
         score = new_score_value,
-        machine_id = machine.machine_id
+        division_machine_id = division_machine.division_machine_id
     )
     entry.scores.append(new_score)
     DB.session.commit()
     return jsonify(entry.to_dict_with_scores())
 
 
-@App.route('/entry/<entry_id>/machine/<machine_id>/score/<new_score_value>', methods=['POST'])
+@App.route('/entry/<entry_id>/machine/<divisionmachine_id>/score/<new_score_value>', methods=['POST'])
 @login_required
 @fetch_entity(Entry, 'entry')
-@fetch_entity(Machine, 'machine')
-def add_score_with_decorator(entry,machine,new_score_value):
-    return add_score(entry,machine,new_score_value)
+@fetch_entity(DivisionMachine, 'divisionmachine')
+def add_score_with_decorator(entry,divisionmachine,new_score_value):
+    return add_score(entry,divisionmachine,new_score_value)
 
 @App.route('/entry/<entry_id>', methods=['GET'])
 @fetch_entity(Entry, 'entry')
@@ -139,8 +129,8 @@ def estimate_entry_score_ranks(entry):
     score_dicts = {}
     for score in entry.scores:
         cur_score_dict = score.to_dict_simple()
-        lower_score = Score.query.filter(Score.machine_id == score.machine_id, Score.rank != None, Score.score < score.score).order_by(Score.score.desc()).first()        
-        higher_score = Score.query.filter(Score.machine_id == score.machine_id, Score.rank != None, Score.score > score.score).order_by(Score.score.asc()).first()        
+        lower_score = Score.query.filter(Score.division_machine_id == score.division_machine_id, Score.rank != None, Score.score < score.score).order_by(Score.score.desc()).first()        
+        higher_score = Score.query.filter(Score.division_machine_id == score.division_machine_id, Score.rank != None, Score.score > score.score).order_by(Score.score.asc()).first()        
         lower_score_dict = {}
         if lower_score:
             cur_score_dict['estimated_rank'] = lower_score.rank
@@ -156,9 +146,9 @@ def estimate_entry_score_ranks(entry):
     return jsonify(score_dicts)
 
 
-@App.route('/entry/machineId/<machine_id>', methods=['GET'])
-def get_entries_for_machine(machine_id):
-    entries = Entry.query.filter_by(completed=True,voided=False).join(Score).filter_by(machine_id=machine_id).all()            
+@App.route('/entry/divisionMachineId/<divisionmachine_id>', methods=['GET'])
+def get_entries_for_machine(divisionmachine_id):
+    entries = Entry.query.filter_by(completed=True,voided=False).join(Score).filter_by(division_machine_id=divisionmachine_id).all()            
     entries_dict={} 
     for entry in entries:
         entries_dict[entry.entry_id]=entry.to_dict_simple()
