@@ -269,9 +269,9 @@
 	      <a  class="list-group-item" ui-sref='app.playerlist'>Players
 		<i class="fa fa-chevron-right pull-right"></i></a>
 	    </span>
-	    <span ng-if='Page.has_role("desk")'>
-	      <div class="list-group-item active">Scorekeeping</div>
-	      <a  class="disabled list-group-item" href="#/link2">Scorekeeping
+	    <span ng-if='Page.has_role("scorekeeper")'>
+	      <div class="list-group-item active">Scorekeeping</div>	      
+	      <a  class="disabled list-group-item" ui-sref='app.tournamentselect_scorekeeper'>Scorekeeping
 		<i class="fa fa-chevron-right pull-right"></i></a>
 	    </span>
 	    <span ng-if='Page.has_role("admin")'>

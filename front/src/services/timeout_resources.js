@@ -187,7 +187,14 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'getPlayerActiveEntriesCount': {method:'GET', 'timeout': 5000}
 			     })    
-    
+    resources['getDivision'] = $resource('[APIHOST]/division/:division_id', null,
+			     {
+				 'getDivision': {method:'GET', 'timeout': 5000}
+			     })
+    resources['setDivisionMachinePlayer'] =  $resource('[APIHOST]/machine/:division_machine_id/player/:player_id', {division_machine_id:'@division_machine_id',player_id:'@player_id'},  
+			     {
+				 'setDivisionMachinePlayer': {method:'PUT','timeout': 5000}
+			     })	
     
     return {
 	GetAllResources: function(){
@@ -213,6 +220,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions','get',true),	
 	GetAllPlayers: generic_resource('getAllPlayers','players','get',false),
 	GetAllPlayerEntries: generic_resource('getAllPlayerEntries','player_entries','get',false),
+	GetDivision: generic_resource('getDivision','division','get',true),		
 	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get',false),
 	GetPlayer: generic_resource('getPlayer','player','get', false),
 	GetPlayerActiveEntriesCount: generic_resource('getPlayerActiveEntriesCount','player_active_entries_count','get', false),
@@ -221,6 +229,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetPlayerTeamTokens: generic_resource('getPlayerTeamTokens','player_team_tokens','get',false),
 	GetRoles: generic_resource('getRoles','roles','get', true),
 	GetTournament: generic_resource('getTournament','tournament','get',true),	
+	SetDivisionMachinePlayer: generic_resource('setDivisionMachinePlayer','division_machine','post', false),	
 	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false),
 	
 	FlushResourceCache:flush_resource_cache,
