@@ -6,6 +6,7 @@ from app import App
 from app.types import Entry, Score, Player, Division, Machine, Token, Team, Metadivision, Tournament
 from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank
+from app.routes import entry,division
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
 
@@ -63,14 +64,10 @@ def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None
 def create_entry_if_needed(token,player_id=None,team_id=None,div_id=None,metadiv_id=None):
 
     if metadiv_id:
-        # WE ASSUME ONLY ONE DIVISION IN A METADIVISION IS ACTIVE AT ONCE
-        division = Division.query.filter_by(metadivision_id=metadiv_id).join(Tournament).filter_by(active=True).first()
+        division = division.get_division_from_metadivision(metadiv_id)
     if div_id:
         division = Division.query.filter_by(division_id=div_id).first()            
-    if player_id:
-        query = Entry.query.filter_by(division_id=division.division_id,player_id=player_id,active=True)
-    if team_id:
-        query = Entry.query.filter_by(division_id=division.division_id,team_id=team_id,active=True)        
+    query = entry.shared_get_query_for_active_entries(player_id=player_id,team_id=team_id,div_id=div_id,metadiv_id=metadiv_id)
     if query.count() > 0:
         return
 

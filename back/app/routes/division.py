@@ -3,11 +3,16 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import DivisionMachine, Division, Machine, Entry
+from app.types import DivisionMachine, Division, Machine, Entry, Tournament
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
 from werkzeug.exceptions import BadRequest
 import time
+
+def get_division_from_metadivision(metadiv_id):
+    #FIXME : should be moved to utils
+    # WE ASSUME ONLY ONE DIVISION IN A METADIVISION IS ACTIVE AT ONCE
+    return Division.query.filter_by(metadivision_id=metadiv_id).join(Tournament).filter_by(active=True).first()
 
 # @App.route('/division/<division_id>/machine/<machine_id>', methods=['DELETE'])
 # @login_required

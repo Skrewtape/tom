@@ -3,30 +3,113 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Entry, Score, Player, Division, Machine, DivisionMachine
+from app.types import Entry, Score, Player, Division, Machine, DivisionMachine, Token
 from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank
+from app.routes import division
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
 
-def check_player_can_start_new_entry(player_id,division_id):
-    # if division tournament is team, lookup team_id for player
-    # make sure no active entries for player
-    # make sure player has more than 0 tokens for division
-    pass
+def shared_get_query_for_active_entries(player_id=None,team_id=None,div_id=None,metadiv_id=None):
+    if metadiv_id is None and div_id is None:
+        raise Exception('no metadiv_id or div_id specified')
+    if team_id is None and player_id is None:
+        raise Exception('no team_id and player_id specified')    
+    if metadiv_id:
+        # WE ASSUME ONLY ONE DIVISION IN A METADIVISION IS ACTIVE AT ONCE
+        division = division.get_division_from_metadivision(metadiv_id)
+    if div_id:
+        division = Division.query.filter_by(division_id=div_id).first()            
+    if player_id:
+        query = Entry.query.filter_by(division_id=division.division_id,player_id=player_id,active=True)
+    if team_id:
+        query = Entry.query.filter_by(division_id=division.division_id,team_id=team_id,active=True)        
+    return query
 
-def create_active_entry(player_id,division_id):
+def shared_check_player_can_start_new_entry(player,division):    
     # if division tournament is team, lookup team_id for player
-    # create entry ( set active )
-    # delete token
-    pass
+    #FIXME : active_entries query should be a shared function
+    active_entries = Entry.query.filter_by(player_id=player.player_id,division_id=division.division_id,active=True).all()
+    if len(active_entries) != 0:
+        return False
+    if division.metadivision_id:
+        available_tokens = Token.query.filter_by(player_id=player.player_id,metadivision_id=division.metadivision_id).all()
+    else:
+        available_tokens = Token.query.filter_by(player_id=player.player_id,division_id=division.division_id).all()
+    if len(available_tokens) == 0:
+        return False
+    return True
+
+def shared_create_active_entry(player,division):
+    # if division tournament is team, lookup team_id for player
+    if not division.tournament.active:
+        raise Conflict('tournament closed')
+    active_entries = shared_get_query_for_active_entries(player_id=player.player_id,div_id=division.division_id).all()
+    if len(active_entries) != 0:
+        raise Conflict('Active entry already exists')
+    new_entry = Entry(
+            division = division,
+            active = True,
+            completed = False,
+            refresh = False,
+            voided = False,
+            number_of_scores_per_entry = division.number_of_scores_per_entry
+        )
+    new_entry.player_id = player.player_id
+    DB.session.add(new_entry)    
+    if division.metadivision_id:
+        query = Token.query.filter_by(player_id=player.player_id,division_id=division.division_id)
+    else:
+        query = Token.query.filter_by(player_id=player.player_id,metadivision_id=division.metadivision_id)       
+    if len(query.all()) == 0:
+        raise Conflict('No tokens are available')        
+    token_id = query.first().token_id
+    Token.query.filter_by(token_id=token_id).delete()
+    DB.session.commit()
+
+
+@App.route('/new_entry/division/<division_id>/player/<player_id>', methods=['GET'])
+@fetch_entity(Division, 'division')
+@fetch_entity(Player, 'player')
+def check_player_can_start_new_entry(player,division):
+    return jsonify({'player_can_start_new_entry':shared_check_player_can_start_new_entry(player,division)})
+
+@App.route('/new_entry/division/<division_id>/player/<player_id>', methods=['POST'])
+@fetch_entity(Division, 'division')
+@fetch_entity(Player, 'player')
+def create_new_entry(player,division):
+    if shared_check_player_can_start_new_entry(player,division):
+        shared_create_active_entry(player,division)
+    else:
+        raise Conflict('You done fucked up')                
+    return jsonify({})
+
+
+@App.route('/entry/<entry_id>/player/<player_id>', methods=['PUT'])
+@login_required
+@Admin_permission.require(403)
+@fetch_entity(Entry, 'entry')
+@fetch_entity(Player, 'player')
+def void_entry(entry,player):
+    """set a entry to voided, and tries to start a new entry if available"""
+    if Entry.player_id != Player.player_id:
+        raise Conflict('Entry and Player Id do not match')
+    entry.voided = True 
+    division = Division.query.filter_by(division_id=entry.division_id)
+    DB.session.commit()
+    if shared_check_player_can_start_new_entry(player,division) is False:
+        return jsonify(entry.to_dict_simple())        
+    shared_create_active_entry(player,division)
+    return jsonify(entry.to_dict_simple())
+
 
 @App.route('/entry/<entry_id>/void/<voided_state>', methods=['PUT'])
 @login_required
 @Admin_permission.require(403)
 @fetch_entity(Entry, 'entry')
 def toggle_entry_voided(entry,voided_state):
-    """set a entry voided state"""
+    """set a entry voided state, and DOES NOT try and start a new entry"""
+    #FIXME : this should have better checks
     entry.voided = True if voided_state=="void" else False
     DB.session.commit()
     return jsonify(entry.to_dict_simple())
@@ -48,7 +131,8 @@ def remove_score(score):
 @fetch_entity(Score, 'score')
 def edit_score(score):
     """change a score"""   
-    score_data = json.loads(request.data)        
+    score_data = json.loads(request.data)
+    #FIXME : oops - will probably need to change the frontend to machine the division_machine_id key
     if 'division_machine_id' in score_data:
         score.division_machine_id = score_data['division_machine_id']
     if 'score' in score_data:
@@ -76,7 +160,7 @@ def add_score(entry,division_machine,new_score_value):
     return jsonify(entry.to_dict_with_scores())
 
 
-@App.route('/entry/<entry_id>/machine/<divisionmachine_id>/score/<new_score_value>', methods=['POST'])
+@App.route('/entry/<entry_id>/divisionmachine/<divisionmachine_id>/score/<new_score_value>', methods=['POST'])
 @login_required
 @fetch_entity(Entry, 'entry')
 @fetch_entity(DivisionMachine, 'divisionmachine')

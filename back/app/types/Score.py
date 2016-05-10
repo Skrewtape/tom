@@ -18,7 +18,7 @@ class Score(DB.Model):
     )
 
     division_machine_id = DB.Column(DB.Integer, DB.ForeignKey(
-        'divisionmachine.division_machine_id'
+        'division_machine.division_machine_id'
     ))
     
     division_machine = DB.relationship(

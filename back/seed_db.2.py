@@ -146,7 +146,7 @@ def add_scores_to_entry(division,player,active=True,num=5,void=False):
     entry = create_entry(division,False,True,False,5)
     for entry_num in range(num):                
         random_int = randint(0,10000)
-        score = app.types.Score(machine_id=division.machines[entry_num].machine_id,score=random_int)
+        score = app.types.Score(division_machine_id=division.machines[entry_num].division_machine_id,score=random_int)
         DB.session.add(score)
         entry.scores.append(score)
     if num==5:
