@@ -5,7 +5,7 @@ from flask_login import login_required
 from app import App
 from app.types import Entry, Score, Player, Division, Machine, DivisionMachine, Token
 from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
-from app.routes.util import fetch_entity, calculate_score_points_from_rank
+from app.routes.util import fetch_entity, calculate_score_points_from_rank, get_division_from_metadivision
 from app.routes import division
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
@@ -17,7 +17,7 @@ def shared_get_query_for_active_entries(player_id=None,team_id=None,div_id=None,
         raise Exception('no team_id and player_id specified')    
     if metadiv_id:
         # WE ASSUME ONLY ONE DIVISION IN A METADIVISION IS ACTIVE AT ONCE
-        division = division.get_division_from_metadivision(metadiv_id)
+        division = get_division_from_metadivision(metadiv_id)
     if div_id:
         division = Division.query.filter_by(division_id=div_id).first()            
     if player_id:
@@ -28,7 +28,6 @@ def shared_get_query_for_active_entries(player_id=None,team_id=None,div_id=None,
 
 def shared_check_player_can_start_new_entry(player,division):    
     # if division tournament is team, lookup team_id for player
-    #FIXME : active_entries query should be a shared function
     active_entries = Entry.query.filter_by(player_id=player.player_id,division_id=division.division_id,active=True).all()
     if len(active_entries) != 0:
         return False
@@ -57,10 +56,10 @@ def shared_create_active_entry(player,division):
         )
     new_entry.player_id = player.player_id
     DB.session.add(new_entry)    
-    if division.metadivision_id:
-        query = Token.query.filter_by(player_id=player.player_id,division_id=division.division_id)
+    if division.metadivision_id:        
+        query = Token.query.filter_by(player_id=player.player_id,metadivision_id=division.metadivision_id)               
     else:
-        query = Token.query.filter_by(player_id=player.player_id,metadivision_id=division.metadivision_id)       
+        query = Token.query.filter_by(player_id=player.player_id,division_id=division.division_id)
     if len(query.all()) == 0:
         raise Conflict('No tokens are available')        
     token_id = query.first().token_id

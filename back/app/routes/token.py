@@ -5,7 +5,7 @@ from flask_login import login_required
 from app import App
 from app.types import Entry, Score, Player, Division, Machine, Token, Team, Metadivision, Tournament
 from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
-from app.routes.util import fetch_entity, calculate_score_points_from_rank
+from app.routes.util import fetch_entity, calculate_score_points_from_rank, get_division_from_metadivision
 from app.routes import entry,division
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
@@ -64,13 +64,14 @@ def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None
 def create_entry_if_needed(token,player_id=None,team_id=None,div_id=None,metadiv_id=None):
 
     if metadiv_id:
-        division = division.get_division_from_metadivision(metadiv_id)
+        division = get_division_from_metadivision(metadiv_id)
     if div_id:
         division = Division.query.filter_by(division_id=div_id).first()            
     query = entry.shared_get_query_for_active_entries(player_id=player_id,team_id=team_id,div_id=div_id,metadiv_id=metadiv_id)
     if query.count() > 0:
         return
 
+    
     new_entry = Entry(
         division = division,
         active = True,
@@ -133,21 +134,25 @@ def add_token():
     tokens_data = json.loads(request.data)
     check_player_valid_for_add_token_request(tokens_data)    
     player_id = tokens_data['player_id']
+    player = Player.query.filter_by(player_id=player_id).first()    
     if tokens_data.has_key('team_id'):
         team_id = tokens_data['team_id']
     else:
         team_id = None
     for div_id in tokens_data['divisions']:
-        if Division.query.filter_by(division_id=div_id) is None:
+        division=Division.query.filter_by(division_id=div_id).first()
+        if division is None:
             raise BadRequest('Bad division specified for token create')
         num_tokens = tokens_data['divisions'][div_id]
         check_add_token_for_max_tokens(num_tokens,div_id=div_id,player_id=player_id)
         if num_tokens > 0:
             tokens = create_division_tokens(num_tokens,div_id=div_id,player_id=player_id)
-            create_entry_if_needed(tokens.pop(), player_id=player_id, div_id=div_id)
+            entry.shared_create_active_entry(player,division)
+            #create_entry_if_needed(tokens.pop(), player_id=player_id, div_id=div_id)
 
     for div_id in tokens_data['teams']:
-        if Division.query.filter_by(division_id=div_id) is None:
+        division=Division.query.filter_by(division_id=div_id)
+        if division is None:
             raise BadRequest('Bad division specified for token create')
         num_tokens = tokens_data['teams'][div_id]
         if num_tokens > 0 and team_id is not None:        
@@ -161,9 +166,13 @@ def add_token():
         num_tokens = tokens_data['metadivisions'][metadiv_id]
         print "%s" % player_id        
         check_add_token_for_max_tokens(num_tokens,metadiv_id=metadiv_id,player_id=player_id)
+        division = get_division_from_metadivision(metadiv_id)
+        if division is None:
+            raise BadRequest('No active divisions in metadivision')            
         if num_tokens > 0:
             tokens = create_division_tokens(num_tokens,metadiv_id=metadiv_id,player_id=player_id)
-            create_entry_if_needed(tokens.pop(), player_id=player_id, metadiv_id=metadiv_id)
+            entry.shared_create_active_entry(player,division)            
+            #create_entry_if_needed(tokens.pop(), player_id=player_id, metadiv_id=metadiv_id)
     
     DB.session.commit()
     

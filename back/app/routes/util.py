@@ -4,7 +4,11 @@ from functools import wraps
 from werkzeug.exceptions import BadRequest
 
 from flask_restless.helpers import to_dict
+from app.types import Division, Tournament
 
+def get_division_from_metadivision(metadiv_id):
+    # WE ASSUME ONLY ONE DIVISION IN A METADIVISION IS ACTIVE AT ONCE
+    return Division.query.filter_by(metadivision_id=metadiv_id).join(Tournament).filter_by(active=True).first()
 # def entry_dict(entry):    
 #     #FIXME : need to use marshmellow here to make more generalized version
 #     #http://marshmallow.readthedocs.org/en/latest/examples.html
