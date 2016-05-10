@@ -9,10 +9,12 @@ from app.routes.util import fetch_entity, calculate_score_points_from_rank
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
 
+def shared_get_player_teams(player_id):
+    return Team.query.filter(Team.players.any(Player.player_id.__eq__(player_id))).all()    
+
 @App.route('/team/player/<player_id>', methods=['get'])
 def get_player_teams(player_id):
-    #FIXME : this should be a shared function
-    teams = Team.query.filter(Team.players.any(Player.player_id.__eq__(player_id)))
+    teams = shared_get_player_teams(player_id)
     return jsonify({'teams':[x.to_dict_simple() for x in teams]})
 
 @App.route('/team', methods=['POST'])

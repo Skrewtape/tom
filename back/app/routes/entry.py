@@ -6,7 +6,7 @@ from app import App
 from app.types import Entry, Score, Player, Division, Machine, DivisionMachine, Token
 from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank, get_division_from_metadivision
-from app.routes import division
+from app.routes import team
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
 
@@ -27,14 +27,28 @@ def shared_get_query_for_active_entries(player_id=None,team_id=None,div_id=None,
     return query
 
 def shared_check_player_can_start_new_entry(player,division):    
-    # if division tournament is team, lookup team_id for player
-    active_entries = Entry.query.filter_by(player_id=player.player_id,division_id=division.division_id,active=True).all()
+    #FIXME : this needs cleaned up
+    teams = team.shared_get_player_teams(player.player_id)
+    if len(teams) > 0:
+        #FIXME : will eventually need to deal with multiple teams
+        team_id = teams[0].team_id
+    else:
+        team_id = None
+
+    active_entries = []
+    if division.tournament.team_tournament and team_id is not None:
+        active_entries = shared_get_query_for_active_entries(team_id=team_id,div_id=division.division_id).all()            
+    if division.tournament.team_tournament == False:
+        active_entries = shared_get_query_for_active_entries(player_id=player.player_id,div_id=division.division_id).all()            
     if len(active_entries) != 0:
         return False
     if division.metadivision_id:
         available_tokens = Token.query.filter_by(player_id=player.player_id,metadivision_id=division.metadivision_id).all()
     else:
-        available_tokens = Token.query.filter_by(player_id=player.player_id,division_id=division.division_id).all()
+        if division.tournament.team_tournament:
+            available_tokens = Token.query.filter_by(team_id=team_id,division_id=division.division_id).all()
+        else:
+            available_tokens = Token.query.filter_by(player_id=player.player_id,division_id=division.division_id).all()
     if len(available_tokens) == 0:
         return False
     return True
@@ -43,7 +57,29 @@ def shared_create_active_entry(player,division):
     # if division tournament is team, lookup team_id for player
     if not division.tournament.active:
         raise Conflict('tournament closed')
-    active_entries = shared_get_query_for_active_entries(player_id=player.player_id,div_id=division.division_id).all()
+
+    teams = team.shared_get_player_teams(player.player_id)
+    if len(teams) > 0:
+        #FIXME : will eventually need to deal with multiple teams
+        team_id = teams[0].team_id
+    else:
+        team_id = None    
+    
+    if division.metadivision_id:        
+        token_query = Token.query.filter_by(player_id=player.player_id,metadivision_id=division.metadivision_id)               
+    else:
+        if division.tournament.team_tournament is False:        
+            token_query = Token.query.filter_by(player_id=player.player_id,division_id=division.division_id)
+        else:
+            token_query = Token.query.filter_by(team_id=team_id,division_id=division.division_id)            
+    if len(token_query.all()) == 0:
+        raise Conflict('No tokens are available')        
+
+    active_entries = []
+    if division.tournament.team_tournament and team_id is not None:
+        active_entries = shared_get_query_for_active_entries(team_id=team_id,div_id=division.division_id).all()
+    if division.tournament.team_tournament is False:
+        active_entries = shared_get_query_for_active_entries(player_id=player.player_id,div_id=division.division_id).all()        
     if len(active_entries) != 0:
         raise Conflict('Active entry already exists')
     new_entry = Entry(
@@ -54,15 +90,13 @@ def shared_create_active_entry(player,division):
             voided = False,
             number_of_scores_per_entry = division.number_of_scores_per_entry
         )
-    new_entry.player_id = player.player_id
-    DB.session.add(new_entry)    
-    if division.metadivision_id:        
-        query = Token.query.filter_by(player_id=player.player_id,metadivision_id=division.metadivision_id)               
-    else:
-        query = Token.query.filter_by(player_id=player.player_id,division_id=division.division_id)
-    if len(query.all()) == 0:
-        raise Conflict('No tokens are available')        
-    token_id = query.first().token_id
+    if division.tournament.team_tournament:
+        new_entry.team_id = team_id            
+    else:            
+        new_entry.player_id = player.player_id
+    DB.session.add(new_entry)
+    
+    token_id = token_query.first().token_id
     Token.query.filter_by(token_id=token_id).delete()
     DB.session.commit()
 
