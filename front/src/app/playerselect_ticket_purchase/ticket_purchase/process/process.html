@@ -15,7 +15,7 @@
     </div>
     <div  ng-repeat='(div_id,div_count) in added_tokens.divisions' ng-if='div_count != 0'>
       {{resources.tournaments[resources.divisions[div_id].tournament_id].name}} tournament
-      <span ng-if='resources.tournaments[divisions[div_id].tournament_id].single_division==false'>, {{resources.divisions[div_id].name}} division</span>
+      <span ng-if='resources.tournaments[resources.divisions[div_id].tournament_id].single_division==false'>, {{resources.divisions[div_id].name}} division</span>
       : {{added_tokens.divisions[div_id]}}<br>
     </div>
    <div  ng-repeat='(div_id,team_count) in added_tokens.teams' ng-if='team_count!=0'>

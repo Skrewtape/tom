@@ -147,7 +147,8 @@ def add_token():
         check_add_token_for_max_tokens(num_tokens,div_id=div_id,player_id=player_id)
         if num_tokens > 0:
             tokens = create_division_tokens(num_tokens,div_id=div_id,player_id=player_id)
-            entry.shared_create_active_entry(player,division)
+            if entry.shared_check_player_can_start_new_entry(player,division):
+                entry.shared_create_active_entry(player,division)
             #create_entry_if_needed(tokens.pop(), player_id=player_id, div_id=div_id)
 
     for div_id in tokens_data['teams']:
@@ -171,7 +172,8 @@ def add_token():
             raise BadRequest('No active divisions in metadivision')            
         if num_tokens > 0:
             tokens = create_division_tokens(num_tokens,metadiv_id=metadiv_id,player_id=player_id)
-            entry.shared_create_active_entry(player,division)            
+            if entry.shared_check_player_can_start_new_entry(player,division):    
+                entry.shared_create_active_entry(player,division)            
             #create_entry_if_needed(tokens.pop(), player_id=player_id, metadiv_id=metadiv_id)
     
     DB.session.commit()
