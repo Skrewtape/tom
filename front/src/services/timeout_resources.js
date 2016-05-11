@@ -235,7 +235,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetRoles: generic_resource('getRoles','roles','get', true),
 	GetTournament: generic_resource('getTournament','tournament','get',true),	
 	SetDivisionMachinePlayer: generic_resource('setDivisionMachinePlayer','division_machine','post', false),
-	ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','division_machine','post', false),	
+	ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','empty','post', false),	
 	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false),
 	
 	FlushResourceCache:flush_resource_cache,

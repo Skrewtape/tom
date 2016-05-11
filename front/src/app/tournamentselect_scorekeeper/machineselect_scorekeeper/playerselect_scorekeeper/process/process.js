@@ -1,4 +1,4 @@
-angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process',[/*REPLACEMECHILD*/]);
+angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process',['app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process.undo',/*REPLACEMECHILD*/]);
 angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process').controller(
     'app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process',
     function($scope, $state, StatusModal, TimeoutResources) {

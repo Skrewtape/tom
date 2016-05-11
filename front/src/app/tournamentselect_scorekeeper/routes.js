@@ -49,7 +49,20 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
 	    params: {
 		playerId:{}
 	    }
+       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process.undo', 
+        { 
+ 	 url: '/undo',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/playerselect_scorekeeper/process/undo/undo.html',
+ 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process.undo',
+ 	     }
+ 	 },
+	    params : {
+		undoPlayerId:{}
+	    }
        })//REPLACE_ME
+
 
 
 
