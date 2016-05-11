@@ -4,7 +4,7 @@ angular.module('tom_services.timeout_resources', ['ngResource']);
 angular.module('tom_services.timeout_resources').factory('TimeoutResources', function($resource,$q) {
     var all_active_tournaments_resource = $resource('[APIHOST]/tournament/active', null,
      		      {
-     			  'getActiveTournaments': {method:'GET', 'timeout': 5000}
+     			  'getActiveTournaments': {method:'GET', 'timeout': 15000}
      		      })    
     var resource_results = {};
     var resources = {};    
@@ -100,126 +100,126 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resource_results['ifpa_player'] = undefined;
     resources['getActiveTournaments'] = $resource('[APIHOST]/tournament/active', null,
      						    {
-     							'getActiveTournaments': {method:'GET', 'timeout': 5000}
+     							'getActiveTournaments': {method:'GET', 'timeout': 15000}
      						    })    
     resources['getAllMetadivisions'] = $resource('[APIHOST]/metadivision', null,			     
 						 {
-						     'getAllMetadivisions': {method:'GET', 'timeout': 5000}
+						     'getAllMetadivisions': {method:'GET', 'timeout': 15000}
 						 })
     resources['getPlayer'] =  $resource('[APIHOST]/player/:player_id', null,			     
 					{
-					    'getPlayer': {method:'GET', 'timeout': 5000}
+					    'getPlayer': {method:'GET', 'timeout': 15000}
 					})
     resources['getPlayerTokens']= $resource('[APIHOST]/token/player_id/:player_id', null,			     
 					       {
-						   'getPlayerTokens': {method:'GET', 'timeout': 5000}
+						   'getPlayerTokens': {method:'GET', 'timeout': 15000}
 					       })
     resources['getPlayerTeamTokens']= $resource('[APIHOST]/token/teams/:player_id', null,			     
 					       {
-						   'getPlayerTeamTokens': {method:'GET', 'timeout': 5000}
+						   'getPlayerTeamTokens': {method:'GET', 'timeout': 15000}
 					       })    
     resources['getAllPlayers'] = $resource('[APIHOST]/player', null,			     
 			     {
-				 'getAllPlayers': {method:'GET', 'timeout': 5000}
+				 'getAllPlayers': {method:'GET', 'timeout': 15000}
 			     })
     resources['getIfpaPlayer'] = $resource('[APIHOST]/ifpa/:player_name', null,			     
 			     {
-				 'getIfpaPlayer': {method:'GET', 'timeout': 5000}
+				 'getIfpaPlayer': {method:'GET', 'timeout': 15000}
 			     })
     resources['getPlayerTeams'] = $resource('[APIHOST]/team/player/:player_id', null,			     
 			     {
-				 'getPlayerTeams': {method:'GET', 'timeout': 5000}
+				 'getPlayerTeams': {method:'GET', 'timeout': 15000}
 			     })    
     resources['addTeam'] = $resource('[APIHOST]/team', null,			     
 			     {
-				 'addTeam': {method:'POST', 'timeout': 5000}
+				 'addTeam': {method:'POST', 'timeout': 15000}
 			     })
 
     resources['getAllDivisions'] =  $resource('[APIHOST]/division', null,
 			 {
-			     'getAllDivisions': {method:'GET', 'timeout': 5000}
+			     'getAllDivisions': {method:'GET', 'timeout': 15000}
 			 })
     resources['getActiveMachines'] =  $resource('[APIHOST]/machine/active', null,
 			 {
-			     'getActiveMachines': {method:'GET', 'timeout': 5000}
+			     'getActiveMachines': {method:'GET', 'timeout': 15000}
 			 })
     resources['getDivisionMachine'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id', null,
 			 {
-			     'getDivisionMachine': {method:'GET', 'timeout': 5000}
+			     'getDivisionMachine': {method:'GET', 'timeout': 15000}
 			 })        
     resources['getAllPlayerEntries'] =  $resource('[APIHOST]/player/:player_id/entry/all', null,
 			 {
-			     'getAllPlayerEntries': {method:'GET', 'timeout': 5000}
+			     'getAllPlayerEntries': {method:'GET', 'timeout': 15000}
 			 })    
     resources['addTokens'] =  $resource('[APIHOST]/token', null,			     
 					{
-					    'addTokens': {method:'POST', 'timeout': 5000}
+					    'addTokens': {method:'POST', 'timeout': 15000}
 					})
     resources['changeScore'] =  $resource('[APIHOST]/score/:score_id', null,			     
 					{
-					    'changeScore': {method:'PUT', 'timeout': 5000}
+					    'changeScore': {method:'PUT', 'timeout': 15000}
 					})	        
     resources['deleteScore'] =  $resource('[APIHOST]/score/:score_id', null,			     
 					{
-					    'deleteScore': {method:'DELETE', 'timeout': 5000}
+					    'deleteScore': {method:'DELETE', 'timeout': 15000}
 					})
     resources['voidEntryToggle'] =  $resource('[APIHOST]/entry/:entry_id/void/:void_state', null,			     
 					  {
-					      'voidEntryToggle': {method:'PUT', 'timeout': 5000}
+					      'voidEntryToggle': {method:'PUT', 'timeout': 15000}
 					  })
     resources['addMetadivision'] =  $resource('[APIHOST]/metadivision', null,			     
 					  {
-					      'addMetadivision': {method:'POST', 'timeout': 5000}
+					      'addMetadivision': {method:'POST', 'timeout': 15000}
 					  })
     resources['getRoles'] =  $resource('[APIHOST]/role', null,			     
 					  {
-					      'getRoles': {method:'GET', 'timeout': 5000}
+					      'getRoles': {method:'GET', 'timeout': 15000}
 					  })
     resources['addUser'] =  $resource('[APIHOST]/user', null,			     
 					  {
-					      'addUser': {method:'POST', 'timeout': 5000}
+					      'addUser': {method:'POST', 'timeout': 15000}
 					  })
     resources['editPlayer'] =  $resource('[APIHOST]/player/:player_id', {player_id:'@player_id'},			     
 			     {
-				 'editPlayer': {method:'PUT','timeout': 5000}
+				 'editPlayer': {method:'PUT','timeout': 15000}
 			     })
     resources['addScore'] =  $resource('[APIHOST]/entry/:entry_id/divisionmachine/:division_machine_id/new_score/:new_score',
 				       {entry_id:'@entry_id',division_machine_id:'@division_machine_id',new_score_value:'@new_score_value'},			     
 			     {
-				 'addScore': {method:'POST','timeout': 5000}
+				 'addScore': {method:'POST','timeout': 15000}
 			     })	    
     resources['getTournament'] = $resource('[APIHOST]/tournament/:tournament_id', null,
 			     {
-				 'getTournament': {method:'GET', 'timeout': 5000}
+				 'getTournament': {method:'GET', 'timeout': 15000}
 			     })
     resources['getPlayerActiveEntriesCount'] = $resource('[APIHOST]/player/:player_id/entry/active_count', null,
 			     {
-				 'getPlayerActiveEntriesCount': {method:'GET', 'timeout': 5000}
+				 'getPlayerActiveEntriesCount': {method:'GET', 'timeout': 15000}
 			     })
     resources['getPlayerActiveEntry'] = $resource('[APIHOST]/player/:player_id/division/:division_id/entry/active', null,
 			     {
-				 'getPlayerActiveEntry': {method:'GET', 'timeout': 5000}
+				 'getPlayerActiveEntry': {method:'GET', 'timeout': 15000}
 			     })
     resources['getEntry'] = $resource('[APIHOST]/entry/:entry_id', null,
 			     {
-				 'getEntry': {method:'GET', 'timeout': 5000}
+				 'getEntry': {method:'GET', 'timeout': 15000}
 			     })        
     
     resources['getDivision'] = $resource('[APIHOST]/division/:division_id', null,
 			     {
-				 'getDivision': {method:'GET', 'timeout': 5000}
+				 'getDivision': {method:'GET', 'timeout': 15000}
 			     })
     resources['setDivisionMachinePlayer'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/player/:player_id', {division_machine_id:'@division_machine_id',player_id:'@player_id'},  
 			     {
-				 'setDivisionMachinePlayer': {method:'PUT','timeout': 5000}
+				 'setDivisionMachinePlayer': {method:'PUT','timeout': 15000}
 			     })
     resources['clearDivisionMachinePlayer'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/player/:player_id/clear', {division_machine_id:'@division_machine_id',player_id:'@player_id'},  
 			     {
-				 'clearDivisionMachinePlayer': {method:'PUT','timeout': 5000}
+				 'clearDivisionMachinePlayer': {method:'PUT','timeout': 15000}
 			     })
     resources['completeEntry'] =  $resource('[APIHOST]/entry/:entry_id/complete', {entry_id:'@entry_id'},  
 			     {
-				 'completeEntry': {method:'PUT','timeout': 5000}
+				 'completeEntry': {method:'PUT','timeout': 15000}
 			     })	
     
     
@@ -276,37 +276,37 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	getAllMetadivisionsResource: function(){
 	    return $resource('[APIHOST]/metadivision', null,			     
 			     {
-				 'getAllMetadivisions': {method:'GET', 'timeout': 5000}
+				 'getAllMetadivisions': {method:'GET', 'timeout': 15000}
 			     })	    
 	},	
 	loginResource: function (){
 	    return $resource('[APIHOST]/login', null,
 			     {
-				 'login': { method:'PUT' , 'timeout': 5000}
+				 'login': { method:'PUT' , 'timeout': 15000}
 			     });
 	},
 	addTournamentResource: function(){
 	    return $resource('[APIHOST]/tournament', null,
 			     {
-				 'addTournament': {method:'POST', 'timeout': 5000}
+				 'addTournament': {method:'POST', 'timeout': 15000}
 			     })
 	},
 	getAllTournamentsResource: function(){
 	    return $resource('[APIHOST]/tournament', null,
 			     {
-				 'getAllTournaments': {method:'GET', 'timeout': 5000}
+				 'getAllTournaments': {method:'GET', 'timeout': 15000}
 			     })
 	},
 	getActiveTournamentsResource: function(){
 	    return $resource('[APIHOST]/tournament/active', null,
 			     {
-				 'getActiveTournaments': {method:'GET', 'timeout': 5000}
+				 'getActiveTournaments': {method:'GET', 'timeout': 15000}
 			     })
 	},
 	getTournamentResource: function(){
 	    return $resource('[APIHOST]/tournament/:tournament_id', null,
 			     {
-				 'getTournament': {method:'GET', 'timeout': 5000}
+				 'getTournament': {method:'GET', 'timeout': 15000}
 			     })
 	},
 	addDivisionResource: function(){
@@ -317,25 +317,25 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 				 //        are sub-objects (i.e. list of machines under division
 				 //        should be a dict, not an array ).  We can do 
 				 //        response massaging at the resourc
-				 'addDivision': {method:'POST', 'timeout': 5000}
+				 'addDivision': {method:'POST', 'timeout': 15000}
 			     })
 	},
 	getDivisionResource: function(){
 	    return $resource('[APIHOST]/division/:division_id', null,
 			     {
-				 'getDivision': {method:'GET', 'timeout': 5000}
+				 'getDivision': {method:'GET', 'timeout': 15000}
 			     })
 	},
 	getAllDivisionsResource: function(){
 	    return $resource('[APIHOST]/division', null,
 			     {
-				 'getAllDivisions': {method:'GET', 'timeout': 5000}
+				 'getAllDivisions': {method:'GET', 'timeout': 15000}
 			     })
 	},
 	getAllMachinesResource: function(){
 	    return $resource('[APIHOST]/machine', null,
 			     {
-				 'getAllMachines': {method:'GET', 'timeout': 5000}
+				 'getAllMachines': {method:'GET', 'timeout': 15000}
 			     })
 	},
 	getAllMachinesArrayResource: function(){
@@ -343,7 +343,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'getAllMachinesArray': {
 				     method:'GET',
-				     'timeout': 5000,
+				     'timeout': 15000,
 				     isArray:true,
 				     transformResponse:function(data,headersGetter){
 					 machines_array = [];
@@ -360,55 +360,55 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	addMachineToDivisionResource: function(){
 	    return $resource('[APIHOST]/division/:division_id/machine/:machine_id', {division_id:'@division_id',machine_id:'@machine_id'},
 			     {
-				 'addMachineToDivision': {method:'PUT', 'timeout': 5000}
+				 'addMachineToDivision': {method:'PUT', 'timeout': 15000}
 			     })
 	},
 	removeMachineFromDivisionResource: function(){
 	    return $resource('[APIHOST]/division_machine/:division_machine_id', {division_machine_id:'@division_machine_id'},
 			     {
-				 'removeMachineFromDivision': {method:'DELETE', 'timeout': 5000}
+				 'removeMachineFromDivision': {method:'DELETE', 'timeout': 15000}
 			     })
 	},
 	enableMachineInDivisionResource: function(){
 	    return $resource('[APIHOST]/division_machine/:division_machine_id', {division_machine_id:'@division_machine_id'},
 			     {
-				 'enableMachineInDivision': {method:'PUT', 'timeout': 5000}
+				 'enableMachineInDivision': {method:'PUT', 'timeout': 15000}
 			     })
 	},
 	addPlayerResource: function(){
 	    return $resource('[APIHOST]/player', null,			     
 			     {
-				 'addPlayer': {method:'POST', 'timeout': 5000}
+				 'addPlayer': {method:'POST', 'timeout': 15000}
 			     })
 	},
 	getPlayerResource: function(){
 	    return $resource('[APIHOST]/player/:player_id', null,			     
 			     {
-				 'getPlayer': {method:'GET', 'timeout': 5000}
+				 'getPlayer': {method:'GET', 'timeout': 15000}
 			     })
 	},
 	editPlayerResource: function(){
 	    return $resource('[APIHOST]/player/:player_id', {player_id:'@player_id'},			     
 			     {
-				 'editPlayer': {method:'PUT','timeout': 5000}
+				 'editPlayer': {method:'PUT','timeout': 15000}
 			     })
 	},
 	toggleTournamentActiveResource: function(){
 	    return $resource('[APIHOST]/tournament/:tournament_id/:action', {tournament_id:'@tournament_id',action:'@action'},			     
 			     {
-				 'toggleTournamentActive': {method:'PUT','timeout': 5000}
+				 'toggleTournamentActive': {method:'PUT','timeout': 15000}
 			     })
 	},
 	getTokensForPlayerResource: function(){
 	    return $resource('[APIHOST]/token/player_id/:player_id', null,			     
 			     {
-				 'getTokensForPlayer': {method:'GET', 'timeout': 5000}
+				 'getTokensForPlayer': {method:'GET', 'timeout': 15000}
 			     })	    
 	},
 	addTokensResource: function(){
 	    return $resource('[APIHOST]/token', null,			     
 			     {
-				 'addTokens': {method:'POST', 'timeout': 5000}
+				 'addTokens': {method:'POST', 'timeout': 15000}
 			     })	    
 	}
     };
