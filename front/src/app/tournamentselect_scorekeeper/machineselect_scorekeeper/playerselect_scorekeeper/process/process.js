@@ -8,7 +8,8 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playe
 	    return;
 	}
 	StatusModal.loading()
-	$scope.set_division_machine_player_promise = TimeoutResources.SetDivisionMachinePlayer(undefined,{player_id:$scope.player_id,division_machine_id:$scope.division_machine_id})
+	$scope.player_promise = TimeoutResources.GetPlayer(undefined,{player_id:$scope.player_id});
+	$scope.set_division_machine_player_promise = TimeoutResources.SetDivisionMachinePlayer($scope.player_promise,{player_id:$scope.player_id,division_machine_id:$scope.division_machine_id})
 	$scope.set_division_machine_player_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources()
 	    StatusModal.loaded()	

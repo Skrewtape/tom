@@ -191,10 +191,15 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'getDivision': {method:'GET', 'timeout': 5000}
 			     })
-    resources['setDivisionMachinePlayer'] =  $resource('[APIHOST]/machine/:division_machine_id/player/:player_id', {division_machine_id:'@division_machine_id',player_id:'@player_id'},  
+    resources['setDivisionMachinePlayer'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/player/:player_id', {division_machine_id:'@division_machine_id',player_id:'@player_id'},  
 			     {
 				 'setDivisionMachinePlayer': {method:'PUT','timeout': 5000}
+			     })
+    resources['clearDivisionMachinePlayer'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/player/:player_id/clear', {division_machine_id:'@division_machine_id',player_id:'@player_id'},  
+			     {
+				 'clearDivisionMachinePlayer': {method:'PUT','timeout': 5000}
 			     })	
+    
     
     return {
 	GetAllResources: function(){
@@ -229,7 +234,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetPlayerTeamTokens: generic_resource('getPlayerTeamTokens','player_team_tokens','get',false),
 	GetRoles: generic_resource('getRoles','roles','get', true),
 	GetTournament: generic_resource('getTournament','tournament','get',true),	
-	SetDivisionMachinePlayer: generic_resource('setDivisionMachinePlayer','division_machine','post', false),	
+	SetDivisionMachinePlayer: generic_resource('setDivisionMachinePlayer','division_machine','post', false),
+	ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','division_machine','post', false),	
 	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false),
 	
 	FlushResourceCache:flush_resource_cache,
