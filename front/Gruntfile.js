@@ -1,11 +1,12 @@
 module.exports = function(grunt) {
-    grunt.initConfig({
+  var dest = '/var/www/html/'	  
+  grunt.initConfig({
 	shell: {
 	    makeRevHistory: {
-		command: ["git log --pretty=format:'%H<msgst>%b<msge>' | fgrep -v '<msgst><msge>' | fgrep '<msgst>' | cut -b1-40 | git log --stdin --no-walk > dist/rev.txt",
-			  "echo '<pre>' > dist/rev.html",
-			  "cat dist/rev.txt >> dist/rev.html",
-			  "echo '<pre>' >> dist/rev.html"
+		command: ["git log --pretty=format:'%H<msgst>%b<msge>' | fgrep -v '<msgst><msge>' | fgrep '<msgst>' | cut -b1-40 | git log --stdin --no-walk > "+dest+"dist/rev.txt",
+			  "echo '<pre>' > "+dest+"dist/rev.html",
+			  "cat "+dest+"dist/rev.txt >> "+dest+"dist/rev.html",
+			  "echo '<pre>' >> "+dest+"dist/rev.html"
 			 ].join('&&')
 	    }
 	},
@@ -13,32 +14,32 @@ module.exports = function(grunt) {
         copy: {
             main: {
                 files : [
-                    { expand: true, cwd: 'img/', src: '**', dest: 'dist/img/' },
-                    { expand: true, cwd: 'src/app/', src: 'index.html', dest: 'dist/' },		    
+                    { expand: true, cwd: 'img/', src: '**', dest: dest+'dist/img/' },
+                    { expand: true, cwd: 'src/app/', src: 'index.html', dest: dest+'dist/' },		    
                     {
                         expand: true,
                         cwd: 'node_modules/bootstrap-sass/assets/fonts/bootstrap/',
                         src: '*',
-                        dest: 'dist/bootstrap/'
+                        dest: dest+'dist/bootstrap/'
                     },
                     {
                         expand: true,
                         cwd: 'bower_components/mobile-angular-ui/dist/fonts/',
                         src: '*',
-                        dest: 'dist/fonts'
+                        dest: dest+'dist/fonts'
                     }		    
                 ]
             },
         },
         replace: {
             dev: {
-                src: ['dist/app.js', 'dist/**/*html'],
+                src: [dest+'dist/app.js', dest+'dist/**/*html'],
                 overwrite: true,
                 replacements: [
                     {
                         from: '[APIHOST]',
-                        to: 'http://localhost:8000'
-			//to: 'http://127.0.0.1:8000'
+                        //to: 'http://localhost:8000'
+		        to: 'http://104.196.56.67:8000'
 			//to: 'http://192.168.1.178:8000',
 			//to: 'http://9.75.197.139:8000',
 			//to: 'http://192.168.1.36:8000',
@@ -61,7 +62,7 @@ module.exports = function(grunt) {
             main: {
                 options: {
                     sassDir: 'styles',
-                    cssDir: 'dist',
+                    cssDir: dest+'dist',
                     importPath: 'node_modules'
                 },
             },
@@ -75,21 +76,24 @@ module.exports = function(grunt) {
                     transform: ['browserify-ngannotate'],
                 },
                 src: 'src/app/app.js',
-                dest: 'dist/app.js',
+                dest: dest+'dist/app.js',
             },
         },
-        clean: ['dist'],
+      clean: {
+	  options: {'force':true},
+	  build: [dest+'dist']
+      },
 	ngtemplates: {
 	    TOMApp: {
 		cwd: 'src',
 		src: '**/**.html',
-		dest: 'dist/app_html_templates.js'
+		dest: dest+'dist/app_html_templates.js'
 	    }
 	},
 	concat: {
 	    main: {
-		src: [ 'dist/app.js','src/services/**.js','src/directives/**.js','src/app/routes.js','dist/app_html_templates.js','dist/service_html_templates.js','src/app/**/*.js','!src/app/app.js','dist/_bower.js' ],
-		dest: 'dist/app.js' 
+		src: [ dest+'dist/app.js','src/services/**.js','src/directives/**.js','src/app/routes.js',dest+'dist/app_html_templates.js',dest+'dist/service_html_templates.js','src/app/**/*.js','!src/app/app.js',dest+'dist/js/_bower.js' ],
+		dest: dest+'dist/app.js' 
 	    }
 	},
         prettify: {
@@ -106,8 +110,8 @@ module.exports = function(grunt) {
 	bower_concat: {
 	    all: {
 		dest: {
-		    'js': 'dist/_bower.js',
-		    'css': 'dist/_bower.css'
+		    'js': dest+'dist/js/_bower.js',
+		    'css': dest+'dist/css/_bower.css'
 		},
 		bowerOptions: {
 		    relative: false
