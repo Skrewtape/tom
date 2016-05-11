@@ -1,5 +1,5 @@
 <div ui-content-for="title">
-  <span>Add Player</span>
+  <span>Record Score</span>
 </div>
 <div  ui-content-for="navbarAction">
     <a ui-sref='^' style='font-size:35px'>
@@ -7,8 +7,43 @@
     </a>
 </div>
 <div class="scrollable">
-  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
-    <div class="scrollable-content"  style='padding:10px'>
+    <div class="big-web-font scrollable-content"  style='padding:10px'>
+      <table style='padding-top:25px;'>
+	<tr>
+	  <td align=right> Player : 
+	  </td>
+	  <td>{{resources.player.first_name}} {{resources.player.last_name}}
+	  </td>
+	</tr>
+	<tr>
+	  <td align=right> Machine : 
+	  </td>
+	  <td>{{resources.division_machine.name}}
+	  </td>
+	</tr>
+      </table>
+      <div class='big-web-font' style='border-style:solid;border-width:1px;width:50%;height:50px;padding-top:15px'>
+	<center>{{formatted_score.score}}</center>
+      </div>
+      <input
+	 focus-if
+         type='number'
+	 style='position:absolute;top:-100px;left:-100px;width:50px'
+         class='form-control big-web-font'
+         aria-describedby='new_score'
+         name='new_score'
+         ng-model='new_score'
+	 ng-change='onScoreChange()'
+         />
+      <a
+	 class='btn btn-info btn-xlg big-web-font'
+	 style='width:50%;margin:auto'
+	 ui-sref='.confirm({score:new_score})'
+	 ng-disabled='disabledScoreKeeping'
+	 >Next</a>
+      <hr>
+      <div ng-repeat='score in resources.player_active_entry.entry.scores' ng-if='resources.player_active_entry.entry.scores != undefined'>
+	{{resources.machines[score.division_machine_id].name}} : {{score.score}}<br>
+      </div>
     </div>
-  </div>
 </div>

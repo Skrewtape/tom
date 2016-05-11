@@ -30,7 +30,7 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	 }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper', 
         { 
- 	 url: '/recordscore_scorekeeper',
+ 	 url: '/recordscore_scorekeeper/:divisionMachineId',
  	 views: {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/recordscore_scorekeeper.html',
@@ -61,7 +61,50 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
 	    params : {
 		undoPlayerId:{}
 	    }
+       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm', 
+        { 
+ 	 url: '/confirm/:score',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/confirm/confirm.html',
+ 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm',
+ 	     }
+ 	   }
+       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process', 
+        { 
+ 	 url: '/process',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/confirm/process/process.html',
+ 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process',
+ 	     }
+ 	 },
+	    params : {
+		finalScore: {}
+	    }
+       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete', 
+        { 
+ 	 url: '/complete/:entryId',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/confirm/process/complete/complete.html',
+ 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete',
+ 	     }
+ 	   }
+       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.process', 
+        { 
+ 	 url: '/process',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/confirm/process/complete/process/process.html',
+ 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.process',
+ 	     }
+ 	   }
        })//REPLACE_ME
+
+
+
+
 
 
 

@@ -1,0 +1,19 @@
+<div ui-content-for="title">
+  <span>Complete Ticket</span>
+</div>
+<div class="scrollable">
+  <div class="big-web-font scrollable-content"  style='padding:10px'>
+    <div ng-repeat='score in resources.entry.scores'>
+      {{resources.machines[score.division_machine_id].name}} : {{score.score}}<br>
+    </div>
+    <br>
+    <button
+       class='btn btn-info btn-xlg big-web-font'
+       ui-sref='.process'
+       >Submit Ticket</button>
+    <button
+       class='btn btn-info btn-xlg big-web-font'
+       ui-sref='.void'
+       >Void Ticket</button>    
+  </div>
+</div>

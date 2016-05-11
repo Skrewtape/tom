@@ -1,10 +1,15 @@
 """Utility functions for routing"""
 from functools import wraps
 
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, ImATeapot
 
 from flask_restless.helpers import to_dict
 from app.types import Division, Tournament
+
+def i_am_a_teapot(message,goto_state):
+    new_exception = ImATeapot(message)
+    new_exception.state_go = goto_state
+    return new_exception
 
 def get_division_from_metadivision(metadiv_id):
     # WE ASSUME ONLY ONE DIVISION IN A METADIVISION IS ACTIVE AT ONCE

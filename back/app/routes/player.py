@@ -271,3 +271,28 @@ def get_active_player_entries_count(player):
         entries_grouped_dict[entry.division_id] = 1
         
     return jsonify(entries_grouped_dict)
+
+@App.route('/player/<player_id>/division/<division_id>/entry/active', methods=['GET'])
+@fetch_entity(Player, 'player')
+@fetch_entity(Division, 'division')
+def get_active_player_entry(player,division):
+    """Get a list of open(i.e. not completed, not voided) entries for a player"""
+    entries = Entry.query.filter_by(player_id=player.player_id,completed=False,voided=False,active=True).all()
+    teams = Team.query.filter(Team.players.any(Player.player_id.__eq__(player.player_id))).all()
+    if len(teams) > 0:        
+        team_entries = Entry.query.filter_by(team_id=teams[0].team_id,completed=False,voided=False,active=True).all()
+    else:
+        team_entries = []
+    #FIXME : should only get active divisions
+    divisions = Division.query.all()
+    entries_grouped_dict = {}
+    entry_id=None
+    for entry in entries:
+        if entry.division_id == division.division_id:
+            matched_entry = entry
+    for entry in team_entries:
+        if entry.division_id == division.division_id:
+            matched_entry = entry
+        
+    return jsonify({'entry':matched_entry.to_dict_with_scores()})
+

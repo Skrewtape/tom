@@ -180,20 +180,22 @@ def add_score(entry,division_machine,new_score_value):
         raise Conflict('Can not play the same game twice in one ticket')
     if entry.player.active is False:
         raise Conflict('Player is no longer active.  Please see the front desk')        
-    division = Division.query.filter_by(division_id=entry.division_id).all()    
-    if division_machine not in division[0].machines:
+    division = Division.query.filter_by(division_id=entry.division_id).first()    
+    if division_machine not in division.machines:
         raise Conflict('machine is not in division')            
-    player = Player.query.filter_by(player_id=entry.player_id).all()[0]
     new_score = Score(
         score = new_score_value,
         division_machine_id = division_machine.division_machine_id
     )
     entry.scores.append(new_score)
+    division_machine.player_id = None
+    if len(entry.scores) >= entry.number_of_scores_per_entry:
+        entry.active=False
     DB.session.commit()
     return jsonify(entry.to_dict_with_scores())
 
 
-@App.route('/entry/<entry_id>/divisionmachine/<divisionmachine_id>/score/<new_score_value>', methods=['POST'])
+@App.route('/entry/<entry_id>/divisionmachine/<divisionmachine_id>/new_score/<new_score_value>', methods=['POST'])
 @login_required
 @fetch_entity(Entry, 'entry')
 @fetch_entity(DivisionMachine, 'divisionmachine')
@@ -208,14 +210,9 @@ def get_entry(entry):
 
 def complete_entry(entry):
     """Complete specific entry"""    
-    if entry.completed == True or entry.voided == True or entry.active == False:
+    if entry.completed == True or entry.voided == True or entry.active == True:
         raise Conflict('entry is already completed or voided or inactive')
     entry.completed = True
-    entry.active = False
-    DB.session.commit()
-    entries = Entry.query.filter_by(player_id=entry.player_id,completed=False,voided=False,division_id=entry.division_id).all()        
-    if entries:
-        entries[0].active = True
     DB.session.commit()
     return jsonify(entry.to_dict_with_scores())
 
@@ -225,7 +222,7 @@ def complete_entry(entry):
 @fetch_entity(Entry, 'entry')
 def complete_entry_with_decorator(entry):
     """Complete specific entry"""    
-    complete_entry(entry)
+    return complete_entry(entry)
     # if entry.completed == True or entry.voided == True or entry.active == False:
     #     raise Conflict('entry is already completed or voided')
     # entry.completed = True
@@ -235,7 +232,7 @@ def complete_entry_with_decorator(entry):
     # if entries:
     #     entries[0].active = True
     # DB.session.commit()
-    # return jsonify(entry.to_dict_with_scores())
+    #return jsonify(entry.to_dict_with_scores())
 
 @App.route('/entry/<entry_id>/estimate_score_ranks', methods=['GET'])
 @fetch_entity(Entry, 'entry')

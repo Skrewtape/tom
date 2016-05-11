@@ -48,6 +48,8 @@ def make_json_error(ex):
     """Turn an exception into a chunk of JSON"""
     response = jsonify({})
     response_dict = loads(response.get_data())
+    if hasattr(ex, 'state_go'):
+        response_dict['state_go'] = ex.state_go
     if isinstance(ex, HTTPException):
         response.status_code = ex.code
         if isinstance(ex.description, Permission):

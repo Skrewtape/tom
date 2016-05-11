@@ -10,6 +10,7 @@ require('angular-ui-router');
 require('bootstrap-sass/assets/javascripts/bootstrap');
 require('angular-fcsa-number');
 require('angular-resource');
+require('ng-focus-if');
 app = angular.module(
 	'TOMApp',
 	[
@@ -19,10 +20,20 @@ app = angular.module(
 	    'tom_services',
 	    'tom_directives',
 	    'app.login',
+	    'focus-if',
 	    'app.tournament_add',
 	    'app.tournamentselect_machine_add',
 	    'app.player_add',
-	    'app.tournament_activate','app.playerselect_ticket_purchase','app.teamname_team_add','app.playerlist','app.playerselect_player_edit','app.metadivision_add','app.user_add','app.playerselect_player_info','app.tournamentselect_scorekeeper',/*REPLACEMECHILD*/
+	    'fcsa-number',
+	    'app.tournament_activate',
+	    'app.playerselect_ticket_purchase',
+	    'app.teamname_team_add',
+	    'app.playerlist',
+	    'app.playerselect_player_edit',
+	    'app.metadivision_add',
+	    'app.user_add',
+	    'app.playerselect_player_info',
+	    'app.tournamentselect_scorekeeper',/*REPLACEMECHILD*/
 	]
 );
 
@@ -68,7 +79,8 @@ app.factory('myHttpInterceptor', function($q,$injector,$rootScope) {
 		rejection.data.message="HTTP Timeout while getting "+rejection.config.url
 	    }
 	    $rootScope.loading = false;
-	    StatusModal.http_error(rejection.data.message);	    
+	    console.log(rejection.data)
+	    StatusModal.http_error(rejection.data.message, rejection.data.state_go);	    
 	    return $q.reject(rejection);
 	}
     };

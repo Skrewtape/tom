@@ -5,11 +5,10 @@ from flask import jsonify, request
 from flask_login import login_required
 from app import App
 from app.types import Machine, Player, Entry, Score, Division, DivisionMachine
-from app.routes import entry
 from app import App, Admin_permission, DB
-from app.routes.util import fetch_entity
+from app.routes.util import fetch_entity, i_am_a_teapot
 from app.routes import entry as route_entry
-from werkzeug.exceptions import Conflict
+from werkzeug.exceptions import Conflict,ImATeapot
 from app import tom_config
 
 @App.route('/machine/active', methods=['GET'])
@@ -23,22 +22,27 @@ def get_active_machines():
     return jsonify(active_machines)
 
 @App.route('/divisionmachine/<divisionmachine_id>/player/<player_id>', methods=['PUT'])
-#@login_required
+@login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
 @fetch_entity(Player, 'player')
 def set_machine_player(divisionmachine, player):
     """claim a machine - its mine - ARRRRR"""
     if player.division_machine:
-        raise Conflict('Player already is playing the machine %s !' % player.division_machine.machine.name)        
+        raise i_am_a_teapot('Player already is playing the machine %s !' % player.division_machine.machine.name,"^")        
+        #raise Conflict('Player already is playing the machine %s !' % player.division_machine.machine.name)        
     #FIXME : need to handle team entries
-    #FIXME : need to start an entry if you have tokens
-    #player_entries = Entry.query.filter_by(division_id=divisionmachine.division_id,player_id=player.player_id,completed=False,voided=False,active=True).all()        
-    player_entries = route_entry.shared_get_query_for_active_entries(player_id=player.player_id,div_id=divisionmachine.division_id).all()
-    if player_entries is None:
+    player_entry = route_entry.shared_get_query_for_active_entries(player_id=player.player_id,div_id=divisionmachine.division_id).first()
+    if player_entry is None:
         if route_entry.shared_check_player_can_start_new_entry(player,divisionmachine.division) is False:            
-            raise Conflict('Player does not have any entries')        
+            #FIXME : goto_state should be handled on the client side, but I'm being lazy
+            raise i_am_a_teapot('Player does not have any entries',"^")
         else:
             route_entry.shared_create_active_entry(player,divisionmachine.division)           
+            player_entry = route_entry.shared_get_query_for_active_entries(player_id=player.player_id,div_id=divisionmachine.division_id).first()
+    already_played_count = len([score for score in player_entry.scores if score.division_machine_id == divisionmachine.division_machine_id])
+    #if any(divisionmachine.division_machine_id ==  division_machine.division_machine_id for score in entry.scores):
+    if already_played_count > 0:
+        raise i_am_a_teapot('Can not play the same game twice in one ticket',"^")
     divisionmachine.player_id = player.player_id
     DB.session.commit()
     return jsonify(divisionmachine.to_dict_simple())
@@ -49,7 +53,6 @@ def set_machine_player(divisionmachine, player):
 @fetch_entity(Player, 'player')
 def clear_machine_player(divisionmachine, player):
     """clear a machine - its not mine - ARRRRR"""
-    #FIXME : need check that player has active entry in the division the machine is in
     if player.division_machine is None:
         raise Conflict('Player %s is not playing machine %s !' % (player.player_id,divisionmachine.machine.name))                
     if player.division_machine.machine_id != divisionmachine.division_machine_id:
@@ -84,4 +87,4 @@ def get_machine_rankings(divisionmachine):
 @fetch_entity(DivisionMachine, 'divisionmachine')
 def get_division_machine(divisionmachine):
     """get a division machine"""
-    return jsonify(divisionmachine.to_dict_with_player())
+    return jsonify(divisionmachine.to_dict_simple())

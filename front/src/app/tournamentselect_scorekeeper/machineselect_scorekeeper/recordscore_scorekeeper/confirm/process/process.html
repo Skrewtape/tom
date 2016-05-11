@@ -1,0 +1,25 @@
+<div ui-content-for="title">
+  <span>Score Recorded</span>
+</div>
+<div class="scrollable">
+  <div class="big-web-font scrollable-content"  style='padding:10px'>
+    {{final_score}} was recorded on {{resources.division_machine.name}} for player {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}})
+    <br>
+    <span ng-if='complete==true'>
+    <button
+       class='btn btn-info btn-xlg big-web-font'
+       ui-sref='.complete({entryId:resources.player_active_entry.entry.entry_id})'
+       >Complete Ticket</button>      
+    </span>
+    <span ng-if='complete==false'>
+    <button
+       class='btn btn-info btn-xlg big-web-font'
+       ui-sref='^.^.^.playerselect_scorekeeper({divisionMachineId:division_machine_id})'
+       >Add New Player on Machine</button>
+    <button
+       class='btn btn-info btn-xlg big-web-font'
+       ui-sref='^.^.^'
+       >Return to Machine List</button>
+    </span>
+  </div>
+</div>

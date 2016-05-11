@@ -68,7 +68,7 @@ angular.module('tom_services.status_modal')
                       });                                    
                   };
 		  
-		  launch_http_error_modal = function(error_message){
+		  launch_http_error_modal = function(error_message,goto_state){
 		      close_status_modal();
                       modalInstance = $uibModal.open({
 			  controller: function($scope){
@@ -80,7 +80,11 @@ angular.module('tom_services.status_modal')
                           openedClass: 'modal_decorations',                
                           keyboard: false,
                       });
-		      modalInstance.closed.then(function(){console.log('closing http error');$state.go('app')});                                    
+		      if(goto_state == undefined){
+			  modalInstance.closed.then(function(){console.log('closing http error');$state.go('app')});
+		      } else {
+			  modalInstance.closed.then(function(){console.log('closing http error');$state.go(goto_state)});
+		      }
                   };
 		  
                   
