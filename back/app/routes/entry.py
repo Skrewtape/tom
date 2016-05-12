@@ -118,17 +118,19 @@ def create_new_entry(player,division):
     return jsonify({})
 
 
-@App.route('/entry/<entry_id>/player/<player_id>', methods=['PUT'])
+@App.route('/entry/<entry_id>/void', methods=['PUT'])
 @login_required
 @Admin_permission.require(403)
 @fetch_entity(Entry, 'entry')
-@fetch_entity(Player, 'player')
-def void_entry(entry,player):
+def void_entry(entry):
     """set a entry to voided, and tries to start a new entry if available"""
-    if Entry.player_id != Player.player_id:
-        raise Conflict('Entry and Player Id do not match')
-    entry.voided = True 
-    division = Division.query.filter_by(division_id=entry.division_id)
+    entry.voided = True
+    entry.active = False
+    player = Player.query.filter_by(player_id=entry.player_id).first()
+    division_machine = player.division_machine
+    if division_machine:
+        division_machine.player_id = None
+    division = Division.query.filter_by(division_id=entry.division_id).first()
     DB.session.commit()
     if shared_check_player_can_start_new_entry(player,division) is False:
         return jsonify(entry.to_dict_simple())        
@@ -144,6 +146,13 @@ def toggle_entry_voided(entry,voided_state):
     """set a entry voided state, and DOES NOT try and start a new entry"""
     #FIXME : this should have better checks
     entry.voided = True if voided_state=="void" else False
+
+    if division_machine and entry.active and entry.voided:
+        player = Player.query.filter_by(player_id=entry.player_id).first()
+        division_machine = player.division_machine
+        division_machine.player_id = None
+
+    entry.active = False if entry.voided else True
     DB.session.commit()
     return jsonify(entry.to_dict_simple())
 

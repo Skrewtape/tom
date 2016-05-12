@@ -67,6 +67,22 @@ angular.module('tom_services.status_modal')
 			  }
                       });                                    
                   };
+
+		  launch_void_modal = function(entry_id, player){
+		      close_status_modal();
+                      modalInstance = $uibModal.open({
+			  controller: function($scope){
+			      $scope.entry_id = entry_id;
+			      $scope.player = player;
+			  },
+                          templateUrl: 'services/void_entry_from_score.html',
+                          backdrop: 'static',
+                          size: 'md',
+                          openedClass: 'modal_decorations',
+                          keyboard: false,
+                      });
+                  };
+
 		  
 		  launch_http_error_modal = function(error_message,goto_state){
 		      close_status_modal();
@@ -89,6 +105,9 @@ angular.module('tom_services.status_modal')
 		  
                   
                   return {
+		      launchVoidModal: function(entry_id, player){
+			  launch_void_modal(entry_id, player);
+		      },
 		      addDebugMsg: function(new_msg){
 			  debug_msg=debug_msg+' -- '+new_msg;
 		      },

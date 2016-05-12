@@ -41,6 +41,11 @@
 	 ui-sref='.confirm({score:new_score})'
 	 ng-disabled='disabledScoreKeeping'
 	 >Next</a>
+      <a
+	 class='btn btn-danger btn-xlg big-web-font'
+	 style='width:50%;margin:auto'
+	 ng-click='launchVoidModal(resources.player_active_entry.entry.entry_id, resources.player)'
+	 >Void</a>      
       <hr>
       <div ng-repeat='score in resources.player_active_entry.entry.scores' ng-if='resources.player_active_entry.entry.scores != undefined'>
 	{{resources.machines[score.division_machine_id].name}} : {{score.score}}<br>

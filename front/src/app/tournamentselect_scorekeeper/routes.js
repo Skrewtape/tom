@@ -100,7 +100,30 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.process',
  	     }
  	   }
+       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.void', 
+        { 
+ 	 url: '/void',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/void/void.html',
+ 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.void',
+ 	     }
+ 	 },
+	    params:{
+		entryId:{}
+	    }
+       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.void', 
+        { 
+ 	 url: '/void',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/confirm/process/complete/void/void.html',
+ 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.void',
+ 	     }
+ 	   }
        })//REPLACE_ME
+
+
 
 
 

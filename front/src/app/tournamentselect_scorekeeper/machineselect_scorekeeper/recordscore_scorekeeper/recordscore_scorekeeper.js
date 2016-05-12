@@ -1,4 +1,4 @@
-angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper',['app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm',/*REPLACEMECHILD*/]);
+angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper',['app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm','app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.void',/*REPLACEMECHILD*/]);
 angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper').controller(
     'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper',
     function($scope, $state, StatusModal, TimeoutResources, $filter) {
@@ -15,6 +15,7 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 		$scope.disabledScoreKeeping = true;
 	    }
 	}
+	
 	//SIGH : loading modal causes problem with input field focus
 	//StatusModal.loading();
 	$scope.machines_promise = TimeoutResources.GetActiveMachines();

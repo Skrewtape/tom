@@ -163,10 +163,16 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 					{
 					    'deleteScore': {method:'DELETE', 'timeout': 15000}
 					})
-    resources['voidEntryToggle'] =  $resource('[APIHOST]/entry/:entry_id/void/:void_state', null,			     
-					  {
-					      'voidEntryToggle': {method:'PUT', 'timeout': 15000}
-					  })
+    resources['voidEntryToggle'] =  $resource('[APIHOST]/entry/:entry_id/void/:void_state',
+					      {entry_id:'@entry_id', void_state:'@void_state'},
+					      {
+						  'voidEntryToggle': {method:'PUT', 'timeout': 15000}
+					      })
+    resources['voidEntry'] =  $resource('[APIHOST]/entry/:entry_id/void',
+					      {entry_id:'@entry_id'},
+					      {
+						  'voidEntry': {method:'PUT', 'timeout': 15000}
+					      })    
     resources['addMetadivision'] =  $resource('[APIHOST]/metadivision', null,			     
 					  {
 					      'addMetadivision': {method:'POST', 'timeout': 15000}
@@ -271,6 +277,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	SetDivisionMachinePlayer: generic_resource('setDivisionMachinePlayer','division_machine','post', false),
 	ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','empty','post', false),	
 	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false),
+	VoidEntry: generic_resource('voidEntry','entry','post', false),
 	
 	FlushResourceCache:flush_resource_cache,
 	getAllMetadivisionsResource: function(){

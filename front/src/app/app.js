@@ -49,6 +49,10 @@ app.controller(
 		StatusModal.http_error("Oops.  Looks like you tried to reload a page which submits data.  That is a no no!");	         return true;
 	    }
 	}
+	$scope.launchVoidModal = function(entry_id,player){
+	    StatusModal.launchVoidModal(entry_id,player)
+	}
+	
 	//FIXME : change this to use $resource	
         $scope.logout = function() {
 	    StatusModal.loading();            	    
