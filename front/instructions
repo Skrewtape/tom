@@ -21,8 +21,8 @@ python ./setup.py
 FRONTEND
 ---
 apt-get install npm
-npm install
 apt-get install nodejs-legacy
-./node_modules/bower/bin/bower --allow-root install
 apt-get install ruby-compass
+npm install
+./node_modules/bower/bin/bower --allow-root install
 ./node_modules/grunt-cli/bin/grunt 

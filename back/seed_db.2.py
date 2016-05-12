@@ -189,9 +189,7 @@ def init_players(division):
         for division in divisions:
             #division = divisions[0]
             #player.linked_division.append(division)
-            add_scores_to_entry(division,player,active=True, num=4)
-            add_scores_to_entry(division,player,active=False,num=0)
-            for i in range(5):
+            for i in range(1):
                 add_scores_to_entry(division,player,active=False)
         DB.session.commit()            
         print " player %d is done \n" % play_num

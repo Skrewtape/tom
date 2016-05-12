@@ -8,6 +8,7 @@ from app.types import Machine, Player, Entry, Score, Division, DivisionMachine
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity, i_am_a_teapot
 from app.routes import entry as route_entry
+from app.routes import team as route_team
 from werkzeug.exceptions import Conflict,ImATeapot
 from app import tom_config
 
@@ -28,11 +29,20 @@ def get_active_machines():
 def set_machine_player(divisionmachine, player):
     """claim a machine - its mine - ARRRRR"""
     if player.division_machine:
-        raise i_am_a_teapot('Player already is playing the machine %s !' % player.division_machine.machine.name,"^")        
-        #raise Conflict('Player already is playing the machine %s !' % player.division_machine.machine.name)        
+        raise i_am_a_teapot('Player already is playing the machine %s !' % player.division_machine.machine.name,"^")    
+    if divisionmachine.player_id or divisionmachine.team_id:
+        raise i_am_a_teapot('%s is already in use !' % divisionmachine.machine.name,"^")                
     #FIXME : need to handle team entries
-    player_entry = route_entry.shared_get_query_for_active_entries(player_id=player.player_id,div_id=divisionmachine.division_id).first()
-    if player_entry is None:
+    teams = None
+    if divisionmachine.division.tournament.team_tournament:        
+        teams = route_team.shared_get_player_teams(player.player_id)
+    if teams:
+        player_entry = route_entry.shared_get_query_for_active_entries(team_id=teams[0].team_id,div_id=divisionmachine.division_id).first()
+        if teams[0].division_machine:
+            raise i_am_a_teapot('Team already playing the machine %s !' % teams[0].division_machine.machine.name,"^")                
+    else:
+        player_entry = route_entry.shared_get_query_for_active_entries(player_id=player.player_id,div_id=divisionmachine.division_id).first()        
+    if player_entry is None:        
         if route_entry.shared_check_player_can_start_new_entry(player,divisionmachine.division) is False:            
             #FIXME : goto_state should be handled on the client side, but I'm being lazy
             raise i_am_a_teapot('Player does not have any entries',"^")
@@ -43,7 +53,10 @@ def set_machine_player(divisionmachine, player):
     #if any(divisionmachine.division_machine_id ==  division_machine.division_machine_id for score in entry.scores):
     if already_played_count > 0:
         raise i_am_a_teapot('Can not play the same game twice in one ticket',"^")
-    divisionmachine.player_id = player.player_id
+    if teams:
+        divisionmachine.team_id = teams[0].team_id
+    else:
+        divisionmachine.player_id = player.player_id
     DB.session.commit()
     return jsonify(divisionmachine.to_dict_simple())
 
