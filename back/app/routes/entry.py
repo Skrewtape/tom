@@ -130,6 +130,7 @@ def void_entry(entry):
     division_machine = player.division_machine
     if division_machine:
         division_machine.player_id = None
+        division_machine.team_id = None
     division = Division.query.filter_by(division_id=entry.division_id).first()
     DB.session.commit()
     if shared_check_player_can_start_new_entry(player,division) is False:
@@ -187,7 +188,7 @@ def add_score(entry,division_machine,new_score_value):
         raise Conflict('Entry already has enough scores')
     if any(score.division_machine_id ==  division_machine.division_machine_id for score in entry.scores):
         raise Conflict('Can not play the same game twice in one ticket')
-    if entry.player.active is False:
+    if entry.player and entry.player.active is False:
         raise Conflict('Player is no longer active.  Please see the front desk')        
     division = Division.query.filter_by(division_id=entry.division_id).first()    
     if division_machine not in division.machines:
@@ -198,6 +199,7 @@ def add_score(entry,division_machine,new_score_value):
     )
     entry.scores.append(new_score)
     division_machine.player_id = None
+    division_machine.team_id = None
     if len(entry.scores) >= entry.number_of_scores_per_entry:
         entry.active=False
     DB.session.commit()

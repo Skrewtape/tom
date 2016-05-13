@@ -3,7 +3,13 @@
 </div>
 <div class="scrollable">
   <div class="big-web-font scrollable-content"  style='padding:10px'>
-    {{final_score}} was recorded on {{resources.division_machine.name}} for player {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}})
+    {{final_score}} was recorded on {{resources.division_machine.name}} for
+    <span ng-if='resources.tournament.team_tournament==false'>
+      player {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}})
+    </span>
+    <span ng-if='resources.tournament.team_tournament==true'>
+      {{resources.player_teams.teams[0].team_name}}
+    </span>
     <br>
     <span ng-if='complete==true'>
     <button

@@ -18,6 +18,14 @@ class Team(DB.Model):
         secondary=Team_Player_mapping        
     )
     division_machine = DB.relationship('DivisionMachine', uselist=False)
+
+    def to_dict_with_players(self):
+        team = to_dict(self)
+        team['players']=[]
+        for player in self.players:
+            team['players'].append(to_dict(player))
+        return team
     
     def to_dict_simple(self):
         return to_dict(self)
+    

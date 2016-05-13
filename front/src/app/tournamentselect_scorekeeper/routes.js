@@ -17,7 +17,7 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/machineselect_scorekeeper.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper',
- 	     }
+  	     }
  	   }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper', 
         { 
@@ -30,7 +30,7 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	 }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper', 
         { 
- 	 url: '/recordscore_scorekeeper/:divisionMachineId',
+ 	 url: '/recordscore_scorekeeper/:divisionMachineId/teamId/:teamId/playerId/:playerId',
  	 views: {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/recordscore_scorekeeper.html',

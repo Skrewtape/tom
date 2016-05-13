@@ -71,6 +71,11 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 		return resolved_promise();
 	    }
 	    if(promise == undefined){
+	     	for(arg_key in url_args){
+	     	    if(isFunction(url_args[arg_key])){
+	     		url_args[arg_key] = url_args[arg_key]();
+	     	    }
+	     	}		
 		if(type == "get"){
 		    return generic_getdelete_resource(res_name,scope_name,url_args);
 		} else {
@@ -205,7 +210,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resources['getPlayerActiveEntry'] = $resource('[APIHOST]/player/:player_id/division/:division_id/entry/active', null,
 			     {
 				 'getPlayerActiveEntry': {method:'GET', 'timeout': 15000}
-			     })
+			     })    
     resources['getEntry'] = $resource('[APIHOST]/entry/:entry_id', null,
 			     {
 				 'getEntry': {method:'GET', 'timeout': 15000}
@@ -215,6 +220,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'getDivision': {method:'GET', 'timeout': 15000}
 			     })
+    resources['getTeam'] = $resource('[APIHOST]/team/:team_id', null,
+			     {
+				 'getTeam': {method:'GET', 'timeout': 15000}
+			     })    
     resources['setDivisionMachinePlayer'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/player/:player_id', {division_machine_id:'@division_machine_id',player_id:'@player_id'},  
 			     {
 				 'setDivisionMachinePlayer': {method:'PUT','timeout': 15000}
@@ -239,6 +248,9 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	},
 	GetEntryId: function(){
 	    return resource_results.player_active_entry.entry.entry_id
+	},	
+	GetTournamentIdFromDivision: function(){
+	    return resource_results.division.tournament_id
 	},
 	GetPlayerIdFromDivisionMachine: function(){
 	    return resource_results.division_machine.player_id;
@@ -273,6 +285,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens','get', false),
 	GetPlayerTeamTokens: generic_resource('getPlayerTeamTokens','player_team_tokens','get',false),
 	GetRoles: generic_resource('getRoles','roles','get', false),
+	GetTeam: generic_resource('getTeam','team','get', false),
 	GetTournament: generic_resource('getTournament','tournament','get',false),	
 	SetDivisionMachinePlayer: generic_resource('setDivisionMachinePlayer','division_machine','post', false),
 	ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','empty','post', false),	

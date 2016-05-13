@@ -4,6 +4,9 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
     function($scope, $state, StatusModal, TimeoutResources, $filter) {
 	$scope.division_machine_id = $state.params.divisionMachineId;
 	$scope.division_id=$state.params.divisionId;
+	$scope.player_id = $state.params.playerId;
+	//FIXME : need to refactor the whole tree underneath so that it uses this team id
+	$scope.team_id = $state.params.teamId;
 	
 	$scope.formatted_score = {};
 	$scope.disabledScoreKeeping = true;
@@ -20,9 +23,12 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	//StatusModal.loading();
 	$scope.machines_promise = TimeoutResources.GetActiveMachines();
 	$scope.division_machine_promise = TimeoutResources.GetDivisionMachine($scope.machines_promise,{division_machine_id:$scope.division_machine_id});
-	$scope.player_promise = TimeoutResources.GetPlayer($scope.division_machine_promise,{player_id:TimeoutResources.GetPlayerIdFromDivisionMachine});
+	$scope.player_promise = TimeoutResources.GetPlayer($scope.division_machine_promise,{player_id:$scope.player_id});
+	if($scope.team_id.length > 0){
+	    $scope.player_promise = TimeoutResources.GetTeam($scope.division_machine_promise,{team_id:$scope.team_id});
+	}
 	$scope.entry_id_promise = TimeoutResources.GetPlayerActiveEntry($scope.player_promise,
-									{player_id:TimeoutResources.GetPlayerIdFromDivisionMachine,
+									{player_id:$scope.player_id,
 									 division_id:$scope.division_id})
 	
 	$scope.entry_id_promise.then(function(data){

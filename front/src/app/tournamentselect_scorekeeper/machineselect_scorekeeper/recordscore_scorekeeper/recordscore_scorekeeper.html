@@ -9,12 +9,18 @@
 <div class="scrollable">
     <div class="big-web-font scrollable-content"  style='padding:10px'>
       <table style='padding-top:25px;'>
-	<tr>
+	<tr ng-if='team_id.length > 0'>
+	  <td align=right> Team : 
+	  </td>
+	  <td>{{resources.team.team_name}}
+	  </td>
+	</tr>
+	<tr ng-if='team_id.length == 0'>
 	  <td align=right> Player : 
 	  </td>
 	  <td>{{resources.player.first_name}} {{resources.player.last_name}}
 	  </td>
-	</tr>
+	</tr>	
 	<tr>
 	  <td align=right> Machine : 
 	  </td>

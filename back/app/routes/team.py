@@ -17,6 +17,11 @@ def get_player_teams(player_id):
     teams = shared_get_player_teams(player_id)
     return jsonify({'teams':[x.to_dict_simple() for x in teams]})
 
+@App.route('/team/<team_id>', methods=['get'])
+@fetch_entity(Team, 'team')
+def get_team(team):
+    return jsonify(team.to_dict_with_players())
+
 @App.route('/team', methods=['POST'])
 def add_team():
     team_data = json.loads(request.data)    

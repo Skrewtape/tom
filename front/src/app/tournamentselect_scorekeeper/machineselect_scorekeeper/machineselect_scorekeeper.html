@@ -10,18 +10,18 @@
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
   <div class="big-web-font scrollable-content"  style='padding:10px'>
     <div ng-repeat='machine in resources.division.machines'>
-      <button
-	 ng-if='machine.player_id == undefined'
-	 class='btn btn-success btn-xlg'
-	 ui-sref='.playerselect_scorekeeper({divisionMachineId:machine.division_machine_id})'
-	 > {{machine.name}}
-      </button>
-      <button
-	 ng-if='machine.player_id != undefined'
-	 class='btn btn-warning btn-xlg'
-	 ui-sref='.recordscore_scorekeeper({divisionMachineId:machine.division_machine_id})'
-	 > {{machine.name}}
-      </button>
+	<button
+	   ng-if='machine.player_id == undefined && machine.team_id == undefined'
+	   class='btn btn-success btn-xlg'
+	   ui-sref='.playerselect_scorekeeper({divisionMachineId:machine.division_machine_id})'
+	   > {{machine.name}}
+	</button>
+	<button
+	   ng-if='machine.player_id != undefined || machine.team_id != undefined'
+	   class='btn btn-warning btn-xlg'
+	   ui-sref='.recordscore_scorekeeper({divisionMachineId:machine.division_machine_id,playerId:machine.player_id,teamId:machine.team_id})'
+	   > {{machine.name}}	
+	</button>
     </div>
   </div>
 </div>
