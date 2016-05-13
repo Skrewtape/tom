@@ -68,12 +68,15 @@ angular.module('tom_services.status_modal')
                       });                                    
                   };
 
-		  launch_void_modal = function(entry_id, player){
+		  launch_void_modal = function(entry_id, player, team){
 		      close_status_modal();
                       modalInstance = $uibModal.open({
 			  controller: function($scope){
 			      $scope.entry_id = entry_id;
 			      $scope.player = player;
+			      if(team != undefined){
+				  $scope.team = team;
+			      }
 			  },
                           templateUrl: 'services/void_entry_from_score.html',
                           backdrop: 'static',
@@ -105,8 +108,8 @@ angular.module('tom_services.status_modal')
 		  
                   
                   return {
-		      launchVoidModal: function(entry_id, player){
-			  launch_void_modal(entry_id, player);
+		      launchVoidModal: function(entry_id, player, team){
+			  launch_void_modal(entry_id, player, team);
 		      },
 		      addDebugMsg: function(new_msg){
 			  debug_msg=debug_msg+' -- '+new_msg;

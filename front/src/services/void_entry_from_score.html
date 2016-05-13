@@ -1,7 +1,16 @@
 <center>
 <h1>PAY FUCKING ATTENTION</h1>
-Are you SURE you want to void this ticket for {{player.first_name}} {{player.last_name}} ({{player.player_id}})?<br>
+
+Are you SURE you want to void this ticket for
+<span ng-if='team != undefined'>
+  Team {{team.team_name}}
+</span>
+<span ng-if='team == undefined'>
+{{player.first_name}} {{player.last_name}} ({{player.player_id}})?<br>
+</span>
+
 <br>
 <button class='btn btn-primary' ng-click="$close()">Cancel</button>
 <button class='btn btn-primary' ng-click="$close()" ui-sref=".void({entryId:entry_id})">Void</button>
+
 </center>

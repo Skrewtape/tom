@@ -5,6 +5,8 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	$scope.division_machine_id = $state.params.divisionMachineId;
 	$scope.division_id=$state.params.divisionId;
 	$scope.player_id = $state.params.playerId;
+	//FIXME : need to refactor everything under *_scorekeeper to use the tournamentId param
+	$scope.tournament_id = $state.params.tournamentId;	
 	//FIXME : need to refactor the whole tree underneath so that it uses this team id
 	$scope.team_id = $state.params.teamId;
 	
@@ -27,7 +29,8 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	if($scope.team_id.length > 0){
 	    $scope.player_promise = TimeoutResources.GetTeam($scope.division_machine_promise,{team_id:$scope.team_id});
 	}
-	$scope.entry_id_promise = TimeoutResources.GetPlayerActiveEntry($scope.player_promise,
+	$scope.tournament_promise = TimeoutResources.GetTournament($scope.player_promise,{tournament_id:$scope.tournament_id});
+	$scope.entry_id_promise = TimeoutResources.GetPlayerActiveEntry($scope.tournament_promise,
 									{player_id:$scope.player_id,
 									 division_id:$scope.division_id})
 	
