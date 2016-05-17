@@ -2,10 +2,10 @@
 <h1>PAY FUCKING ATTENTION</h1>
 
 Are you SURE you want to void this ticket for
-<span ng-if='team != undefined'>
+<span ng-if='type == "team"'>
   Team {{team.team_name}}
 </span>
-<span ng-if='team == undefined'>
+<span ng-if='type == "player"'>
 {{player.first_name}} {{player.last_name}} ({{player.player_id}})?<br>
 </span>
 

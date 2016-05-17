@@ -4,7 +4,7 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Machine, Player, Entry, Score, Division, DivisionMachine
+from app.types import Machine, Player, Entry, Score, Division, DivisionMachine, Team
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity, i_am_a_teapot
 from app.routes import entry as route_entry
@@ -22,43 +22,52 @@ def get_active_machines():
             active_machines[machine.division_machine_id]=machine.to_dict_simple()
     return jsonify(active_machines)
 
+@App.route('/divisionmachine/<divisionmachine_id>/team/<team_id>', methods=['PUT'])
+@login_required
+@fetch_entity(DivisionMachine, 'divisionmachine')
+@fetch_entity(Team, 'team')
+def set_machine_team(divisionmachine, team):
+    """claim a machine for a team - its mine - ARRRRR"""
+    if team.division_machine:
+        raise i_am_a_teapot('Team is already playing the machine %s !' % team.division_machine.machine.name,"^")    
+    if divisionmachine.team_id or divisionmachine.player_id:
+        raise i_am_a_teapot('%s is already in use !' % divisionmachine.machine.name,"^")                    
+    team_entry = route_entry.shared_get_query_for_active_entries(team_id=team.team_id,div_id=divisionmachine.division_id).first()
+    if team_entry is None:        
+        if route_entry.shared_check_team_can_start_new_entry(team,divisionmachine.division) is False:            
+            #FIXME : goto_state should be handled on the client side, but I'm being lazy
+            raise i_am_a_teapot('Team does not have any entries',"^")
+        route_entry.shared_create_active_entry(divisionmachine.division,team=team)
+    team_entry = route_entry.shared_get_query_for_active_entries(team_id=team.team_id,div_id=divisionmachine.division_id).first()            
+    already_played_count = len([score for score in team_entry.scores if score.division_machine_id == divisionmachine.division_machine_id])
+    if already_played_count > 0:
+        raise i_am_a_teapot('Can not play the same game twice in one ticket',"^")
+    divisionmachine.team_id = team.team_id
+    DB.session.commit()
+    return jsonify(divisionmachine.to_dict_simple())
+
+
 @App.route('/divisionmachine/<divisionmachine_id>/player/<player_id>', methods=['PUT'])
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
 @fetch_entity(Player, 'player')
 def set_machine_player(divisionmachine, player):
-    """claim a machine - its mine - ARRRRR"""
+    """claim a machine for a player - its mine - ARRRRR"""
     if player.division_machine:
         raise i_am_a_teapot('Player already is playing the machine %s !' % player.division_machine.machine.name,"^")    
     if divisionmachine.player_id or divisionmachine.team_id:
         raise i_am_a_teapot('%s is already in use !' % divisionmachine.machine.name,"^")                
-    #FIXME : need to handle team entries
-    teams = None
-    if divisionmachine.division.tournament.team_tournament:        
-        teams = route_team.shared_get_player_teams(player.player_id)
-    if teams:
-        player_entry = route_entry.shared_get_query_for_active_entries(team_id=teams[0].team_id,div_id=divisionmachine.division_id).first()
-        if teams[0].division_machine:
-            raise i_am_a_teapot('Team already playing the machine %s !' % teams[0].division_machine.machine.name,"^")                
-    else:
-        player_entry = route_entry.shared_get_query_for_active_entries(player_id=player.player_id,div_id=divisionmachine.division_id).first()            
+    player_entry = route_entry.shared_get_query_for_active_entries(player_id=player.player_id,div_id=divisionmachine.division_id).first()            
     if player_entry is None:        
         if route_entry.shared_check_player_can_start_new_entry(player,divisionmachine.division) is False:            
             #FIXME : goto_state should be handled on the client side, but I'm being lazy
             raise i_am_a_teapot('Player does not have any entries',"^")
-        route_entry.shared_create_active_entry(player,divisionmachine.division)
-        if teams:
-            player_entry = route_entry.shared_get_query_for_active_entries(team_id=teams[0].team_id,div_id=divisionmachine.division_id).first()            
-        else:
-            player_entry = route_entry.shared_get_query_for_active_entries(player_id=player.player_id,div_id=divisionmachine.division_id).first()
+        route_entry.shared_create_active_entry(divisionmachine.division,player=player)
+    player_entry = route_entry.shared_get_query_for_active_entries(player_id=player.player_id,div_id=divisionmachine.division_id).first()
             
     already_played_count = len([score for score in player_entry.scores if score.division_machine_id == divisionmachine.division_machine_id])
-    #if any(divisionmachine.division_machine_id ==  division_machine.division_machine_id for score in entry.scores):
     if already_played_count > 0:
         raise i_am_a_teapot('Can not play the same game twice in one ticket',"^")
-    if teams:
-        divisionmachine.team_id = teams[0].team_id
-    #else:
     divisionmachine.player_id = player.player_id
     DB.session.commit()
     return jsonify(divisionmachine.to_dict_simple())

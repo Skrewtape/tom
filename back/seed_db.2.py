@@ -93,6 +93,14 @@ def create_division(name):
     DB.session.add(division)
     return division
 
+def create_team(name, player_one):
+    new_team = app.types.Team(
+        team_name = name        
+    )
+    DB.session.add(new_team)    
+    new_team.players.append(player_one);
+    DB.session.commit()
+    
 def add_machines_to_division(division,machines):
     
     for machine in machines:
@@ -179,12 +187,13 @@ def init_players(division):
     #    player.delete()
     #    DB.session.commit()
         
-    for play_num in range(0,20):
+    for play_num in range(0,500):
         first_name = first_names[random.randrange(0,len(first_names))]
         last_name = first_names[random.randrange(0,len(first_names))]
         player = create_player(first_name,last_name)
         print " adding player %d " % play_num
         DB.session.add(player)
+        create_team(player.first_name,player)
         DB.session.commit()
         for division in divisions:
             #division = divisions[0]

@@ -7,7 +7,7 @@
       <span ng-if='division.metadivision_id == undefined && tournament.team_tournament == false' >
 	<purchase-ticketsbutton tokentype='divisions' resourcetype='player_tokens' divisionidname='division_id'></purchase-ticketsbutton>
       </span>
-      <span ng-if='tournament.team_tournament == true && resources.player_teams.teams.length != 0'>
+      <span ng-if='tournament.team_tournament == true && resources.player.team != undefined'>
 	<purchase-ticketsbutton tokentype='teams' resourcetype='player_team_tokens' divisionidname='division_id'></purchase-ticketsbutton>
       </span>            
     </div>
@@ -22,7 +22,7 @@
       <span ng-if='division.metadivision_id == undefined && tournament.team_tournament == false' >
 	<purchase-ticketssummarybutton tokentype='divisions' resourcetype='player_tokens' divisionidname='division_id'></purchase-ticketssummarybutton><br>
       </span>
-      <span ng-if='tournament.team_tournament == true && resources.player_teams.teams.length != 0'>
+      <span ng-if='tournament.team_tournament == true && resources.player.team != undefined'>
 	<purchase-ticketssummarybutton tokentype='teams' resourcetype='player_team_tokens' divisionidname='division_id'></purchase-ticketssummarybutton><br>
       </span>            
     </div>

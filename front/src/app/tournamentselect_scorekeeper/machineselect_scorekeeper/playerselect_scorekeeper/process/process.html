@@ -4,11 +4,11 @@
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
   <div class="scrollable-content big-web-font"  style='padding:10px'>
-    <span ng-if='resources.tournament.team_tournament==false'>
+    <span ng-if='team_tournament=="false"'>
       {{resources.player.first_name}} {{resources.player.last_name}}     
     </span>
-    <span ng-if='resources.tournament.team_tournament==true'>
-      Team {{resources.player_teams.teams[0].team_name}} 
+    <span ng-if='team_tournament=="true"'>
+      Team {{resources.player.team.team_name}} 
     </span>
     is now playing on {{resources.division_machine.name}}
     <br>

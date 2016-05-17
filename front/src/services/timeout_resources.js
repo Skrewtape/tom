@@ -210,7 +210,11 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resources['getPlayerActiveEntry'] = $resource('[APIHOST]/player/:player_id/division/:division_id/entry/active', null,
 			     {
 				 'getPlayerActiveEntry': {method:'GET', 'timeout': 15000}
-			     })    
+			     })
+    resources['getTeamActiveEntry'] = $resource('[APIHOST]/team/:team_id/division/:division_id/entry/active', null,
+			     {
+				 'getTeamActiveEntry': {method:'GET', 'timeout': 15000}
+			     })        
     resources['getEntry'] = $resource('[APIHOST]/entry/:entry_id', null,
 			     {
 				 'getEntry': {method:'GET', 'timeout': 15000}
@@ -228,6 +232,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'setDivisionMachinePlayer': {method:'PUT','timeout': 15000}
 			     })
+    resources['setDivisionMachineTeam'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/team/:team_id', {division_machine_id:'@division_machine_id',player_id:'@team_id'},  
+			     {
+				 'setDivisionMachineTeam': {method:'PUT','timeout': 15000}
+			     })    
     resources['clearDivisionMachinePlayer'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/player/:player_id/clear', {division_machine_id:'@division_machine_id',player_id:'@player_id'},  
 			     {
 				 'clearDivisionMachinePlayer': {method:'PUT','timeout': 15000}
@@ -248,7 +256,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	},
 	GetEntryId: function(){
 	    return resource_results.player_active_entry.entry.entry_id
-	},	
+	},
+	GetTeamEntryId: function(){
+	    return resource_results.team_active_entry.entry.entry_id
+	},		
 	GetTournamentIdFromDivision: function(){
 	    return resource_results.division.tournament_id
 	},
@@ -286,8 +297,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetPlayerTeamTokens: generic_resource('getPlayerTeamTokens','player_team_tokens','get',false),
 	GetRoles: generic_resource('getRoles','roles','get', false),
 	GetTeam: generic_resource('getTeam','team','get', false),
+	GetTeamActiveEntry: generic_resource('getTeamActiveEntry','team_active_entry','get', false),	
 	GetTournament: generic_resource('getTournament','tournament','get',false),	
 	SetDivisionMachinePlayer: generic_resource('setDivisionMachinePlayer','division_machine','post', false),
+	SetDivisionMachineTeam: generic_resource('setDivisionMachineTeam','division_machine','post', false),
 	ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','empty','post', false),	
 	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false),
 	VoidEntry: generic_resource('voidEntry','entry','post', false),

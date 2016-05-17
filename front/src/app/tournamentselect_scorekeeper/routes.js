@@ -12,22 +12,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	   }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper', 
         { 
- 	 url: '/machineselect_scorekeeper/divisionId/:divisionId/tournamentId/:tournamentId',
+ 	 url: '/machineselect_scorekeeper/divisionId/:divisionId/tournamentId/:tournamentId/teamTournament/:teamTournament',
  	 views: {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/machineselect_scorekeeper.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper',
   	     }
  	   }
-       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper', 
-        { 
- 	 url: '/playerselect_scorekeeper/:divisionMachineId',
- 	 views: {
- 	     '@': {
- 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/playerselect_scorekeeper/playerselect_scorekeeper.html',
- 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper',
- 	     }
- 	 }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper', 
         { 
  	 url: '/recordscore_scorekeeper/:divisionMachineId/teamId/:teamId/playerId/:playerId',
@@ -37,33 +28,9 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper',
  	     }
  	 }	   
-       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process', 
-        { 
- 	 url: '/process',
- 	 views: {
- 	     '@': {
- 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/playerselect_scorekeeper/process/process.html',
- 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process',
- 	     }
- 	 },
-	    params: {
-		playerId:{}
-	    }
-       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process.undo', 
-        { 
- 	 url: '/undo',
- 	 views: {
- 	     '@': {
- 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/playerselect_scorekeeper/process/undo/undo.html',
- 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process.undo',
- 	     }
- 	 },
-	    params : {
-		undoPlayerId:{}
-	    }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm', 
         { 
- 	 url: '/confirm/:score',
+ 	 url: '/confirm/:score/entryId/:entryId',
  	 views: {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/confirm/confirm.html',
@@ -121,6 +88,40 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.void',
  	     }
  	   }
+       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper', 
+        { 
+ 	 url: '/playerselect_scorekeeper/:divisionMachineId',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/playerselect_scorekeeper/playerselect_scorekeeper.html',
+ 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper',
+ 	     }
+ 	 }
+       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process', 
+        { 
+ 	 url: '/process',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/playerselect_scorekeeper/process/process.html',
+ 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process',
+ 	     }
+ 	 },
+	    params: {
+		playerId:{},
+		team:{}
+	    }
+       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process.undo', 
+        { 
+ 	 url: '/undo',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/playerselect_scorekeeper/process/undo/undo.html',
+ 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process.undo',
+ 	     }
+ 	 },
+	    params : {
+		undoPlayerId:{}
+	    }
        })//REPLACE_ME
 
 

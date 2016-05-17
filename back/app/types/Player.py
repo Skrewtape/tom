@@ -2,7 +2,7 @@
 
 from app import DB
 from flask_restless.helpers import to_dict
-from app.types import util
+from app.types import util, Team
 
 Player_Division_mapping = DB.Table(
     'player_division',
@@ -29,9 +29,14 @@ class Player(DB.Model):
         'Division',
         secondary=Player_Division_mapping        
     )
+    team = DB.relationship(
+        'Team',
+        secondary=Team.Team_Player_mapping,
+        lazy='joined'
+    )
     
     division_machine = DB.relationship('DivisionMachine', uselist=False)
-
+    #team = DB.relationship('Team')
     # active_tournaments_entries = DB.relationship(
     #     'Entry',
     #     secondary="join(Entry,Division,Entry.division_id==Division.division_id)",        
@@ -41,6 +46,12 @@ class Player(DB.Model):
     #     "Tournament.active==True))"
     # )
             
+    def to_dict_with_team(self):
+        player_dict = to_dict(self)
+        if self.team:
+            player_dict['team'] = self.team[0].to_dict_simple()
+        return player_dict
+    
     def to_dict_simple(self):
         return to_dict(self)        
 

@@ -4,10 +4,10 @@
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
   <div class="big-web-font scrollable-content"  style='padding:10px'>
-    <span ng-if='resources.tournament.team_tournament==true'>
-    Ticket has been completed by Team {{resources.player_teams.teams[0].team_name}}
+    <span ng-if='team_tournament=="true"'>
+    Ticket has been completed by Team {{resources.team.team_name}}
     </span>
-    <span ng-if='resources.tournament.team_tournament==false'>    
+    <span ng-if='team_tournament=="false"'>
       Ticket has been completed by {{resources.player.first_name}} {{resources.player.last_name}}
     </span>
     <button

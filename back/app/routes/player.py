@@ -55,7 +55,8 @@ def calculate_ranks():
 def get_players():
     """Get a list of players"""
     return jsonify(players=[
-        p.to_dict_simple() for p in
+        #p.to_dict_simple() for p in
+        p.to_dict_with_team() for p in
         Player.query.order_by(Player.first_name.asc(), Player.last_name.asc()).all()
     ])
 
@@ -111,7 +112,8 @@ def linked_divisions_to_dict(linked_divisions):
 @fetch_entity(Player, 'player')
 def get_player(player):
     """Get a player"""
-    player_dict = player.to_dict_simple()
+    #player_dict = player.to_dict_simple()
+    player_dict = player.to_dict_with_team()
     #FIXME : this should be in the model
     player_dict['linked_division'] = linked_divisions_to_dict(player.linked_division)
     if player.division_machine:
@@ -269,15 +271,16 @@ def get_active_player_entries_count(player):
         
     return jsonify(entries_grouped_dict)
 
+#Guyh - need to remove all the team stuff from this?
 @App.route('/player/<player_id>/division/<division_id>/entry/active', methods=['GET'])
 @fetch_entity(Player, 'player')
 @fetch_entity(Division, 'division')
 def get_active_player_entry(player,division):
     """Get a list of open(i.e. not completed, not voided) entries for a player"""
-    entries = Entry.query.filter_by(player_id=player.player_id,completed=False,voided=False,active=True).all()
+    entries = Entry.query.filter_by(division_id=division.division_id,player_id=player.player_id,completed=False,voided=False,active=True).all()
     teams = Team.query.filter(Team.players.any(Player.player_id.__eq__(player.player_id))).all()
     if len(teams) > 0:        
-        team_entries = Entry.query.filter_by(team_id=teams[0].team_id,completed=False,voided=False,active=True).all()
+        team_entries = Entry.query.filter_by(division_id=division.division_id,team_id=teams[0].team_id,completed=False,voided=False,active=True).all()
     else:
         team_entries = []
     #FIXME : should only get active divisions

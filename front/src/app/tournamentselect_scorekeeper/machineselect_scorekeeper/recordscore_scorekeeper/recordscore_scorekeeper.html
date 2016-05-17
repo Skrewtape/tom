@@ -9,13 +9,13 @@
 <div class="scrollable">
     <div class="big-web-font scrollable-content"  style='padding:10px'>
       <table style='padding-top:25px;'>
-	<tr ng-if='team_id.length > 0'>
+	<tr ng-if='team_tournament == "true"'>
 	  <td align=right> Team : 
 	  </td>
 	  <td>{{resources.team.team_name}}
 	  </td>
 	</tr>
-	<tr ng-if='team_id.length == 0'>
+	<tr ng-if='team_tournament == "false"'>
 	  <td align=right> Player : 
 	  </td>
 	  <td>{{resources.player.first_name}} {{resources.player.last_name}}
@@ -44,17 +44,28 @@
       <a
 	 class='btn btn-info btn-xlg big-web-font'
 	 style='width:50%;margin:auto'
-	 ui-sref='.confirm({score:new_score})'
+	 ui-sref='.confirm({score:new_score,entryId:active_entry.entry.entry_id})'
 	 ng-disabled='disabledScoreKeeping'
 	 >Next</a>
       <a
+	 ng-if='team_tournament == "false"'
 	 class='btn btn-danger btn-xlg big-web-font'
 	 style='width:50%;margin:auto'
-	 ng-click='launchVoidModal(resources.player_active_entry.entry.entry_id, resources.player, resources.team)'
+	 ng-click='launchVoidModal(resources,"player")'
+	 >Void</a>
+      <a
+	 ng-if='team_tournament == "true"'
+	 class='btn btn-danger btn-xlg big-web-font'
+	 style='width:50%;margin:auto'
+	 ng-click='launchVoidModal(resources,"team")'
 	 >Void</a>      
       <hr>
-      <div ng-repeat='score in resources.player_active_entry.entry.scores' ng-if='resources.player_active_entry.entry.scores != undefined'>
+      <div ng-repeat='score in resources.player_active_entry.entry.scores' ng-if='resources.player_active_entry.entry.scores != undefined && resources.player_active_entry.entry.division_id == division_id'>
 	{{resources.machines[score.division_machine_id].name}} : {{score.score}}<br>
       </div>
+      <div ng-repeat='score in resources.team_active_entry.entry.scores' ng-if='resources.team_active_entry.entry.scores != undefined && resources.team_active_entry.entry.division_id == division_id'>
+	{{resources.machines[score.division_machine_id].name}} : {{score.score}}<br>
+      </div>
+      
     </div>
 </div>

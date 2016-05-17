@@ -68,14 +68,19 @@ angular.module('tom_services.status_modal')
                       });                                    
                   };
 
-		  launch_void_modal = function(entry_id, player, team){
+		  
+		  launch_void_modal = function(resources,type){
 		      close_status_modal();
                       modalInstance = $uibModal.open({
 			  controller: function($scope){
-			      $scope.entry_id = entry_id;
-			      $scope.player = player;
-			      if(team != undefined){
-				  $scope.team = team;
+			      if(type == "player"){
+				  $scope.type = "player";
+				  $scope.entry_id = resources.player_active_entry.entry.entry_id;
+				  $scope.player = resources.player;				  
+			      } else {
+				  $scope.type = "team";
+				  $scope.entry_id = resources.team_active_entry.entry.entry_id;
+				  $scope.team = resources.team;				  
 			      }
 			  },
                           templateUrl: 'services/void_entry_from_score.html',

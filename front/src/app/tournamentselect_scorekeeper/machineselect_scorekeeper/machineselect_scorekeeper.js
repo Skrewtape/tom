@@ -8,6 +8,7 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper').con
 	$scope.division_promise = TimeoutResources.GetDivision($scope.tournaments_promise,{division_id:$scope.division_id});
 	$scope.division_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
+	    console.log($scope.resources.division);
 	    StatusModal.loaded();
 	});
 	//if($scope.checkForBlankParams($scope.player_info) == true){

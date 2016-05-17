@@ -3,12 +3,42 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Entry, Score, Player, Division, Machine, DivisionMachine, Token
+from app.types import Entry, Score, Player, Division, Machine, DivisionMachine, Token, Team
 from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank, get_division_from_metadivision
-from app.routes import team
+from app.routes import team as route_team
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
+
+# setting player_id and team_id on entries
+# 
+# buying tokens
+## buy team token - check
+## set team id on entry - not needed anymore
+# start game
+## if tournamen it team tournament - check
+### if no entry exists for team for division - check
+#### if tokens exist for team in division - check
+##### create entry with team id - check
+### set division_machine team id - check
+# add score
+## add score to entry
+## if tournament is team tournament
+### set division_machine team id to none
+# void
+## if tournament is team tourney
+### set division_machine team_id to none
+# undo
+## whatever
+
+#ui
+# start game
+## need tournament id
+## on succes, get team
+# record score
+## need tournament id
+## need team id
+
 
 def shared_get_query_for_active_entries(player_id=None,team_id=None,div_id=None,metadiv_id=None):
     if metadiv_id is None and div_id is None:
@@ -26,9 +56,35 @@ def shared_get_query_for_active_entries(player_id=None,team_id=None,div_id=None,
         query = Entry.query.filter_by(division_id=division.division_id,team_id=team_id,active=True)        
     return query
 
+def shared_check_team_can_start_new_entry(team,division):
+    active_entries = []
+    if team is None or division.tournament.team_tournament is False:
+        return False    
+    if division.tournament.team_tournament and team:
+        active_entries = shared_get_query_for_active_entries(team_id=team_id,div_id=division.division_id).all()            
+    if len(active_entries) != 0:
+        return False
+    available_tokens = Token.query.filter_by(team_id=team.team_id,division_id=division.division_id).all()
+    if len(available_tokens) == 0:
+        return False
+    return True
+
+def shared_check_team_can_start_new_entry(team,division):    
+    #FIXME : this needs cleaned up
+    active_entries = []
+    if division.tournament.team_tournament and team is not None:
+        active_entries = shared_get_query_for_active_entries(team_id=team.team_id,div_id=division.division_id).all()            
+    if len(active_entries) != 0:
+        return False
+    available_tokens = Token.query.filter_by(team_id=team.team_id,division_id=division.division_id).all()      
+    if len(available_tokens) == 0:
+        return False
+    return True
+
+
 def shared_check_player_can_start_new_entry(player,division):    
     #FIXME : this needs cleaned up
-    teams = team.shared_get_player_teams(player.player_id)
+    teams = route_team.shared_get_player_teams(player.player_id)
     if len(teams) > 0:
         #FIXME : will eventually need to deal with multiple teams
         team_id = teams[0].team_id
@@ -53,31 +109,29 @@ def shared_check_player_can_start_new_entry(player,division):
         return False
     return True
 
-def shared_create_active_entry(player,division):
+def shared_create_active_entry(division,player=None,team=None):
     # if division tournament is team, lookup team_id for player
     if not division.tournament.active:
         raise Conflict('tournament closed')
-
-    teams = team.shared_get_player_teams(player.player_id)
-    if len(teams) > 0:
+    teams = []
+    #if team:
+    #    teams = route_team.shared_get_player_teams(player.player_id)
+    #if len(teams) > 0:
         #FIXME : will eventually need to deal with multiple teams
-        team_id = teams[0].team_id
-    else:
-        team_id = None    
-    
+        #team_id = teams[0].team_id
     if division.metadivision_id:        
         token_query = Token.query.filter_by(player_id=player.player_id,metadivision_id=division.metadivision_id)               
     else:
         if division.tournament.team_tournament is False:        
             token_query = Token.query.filter_by(player_id=player.player_id,division_id=division.division_id)
         else:
-            token_query = Token.query.filter_by(team_id=team_id,division_id=division.division_id)            
+            token_query = Token.query.filter_by(team_id=team.team_id,division_id=division.division_id)            
     if len(token_query.all()) == 0:
         raise Conflict('No tokens are available')        
 
     active_entries = []
-    if division.tournament.team_tournament and team_id is not None:
-        active_entries = shared_get_query_for_active_entries(team_id=team_id,div_id=division.division_id).all()
+    if division.tournament.team_tournament and team is not None:
+        active_entries = shared_get_query_for_active_entries(team_id=team.team_id,div_id=division.division_id).all()
     if division.tournament.team_tournament is False:
         active_entries = shared_get_query_for_active_entries(player_id=player.player_id,div_id=division.division_id).all()        
     if len(active_entries) != 0:
@@ -91,7 +145,7 @@ def shared_create_active_entry(player,division):
             number_of_scores_per_entry = division.number_of_scores_per_entry
         )
     if division.tournament.team_tournament:
-        new_entry.team_id = team_id            
+        new_entry.team_id = team.team_id            
     else:            
         new_entry.player_id = player.player_id
     DB.session.add(new_entry)
@@ -112,7 +166,7 @@ def check_player_can_start_new_entry(player,division):
 @fetch_entity(Player, 'player')
 def create_new_entry(player,division):
     if shared_check_player_can_start_new_entry(player,division):
-        shared_create_active_entry(player,division)
+        shared_create_active_entry(division,player=player)
     else:
         raise Conflict('You done fucked up')                
     return jsonify({})
@@ -126,16 +180,23 @@ def void_entry(entry):
     """set a entry to voided, and tries to start a new entry if available"""
     entry.voided = True
     entry.active = False
-    player = Player.query.filter_by(player_id=entry.player_id).first()
-    division_machine = player.division_machine
-    if division_machine:
-        division_machine.player_id = None
-        division_machine.team_id = None
-    division = Division.query.filter_by(division_id=entry.division_id).first()
+    if entry.player_id:
+        player = Player.query.filter_by(player_id=entry.player_id).first()
+        player.division_machine.player_id = None
+    if entry.team_id:
+        team = Team.query.filter_by(team_id=entry.team_id).first()        
+        team.division_machine.team_id = None
     DB.session.commit()
-    if shared_check_player_can_start_new_entry(player,division) is False:
-        return jsonify(entry.to_dict_simple())        
-    shared_create_active_entry(player,division)
+    # division = Division.query.filter_by(division_id=entry.division_id).first()    
+    # if entry.player_id and shared_check_player_can_start_new_entry(player,division) is False:
+    #     return jsonify(entry.to_dict_simple())        
+    # if entry.player_id and shared_check_player_can_start_new_entry(player,division) is True:
+    #     shared_create_active_entry(division,player=player)
+    # if entry.team_id and shared_check_team_can_start_new_entry(team,division) is False:
+    #     return jsonify(entry.to_dict_simple())        
+    # if entry.team_id and shared_check_team_can_start_new_entry(team,division) is True:
+    #     #back
+    #     shared_create_active_entrys(player,division)    
     return jsonify(entry.to_dict_simple())
 
 
@@ -184,6 +245,7 @@ def edit_score(score):
     return jsonify(score.to_dict_simple())
 
 def add_score(entry,division_machine,new_score_value):
+    #FIXME : check that player is actually the one playing machine
     if len(entry.scores) >= entry.number_of_scores_per_entry:
         raise Conflict('Entry already has enough scores')
     if any(score.division_machine_id ==  division_machine.division_machine_id for score in entry.scores):

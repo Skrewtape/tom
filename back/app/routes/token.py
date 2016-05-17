@@ -108,6 +108,7 @@ def add_token():
     player = Player.query.filter_by(player_id=player_id).first()    
     if tokens_data.has_key('team_id'):
         team_id = tokens_data['team_id']
+        team = Team.query.filter_by(team_id=team_id).first()
     else:
         team_id = None
     for div_id in tokens_data['divisions']:
@@ -118,19 +119,19 @@ def add_token():
         check_add_token_for_max_tokens(num_tokens,div_id=div_id,player_id=player_id)
         if num_tokens > 0:
             tokens = create_division_tokens(num_tokens,div_id=div_id,player_id=player_id)
-            if entry.shared_check_player_can_start_new_entry(player,division):
-                entry.shared_create_active_entry(player,division)
+            #if entry.shared_check_player_can_start_new_entry(player,division):
+            #    entry.shared_create_active_entry(division,player=player)
 
     for div_id in tokens_data['teams']:
         division=Division.query.filter_by(division_id=div_id).first()
         if division is None:
             raise BadRequest('Bad division specified for token create')
         num_tokens = tokens_data['teams'][div_id]
-        if num_tokens > 0 and team_id is not None:        
+        if num_tokens > 0 and team_id:
             check_add_token_for_max_tokens(num_tokens,div_id=div_id,team_id=team_id)
             tokens = create_division_tokens(num_tokens,div_id=div_id,team_id=team_id)
-            if entry.shared_check_player_can_start_new_entry(player,division):    
-                entry.shared_create_active_entry(player,division)            
+            #if entry.shared_check_team_can_start_new_entry(team,division):    
+            #    entry.shared_create_active_entry(division,player=player)            
 
     for metadiv_id in tokens_data['metadivisions']:
         if Metadivision.query.filter_by(metadivision_id=metadiv_id) is None:
@@ -142,8 +143,8 @@ def add_token():
             raise BadRequest('No active divisions in metadivision')            
         if num_tokens > 0:
             tokens = create_division_tokens(num_tokens,metadiv_id=metadiv_id,player_id=player_id)
-            if entry.shared_check_player_can_start_new_entry(player,division):    
-                entry.shared_create_active_entry(player,division)            
+            #if entry.shared_check_player_can_start_new_entry(player,division):    
+            #    entry.shared_create_active_entry(division,player=player)            
     
     DB.session.commit()
     

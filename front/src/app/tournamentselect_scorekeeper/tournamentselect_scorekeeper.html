@@ -13,7 +13,7 @@
 	<div ng-repeat='division in tournament.divisions'>
 	  <button
 	     class='btn btn-info btn-xlg'
-	     ui-sref='.machineselect_scorekeeper({divisionId:division.division_id,tournamentId:tournament.tournament_id})'
+	     ui-sref='.machineselect_scorekeeper({divisionId:division.division_id,tournamentId:tournament.tournament_id,teamTournament:tournament.team_tournament})'
 	     > Select {{tournament.name}}<span ng-if='tournament.single_division == false'>, {{division.name}} Division</span>
 	  </button>
 	</div>
