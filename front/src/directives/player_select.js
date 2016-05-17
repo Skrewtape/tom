@@ -4,6 +4,7 @@ angular.module('tom_directives.player_select').controller(
     'player_select',function($scope, $state, StatusModal, TimeoutResources, $filter){
 	$scope.popovertemplate='myPopoverTemplate.html';
 	$scope.submitPlayerDisabled=true;
+	$scope.team_tournament=$state.params.teamTournament;
 	StatusModal.loading();
 	//TimeoutResources.FlushResourceCache("player");
 	//TimeoutResources.FlushResourceCache("players");	
@@ -32,7 +33,12 @@ angular.module('tom_directives.player_select').controller(
 	    if($scope.selected_players.length>0){
                 first_name = $scope.selected_players[0].first_name;
                 last_name = $scope.selected_players[0].last_name;
+		team_name = undefined
+		if($scope.selected_players[0].team != undefined && ($scope.team_tournament=="true" || $scope.team_tournament == undefined) ){
+		    team_name = $scope.selected_players[0].team.team_name;
+		}
                 $scope.keypad_player_name = first_name +' '+last_name;
+		$scope.keypad_player_team = team_name;
                 $scope.popoverIsOpen = true;
                 $scope.select_player = $scope.selected_players[0];
 		$scope.submitPlayerDisabled=false;
