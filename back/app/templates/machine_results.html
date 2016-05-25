@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+{% block content %}
+<table class='table'>
+  <div class='big-web-font'>
+    <center>
+      {{division_machine.name}}
+      <br>
+      <select ng-model='new_machine.data' ng-change='poop()'>
+	<option value='-1'> Select Machine </option>	
+	{% for div_machine in division_machines[division_machine['division_id']] %}	  
+	<option value="{{div_machine.division_machine_id}}">{{div_machine.name}}</option>
+	{% endfor %}
+      </select>
+    </center>
+  </div>
+  <th>Rank</th><th>Name</th><th>Score</th><th>Points</th>
+  {% for score in machine_scores %}
+  <tr>
+    <td>{{score.rank}}</td><td>{{"%s %s" % (players[score.player_id].first_name,players[score.player_id].last_name)}}</td><td>{{score.score}}</td><td>{{score.points}}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

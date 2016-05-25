@@ -10,8 +10,11 @@ import re
 def get_ifpa_ranking(player_name):
     content=requests.get('http://www.ifpapinball.com/ajax/searchplayer.php?search=%s' % player_name).content
     players = re.findall('player.php\?p=\d+\"\>([^\<]+)',content.lower())
-    rank = re.search('(\d+)th|(\d+)nd|(\d+)st', content.lower())
+    print content
+    rank = re.search('(\d+)th|(\d+)nd|(\d+)st|(\d+)rd', content.lower())
     count = len(players)
+    print "%s %s" % (rank,count)
+
     ifpa_results = {'count':count,'players':players,'rank':''}    
     if count > 0:
         ifpa_results['rank'] = rank.group(0)

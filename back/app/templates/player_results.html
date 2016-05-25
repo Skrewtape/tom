@@ -1,0 +1,108 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class='panel-title'>Player Info</h3>
+  </div>
+  <div class='panel-body'>
+    Player Name : {{"%s %s" % (player.first_name,player.last_name)}}
+    <br>Player Number : {{player.player_id}}
+    {% if "team" in player %}
+    <br>Team : {{player.team.team_name}}
+    {% endif %}
+  </div>
+</div>
+{% if division_tokens|length > 0 or metadivision_tokens|length > 0%}
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class='panel-title'>Available Tokens</h3>
+    </div>
+    <div class='panel-body'>
+      {% for div_id,div_tokens in division_tokens.iteritems() %}
+      {{divisions[div_id].name}} : {{div_tokens}}<br>
+      {% endfor %}
+      {% for metadiv_id,metadiv_tokens in metadivision_tokens.iteritems() %}
+      {{metadivisions[metadiv_id].name}} : {{metadiv_tokens}}<br>
+      {% endfor %}      
+    </div>
+</div>      
+{% endif %}
+{% if inprogress_entries|length > 0 %}
+{% for entry_division_id,entries in inprogress_entries.iteritems() %}
+{% if entries | length > 0 %}
+<div class="panel panel-default">
+  <div class="panel-heading">      
+    <h3 class='panel-title'>"{{divisions[entry_division_id].name}}" In Progress</h3>
+  </div>
+  <div class='panel-body'>
+    Entry #{{ entries[0].entry_id }}:<br>
+    <table class='table table-condensed'>
+      <tr>
+	<th>Machine</th><th>Score</th><th>Rank</th><th>Points</th>
+      </tr>
+      {% for score in entries[0].scores %}
+      <tr>
+	<td>{{score.machine_name}}</td><td>{{score.machine_score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_points}}</td>
+      </tr>
+      {% endfor %}
+      <td></td><td></td><td></td><td>{{entries[0].total_score}}</td>    
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if player_entries|length > 0 %}
+{% for entry_division_id,entries in player_entries.iteritems() %}
+{% if entries | length > 0 %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class='panel-title'> {{divisions[entry_division_id].name}} Best Entry</h3>
+    </div>
+    <div class='panel-body'>
+      Entry #{{ entries[0].entry_id }}:<br>
+      <table class='table'>
+	<tr>
+	  <th>Machine</th><th>Score</th><th>Rank</th><th>Points</th>
+	</tr>
+	{% for score in entries[0].scores %}
+	<tr>
+	  <td>{{score.machine_name}}</td><td>{{score.machine_score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_points}}</td>
+	</tr>
+	{% endfor %}
+	<td></td><td></td><td></td><td>{{entries[0].total_score}}</td>    
+      </table>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+<hr>
+<h2>All Entries</h2>
+{% for entry_division_id,entries in player_entries.iteritems() %}
+{% if entries | length > 0 %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class='panel-title'> {{divisions[entry_division_id].name}} </h3>
+    </div>
+    <div class='panel-body'>
+      {% for entry in entries %}  
+      Entry #{{ entry.entry_id }}:<br>
+      <table class='table'>
+	<tr>
+	  <th>Machine</th><th>Score</th><th>Rank</th><th>Points</th>
+	</tr>
+	{% for score in entry.scores %}
+	<tr>
+	  <td>{{score.machine_name}}</td><td>{{score.machine_score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_points}}</td>
+	</tr>
+	{% endfor %}
+	<td></td><td></td><td></td><td>{{entry.total_score}}</td>    
+      </table>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endfor %}
+</table>
+{% endif %}
+{% endblock %}
