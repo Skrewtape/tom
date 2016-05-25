@@ -59,12 +59,13 @@ def results_player(player_id):
         tournament_results[tournament.tournament_id]=to_dict(tournament)
 
     for division in divisions:
+        division_dict = to_dict(division)
         tournament = tournament_results[division.tournament_id]
         if tournament['single_division'] is True:
-            division.name=tournament['name']
+            division_dict['name']=tournament['name']
         else:
-            division.name="%s %s" % (tournament['name'], division.name)            
-        division_results[division.division_id]=to_dict(division)
+            division_dict['name']="%s %s" % (tournament['name'], division.name)            
+        division_results[division.division_id]=division_dict
         division_machine_results[division.division_id] = []
 
     for token in tokens:
@@ -108,13 +109,23 @@ def results_players():
         tournament_results[tournament.tournament_id]=to_dict(tournament)
 
     for division in divisions:
+        division_dict = to_dict(division)
         tournament = tournament_results[division.tournament_id]
         if tournament['single_division'] is True:
-            division.name=tournament['name']
+            division_dict['name']=tournament['name']
         else:
-            division.name="%s %s" % (tournament['name'], division.name)            
-        division_results[division.division_id]=to_dict(division)
+            division_dict['name']="%s %s" % (tournament['name'], division.name)            
+        division_results[division.division_id]=division_dict
         division_machine_results[division.division_id] = []
+
+    # for division in divisions:
+    #     tournament = tournament_results[division.tournament_id]
+    #     if tournament['single_division'] is True:
+    #         division.name=tournament['name']
+    #     else:
+    #         division.name="%s %s" % (tournament['name'], division.name)            
+    #     division_results[division.division_id]=to_dict(division)
+    #     division_machine_results[division.division_id] = []
         
     for division_machine in division_machines:
         division_machine_results[division_machine.division_id].append(division_machine.to_dict_simple())
@@ -147,13 +158,23 @@ def results_division_machine(division_machine_id):
         tournament_results[tournament.tournament_id]=to_dict(tournament)
 
     for division in divisions:
+        division_dict = to_dict(division)
         tournament = tournament_results[division.tournament_id]
         if tournament['single_division'] is True:
-            division.name=tournament['name']
+            division_dict['name']=tournament['name']
         else:
-            division.name="%s %s" % (tournament['name'], division.name)            
-        division_results[division.division_id]=to_dict(division)
+            division_dict['name']="%s %s" % (tournament['name'], division.name)            
+        division_results[division.division_id]=division_dict
         division_machine_results[division.division_id] = []
+
+        # for division in divisions:
+        # tournament = tournament_results[division.tournament_id]
+        # if tournament['single_division'] is True:
+        #     division.name=tournament['name']
+        # else:
+        #     division.name="%s %s" % (tournament['name'], division.name)            
+        # division_results[division.division_id]=to_dict(division)
+        # division_machine_results[division.division_id] = []
         
     for division_machine in division_machines:
         if division_machine.division_machine_id == int(division_machine_id):
@@ -197,13 +218,23 @@ def results_divisions(division_id=None):
         tournament_results[tournament.tournament_id]=to_dict(tournament)
 
     for division in divisions:
+        division_dict = to_dict(division)
         tournament = tournament_results[division.tournament_id]
         if tournament['single_division'] is True:
-            division.name=tournament['name']
+            division_dict['name']=tournament['name']
         else:
-            division.name="%s %s" % (tournament['name'], division.name)            
-        division_results[division.division_id]=to_dict(division)
+            division_dict['name']="%s %s" % (tournament['name'], division.name)            
+        division_results[division.division_id]=division_dict
         division_machine_results[division.division_id] = []
+
+    # for division in divisions:
+    #     tournament = tournament_results[division.tournament_id]
+    #     if tournament['single_division'] is True:
+    #         division.name=tournament['name']
+    #     else:
+    #         division.name="%s %s" % (tournament['name'], division.name)            
+    #     division_results[division.division_id]=to_dict(division)
+    #     division_machine_results[division.division_id] = []
         
     for division_machine in division_machines:
         division_machine_results[division_machine.division_id].append(division_machine.to_dict_simple())
