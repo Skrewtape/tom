@@ -27,7 +27,7 @@
 	</span>
 	<table class='table' style='width:100%'>
 	  <td style='padding:5px;border-style:solid;border-width:0;border-right-width:1px;width:20%' ng-repeat='score in entry.scores'>
-	    {{truncateString(resources.machines[score.machine_id].name,10)}}
+	    {{truncateString(resources.machines[score.division_machine_id].name,10)}}
 	  </td>
 	</table>
 	<ui-switch ng-change='setEntryVoidStatus(entry.voided,entry)' class='pull-left' ng-model='entry.voided'></ui-switch>
@@ -42,7 +42,7 @@
               <a ng-click='remove_score(score)'><span class="fa fa-times-circle pull-right" style='color:red'></a>
             </td>
             <td>
-              <input type="text" ng-change='score_and_machine_change(score)' placeholder='{{resources.machines[score.machine_id].name}}' ng-model="score.machine" uib-typeahead="machine as machine.name for machine in machines_array | filter:$viewValue | limitTo:8" class="form-control">
+              <input type="text" ng-change='score_and_machine_change(score)' placeholder='{{resources.machines[score.division_machine_id].name}}' ng-model="score.machine" uib-typeahead="machine as machine.name for machine in machines_array | filter:$viewValue | limitTo:8" class="form-control">
             </td>
             <td>
               <input ng-change='score_and_machine_change(score)' type="text" ng-model="score.score" class="form-control">
