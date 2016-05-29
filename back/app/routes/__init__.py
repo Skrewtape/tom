@@ -13,3 +13,4 @@ import app.routes.team
 import app.routes.ifpa
 import app.routes.results
 import app.routes.static
+import app.routes.finals

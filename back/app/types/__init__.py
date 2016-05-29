@@ -14,5 +14,4 @@ from app.types.Team import Team
 from app.types.Metadivision import Metadivision
 from app.types.Finals import Finals
 from app.types.Finals import FinalsMatch
-from app.types.Finals import FinalsGroup
-from app.types.Finals import FinalsPlayerScore
+from app.types.Finals import FinalsPlayer

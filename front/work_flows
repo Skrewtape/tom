@@ -1,95 +1,76 @@
+1) Review all workflows and make changes as appropriate
+2) Review all workflows
+2a) remove unused code ( and mark code for fixme/refactor )
+2b) add comments
+3) Provide documents for folks to contribute
 * home
-home
 
-* Add player
-home.add_user
-home.add_user.process
-home.add_user.process.buy_multiple_tickets
-home.add_user.process.buy_multiple_tickets.process
-home.add_user.process.link_division
-home.add_user.process.link_division.process
+* Add tournament
+** single div
 
-* Add/remove/activate/deactivate tournament/divisions/machines
-home.tournaments
-home.tournaments.add_tournament
-home.tournaments.add_tournament.process
-home.tournaments.edit_tournament
-home.tournaments.divisions
-home.tournaments.divisions.add_division
-home.tournaments.divisions.add_division.process
-home.tournaments.divisions.edit_division
+** team div
 
-* Add user
-home.add_user
-home.add_user.process
+* Activate/deactivate tournament
 
-* Link player to division
-home.select_player.info.link_division
-home.select_player.info.link_division.process
+* Add divisions to tournament
 
-* buy ticket for player
-home.select_player.buy_ticket
-home.select_player.buy_ticket.process
-home.select_player.buy_ticket.link_division
-home.select_player.buy_ticket.link_division.process
+* Remove divisions from tournament(?)
 
-* lookup player
-home.select_player
-home.select_player.info
+* Add machines to division
+** multi division
+** single division
+** team division
 
-* deactivate player
-home.select_player.info.deactivate_player
-home.select_player.info.deactivate_player.confirm
-home.select_player.info.deactivate_player.confirm.process
+* Remove machines from division
+** multi
+** single
+** team
 
-* edit player entries
-home.select_player.info.player_entries
+*Create metadivision
 
-* view all entries for a given time period
-home.entry_list
+*Add Player
+** edit division link
+** ifpa rating
+** add tickets
 
-* see list of assholes
-home.asshole_list
-home.asshole_list.deactivate_player
-home.asshole_list.deactivate_player.confirm
-home.asshole_list.deactivate_player.confirm.process
+*Create team
+** add players to team
 
-* void ticket
-home.select_player.void
+*Edit team
 
-* record score for player
-home.scorekeeping
-home.scorekeeping.select_machine
-home.scorekeeping.select_machine.record_score
-home.scorekeeping.select_machine.record_score.confirm
-home.scorekeeping.select_machine.record_score.confirm.process
-home.scorekeeping.select_machine.void
-home.scorekeeping.select_machine.record_score.void
+*Add tickets
+** all types of tourneys
+
+*Scorekeeping
+** add person to machine
+*** machine already occupied
+*** player has no tickets
+*** player has already played machine on current ticket
+** record score in each type of tourney
+** complete ticket in each type of tourney
+** cancel complete
+** void ticket from "score record" and "score complete" pages
+
+* Edit player link division
+
+* Edit player entries
+
+* Edit last x entries for a given division
+
+* player is a jagoff
+
+* add user
+** roles
+
+* View results
 
 
-* add player to machine
-home.scorekeeping.select_machine
-home.scorekeeping.select_machine.add_player_to_machine
-home.scorekeeping.select_machine.add_player_to_machine.process
-home.scorekeeping.select_machine.add_player_to_machine.process.undo
-home.scorekeeping.select_machine.add_player_to_machine.process.undo.process
+Jake notes on ticket purchase page:
 
-* complete ticket
-home.scorekeeping.select_machine.record_score.confirm.process.complete
-home.scorekeeping.select_machine.record_score.confirm.process.complete.process
-home.scorekeeping.select_machine.record_score.confirm.process.complete.void
+X left VS X already purchased
 
-* mark machine as "out of order"
-home.scorekeeping.select_machine.machine_out_of_order
-home.scorekeeping.select_machine.machine_out_of_order.select_machine
-home.scorekeeping.select_machine.machine_out_of_order.select_machine.confirm
-home.scorekeeping.select_machine.machine_out_of_order.select_machine.confirm.process
+Show player existing info seperately/top of page
 
-* mark player as asshole
-home.scorekeeping.select_machine.record_score.player_is_asshole
-home.scorekeeping.select_machine.record_score.player_is_asshole.process
-home.scorekeeping.select_machine.record_score.confirm.player_is_asshole
-home.scorekeeping.select_machine.record_score.confirm.player_is_asshole.process
+shopping cart
 
-* get division rankings
-* get machine rankings
+different sized text for buttons vs reading

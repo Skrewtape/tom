@@ -16,6 +16,9 @@ class DivisionMachine(DB.Model):
     division_id = DB.Column(DB.Integer, DB.ForeignKey(
         'division.division_id'
     ))
+    finals_id = DB.Column(DB.Integer, DB.ForeignKey(
+        'finals.finals_id'
+    ))    
     team_id = DB.Column(DB.Integer, DB.ForeignKey(
         'team.team_id'
     ))    
