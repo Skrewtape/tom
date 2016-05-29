@@ -7,7 +7,7 @@
     </a>
 </div>
 <div class="scrollable">
-  <div style='background:#AAAAAA' ui-view='tournament_add_progress'></div>
+  <div ui-view='tournament_add_progress'></div>
   <div class="scrollable-content"  style='padding:10px'>
 	    <form>
 	      <div class='form-group form-group-xlg input-group input-group-xlg'>        
@@ -49,6 +49,7 @@
 		</td>
 	      </table>	      	      
 	      <br>
+	      <!-- FIXME : need to make sure non 0/empty value entered for scores per ticket -->
 	      <div class='form-group form-group-xlg input-group input-group-xlg' ng-if='tournament.single_division == true'>        
 		<span  class="input-group-addon" id="number_of_scores_per_entry">Scores Per Ticket</span>
 		<input

@@ -103,6 +103,14 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resource_results['player_token'] = undefined;
     resource_results['players'] = undefined;
     resource_results['ifpa_player'] = undefined;
+    resources['addTournament'] = $resource('[APIHOST]/tournament', null,     //killroy was here
+					   {
+					       'addTournament': {method:'POST', 'timeout': 15000}
+					   })
+    resources['addDivision'] = $resource('[APIHOST]/division', null,			     
+					 {
+					     'addDivision': {method:'POST', 'timeout': 15000}
+					 })    
     resources['getActiveTournaments'] = $resource('[APIHOST]/tournament/active', null,
      						    {
      							'getActiveTournaments': {method:'GET', 'timeout': 15000}
@@ -248,7 +256,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     
     
     return {
-	GetAllResources: function(){
+	GetAllResources: function(){//killroy was here
 	    return resource_results;
 	},
 	GetPlayerNameSmushed: function(){
@@ -273,6 +281,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	AddMetadivision: generic_resource('addMetadivision','meta_division','post', false),	
 	AddTeam: generic_resource('addTeam','team','post',false),
 	AddTokens: generic_resource('addTokens','add_tokens_result','post', false),
+	AddTournament: generic_resource('addTournament','add_tournament_result','post', false),	//killroy was here
+	AddDivision: generic_resource('addDivision','add_division_result','post', false),	//killroy was here	
 	AddUser: generic_resource('addUser','user','post', false),
 	AddScore: generic_resource('addScore','entry','post',false),
 	ChangeScore: generic_resource('changeScore','score','post', false),
@@ -298,7 +308,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetRoles: generic_resource('getRoles','roles','get', false),
 	GetTeam: generic_resource('getTeam','team','get', false),
 	GetTeamActiveEntry: generic_resource('getTeamActiveEntry','team_active_entry','get', false),	
-	GetTournament: generic_resource('getTournament','tournament','get',false),	
+	GetTournament: generic_resource('getTournament','tournament','get',false), //killroy was here	
 	SetDivisionMachinePlayer: generic_resource('setDivisionMachinePlayer','division_machine','post', false),
 	SetDivisionMachineTeam: generic_resource('setDivisionMachineTeam','division_machine','post', false),
 	ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','empty','post', false),	
@@ -318,12 +328,12 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 				 'login': { method:'PUT' , 'timeout': 15000}
 			     });
 	},
-	addTournamentResource: function(){
-	    return $resource('[APIHOST]/tournament', null,
-			     {
-				 'addTournament': {method:'POST', 'timeout': 15000}
-			     })
-	},
+	// addTournamentResource: function(){
+	//     return $resource('[APIHOST]/tournament', null,
+	// 		     {
+	// 			 'addTournament': {method:'POST', 'timeout': 15000}
+	// 		     })
+	// },
 	getAllTournamentsResource: function(){
 	    return $resource('[APIHOST]/tournament', null,
 			     {

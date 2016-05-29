@@ -15,7 +15,7 @@ class Tournament(DB.Model):
 
     divisions = DB.relationship('Division',lazy='joined')
 
-    def to_dict_with_divisions(self):
+    def to_dict_with_divisions(self): #killroy was here
         tournament = to_dict(self)
         if self.divisions:
             tournament['divisions']=[]

@@ -187,7 +187,7 @@ def init_players(division):
     #    player.delete()
     #    DB.session.commit()
         
-    for play_num in range(0,1):
+    for play_num in range(0,50):
         first_name = first_names[random.randrange(0,len(first_names))]
         last_name = first_names[random.randrange(0,len(first_names))]
         player = create_player(first_name,last_name)

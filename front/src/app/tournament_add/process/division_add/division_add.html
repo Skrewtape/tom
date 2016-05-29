@@ -1,10 +1,11 @@
 <div ui-content-for="title">
   <span>Add Divisions</span>
 </div>
+<!-- FIXME : needs better separation between division's addded/existing divisions and form -->
 <div class="scrollable">
-  <div style='background:#AAAAAA' ui-view='tournament_add_progress'></div>
+  <div ui-view='tournament_add_progress'></div>
   <div class="scrollable-content"  style='padding:10px'>
-    <span class='big-web-font'>Add Division To {{tournament.name}} : </span><br>
+    <span class='big-web-font'>Add Division To {{resources.tournament.name}} : </span><br>
     <form>      
       <div class='form-group form-group-xlg input-group input-group-xlg'>        
 	<span  class="input-group-addon" id="division_name">Division Name</span>	
@@ -26,15 +27,19 @@
 	   style='width:100px'
 	   />
       </div>
+      <!-- FIXME : need validation that a non empty/0 number was entered for number of scores per ticket -->
       <a
 	 ng-disabled='form_division.division_name == undefined || form_division.division_name == ""'
 	 class='btn btn-info btn-xlg'
 	 ng-click='add_division()'
 	 > Add Division</a>
       <br>
-      
-      <hr style='align:center;width:50%;margin:auto' />
-    <div ng-repeat='tournament_division in tournament.divisions'>
+      <br>
+      <hr style='align:center;width:50%;margin:auto;border-style:solid;border-width:2px' class='big-web-font'/>
+      <div ng-if='resources.tournament.divisions.length > 0' class='big-web-font'>
+	Existing/Added Divisions
+      </div>
+    <div ng-repeat='tournament_division in resources.tournament.divisions' class='med-web-font'>
       Name : {{tournament_division.name}}, Scores Per Ticket : {{tournament_division.number_of_scores_per_entry}}
       </div>
   </div>

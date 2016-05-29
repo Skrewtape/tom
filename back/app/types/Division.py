@@ -32,25 +32,17 @@ class Division(DB.Model):
          foreign_keys=[metadivision_id]
     )
 
-    # machines = DB.relationship(
-    #     'Machine',
-    #     secondary=Division_machine_mapping,
-    #     backref=DB.backref('division'),
-    #     lazy='joined'
-    # )
-
     machines = DB.relationship(
         'DivisionMachine',
         lazy='joined'
     )
     
-    def to_dict_with_machines(self):
+    def to_dict_with_machines(self): #killroy was here
         division = to_dict(self)
         if self.machines:
             #FIXME : this should be returning the machines as a dict
             division['machines']=[]
             for machine in self.machines:
-                print "%s" % machine.to_dict_simple()
                 division['machines'].append(machine.to_dict_simple())
         return division
     

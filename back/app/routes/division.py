@@ -45,7 +45,7 @@ def enable_division_machine(divisionmachine):
     return jsonify(divisionmachine.to_dict_simple())
 
 
-@App.route('/division/<division_id>/machine/<machine_id>', methods=['PUT'])
+@App.route('/division/<division_id>/machine/<machine_id>', methods=['PUT']) 
 @login_required
 @Admin_permission.require(403)
 @fetch_entity(Division, 'division')
@@ -64,28 +64,15 @@ def add_machine_to_division(division,machine):
 
 
 
-@App.route('/division', methods=['POST'])
+@App.route('/division', methods=['POST']) #killroy was here
 @login_required
 @Admin_permission.require(403)
 def add_division():
-    # """Add a player"""
-    return shared_add_division(request.data)
-    # if 'division_name' not in division_data or 'tournament_id' not in division_data:
-    #     raise BadRequest('Did not specify division_name or tournament_id in post data')
-    # new_division = Division(
-    #     name = division_data['division_name'],
-    #     tournament_id = division_data['tournament_id']
-    # )
-    # # if 'number_of_scores_per_entry' in division_data:
-    # #     new_division.number_of_scores_per_entry = division_data['number_of_scores_per_entry']
-    # # else:
-    # #     new_division.number_of_scores_per_entry = 4
-    # DB.session.add(new_division)
-    # DB.session.commit()
-    # return jsonify(new_division.to_dict_with_machines())
+    """wrapper around shared_add_division"""
+    return shared_add_division(request.data) 
 
-def shared_add_division(post_data):
-    """Add a player"""
+def shared_add_division(post_data): #killroy was here
+    """Add a division"""
     division_data = json.loads(post_data)
     if 'division_name' not in division_data or 'tournament_id' not in division_data:
         raise BadRequest('Did not specify division_name or tournament_id in post data')
@@ -96,6 +83,7 @@ def shared_add_division(post_data):
     if 'number_of_scores_per_entry' in division_data:
         new_division.number_of_scores_per_entry = division_data['number_of_scores_per_entry']
     else:
+        #FIXME : this should not be hardcoded
         new_division.number_of_scores_per_entry = 4
     DB.session.add(new_division)
     DB.session.commit()

@@ -6,16 +6,16 @@
   <div ui-view='tournament_add_progress'></div>
   <div class="scrollable-content">
     <div style='background-color:white' class='big-web-font'>
-      Tournament {{tournament.name}} has been created!
+      Tournament {{resources.add_tournament_results.name}} has been created!
       <br>
       <a
-	 ng-if='tournament.single_division != true'
+	 ng-if='resources.add_tournament_result.single_division != true'
 	 class='btn btn-info btn-xlg'
-	 ui-sref='app.tournament_add.process.division_add({tournamentId:tournament.tournament_id})'
+	 ui-sref='.division_add({tournamentId:resources.add_tournament_result.tournament_id})'
 	 > Create Divisions</a>
       <br>
       <a
-	 ng-if='tournament.single_division == true'
+	 ng-if='resources.add_tournament_result.single_division == true'
 	 class='btn btn-info btn-xlg'
 	 ui-sref='app'
 	 > Done</a>       

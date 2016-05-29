@@ -9,11 +9,12 @@ from app.routes.util import fetch_entity
 from app.routes import division
 from werkzeug.exceptions import BadRequest
 
-@App.route('/tournament', methods=['POST'])
+
+@App.route('/tournament', methods=['POST']) #killroy_was_here
 @login_required
 @Admin_permission.require(403)
 def add_tournament():
-    """Add a player"""
+    """Add a tournament"""
     tournament_data = json.loads(request.data)
     if 'tournament_name' not in tournament_data:
         raise BadRequest('tournament_name not found in post data')
@@ -35,8 +36,8 @@ def add_tournament():
     DB.session.commit()
     return jsonify(new_tournament.to_dict_with_divisions())
 
-@App.route('/tournament', methods=['GET'])
-def get_tournaments():
+@App.route('/tournament', methods=['GET']) 
+def get_tournaments(): 
     """Get a list of tournaments"""
     
     return jsonify({t.tournament_id: t.to_dict_with_divisions() for t in
@@ -52,7 +53,7 @@ def get_active_tournaments():
     })
 
 
-@App.route('/tournament/<tournament_id>', methods=['GET'])
+@App.route('/tournament/<tournament_id>', methods=['GET']) #killroy was here
 @fetch_entity(Tournament, 'tournament')
 def get_tournament(tournament):
     """Get a tournament"""    

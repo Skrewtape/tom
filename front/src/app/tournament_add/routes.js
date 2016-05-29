@@ -1,5 +1,6 @@
 angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {    
     $stateProvider.state(
+	//killroy was here
         'app.tournament_add', {
             url: '/tournament_add',
             views: {
@@ -12,8 +13,9 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
 		}
             }
 	}).state(
+	//killroy was here	    
         'app.tournament_add.process', {
-            url: '/tournament_add/process',
+            url: '/process',
             views: {
                 '@': {
                     templateUrl: 'app/tournament_add/process/process.html',
@@ -28,8 +30,9 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
 		tournamentInfo: {}
 	    }
 	}).state(
+        //killroy was here
         'app.tournament_add.process.division_add', {
-            url: '/tournament_add/process/division_add/:tournamentId',
+            url: '/division_add/:tournamentId',
             views: {
                 '@': {
                     templateUrl: 'app/tournament_add/process/division_add/division_add.html',
