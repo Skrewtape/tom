@@ -15,3 +15,4 @@ from app.types.Metadivision import Metadivision
 from app.types.Finals import Finals
 from app.types.Finals import FinalsMatch
 from app.types.Finals import FinalsPlayer
+from app.types.Finals import FinalsScore

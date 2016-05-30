@@ -2,30 +2,6 @@ from app import DB
 from flask_restless.helpers import to_dict
 from app.types import util, Team
 
-# finals design
-#
-# finals : 
-#  division_id
-#  matches
-#
-# finals_match
-#  round
-#  finals_id
-#  child
-#  parent
-#
-# finals_group
-#  machine
-#  finals_match
-#
-# finals_player_score
-#  finals_player_id
-#  finals_score
-#  finals_group
-#
-#
-# filling design
-
 class Finals(DB.Model):
     """Model object for a division finals"""
     # pylint: disable=no-init
@@ -51,11 +27,11 @@ class FinalsMatch(DB.Model):
     
 class FinalsPlayer(DB.Model):
     """Model object for a division finals players score"""        
-    player_id = DB.Column(DB.Integer,primary_key=True)
+    finals_player_id = DB.Column(DB.Integer,primary_key=True)
     match_id = DB.Column(DB.Integer, DB.ForeignKey(
         'finals_match.match_id'
     ))    
-    finals_player_id = DB.Column(DB.Integer, DB.ForeignKey(
+    player_id = DB.Column(DB.Integer, DB.ForeignKey(
         'player.player_id'
     ))
     finals_seed = DB.Column(DB.Integer)
@@ -66,7 +42,7 @@ class FinalsScore(DB.Model):
     ))    
     finals_player_score_id = DB.Column(DB.Integer,primary_key=True)    
     finals_player_id = DB.Column(DB.Integer, DB.ForeignKey(
-        'player.player_id'
+        'finals_player.finals_player_id'
     ))    
     score = DB.Column(DB.BIGINT)    
     game_number = DB.Column(DB.Integer)
