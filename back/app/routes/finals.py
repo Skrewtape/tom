@@ -9,16 +9,43 @@ from app.routes.util import fetch_entity, calculate_score_points_from_rank
 from werkzeug.exceptions import Conflict
 from flask_restless.helpers import to_dict
 
-# 
+# workflow for finals
+# 1) get list of finals
+# 2) get list of rounds for a final
+# 3) get list of matches for a round
+# 4) get list of players in a match 
+# 5) get list of scores for a match ( grouped by game ) 
+# 6) select machine for a match
 #
-#
-#
+
+@App.route('/finals/<finals_id>/match', methods=['GET'])
+@fetch_entity(Finals, 'finals')
+def get_matches_for_final(finals):
+    matches_dict = {}
+    for round in range(finals.rounds):
+        round=round+1
+        matches_dict[round]=[]
+    finals_matches = FinalsMatch.query.filter_by(finals_id=finals.finals_id)
+    for final_match in finals_matches:
+        final_match_dict = final_match.to_dict_simple()
+        matches_dict[final_match.round_id].append(final_match_dict)
+    return jsonify(matches_dict)
+
+@App.route('/finals', methods=['GET'])
+def get_all_active_finals():
+    finals = Finals.query.filter_by(active=True).all()
+    finals_dict = {'finals':[]}
+    for final in finals:
+        finals_dict['finals'].append(final.to_dict_simple())
+    return jsonify(finals_dict)
 
 @App.route('/finals/division/<division_id>', methods=['POST'])
 @fetch_entity(Division, 'division')
 def create_finals(division):
     new_finals = Finals(
-        division_id=division.division_id
+        division_id=division.division_id,
+        active=True,
+        rounds=0
         )
     DB.session.add(new_finals)
     DB.session.commit()
@@ -90,6 +117,8 @@ def generate_finals_rounds(finals):
     num_bye_rounds = 1
     num_per_group = 4
     num_rounds = ((num_players/num_per_group)/2) + num_bye_rounds
+    finals.rounds = num_rounds
+    DB.session.commit()
     num_byes_per_round = (num_players/3)
     cur_round_matches=[]
     next_round_matches=[]
