@@ -1,0 +1,56 @@
+<div ui-content-for="title">
+  <span>Add Player</span>
+</div>
+<div  ui-content-for="navbarAction">
+    <a ui-sref='^' style='font-size:35px'>
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"> </i> Back
+    </a>
+</div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+  <div class="scrollable-content"  style='padding:10px'>
+      <div ui-state="activeTab" default="1">
+	<ul class="nav nav-tabs">	  
+	  <li ui-class="{'active': activeTab == {{round}}}" ng-repeat="(round,finals_match) in resources.finals_matches">
+	    <a ui-set="{'activeTab': {{round}}}">Round {{round}}</a>
+	  </li>
+	  
+	</ul>
+	
+	<div ui-if="activeTab == {{round}}" ng-repeat="(round,finals_matches) in resources.finals_matches">
+	  <h3 class="page-header">Round {{round}}</h3>
+	  <p>
+	    <div ng-repeat="finals_match in finals_matches">	      
+	      <!--	      <table ng-repeat='game_count in [0,1,2]' class='table' style='width:50%'>
+			      <tr><td class='info'>Machine</td><td class='info'>{{game.division_machine_id}}</td><td class='info'></td></tr>
+			      <tr ng-repeat='game in finals_match.games[game_count]'>			
+				<td>{{game.finals_player_id}}</td><td>{{game.score}}</td>
+			      </tr>
+	      </table>-->
+	      <a ng-click='open_match(finals_match)'>
+		<table class='table' style='width:50%'>
+		  <tr><td class='info'>Match&nbsp;ID</td><td class='info'>{{finals_match.match_id}}</td><td class='info'></td></tr>
+		  <tr ng-repeat='(finals_player_id,finals_player) in finals_match.finals_players'>			
+		    <td>{{finals_player.finals_seed}}</td>		    
+		    <td ng-if="finals_player.player_name != null">
+		      {{finals_player.player_name}}		      
+		    </td>
+		    <td ng-if="finals_player.player_name == null">
+		      <i>Pending Match</i>
+		    </td>		    		    		    
+		    <td ng-if='finals_player.games_played<3'>
+		      {{finals_player.games_played}} Games Finished
+		    </td>
+<td ng-if='finals_player.games_played==3'>
+		      <span ng-if='finals_match.player_ranks[finals_player.finals_player_id]=="Advancing"'>Advancing</span>
+		      <span ng-if='finals_match.player_ranks[finals_player.finals_player_id]!="Advancing"'>{{finals_match.player_finished}}</span>
+		    </td>
+		  </tr>
+		</table>
+	      </a>
+	    </div>
+	  </p>
+	</div>	
+      </div>
+    </div>    
+</div>

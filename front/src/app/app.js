@@ -33,7 +33,7 @@ app = angular.module(
 	    'app.metadivision_add',
 	    'app.user_add',
 	    'app.playerselect_player_info',
-	    'app.tournamentselect_scorekeeper',/*REPLACEMECHILD*/
+	    'app.tournamentselect_scorekeeper','app.finalselect_finals',/*REPLACEMECHILD*/
 	]
 );
 
@@ -112,13 +112,16 @@ app.config(function($httpProvider) {
 // });
 // Close all modals when changing routes
 app.run(function($rootScope, $uibModalStack) {
-//    $rootScope.$on('$routeChangeSuccess', function() {
-//        $uibModalStack.dismissAll();	
-//    });
-
-    $rootScope.$on('$stateChangeStart', function(){
-	$rootScope.$broadcast('$routeChangeSuccess');
+    $rootScope.$on('$routeChangeSuccess', function(){
+	$rootScope.broadcast('$stateChangeStart');
     });
+    //    $rootScope.$on('$routeChangeSuccess', function() {
+    //        $uibModalStack.dismissAll();	
+    //    });
+    
+    //// $rootScope.$on('$stateChangeStart', function(){
+    //// 	$rootScope.$broadcast('$routeChangeSuccess');
+    //// });
 
     // $rootScope.$on('$stateChangeStart',
     // 		   function(event, toState, toParams, fromState, fromParams){

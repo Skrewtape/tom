@@ -18,17 +18,36 @@ from flask_restless.helpers import to_dict
 # 6) select machine for a match
 #
 
+@App.route('/finals/match/match_id/<match_id>', methods=['GET'])
+@fetch_entity(FinalsMatch, 'match')
+def get_match(match):
+    finals_match = FinalsMatch.query.filter_by(match_id=match.match_id).first()    
+    return jsonify(finals_match.to_dict_simple())
+
 @App.route('/finals/<finals_id>/match', methods=['GET'])
 @fetch_entity(Finals, 'finals')
 def get_matches_for_final(finals):
     matches_dict = {}
+    sorted_total_points = {}
+    
     for round in range(finals.rounds):
         round=round+1
         matches_dict[round]=[]
     finals_matches = FinalsMatch.query.filter_by(finals_id=finals.finals_id)
+    total_points = {}
     for final_match in finals_matches:
         final_match_dict = final_match.to_dict_simple()
+        for (player_id,player_points) in final_match_dict['player_ranks'].iteritems():
+            if not total_points.has_key(player_id):
+                total_points[player_id] = 0
+            if player_points != 'Advancing':
+                total_points[player_id] = total_points[player_id] + int(player_points)
+        order_out=0
         matches_dict[final_match.round_id].append(final_match_dict)
+    #for key, value in sorted(total_points.iteritems(), key=lambda (k,v): (v,k), reverse=True):
+    #    sorted_total_points[key]=order_out
+    #    order_out=order_out+1
+    #final_match_dict['player_finished']=sorted_total_points        
     return jsonify(matches_dict)
 
 @App.route('/finals', methods=['GET'])
@@ -38,6 +57,106 @@ def get_all_active_finals():
     for final in finals:
         finals_dict['finals'].append(final.to_dict_simple())
     return jsonify(finals_dict)
+
+@App.route('/finals/divisionMachineId/<divisionmachine_id>/score/<finalsmatch_id>/game_num/<game_number>', methods=['POST'])
+@fetch_entity(DivisionMachine, 'divisionmachine')
+@fetch_entity(FinalsMatch, 'finalsmatch')
+def set_match_machine(divisionmachine, finalsmatch, game_number):
+    finals_scores = FinalsScore.query.filter_by(match_id=finalsmatch.match_id,game_number=game_number).all()
+    for finals_score in finals_scores:
+        finals_score.division_machine_id = divisionmachine.division_machine_id
+    DB.session.commit()
+    return jsonify({})
+
+@App.route('/finals/finals_score/<finalsscore_id>/score/<score>', methods=['POST'])
+@fetch_entity(FinalsScore, 'finalsscore')
+def set_match_score(finalsscore, score):
+    finals_score = FinalsScore.query.filter_by(finals_player_score_id=finalsscore.finals_player_score_id).first()
+    finals_score.score = score
+    DB.session.commit()
+    finals_match = FinalsMatch.query.filter_by(match_id=finals_score.match_id).first()
+    finals_matches = FinalsMatch.query.filter_by(finals_id=finals_match.finals_id,round_id=finals_match.round_id).all()
+    next_round_matches = FinalsMatch.query.filter_by(finals_id=finals_match.finals_id,round_id=finals_match.round_id+1).all()    
+    finals_scores = FinalsScore.query.join(FinalsMatch).filter_by(finals_id=finals_match.finals_id,round_id=finals_match.round_id).all()
+    all_scores_for_match_entered=True
+    for all_finals_score in finals_scores:
+        if all_finals_score.score is None:
+            all_scores_for_match_entered=False
+    #FIXME : should not be hardcoding 4 here
+    advancing_players={}
+    sorted_advancing_players=[]
+    if all_scores_for_match_entered:
+    #if 1:
+        # assign next round
+        if finals_match.round_id==4:
+            return
+        for match in finals_matches:
+            finals_match_dict = match.to_dict_simple()
+            for (player_id,rank) in finals_match_dict['player_ranks'].iteritems():
+                if rank=="Advancing":
+                    advancing_players[FinalsPlayer.query.filter_by(finals_player_id=player_id).first().player_id]=FinalsPlayer.query.filter_by(finals_player_id=player_id).first().finals_seed
+        for match in next_round_matches:
+            players = match.finals_players
+            for player in players:
+                if player.player_id:
+                    advancing_players[player.player_id]=player.finals_seed
+        for key, value in sorted(advancing_players.iteritems(), key=lambda (k,v): (v,k), reverse=True):
+           sorted_advancing_players.insert(0,key)
+        print sorted_advancing_players
+        ranked_players_pairs = [
+            [sorted_advancing_players[0],
+             sorted_advancing_players[7],
+             sorted_advancing_players[8],
+             sorted_advancing_players[15]
+            ],
+            [sorted_advancing_players[1],
+             sorted_advancing_players[6],
+             sorted_advancing_players[9],
+             sorted_advancing_players[14]
+            ],
+            [sorted_advancing_players[2],
+             sorted_advancing_players[5],
+             sorted_advancing_players[10],
+             sorted_advancing_players[13]
+            ],
+            [sorted_advancing_players[3],
+             sorted_advancing_players[4],
+             sorted_advancing_players[11],
+             sorted_advancing_players[12]
+            ]
+        ]
+        players_seed = {}
+        for player_id in sorted_advancing_players:
+            players_seed[player_id] = FinalsPlayer.query.filter_by(player_id=player_id).first().finals_seed
+            print players_seed[player_id]
+        for match in next_round_matches:
+            players = FinalsPlayer.query.join(FinalsMatch).filter_by(match_id=match.match_id).all()            
+            players_pair = ranked_players_pairs.pop()
+            ranked_player_one_id=players_pair[0]
+            ranked_player_two_id=players_pair[1]
+            ranked_player_three_id=players_pair[2]
+            ranked_player_four_id=players_pair[3]            
+            player_one = players[0]
+            player_two = players[1]
+            player_three = players[2]
+            player_four = players[3]
+            print "player 1 id is %d" % ranked_player_one_id
+            print "player 2 id is %d" % ranked_player_two_id
+            print "player 3 id is %d" % ranked_player_three_id
+            print "player 4 id is %d" % ranked_player_four_id            
+            player_one.finals_seed = players_seed[ranked_player_one_id]
+            player_two.finals_seed = players_seed[ranked_player_two_id]
+            player_three.finals_seed = players_seed[ranked_player_three_id]
+            player_four.finals_seed = players_seed[ranked_player_four_id]
+            player_one.player_id=ranked_player_one_id
+            player_two.player_id=ranked_player_two_id            
+            player_three.player_id=ranked_player_three_id            
+            player_four.player_id=ranked_player_four_id            
+            DB.session.commit()
+    #print "%d %s" % (finalsscore.match_id,all_scores_for_match_entered)
+    return jsonify({})
+
+
 
 @App.route('/finals/division/<division_id>', methods=['POST'])
 @fetch_entity(Division, 'division')

@@ -103,6 +103,15 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resource_results['player_token'] = undefined;
     resource_results['players'] = undefined;
     resource_results['ifpa_player'] = undefined;
+
+    resources['setMatchScore'] = $resource('[APIHOST]/finals/finals_score/:finalsScoreId/score/:score', null,     //killroy was here
+					     {
+						 'setMatchScore': {method:'POST', 'timeout': 15000}
+					     })        
+    resources['setMatchMachine'] = $resource('[APIHOST]/finals/divisionMachineId/:divisionMachineId/score/:finalsMatchId/game_num/:gameNumber', null,     //killroy was here
+					     {
+						 'setMatchMachine': {method:'POST', 'timeout': 15000}
+					     })    
     resources['addTournament'] = $resource('[APIHOST]/tournament', null,     //killroy was here
 					   {
 					       'addTournament': {method:'POST', 'timeout': 15000}
@@ -110,7 +119,15 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resources['addDivision'] = $resource('[APIHOST]/division', null,			     
 					 {
 					     'addDivision': {method:'POST', 'timeout': 15000}
-					 })    
+					 })
+    resources['getFinalsMatches'] = $resource('[APIHOST]/finals/:finals_id/match', null,
+     					      {
+     						  'getFinalsMatches': {method:'GET', 'timeout': 15000}
+     					      })
+    resources['getFinalsMatch'] = $resource('[APIHOST]/finals/match/match_id/:match_id', null,
+     					      {
+     						  'getFinalsMatch': {method:'GET', 'timeout': 15000}
+     					      })        
     resources['getActiveTournaments'] = $resource('[APIHOST]/tournament/active', null,
      						    {
      							'getActiveTournaments': {method:'GET', 'timeout': 15000}
@@ -156,6 +173,22 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			 {
 			     'getActiveMachines': {method:'GET', 'timeout': 15000}
 			 })
+    resources['getActiveMachinesArray'] = $resource('[APIHOST]/machine/active',null,
+						    {
+							'getActiveMachinesArray': {method:'GET','timeout': 15000,
+										   isArray:true,
+										   transformResponse:function(data,headersGetter){
+										       machines_array = [];
+										       machines_dict = angular.fromJson(data);
+										       for(machine_index in machines_dict){
+											   machine = machines_dict[machine_index];
+											   machines_array.push(machine);
+										       }
+										       return machines_array;
+										   }
+										  }			     
+							
+						    })
     resources['getDivisionMachine'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id', null,
 			 {
 			     'getDivisionMachine': {method:'GET', 'timeout': 15000}
@@ -290,6 +323,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	DeleteScore: generic_resource('deleteScore','score','get', false),
 	EditPlayer: generic_resource('editPlayer','edited_player','post', false),
 	GetActiveMachines: generic_resource('getActiveMachines','machines','get',false),
+	GetActiveMachinesArray: generic_resource('getActiveMachinesArray','machines_array','get',false),
 	GetDivisionMachine: generic_resource('getDivisionMachine','division_machine','get',false),
 	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments','get',false),
 	GetAllDivisions: generic_resource('getAllDivisions','divisions','get', false),
@@ -300,6 +334,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetEntry: generic_resource('getEntry','entry','get',false),		
 	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get',false),
 	GetPlayer: generic_resource('getPlayer','player','get', false),
+	GetFinalsMatches: generic_resource('getFinalsMatches','finals_matches','get', false),
+	GetFinalsMatch: generic_resource('getFinalsMatch','finals_match','get', false),	
 	GetPlayerActiveEntriesCount: generic_resource('getPlayerActiveEntriesCount','player_active_entries_count','get', false),
 	GetPlayerActiveEntry: generic_resource('getPlayerActiveEntry','player_active_entry','get', false),	
 	GetPlayerTeams: generic_resource('getPlayerTeams','player_teams','get', false),
@@ -311,6 +347,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetTournament: generic_resource('getTournament','tournament','get',false), //killroy was here	
 	SetDivisionMachinePlayer: generic_resource('setDivisionMachinePlayer','division_machine','post', false),
 	SetDivisionMachineTeam: generic_resource('setDivisionMachineTeam','division_machine','post', false),
+	SetMatchMachine: generic_resource('setMatchMachine','match_machine','post', false),
+	SetMatchScore: generic_resource('setMatchScore','match_score','post', false),
 	ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','empty','post', false),	
 	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false),
 	VoidEntry: generic_resource('voidEntry','entry','post', false),
