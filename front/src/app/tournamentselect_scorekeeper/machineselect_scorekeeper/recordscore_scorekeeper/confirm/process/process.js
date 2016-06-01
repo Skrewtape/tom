@@ -3,14 +3,15 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
     'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process',
     function($scope, $state, StatusModal, TimeoutResources) {
 	$scope.final_score=$state.params.finalScore;
-	$scope.team_id = $state.params.teamId;
+        $scope.team_id = $state.params.teamId;
 	$scope.division_id=$state.params.divisionId;
 	//$scope.tournament_id=$state.params.tournamentId;
 	$scope.division_machine_id=$state.params.divisionMachineId;
 	$scope.player_id = $state.params.playerId;
 	$scope.team_tournament = $state.params.teamTournament;
 	$scope.entry_id = $state.params.entryId;
-	
+	console.log($scope.final_score);
+        console.log('wheeee');        
 	if($scope.checkForBlankParams($scope.final_score) == true){
 	    return;
 	}

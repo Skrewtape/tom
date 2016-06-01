@@ -246,12 +246,16 @@ def edit_score(score):
 
 def add_score(entry,division_machine,new_score_value):
     #FIXME : check that player is actually the one playing machine
+    if entry.player.division_machine is None:
+        raise Conflict('Tried to add score for player who is not started on a machine!')        
+    if entry.player.division_machine.division_machine_id != division_machine.division_machine_id:
+        raise Conflict('Player is started on a different machine!')
     if len(entry.scores) >= entry.number_of_scores_per_entry:
         raise Conflict('Entry already has enough scores')
     if any(score.division_machine_id ==  division_machine.division_machine_id for score in entry.scores):
         raise Conflict('Can not play the same game twice in one ticket')
     if entry.player and entry.player.active is False:
-        raise Conflict('Player is no longer active.  Please see the front desk')        
+        raise Conflict('Player is no longer active.  Please see the front desk')
     division = Division.query.filter_by(division_id=entry.division_id).first()    
     if division_machine not in division.machines:
         raise Conflict('machine is not in division')            

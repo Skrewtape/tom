@@ -1,8 +1,24 @@
-<div style='background:lightblue' id="status-buttons" class="text-center" >
-  Steps : 
-  <a ui-sref-active="active activeborder" ui-sref="app.player_add"><span>1</span></a>
+<!--<div  id="status-buttons" >-->
+<!--    Progress :
+    <div class="progress" style=';width:50%'>
+      <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+	60%
+    </div>
+    </div>-->
+<center>
+  Progress
+  <uib-progress style='width:55%'>
+    <uib-bar ng-if='"app.player_add"|isState' value="0" type="info">0%</uib-bar>
+    <uib-bar ng-if='"app.player_add.process"|isState' value="20" type="info">20%</uib-bar>
+    <uib-bar ng-if='"app.player_add.process.edit_linked_division"|isState' value="40" type="info">40%</uib-bar>
+    <uib-bar ng-if='"app.player_add.process.edit_linked_division.process"|isState' value="60" type="info">60%</uib-bar>
+    <uib-bar ng-if='"app.player_add.process.edit_linked_division.process.ticket_purchase"|isState' value="80" type="info">80%</uib-bar>
+    <uib-bar ng-if='"app.player_add.process.edit_linked_division.process.ticket_purchase.process"|isState' value="100" type="info">100%</uib-bar>
+  </uib-progress>
+</center>
+<!--  <a ui-sref-active="active activeborder" ui-sref="app.player_add"><span>1</span></a>
   <a ui-sref-active="active activeborder" ui-sref="app.player_add.process.edit_linked_division"><span>2</span></a>
   <a ui-sref-active="active activeborder" ui-sref="app.player_add.process.edit_linked_division.process.ticket_purchase"><span>3</span></a>
-  <a ui-sref-active="active activeborder" ui-sref="app.player_add.process.edit_linked_division.process.ticket_purchase.process"><span><i class="fa fa-flag-checkered big-web-font" aria-hidden="true"></i></span></a>
+  <a ui-sref-active="active activeborder" ui-sref="app.player_add.process.edit_linked_division.process.ticket_purchase.process"><span><i class="fa fa-flag-checkered big-web-font" aria-hidden="true"></i></span></a>-->
 
-</div>
+<!--</div>-->
