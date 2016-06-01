@@ -39,13 +39,16 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	   }
        }).state('app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add.review_team_add.process', 
         { 
- 	 url: '/process/:teamName',
+ 	 url: '/process',
  	 views: {
  	     '@': {
  	       templateUrl: 'app/teamname_team_add/playeroneselect_team_add/playertwoselect_team_add/review_team_add/process/process.html',
  	       controller: 'app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add.review_team_add.process',
  	     }
- 	   }
+ 	 },
+	    params: {
+		finalTeamName:{}
+	    }
        })//REPLACE_ME
 
 

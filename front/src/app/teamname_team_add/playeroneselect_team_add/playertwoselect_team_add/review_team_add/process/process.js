@@ -2,9 +2,13 @@ angular.module('app.teamname_team_add.playeroneselect_team_add.playertwoselect_t
 angular.module('app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add.review_team_add.process').controller(
     'app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add.review_team_add.process',
     function($scope, $state, StatusModal, TimeoutResources) {
-	$scope.team_name=$state.params.teamName;
+	$scope.team_name=$state.params.finalTeamName;
 	$scope.player_one_id=$state.params.playerOneId;
 	$scope.player_two_id=$state.params.playerTwoId;
+	if($scope.checkForBlankParams($scope.team_name) == true){
+	    return;
+	}
+	
 	StatusModal.loading();
 	$scope.player_one_promise = TimeoutResources.GetPlayer(undefined,{player_id:$scope.player_one_id});
 	$scope.player_two_promise = TimeoutResources.GetPlayer($scope.player_one_promise,{player_id:$scope.player_two_id});
