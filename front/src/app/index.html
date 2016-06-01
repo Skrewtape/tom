@@ -20,6 +20,9 @@
 
 		  #status-buttons a.active span   { background:#AAAAAA; }
 
+		  .sidebarheader {
+		   background-color: lightblue;
+		  }
 		  .activeborder {
 		  border-style:solid;
 		  border-width:3px;
@@ -266,27 +269,27 @@
 	      <span  class="fa fa-user pull-right" aria-hidden="true"></a>
 	    </span>
 	    <span ng-if='Page.has_role("desk")'>
-	      <div class="list-group-item active">Desk</div>
+	      <div class="list-group-item sidebarheader">Desk</div>
 	      <a class="list-group-item" ui-sref="app.player_add">Add Player
 		<i class="fa fa-chevron-right pull-right"></i></a>
 	      <a class="list-group-item" ui-sref="app.teamname_team_add">Add Team
 		<i class="fa fa-chevron-right pull-right"></i></a>	      
-	      <a class="list-group-item" ui-sref="app.playerselect_ticket_purchase">Tickets
+	      <a class="list-group-item" ui-sref="app.playerselect_ticket_purchase">Buy Tickets
 		<i class="fa fa-chevron-right pull-right"></i></a>
-	      <a  class="list-group-item" ui-sref='app.playerselect_player_info'>Player
+	      <a  class="list-group-item" ui-sref='app.playerselect_player_info'>Player Info
 		<i class="fa fa-chevron-right pull-right"></i></a>
-	      <a  class="list-group-item" ui-sref='app.playerlist'>Players
+	      <a  class="list-group-item" ui-sref='app.playerlist'>Player List
 		<i class="fa fa-chevron-right pull-right"></i></a>
 	    </span>
 	    <span ng-if='Page.has_role("scorekeeper")'>
-	      <div class="list-group-item active">Scorekeeping</div>	      
+	      <div class="list-group-item sidebarheader">Scorekeeping</div>	      
 	      <a  class=" list-group-item" ui-sref='app.tournamentselect_scorekeeper'>Qualifying
 		<i class="fa fa-chevron-right pull-right"></i></a>
 	      <a  class=" list-group-item" ui-sref='app.finalselect_finals'>Finals
 		<i class="fa fa-chevron-right pull-right"></i></a>	      
 	    </span>
 	    <span ng-if='Page.has_role("admin")'>
-	      <div class="list-group-item active">Admin</div>
+	      <div class="list-group-item sidebarheader">Admin</div>
 	      <a class="list-group-item" ui-sref='app.metadivision_add'>New Metadivision<i class="fa fa-chevron-right pull-right"></i></a>
 	      <a class="list-group-item" ui-sref='app.tournament_add'>New Tournament<i class="fa fa-chevron-right pull-right"></i></a>
 	      <a class="list-group-item" ui-sref='app.tournamentselect_machine_add'>Edit Machines<i class="fa fa-chevron-right pull-right"></i></a>

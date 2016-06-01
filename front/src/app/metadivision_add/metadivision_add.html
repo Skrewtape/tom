@@ -18,8 +18,8 @@
 	   ng-model='new_metadivision.metadivision_name'
 	   />
       </div>
-      
-      <div ng-repeat='division in resources.divisions'>
+      <div ng-repeat='tournament in resources.tournaments'>
+      <div ng-repeat='division in tournament.divisions'>
 	<table style='margin-top:15px'>
 	  <td>
 	    <input		 
@@ -30,10 +30,11 @@
 	       style='margin-left:10px;margin-right:10px;margin-top:0px;height:40px;width:40px;vertical-align:middle;'
 	       />
 	  </td>
-	  <td>
-	    <span class='big-web-font'>{{division.name}} division</span>
+	  <td class='big-web-font'>
+	    {{tournament.name}} <span ng-if='tournament.single_division==false'>, {{division.name}} division</span>
 	  </td>
 	</table>	
+      </div>
       </div>
       <button
 	 ng-disabled='new_metadivision.metadivision_name == undefined'

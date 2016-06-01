@@ -80,8 +80,8 @@ def clear_machine_player(divisionmachine, player):
     """clear a machine - its not mine - ARRRRR"""
     if player.division_machine is None:
         raise Conflict('Player %s is not playing machine %s !' % (player.player_id,divisionmachine.machine.name))                
-    if player.division_machine.machine_id != divisionmachine.division_machine_id:
-        raise Conflict('Player %s is not playing machine %s !' % (player.player_id,divisionmachine.machine.name))
+    if player.division_machine.division_machine_id != divisionmachine.division_machine_id:
+        raise Conflict('Player %s is not playing machine %s (but in a really weird way)!' % (player.player_id,divisionmachine.machine.name))
     divisionmachine.player_id = None
     # player.division_machine = None
     # division_id = machine.division[0].division_id
