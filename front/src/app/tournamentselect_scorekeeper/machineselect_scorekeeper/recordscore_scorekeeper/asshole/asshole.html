@@ -1,0 +1,25 @@
+<div ui-content-for="title">
+  <span>Add Player</span>
+</div>
+<div  ui-content-for="navbarAction">
+    <a ui-sref='^' style='font-size:35px'>
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"> </i> Back
+    </a>
+</div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+    <div class="big-web-font scrollable-content"  style='padding:10px'>
+      <h2>UH OH</h2>
+      Please confirm the player standing next to you is NOT {{resources.player.first_name}} {{resources.player.last_name}} ({{resources.player.player_id}})     
+      <a
+	 class='btn btn-info btn-xlg big-web-font'
+	 style='width:50%;margin:auto'
+	 ui-sref='.process({asshole:true})'
+	 >#{{resources.player.player_id}} is a Jagoff</a>
+      <a
+	 class='btn btn-info btn-xlg big-web-font'
+	 style='width:50%;margin:auto'
+	 ui-sref='^'
+	 >Never Mind</a>
+    </div>      
+</div>

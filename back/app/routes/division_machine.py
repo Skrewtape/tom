@@ -72,6 +72,25 @@ def set_machine_player(divisionmachine, player):
     DB.session.commit()
     return jsonify(divisionmachine.to_dict_simple())
 
+@App.route('/divisionmachine/<divisionmachine_id>/player/<player_id>/asshole', methods=['PUT'])
+@login_required
+@fetch_entity(DivisionMachine, 'divisionmachine')
+@fetch_entity(Player, 'player')
+def declare_player_asshole(divisionmachine, player):
+    """clear a machine and declare player on it an asshole - ARRRRR"""
+    if player.division_machine is None:
+        raise Conflict('Player %s is not playing machine %s !' % (player.player_id,divisionmachine.machine.name))                
+    if player.division_machine.division_machine_id != divisionmachine.division_machine_id:
+        raise Conflict('Player %s is not playing machine %s (but in a really weird way)!' % (player.player_id,divisionmachine.machine.name))
+    divisionmachine.player_id = None
+    if player.player_is_an_asshole_count is None:
+        player.player_is_an_asshole_count=0        
+    player.player_is_an_asshole_count=player.player_is_an_asshole_count+1
+    DB.session.commit()
+    
+    return jsonify({})
+
+
 @App.route('/divisionmachine/<divisionmachine_id>/player/<player_id>/clear', methods=['PUT'])
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')

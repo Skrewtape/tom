@@ -8,9 +8,14 @@
 </div>
 <center><span class='big-web-font'>Welcome<br>To<br>TOM!</span>
   <br>
+  <div ng-if='Page.has_role("admin")||Page.has_role("desk")'>
   <br>
-  <button class='big-web-font btn btn-info' ui-sref='.player_add'>Add Player</button>
+    <button class='big-web-font btn btn-info' ui-sref='.player_add'>Add Player</button>
   <br>
   <br>
   <button class='big-web-font btn btn-info' ui-sref='.playerselect_ticket_purchase'>Buy Tickets</button>
-  
+  </div>  
+  <div ng-if='Page.has_role("scorekeeper")'>
+    <br>
+  <button class='big-web-font btn btn-info' ui-sref='.tournamentselect_scorekeeper'>Start Scorekeeping</button>
+  </div>  

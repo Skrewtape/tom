@@ -159,8 +159,13 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resources['getAllTournaments'] = $resource('[APIHOST]/tournament', null,			     
 						 {
 						     'getAllTournaments': {method:'GET', 'timeout': 15000}
+						 })
+    resources['getAssholes'] = $resource('[APIHOST]/player/asshole', null,			     
+						 {
+						     'getAssholes': {method:'GET', 'timeout': 15000}
 						 })    
-    resources['getPlayer'] =  $resource('[APIHOST]/player/:player_id', null,			     
+    
+    resources['getPlayer'] =  $resource('[APIHOST]/player/:player_id', null, //killroy was here			     
 					{
 					    'getPlayer': {method:'GET', 'timeout': 15000}
 					})
@@ -305,6 +310,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'clearDivisionMachinePlayer': {method:'PUT','timeout': 15000}
 			     })
+    resources['playerIsAsshole'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/player/:player_id/asshole', {division_machine_id:'@division_machine_id',player_id:'@player_id'},  
+			     {
+				 'playerIsAsshole': {method:'PUT','timeout': 15000}
+			     })    
     resources['completeEntry'] =  $resource('[APIHOST]/entry/:entry_id/complete', {entry_id:'@entry_id'},  
 			     {
 				 'completeEntry': {method:'PUT','timeout': 15000}
@@ -344,6 +353,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	AddUser: generic_resource('addUser','user','post', false),
 	AddScore: generic_resource('addScore','entry','post',false),
 	ChangeScore: generic_resource('changeScore','score','post', false),
+        ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','empty','post', false),
 	CompleteEntry: generic_resource('completeEntry','entry','post', false),
 	DeleteScore: generic_resource('deleteScore','score','get', false),
 	EditPlayer: generic_resource('editPlayer','edited_player','post', false),
@@ -355,7 +365,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments','get',false),
 	GetAllDivisions: generic_resource('getAllDivisions','divisions','get', false),
 	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions','get',false),	
-	GetAllPlayers: generic_resource('getAllPlayers','players','get',false),
+        GetAllPlayers: generic_resource('getAllPlayers','players','get',false),
+	GetAssholes: generic_resource('getAssholes','assholes','get',false),        
 	GetAllPlayerEntries: generic_resource('getAllPlayerEntries','player_entries','get',false),
 	GetAllTournaments: generic_resource('getAllTournaments','tournaments','get',false),
 	GetDivision: generic_resource('getDivision','division','get',false),
@@ -374,12 +385,12 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetRoles: generic_resource('getRoles','roles','get', false),
 	GetTeam: generic_resource('getTeam','team','get', false),
 	GetTeamActiveEntry: generic_resource('getTeamActiveEntry','team_active_entry','get', false),	
-	GetTournament: generic_resource('getTournament','tournament','get',false), //killroy was here	
+	GetTournament: generic_resource('getTournament','tournament','get',false), //killroy was here
+	PlayerIsAsshole: generic_resource('playerIsAsshole','empty','post', false),        
 	SetDivisionMachinePlayer: generic_resource('setDivisionMachinePlayer','division_machine','post', false),
 	SetDivisionMachineTeam: generic_resource('setDivisionMachineTeam','division_machine','post', false),
 	SetMatchMachine: generic_resource('setMatchMachine','match_machine','post', false),
-	SetMatchScore: generic_resource('setMatchScore','match_score','post', false),
-	ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','empty','post', false),	
+	SetMatchScore: generic_resource('setMatchScore','match_score','post', false),        
 	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false),
 	VoidEntry: generic_resource('voidEntry','entry','post', false),
 	

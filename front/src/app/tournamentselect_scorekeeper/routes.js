@@ -122,7 +122,31 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
 	    params : {
 		undoPlayerId:{}
 	    }
+       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole', 
+        { 
+ 	 url: '/asshole',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/asshole/asshole.html',
+ 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole',
+ 	     }
+ 	   }
+       }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole.process', 
+        { 
+ 	 url: '/process',
+ 	 views: {
+ 	     '@': {
+ 	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/asshole/process/process.html',
+ 	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole.process',
+ 	     }
+ 	 },
+            params: {
+                asshole:{}
+            }
+            
        })//REPLACE_ME
+
+
 
 
 
