@@ -124,6 +124,14 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
      					      {
      						  'getFinalsMatches': {method:'GET', 'timeout': 15000}
      					      })
+    resources['getFinals'] = $resource('[APIHOST]/finals', null,
+     				       {
+     					   'getFinals': {method:'GET', 'timeout': 15000}
+     				       })    
+    resources['getDivisionsForFinals'] = $resource('[APIHOST]/division/ready_for_finals', null,
+     					      {
+     						  'getDivisionsForFinals': {method:'GET', 'timeout': 15000}
+     					      })    
     resources['getFinalsMatch'] = $resource('[APIHOST]/finals/match/match_id/:match_id', null,
      					      {
      						  'getFinalsMatch': {method:'GET', 'timeout': 15000}
@@ -331,11 +339,13 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetAllPlayers: generic_resource('getAllPlayers','players','get',false),
 	GetAllPlayerEntries: generic_resource('getAllPlayerEntries','player_entries','get',false),
 	GetDivision: generic_resource('getDivision','division','get',false),
+	GetDivisionsForFinals: generic_resource('getDivisionsForFinals','divisions_ready_for_finals','get', false),
 	GetEntry: generic_resource('getEntry','entry','get',false),		
-	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get',false),
-	GetPlayer: generic_resource('getPlayer','player','get', false),
+	GetFinals: generic_resource('getFinals','finals','get', false),
 	GetFinalsMatches: generic_resource('getFinalsMatches','finals_matches','get', false),
 	GetFinalsMatch: generic_resource('getFinalsMatch','finals_match','get', false),	
+	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get',false),
+	GetPlayer: generic_resource('getPlayer','player','get', false),
 	GetPlayerActiveEntriesCount: generic_resource('getPlayerActiveEntriesCount','player_active_entries_count','get', false),
 	GetPlayerActiveEntry: generic_resource('getPlayerActiveEntry','player_active_entry','get', false),	
 	GetPlayerTeams: generic_resource('getPlayerTeams','player_teams','get', false),

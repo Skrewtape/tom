@@ -1,5 +1,5 @@
 <div ui-content-for="title">
-  <span>Add Player</span>
+  <span>Select Finals</span>
 </div>
 <div  ui-content-for="navbarAction">
     <a ui-sref='^' style='font-size:35px'>
@@ -9,5 +9,14 @@
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
   <div class="scrollable-content"  style='padding:10px'>
+    <div ng-repeat='tournament in resources.tournament'>
+      <div ng-repeat='division in tournament.divisions'>
+	<button ui-sref='.matchselect_finals({finalsId:resources.finals.sorted_by_division_id[division.division_id].finals_id})' class='btn btn-info btn-xlg big-web-font'>
+	  {{tournament.name}} <span ng-if='tournament.single_division==false'>, {{division.name}}</span>
+	</button>
+	<br>
+	<br>
+      </div>	
+    </div>
   </div>
 </div>

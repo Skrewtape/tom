@@ -38,7 +38,7 @@ class Division(DB.Model):
     )
     
     def to_dict_with_machines(self): #killroy was here
-        division = to_dict(self)
+        division = to_dict(self)        
         if self.machines:
             #FIXME : this should be returning the machines as a dict
             division['machines']=[]
@@ -47,5 +47,7 @@ class Division(DB.Model):
         return division
     
     def to_dict_simple(self):
-        return to_dict(self)
+        division = to_dict(self)
+        division['tournament_name'] = self.tournament.name        
+        return division
 

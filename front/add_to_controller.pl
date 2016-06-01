@@ -59,7 +59,7 @@ angular.module('$full_module_name').controller(
 	//if(\$scope.checkForBlankParams(\$scope.player_info) == true){
 	//    return;
 	//}
-	//\$scope.player = TimeoutResources.addPlayerResource().addPlayer(submit_data);	    
+	//\$scope.player_promise = TimeoutResources.AddPlayer(undefined,{/*get_params*/},{/*post_data*/});	    
     }
 );
 END_MODULE

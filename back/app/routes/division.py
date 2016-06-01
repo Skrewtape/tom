@@ -3,7 +3,7 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import DivisionMachine, Division, Machine, Entry, Tournament
+from app.types import DivisionMachine, Division, Machine, Entry, Tournament, Finals
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
 from werkzeug.exceptions import BadRequest
@@ -89,6 +89,16 @@ def shared_add_division(post_data): #killroy was here
     DB.session.commit()
     return jsonify(new_division.to_dict_with_machines())
 
+
+@App.route('/division/ready_for_finals', methods=['GET']) #killroy was here
+def get_divisions_for_finals():
+    divisions_dict={}
+    divisions = Division.query.all()
+    for division in divisions:
+        finals = Finals.query.filter_by(division_id=division.division_id).first()
+        if finals is None:
+            divisions_dict[division.division_id]= division.to_dict_simple()
+    return jsonify(divisions_dict)
 
 @App.route('/division/<division_id>', methods=['GET'])
 @fetch_entity(Division, 'division')

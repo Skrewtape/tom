@@ -6,6 +6,14 @@ angular.module('app.finalselect_finals').controller(
 	//if($scope.checkForBlankParams($scope.player_info) == true){
 	//    return;
 	//}
+	StatusModal.loading()
+	$scope.finals_state = {}	
+	$scope.promise = TimeoutResources.GetFinals();
+	$scope.finals_promise = TimeoutResources.GetTournament($scope.promise);
+	$scope.finals_promise.then(function(data){
+	    StatusModal.loaded();
+	    $scope.resources = TimeoutResources.GetAllResources();	    
+	})
 	//$scope.player = TimeoutResources.addPlayerResource().addPlayer(submit_data);	    
     }
 );

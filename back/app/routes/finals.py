@@ -53,9 +53,9 @@ def get_matches_for_final(finals):
 @App.route('/finals', methods=['GET'])
 def get_all_active_finals():
     finals = Finals.query.filter_by(active=True).all()
-    finals_dict = {'finals':[]}
+    finals_dict = {'sorted_by_division_id':{},'sorted_by_finals_id':{}}
     for final in finals:
-        finals_dict['finals'].append(final.to_dict_simple())
+        finals_dict['sorted_by_division_id'][final.division_id]=final.to_dict_simple()
     return jsonify(finals_dict)
 
 @App.route('/finals/divisionMachineId/<divisionmachine_id>/score/<finalsmatch_id>/game_num/<game_number>', methods=['POST'])
