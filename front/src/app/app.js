@@ -33,7 +33,7 @@ app = angular.module(
 	    'app.metadivision_add',
 	    'app.user_add',
 	    'app.playerselect_player_info',
-	    'app.tournamentselect_scorekeeper','app.finalselect_finals',/*REPLACEMECHILD*/
+	    'app.tournamentselect_scorekeeper','app.finalselect_finals','app.finals_activate',/*REPLACEMECHILD*/
 	]
 );
 

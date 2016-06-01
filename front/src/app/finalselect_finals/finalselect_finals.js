@@ -7,7 +7,6 @@ angular.module('app.finalselect_finals').controller(
 	//    return;
 	//}
 	StatusModal.loading()
-	$scope.finals_state = {}	
 	$scope.promise = TimeoutResources.GetFinals();
 	$scope.finals_promise = TimeoutResources.GetTournament($scope.promise);
 	$scope.finals_promise.then(function(data){

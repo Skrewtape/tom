@@ -1,0 +1,21 @@
+<div ui-content-for="title">
+  <span>Activate Finals</span>
+</div>
+<div  ui-content-for="navbarAction">
+    <a ui-sref='^' style='font-size:35px'>
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"> </i> Back
+    </a>
+</div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+  <div class="scrollable-content"  style='padding:10px'>
+    <div ng-repeat='(key,tournament) in resources.tournaments'>
+      <div ng-repeat='division in tournament.divisions'>
+	<button  ng-click='start_finals(division.division_id)' ng-if='resources.finals.sorted_by_division_id[division.division_id] == undefined' class='btn btn-info btn-xlg big-web-font'>
+	  {{tournament.name}} <span ng-if='tournament.single_division==false'>, {{division.name}}</span>
+	</button>
+      </div>	
+    </div>
+  </div>
+</div>
+<!--export DIV_ID=7; curl -X POST http://localhost:8000/finals/division/$DIV_ID;curl -X POST http://localhost:8000/finals/$DIV_ID/generate_rounds;curl -X POST http://localhost:8000/finals/$DIV_ID/fill_rounds-->
