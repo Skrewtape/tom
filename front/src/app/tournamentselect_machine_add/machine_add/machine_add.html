@@ -19,7 +19,7 @@
 	       class='form-control'
 	       aria-describedby='machine_name'
 	       ng-model='selected_machine'
-	       uib-typeahead="machine as machine.name for machine in all_machines | filter:$viewValue | limitTo:8"
+	       uib-typeahead="machine as machine.name for machine in resources.machines | filter:$viewValue | limitTo:8"
 	       />
 	  </div>
 	</td>
@@ -31,7 +31,7 @@
     <br>    
     <hr style='align:center:width:50%'/>
     <br>
-    <div ng-repeat='division_machine in division.machines|orderBy:"-division_machine_id"' class='big-web-font'>
+    <div ng-repeat='division_machine in resources.division.machines|orderBy:"-division_machine_id"' class='big-web-font'>
       <a ng-if='division_machine.removed == false' class='btn' ng-click='machine_remove(division_machine.division_machine_id)'><i style='color:red;font-size:38px' class="fa fa-times-circle pull-right" aria-hidden="true"> </i></a>
       <a ng-if='division_machine.removed == true' class='btn' ng-click='machine_enable(division_machine.division_machine_id)'><i style='color:green;font-size:38px' class="fa fa-plus-circle pull-right" aria-hidden="true"> </i></a>
       {{division_machine.name}} 

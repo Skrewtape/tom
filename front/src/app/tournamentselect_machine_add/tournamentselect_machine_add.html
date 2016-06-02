@@ -8,7 +8,7 @@
 </div>
 <div class="scrollable">
   <div class="scrollable-content"  style='padding:10px'>   
-    <div ng-repeat='tournament in tournaments'>
+    <div ng-repeat='tournament in resources.tournaments'>
       <table ng-if='tournament.single_division==true'>
 	<td>
 	  <a
@@ -24,10 +24,10 @@
       ng-repeat='division in tournament.divisions'>
 	<table ng-if='tournament.single_division==false'>
 	  <td>
-	<a
-	   class='btn btn-info btn-xlg'
-	   ui-sref='app.tournamentselect_machine_add.machine_add({divisionId:division.division_id,tournamentName:tournament.name,singleDivision:false})'
-	   > Edit {{tournament.name}} Tournament, {{division.name}} Division Machines</a>  
+	    <a
+	       class='btn btn-info btn-xlg'
+	       ui-sref='app.tournamentselect_machine_add.machine_add({divisionId:division.division_id,tournamentName:tournament.name,singleDivision:false})'
+	       > Edit {{tournament.name}} Tournament, {{division.name}} Division Machines</a>  
 	  </td>
 	  <td>
 	  </td>
