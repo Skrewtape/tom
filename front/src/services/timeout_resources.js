@@ -104,6 +104,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resource_results['players'] = undefined;
     resource_results['ifpa_player'] = undefined;
 
+    resources['toggleTournamentActive'] = $resource('[APIHOST]/tournament/:tournament_id/:action', {tournament_id:'@tournament_id',action:'@action'},			     //killroy was here
+			                            {
+				                        'toggleTournamentActive': {method:'PUT','timeout': 15000}
+			                            })
     resources['setMatchScore'] = $resource('[APIHOST]/finals/finals_score/:finalsScoreId/score/:score', null,     //killroy was here
 					     {
 						 'setMatchScore': {method:'POST', 'timeout': 15000}
@@ -368,7 +372,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
         GetAllPlayers: generic_resource('getAllPlayers','players','get',false),
 	GetAssholes: generic_resource('getAssholes','assholes','get',false),        
 	GetAllPlayerEntries: generic_resource('getAllPlayerEntries','player_entries','get',false),
-	GetAllTournaments: generic_resource('getAllTournaments','tournaments','get',false),
+	GetAllTournaments: generic_resource('getAllTournaments','tournaments','get',false),//killroy was here
 	GetDivision: generic_resource('getDivision','division','get',false),
 	GetDivisionsForFinals: generic_resource('getDivisionsForFinals','divisions_ready_for_finals','get', false),
 	GetEntry: generic_resource('getEntry','entry','get',false),		
@@ -390,7 +394,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	SetDivisionMachinePlayer: generic_resource('setDivisionMachinePlayer','division_machine','post', false),
 	SetDivisionMachineTeam: generic_resource('setDivisionMachineTeam','division_machine','post', false),
 	SetMatchMachine: generic_resource('setMatchMachine','match_machine','post', false),
-	SetMatchScore: generic_resource('setMatchScore','match_score','post', false),        
+	SetMatchScore: generic_resource('setMatchScore','match_score','post', false),
+        ToggleTournamentActive: generic_resource('toggleTournamentActive','toggled_tournament','post', false), //killroy was here
 	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false),
 	VoidEntry: generic_resource('voidEntry','entry','post', false),
 	
