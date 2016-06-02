@@ -62,18 +62,30 @@ def add_machine_to_division(division,machine):
     DB.session.commit()
     return jsonify(new_division_machine.to_dict_simple())
 
-
-
 @App.route('/division', methods=['POST']) #killroy was here
 @login_required
 @Admin_permission.require(403)
 def add_division():
-    """wrapper around shared_add_division"""
-    return shared_add_division(request.data) 
+    """
+description: wrapper around shared_add_division()
+notes : see shared_add_division()
+    """
+    division_data = json.loads(request.data)    
+    return shared_add_division(division_data) 
 
-def shared_add_division(post_data): #killroy was here
-    """Add a division"""
-    division_data = json.loads(post_data)
+def shared_add_division(division_data): #killroy was here
+    """
+description: Add a division to a tournament
+post data: 
+    division_name: string : name of division
+    tournament_id: int : tournament_id of tournament to add division to
+    number_of_scores_per_entry: number of scores per ticket for division
+url params: 
+    none
+returns:
+    dict of all added division with division machines    
+    """
+    
     if 'division_name' not in division_data or 'tournament_id' not in division_data:
         raise BadRequest('Did not specify division_name or tournament_id in post data')
     new_division = Division(

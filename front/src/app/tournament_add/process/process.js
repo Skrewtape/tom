@@ -15,6 +15,6 @@ angular.module('app.tournament_add.process').controller(
 	$scope.add_tournament_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    StatusModal.loaded();		
-	})        
+	});        
     }
 );

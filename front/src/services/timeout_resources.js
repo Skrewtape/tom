@@ -128,7 +128,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 					   {
 					       'fillFinalsRounds': {method:'POST', 'timeout': 15000}
 					   })            
-    resources['addDivision'] = $resource('[APIHOST]/division', null,			     
+    resources['addDivision'] = $resource('[APIHOST]/division', null, //killroy was here			     
 					 {
 					     'addDivision': {method:'POST', 'timeout': 15000}
 					 })
@@ -269,7 +269,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'addScore': {method:'POST','timeout': 15000}
 			     })	    
-    resources['getTournament'] = $resource('[APIHOST]/tournament/:tournament_id', null,
+    resources['getTournament'] = $resource('[APIHOST]/tournament/:tournament_id', null, //killroy was here
 			     {
 				 'getTournament': {method:'GET', 'timeout': 15000}
 			     })

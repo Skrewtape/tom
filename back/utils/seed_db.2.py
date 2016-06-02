@@ -85,10 +85,10 @@ def create_tournament(name, single_division=True, team_tournament=False):
     DB.session.add(tournament)
     return tournament
 
-def create_division(name):
+def create_division(name,number_of_scores_per_entry=5):
     global divisions
     division = app.types.Division(name=name)
-    division.number_of_scores_per_entry=5
+    division.number_of_scores_per_entry=number_of_scores_per_entry
     divisions.append(division)
     DB.session.add(division)
     return division
@@ -127,9 +127,11 @@ def init_tournaments():
     classics_1 = create_tournament('classics 1')
     classics_2 = create_tournament('classics 2')
     classics_3 = create_tournament('classics 3')
+    test = create_tournament('test')    
     classics_all_1 = create_division('all')
     classics_all_2 = create_division('all')
     classics_all_3 = create_division('all')
+    test_all = create_division('all',1)
     main_a = create_division('A')
     main_b = create_division('B')
     main_c = create_division('C')
@@ -137,6 +139,7 @@ def init_tournaments():
     add_machines_to_division(classics_all_1,machines[0:10])
     add_machines_to_division(classics_all_2,machines[11:20])
     add_machines_to_division(classics_all_3,machines[21:30])
+    add_machines_to_division(test_all,machines[31:40])    
     add_machines_to_division(main_a,machines[31:40])
     add_machines_to_division(main_b,machines[41:50])
     add_machines_to_division(main_c,machines[51:60])
@@ -148,6 +151,7 @@ def init_tournaments():
     classics_1.divisions.append(classics_all_1)
     classics_2.divisions.append(classics_all_2)
     classics_3.divisions.append(classics_all_3)
+    test.divisions.append(test_all)
     DB.session.commit()
     
 def add_scores_to_entry(division,player,active=True,num=5,void=False):
@@ -206,6 +210,6 @@ def init_players(division):
 init_roles()
 init_users()
 init_machines()
-#init_tournaments()
-#init_players([x for x in divisions if x.division_id == 1][0])
+init_tournaments()
+init_players([x for x in divisions if x.division_id == 1][0])
 
