@@ -124,7 +124,7 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
 	    }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole', 
         { 
- 	 url: '/asshole',
+ 	 url: '/entry/:entryId/asshole',
  	 views: {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/asshole/asshole.html',

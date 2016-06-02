@@ -209,7 +209,7 @@ def toggle_entry_voided(entry,voided_state):
     #FIXME : this should have better checks
     entry.voided = True if voided_state=="void" else False
 
-    if division_machine and entry.active and entry.voided:
+    if entry.active and entry.voided:
         player = Player.query.filter_by(player_id=entry.player_id).first()
         division_machine = player.division_machine
         division_machine.player_id = None

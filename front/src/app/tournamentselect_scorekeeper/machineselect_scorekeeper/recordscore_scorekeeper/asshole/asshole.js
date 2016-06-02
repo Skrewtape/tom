@@ -2,8 +2,8 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole').controller(
     'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole',
     function($scope, $state, StatusModal, TimeoutResources) {
-	$scope.player_id=$state.params.playerId;
-	//if($scope.checkForBlankParams($scope.player_info) == true){
+        $scope.player_id=$state.params.playerId;
+        //if($scope.checkForBlankParams($scope.player_info) == true){
 	//    return;
 	//}
         StatusModal.loading();

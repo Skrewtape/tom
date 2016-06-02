@@ -28,21 +28,28 @@ angular.module('tom_directives.player_select').controller(
                 $scope.popoverIsOpen = true;
                 $scope.select_player = undefined;
 		$scope.submitPlayerDisabled=true;
+		$scope.keypad_player_team = undefined;                
 		return;
 	    } 
 	    if($scope.selected_players.length>0){
-                first_name = $scope.selected_players[0].first_name;
-                last_name = $scope.selected_players[0].last_name;
-		team_name = undefined
-		if($scope.selected_players[0].team != undefined && ($scope.team_tournament=="true" || $scope.team_tournament == undefined) ){
-		    team_name = $scope.selected_players[0].team.team_name;
+                selected_player_index = 0;
+                for(x=0;x<$scope.selected_players.length;x++){
+                    if ($scope.selected_players[x].player_id == $scope.player.player_id){
+                        selected_player_index=x;
+                    }
+                }
+                first_name = $scope.selected_players[selected_player_index].first_name;
+                last_name = $scope.selected_players[selected_player_index].last_name;
+                team_name = undefined;
+		if($scope.selected_players[selected_player_index].team != undefined && ($scope.team_tournament=="true" || $scope.team_tournament == undefined) ){
+		    team_name = $scope.selected_players[selected_player_index].team.team_name;
 		}
                 $scope.keypad_player_name = first_name +' '+last_name;
-		$scope.keypad_player_team = team_name;
+                $scope.keypad_player_team = team_name;
                 $scope.popoverIsOpen = true;
-                $scope.select_player = $scope.selected_players[0];
+                $scope.select_player = $scope.selected_players[selected_player_index];
 		$scope.submitPlayerDisabled=false;
-		if($scope.selected_players[0].player_is_an_asshole_count > 2){
+		if($scope.selected_players[selected_player_index].player_is_an_asshole_count > 0){
 		    $scope.player_is_asshole="(Player is Jagoff)";
 		}
             } 

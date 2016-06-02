@@ -41,13 +41,10 @@ angular.module('tom_services.utils').factory('Utils', function($filter,StatusMod
 	    })	                
         },	
 	change_score: function(score){
+            console.log('poooooop');
 	    score.changed = undefined;
 	    score_to_submit = {}
-	    if(score.machine != undefined){
-		score_to_submit.machine_id = score.machine.machine_id;		
-	    } else {
-		score_to_submit.machine_id = score.machine_id;
-	    }
+            score_to_submit.division_machine_id = score.machine.division_machine_id;		
 	    score_to_submit.score = score.score;
 	    StatusModal.loading()
 	    score_promise = TimeoutResources.ChangeScore(undefined,{score_id:score.score_id},score_to_submit);

@@ -310,7 +310,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			     {
 				 'clearDivisionMachinePlayer': {method:'PUT','timeout': 15000}
 			     })
-    resources['playerIsAsshole'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/player/:player_id/asshole', {division_machine_id:'@division_machine_id',player_id:'@player_id'},  
+    resources['playerIsAsshole'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/player/:player_id/entry/:entry_id/asshole', {division_machine_id:'@division_machine_id',player_id:'@player_id',entry_id:'@entry_id'},  
 			     {
 				 'playerIsAsshole': {method:'PUT','timeout': 15000}
 			     })    

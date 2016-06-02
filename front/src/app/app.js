@@ -43,6 +43,8 @@ app.controller(
              $state, $injector, $uibModal, Page, StatusModal) {
 	$scope.Page = Page;
 
+        //FIXME : wipeStateParamToPreventRepost is a hack, and should be handled at the
+        //        REST level
 	$scope.checkForBlankParams = function(param){
 
 	    if(Object.keys(param).length === 0 && JSON.stringify(param) === JSON.stringify({})){

@@ -12,7 +12,6 @@ class Tournament(DB.Model):
     name = DB.Column(DB.String(1000))
     active = DB.Column(DB.Boolean)
     single_division = DB.Column(DB.Boolean)
-
     divisions = DB.relationship('Division',lazy='joined')
 
     def to_dict_with_divisions(self): #killroy was here

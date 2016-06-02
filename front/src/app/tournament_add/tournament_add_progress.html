@@ -1,6 +1,8 @@
-<div id="status-buttons" class="text-center" >
-  Steps : 
-  <a ui-sref-active="active" ui-sref="app.tournament_add"><span>1</span></a>
-  <a ui-sref-active="active" ui-sref="app.tournament_add.process"><span>2</span></a>
-  <a ng-if='tournament.single_division != true' ui-sref-active="active" ui-sref="app.tournament_add.process.division_add"><span>3</span></a>
-</div>
+<center>
+<!--  Progress
+  <uib-progress style='width:55%'>
+    <uib-bar ng-if='"app.tournament_add"|isState' value=0 type="info">0%</uib-bar>
+    <uib-bar ng-if='"app.tournament_add.process"|isState' value=50 type="info">50%</uib-bar>
+    <uib-bar ng-if='"app.tournament_add.process.division_add"|isState' value=100 type="info">100%</uib-bar>
+  </uib-progress>-->
+</center>
