@@ -126,7 +126,21 @@ def get_divisions_for_finals():
 @App.route('/division/<division_id>', methods=['GET']) #killroy
 @fetch_entity(Division, 'division')
 def get_division(division):
-    return jsonify(division.to_dict_with_machines())
+    """
+description: Get a specific division
+post data: 
+    none
+url params: 
+    division_id: int :id of division to retrieve
+returns:
+    dict of division    
+    """
+    division_dict = division.to_dict_with_machines()    
+    if division.tournament.single_division:
+        division_dict['full_name']="%s Division" % division.name        
+    if division.tournament.single_division is False:
+        division_dict['full_name']="%s Tournament, %s Division" % (division.tournament.name,division.name)        
+    return jsonify(division_dict)
 
 @App.route('/division/<division_id>/rankings', methods=['GET'])
 @fetch_entity(Division, 'division')

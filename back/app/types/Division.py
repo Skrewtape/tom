@@ -43,7 +43,7 @@ class Division(DB.Model):
             #FIXME : this should be returning the machines as a dict
             division['machines']=[]
             for machine in self.machines:
-                division['machines'].append(machine.to_dict_simple())
+                division['machines'].append(machine.to_dict_simple())        
         return division
     
     def to_dict_simple(self):
