@@ -7,13 +7,14 @@
   <div ui-view='player_add_progress'></div>
   <div class="scrollable-content">
     <div style='background-color:white' class='big-web-font'>
-      Player {{player.first_name}} {{player.last_name}} has been created!<br>
-      Player number is #{{player.player_id}}.
+      Player {{resources.added_player.first_name}} {{resources.added_player.last_name}} has been created!<br>
+      Player number is #{{resources.added_player.player_id}}.
       <br>
-      <a
+      <br>
+      <button
 	 class='btn btn-info btn-xlg'
-	 ui-sref='app.player_add.process.edit_linked_division({playerId:player.player_id})'
-	 >Set Player Division</a>
+	 ui-sref='app.player_add.process.edit_linked_division({playerId:resources.added_player.player_id})'
+	 >Set Player Division</button>
       <br>
   </div>
 </div>

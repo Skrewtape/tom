@@ -5,8 +5,8 @@
 	      <br>IFPA Ranking :
 	      <span ng-if='resources.ifpa_player.count > 0'>{{resources.ifpa_player.rank}}</span>
 	      <span ng-if='resources.ifpa_player.count == 0'>No IFPA results found</span>
-	      
-	      <br>{{tournament.name}} Tournament
+              <hr>
+	      {{tournament.name}} Tournament              
 	    </th>
 	    <tr ng-repeat='division in tournament.divisions | orderBy: "name"'>
 	      <td>
@@ -27,10 +27,11 @@
 	  </tbody>
 	</table>	      
       </form>
-
-      <a
+      <br>
+      <button
+         ng-disabled='linked_division.value == undefined'
 	 class='btn btn-info btn-xlg'
 	 ui-sref='.process({playerId:resources.player.player_id,divisionId:linked_division.value})'
-	 >Save Player Division</a>
+	 >Save Player Division</button>
       <br>
 

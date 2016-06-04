@@ -8,8 +8,9 @@ angular.module('app.player_add.process').controller(
 	}
         StatusModal.loading();
 	var submit_data = angular.toJson($scope.player_info);
-	$scope.player = TimeoutResources.addPlayerResource().addPlayer(submit_data);	    
-	$scope.player.$promise.then(function(data){
+	$scope.player_promise = TimeoutResources.AddPlayer(undefined,undefined,submit_data);	    
+	$scope.player_promise.then(function(data){
+            $scope.resources = TimeoutResources.GetAllResources();
 	    StatusModal.loaded();		
 	})        
     }

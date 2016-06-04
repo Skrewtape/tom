@@ -11,14 +11,14 @@ angular.module('app.player_add.process.edit_linked_division.process.ticket_purch
 	tokensToPost.player_id = $scope.player_id;
 	tokensToPost.tokens = [];
 	StatusModal.loading();
-	$scope.metadivisions_promise = TimeoutResources.GetAllMetadivisions();
-	$scope.player_teams_promise = TimeoutResources.GetPlayerTeams($scope.metadivisions_promise,{player_id:$scope.player_id})		
-	$scope.divisions_promise = TimeoutResources.GetAllDivisions($scope.player_teams_promise)			
+        //FIXME : shouldn't need to load all these things just to get names
+	$scope.metadivisions_promise = TimeoutResources.GetAllMetadivisions();        
+	$scope.divisions_promise = TimeoutResources.GetAllDivisions($scope.player_metadivisions_promise);			
 	$scope.tournaments_promise = TimeoutResources.GetActiveTournaments($scope.divisions_promise);
 	$scope.tokens_submit_promise = TimeoutResources.AddTokens($scope.tournaments_promise,undefined,$scope.added_tokens);	
 	$scope.tokens_submit_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    StatusModal.loaded();
-	})
+	});
     }
 );

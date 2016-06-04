@@ -191,6 +191,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 						     'getAssholes': {method:'GET', 'timeout': 15000}
 						 })    
     
+    resources['addPlayer'] = $resource('[APIHOST]/player', null, //killroy			     
+			     {
+				 'addPlayer': {method:'POST', 'timeout': 15000}
+			     })
     resources['getPlayer'] =  $resource('[APIHOST]/player/:player_id', null, //killroy was here			     
 					{
 					    'getPlayer': {method:'GET', 'timeout': 15000}
@@ -379,9 +383,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	},
 	AddFinals: generic_resource('addFinals','added_finals','post', false),	//killroy was here
 	AddMetadivision: generic_resource('addMetadivision','meta_division','post', false), //killroy
-	AddMachineToDivision: generic_resource('addMachineToDivision','added_machine','post',false), //killroy        
+	AddMachineToDivision: generic_resource('addMachineToDivision','added_machine','post',false), //killroy
+	AddPlayer: generic_resource('addPlayer','added_player','post',false), //killroy       
         AddTeam: generic_resource('addTeam','team','post',false),
-	AddTokens: generic_resource('addTokens','add_tokens_result','post', false),
+	AddTokens: generic_resource('addTokens','add_tokens_result','post', false),//killroy
 	AddTournament: generic_resource('addTournament','add_tournament_result','post', false),	//killroy was here	
 	AddDivision: generic_resource('addDivision','add_division_result','post', false),	//killroy was here	
 	AddUser: generic_resource('addUser','user','post', false),
@@ -390,29 +395,29 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
         ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','empty','post', false),
 	CompleteEntry: generic_resource('completeEntry','entry','post', false),
 	DeleteScore: generic_resource('deleteScore','score','get', false),
-        EditPlayer: generic_resource('editPlayer','edited_player','post', false),
+        EditPlayer: generic_resource('editPlayer','edited_player','post', false),//killroy
 	EnableMachineInDivision: generic_resource('enableMachineInDivision','edited_player','post', false),//killroy
         FillFinalsRounds: generic_resource('fillFinalsRounds','fill_finals_rounds_result','post', false),//killroy was here		
 	GenerateFinalsRounds: generic_resource('generateFinalsRounds','generate_finals_rounds_result','post', false),	//killroy was here	
         GetActiveMachines: generic_resource('getActiveMachines','machines','get',false),
-	GetActiveMachinesArray: generic_resource('getActiveMachinesArray','machines_array','get',false),
-	GetDivisionMachine: generic_resource('getDivisionMachine','division_machine','get',false),
-	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments','get',false),
-	GetAllDivisions: generic_resource('getAllDivisions','divisions','get', false),
+	GetActiveMachinesArray: generic_resource('getActiveMachinesArray','machines_array','get',false),        
+	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments','get',false), //killroy
+	GetAllDivisions: generic_resource('getAllDivisions','divisions','get', false),//killroy
 	GetAllMachinesArray: generic_resource('getAllMachinesArray','machines','get',false), //killroy
-	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions','get',false),	
-        GetAllPlayers: generic_resource('getAllPlayers','players','get',false),
-	GetAssholes: generic_resource('getAssholes','assholes','get',false),        
+	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions','get',false), //killroy	
+        GetAllPlayers: generic_resource('getAllPlayers','players','get',false),        
 	GetAllPlayerEntries: generic_resource('getAllPlayerEntries','player_entries','get',false),
 	GetAllTournaments: generic_resource('getAllTournaments','tournaments','get',false),//killroy was here
+	GetAssholes: generic_resource('getAssholes','assholes','get',false),        
 	GetDivision: generic_resource('getDivision','division','get',false), //killroy
 	GetDivisionsForFinals: generic_resource('getDivisionsForFinals','divisions_ready_for_finals','get', false),
+	GetDivisionMachine: generic_resource('getDivisionMachine','division_machine','get',false),
 	GetEntry: generic_resource('getEntry','entry','get',false),		
 	GetFinals: generic_resource('getFinals','finals','get', false),
 	GetFinalsMatches: generic_resource('getFinalsMatches','finals_matches','get', false),
 	GetFinalsMatch: generic_resource('getFinalsMatch','finals_match','get', false),	
-	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get',false),
-	GetPlayer: generic_resource('getPlayer','player','get', false),
+	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get',false), //killroy
+	GetPlayer: generic_resource('getPlayer','player','get', false),//killroy
 	GetPlayerActiveEntriesCount: generic_resource('getPlayerActiveEntriesCount','player_active_entries_count','get', false),
 	GetPlayerActiveEntry: generic_resource('getPlayerActiveEntry','player_active_entry','get', false),	
 	GetPlayerTeams: generic_resource('getPlayerTeams','player_teams','get', false),
