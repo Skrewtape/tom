@@ -9,29 +9,14 @@
 <div class="scrollable">
   <div class="scrollable-content"  style='padding:10px'>   
     <div ng-repeat='tournament in resources.tournaments'>
-      <table ng-if='tournament.single_division==true'>
-	<td>
-	  <a
-	     class='btn btn-info btn-xlg'
-	     ui-sref='app.tournamentselect_machine_add.machine_add({divisionId:tournament.divisions[0].division_id,tournamentName:tournament.name,singleDivision:true})'
-	     > Edit {{tournament.name}} Tournament Machines</a>
-	</td>
-	<td>
-	</td>
-      </table>
-      
-      <div
-      ng-repeat='division in tournament.divisions'>
-	<table ng-if='tournament.single_division==false'>
-	  <td>
-	    <a
-	       class='btn btn-info btn-xlg'
-	       ui-sref='app.tournamentselect_machine_add.machine_add({divisionId:division.division_id,tournamentName:tournament.name,singleDivision:false})'
-	       > Edit {{tournament.name}} Tournament, {{division.name}} Division Machines</a>  
-	  </td>
-	  <td>
-	  </td>
-	</table>
+      <div ng-repeat='division in tournament.divisions' style='margin-bottom:15px'>
+	<button
+           style='width:100%'
+	   class='btn btn-info btn-xlg'
+	   ui-sref='app.tournamentselect_machine_add.machine_add({divisionId:tournament.divisions[0].division_id,tournamentName:tournament.name,singleDivision:tournament.single_division})'
+	   > Edit {{tournament.name}} Tournament<span ng-if='tournament.single_division == false'>, {{division.name}} Division</span>
+          Machines
+        </button>
       </div>
     </div>
   </div>
