@@ -9,8 +9,11 @@
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
     <div class="scrollable-content"  style='padding:10px'>
-      <div ng-repeat='tournament in resources.tournaments'>
-	<ui-switch ng-change='toggle_tournament(tournament)' class='pull-left' ng-model='tournament.active'></ui-switch>	<span style='padding-left:10px' class='big-web-font'>Activate {{tournament.name}} Tournament</span>
+      <div ng-repeat='tournament in resources.tournaments' style='margin-bottom:15px'>
+	<ui-switch ng-change='toggle_tournament(tournament)' class='pull-left' ng-model='tournament.active'></ui-switch>
+        <span ng-if='tournament.active==false' style='padding-left:10px' class='big-web-font'>Activate </span>
+        <span ng-if='tournament.active==true' style='padding-left:10px' class='big-web-font'>Deactivate </span>        
+        <span class='big-web-font'>{{tournament.name}} Tournament</span>
       </div>
     </div>
   </div>
