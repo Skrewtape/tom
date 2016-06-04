@@ -5,8 +5,6 @@ angular.module('app.tournamentselect_machine_add.machine_add').controller(
         
 
 	$scope.division_id=$state.params.divisionId;
-	$scope.tournament_name=$state.params.tournamentName;
-	$scope.single_division=$state.params.singleDivision;	
 
 	StatusModal.loading();        
 	$scope.division_promise = TimeoutResources.GetDivision(undefined,{division_id:$scope.division_id});

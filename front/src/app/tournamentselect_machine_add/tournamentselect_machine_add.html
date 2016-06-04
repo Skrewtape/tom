@@ -13,7 +13,7 @@
 	<button
            style='width:100%'
 	   class='btn btn-info btn-xlg'
-	   ui-sref='app.tournamentselect_machine_add.machine_add({divisionId:tournament.divisions[0].division_id,tournamentName:tournament.name,singleDivision:tournament.single_division})'
+	   ui-sref='app.tournamentselect_machine_add.machine_add({divisionId:tournament.divisions[0].division_id})'
 	   > Edit {{tournament.name}} Tournament<span ng-if='tournament.single_division == false'>, {{division.name}} Division</span>
           Machines
         </button>
