@@ -281,7 +281,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 					      {
 						  'voidEntry': {method:'PUT', 'timeout': 15000}
 					      })    
-    resources['addMetadivision'] =  $resource('[APIHOST]/metadivision', null,			     
+    resources['addMetadivision'] =  $resource('[APIHOST]/metadivision', null, //killroy			     
 					  {
 					      'addMetadivision': {method:'POST', 'timeout': 15000}
 					  })
@@ -378,7 +378,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	    //return 1;
 	},
 	AddFinals: generic_resource('addFinals','added_finals','post', false),	//killroy was here
-	AddMetadivision: generic_resource('addMetadivision','meta_division','post', false),
+	AddMetadivision: generic_resource('addMetadivision','meta_division','post', false), //killroy
 	AddMachineToDivision: generic_resource('addMachineToDivision','added_machine','post',false), //killroy        
         AddTeam: generic_resource('addTeam','team','post',false),
 	AddTokens: generic_resource('addTokens','add_tokens_result','post', false),

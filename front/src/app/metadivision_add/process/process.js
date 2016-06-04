@@ -6,17 +6,11 @@ angular.module('app.metadivision_add.process').controller(
 	if($scope.checkForBlankParams($scope.new_metadivision) == true){
 	    return;
 	}
-
-	console.log($scope.new_metadivision);
-	StatusModal.loading()
+        StatusModal.loading()
 	$new_metadivision_promise = TimeoutResources.AddMetadivision(undefined,undefined,$scope.new_metadivision);
 	$new_metadivision_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    StatusModal.loaded()
 	})
-	//if($scope.checkForBlankParams($scope.player_info) == true){
-	//    return;
-	//}
-	//$scope.player = TimeoutResources.addPlayerResource().addPlayer(submit_data);	    
     }
 );
