@@ -13,31 +13,31 @@
       <div ng-repeat='game_count in [0,1,2]' class='table' style='width:75%'>
 	<table class='table'>
 	  <tr><td class='info'>Machine</td><td class='info'>
-	      <span ng-if='resources.finals_match.games[game_count][0].division_machine_id!=null'>{{resources.machines[resources.finals_match.games[game_count][0].division_machine_id].name}}</span>
-	      <span ng-if='resources.finals_match.games[game_count][0].division_machine_id==null'>
-              <input type="text" ng-change='score_and_machine_change(score)'  ng-model="resources.finals_match.games[game_count][0].new_division_machine" uib-typeahead="machine as machine.name for machine in resources.machines_array | filter:$viewValue | limitTo:8" class="form-control"> 	      
+	      <span ng-if='resources.finals_matches[1][match_id].games[game_count][0].division_machine_id!=null'>{{resources.machines[resources.finals_matches[1][match_id].games[game_count][0].division_machine_id].name}}</span>
+	      <span ng-if='resources.finals_matches[1][match_id].games[game_count][0].division_machine_id==null'>
+                <input type="text" ng-change='score_and_machine_change(score)'  ng-model="resources.finals_matches[1][match_id].games[game_count][0].new_division_machine" uib-typeahead="machine as machine.name for machine in resources.machines_array | filter:$viewValue | limitTo:8" class="form-control">
 	      </span>
 	    </td>
 	    <td class='info'>
 	      <button
-		 ng-if="resources.finals_match.games[game_count][0].division_machine_id==null"
-		 ng-click='save_machine(resources.finals_match,game_count,resources.finals_match.games[game_count][0].new_division_machine.division_machine_id)'
+		 ng-if="resources.finals_matches[1][match_id].games[game_count][0].division_machine_id==null"
+		 ng-click='save_machine(resources.finals_matches[1][match_id],game_count,resources.finals_matches[1][match_id].games[game_count][0].new_division_machine.division_machine_id)'
 		 class='btn info'> Save </button>
 	    </td>
 	  </tr>
-	  <tr ng-repeat='score in resources.finals_match.games[game_count]'>			
+	  <tr ng-repeat='score in resources.finals_matches[1][match_id].games[game_count]|orderBy:"-score"'>			
 	    <td>
-	      {{resources.finals_match.finals_players[score.finals_player_id].player_name}}
+	      {{resources.finals_matches[1][match_id].finals_players[score.finals_player_id].player_name}}
 	    </td>
 	    <td ng-if='score.score == null'>
 	      <input type="text" ng-change="format_number(score)" ng-model="score.new_score" class="form-control" />
 	    </td>
 	    <td ng-if='score.score != null'>	      
-	      {{score.score|number}} ({{score.points}})
+	      {{score.score|number}} ({{4-$index}} Points) <!--{{resources.finals_matches[1][match_id].finals_players[score.finals_player_id].status}})-->
 	    </td>
 	    <td>
 	      <button ng-if="score.score == null"
-		 ng-click='save_score(score,resources.finals_match.games[game_count])'
+		 ng-click='save_score(score,resources.finals_matches[1][match_id].games[game_count])'
 		 class='btn info'>
 		Save
 	      </button>

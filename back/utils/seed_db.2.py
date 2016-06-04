@@ -2,6 +2,7 @@
 """Set up DB tables and add some core data"""
 #This is importing sqlAlchemy
 from app import DB
+import time
 
 import app.types
 
@@ -155,9 +156,10 @@ def init_tournaments():
     DB.session.commit()
     
 def add_scores_to_entry(division,player,active=True,num=5,void=False):
-    entry = create_entry(division,False,True,False,5)
+    entry = create_entry(division,False,True,False,5)    
     for entry_num in range(num):                
-        random_int = randint(0,10000)
+        random_int = randint(0,100000000) - randint(0,510252)
+        
         score = app.types.Score(division_machine_id=division.machines[entry_num].division_machine_id,score=random_int)
         DB.session.add(score)
         entry.scores.append(score)
@@ -191,7 +193,7 @@ def init_players(division):
     #    player.delete()
     #    DB.session.commit()
         
-    for play_num in range(0,50):
+    for play_num in range(0,500):
         first_name = first_names[random.randrange(0,len(first_names))]
         last_name = first_names[random.randrange(0,len(first_names))]
         player = create_player(first_name,last_name)

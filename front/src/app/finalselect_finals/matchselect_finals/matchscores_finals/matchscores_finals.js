@@ -3,6 +3,7 @@ angular.module('app.finalselect_finals.matchselect_finals.matchscores_finals').c
     'app.finalselect_finals.matchselect_finals.matchscores_finals',
     function($scope, $state, StatusModal, TimeoutResources) {
 	$scope.match = {score:undefined}
+        $scope.finals_id=$state.params.finalsId;
 	$scope.match_machine = {}
 	$scope.match_id=$state.params.matchId;
 	//if($scope.checkForBlankParams($scope.player_info) == true){
@@ -12,8 +13,10 @@ angular.module('app.finalselect_finals.matchselect_finals.matchscores_finals').c
 	StatusModal.loading()
 	TimeoutResources.GetActiveMachinesArray();
 	$scope.active_machines = TimeoutResources.GetActiveMachines();
-	$scope.finals_match_promise = TimeoutResources.GetFinalsMatch($scope.active_machines,{match_id:$scope.match_id});
-	$scope.finals_match_promise.then(function(data){
+	//$scope.finals_match_promise = TimeoutResources.GetFinalsMatch($scope.active_machines,{match_id:$scope.match_id});
+	$scope.finals_matches_promise = TimeoutResources.GetFinalsMatches(undefined,{finals_id:$scope.finals_id});
+        
+	$scope.finals_matches_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources()
 	    StatusModal.loaded()	    
 	})
@@ -30,6 +33,7 @@ angular.module('app.finalselect_finals.matchselect_finals.matchscores_finals').c
 	    score.score = score.new_score;
 	    StatusModal.loading()
 	    score.score = score.score.replace(/,/g,"");
+            score.score = parseInt(score.score)
 	    $scope.promise = TimeoutResources.SetMatchScore(undefined,{finalsScoreId:score.finals_player_score_id,score:score.score});	    
 	    $scope.promise.then(function(data){
 		StatusModal.loaded();		
