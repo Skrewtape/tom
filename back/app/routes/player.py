@@ -260,7 +260,7 @@ returns:
     #FIXME : this should be able to handle multiple teams    
     team = Team.query.filter(Team.players.any(Player.player_id.__eq__(player.player_id))).first()
     if team:
-        team_entries = Entry.query.filter_by(team_id=teams[0].team_id,completed=False,voided=False,active=True).all()
+        team_entries = Entry.query.filter_by(team_id=team.team_id,completed=False,voided=False,active=True).all()
     else:
         team_entries = []
     #FIXME : should only get active divisions
