@@ -14,6 +14,17 @@ def shared_get_player_teams(player_id):
 
 @App.route('/team/player/<player_id>', methods=['get'])
 def get_player_teams(player_id):
+    """
+description: Get teams for a given player
+post data: 
+    none
+url params: 
+    player_id: int : id of player to retrieve teams for
+returns:
+    dict of all teams for given player
+    dict key is "teams".  Value is list of all teams player is a part of.
+    """
+    
     teams = shared_get_player_teams(player_id)
     return jsonify({'teams':[x.to_dict_simple() for x in teams]})
 
@@ -44,6 +55,7 @@ def get_active_team_entry(team,division):
 
 @App.route('/team', methods=['POST'])
 def add_team():
+    #FIXME : need to make sure you can't be part of 2 teams
     team_data = json.loads(request.data)    
     num_posted_players = len(team_data['players'])
     num_actual_players = Player.query.filter(Player.player_id.in_(team_data['players'])).count()

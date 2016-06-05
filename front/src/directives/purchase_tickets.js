@@ -25,14 +25,15 @@ angular.module('tom_directives.purchase_tickets').controller(
 	$scope.get_metadivision_for_division = Utils.get_metadivision_for_division;
 	$scope.division_in_metadivision = Utils.division_in_metadivision
 	
-        StatusModal.loading();
-	$scope.player_active_entries_count_promise = TimeoutResources.GetPlayerActiveEntriesCount(undefined,{player_id:$scope.player_id})	
-	$scope.metadivisions_promise = TimeoutResources.GetAllMetadivisions($scope.player_active_entries_count_promise)
+        StatusModal.loading();        
+	$scope.player_active_entries_count_promise = TimeoutResources.GetPlayerActiveEntriesCount(undefined,{player_id:$scope.player_id})	        
+	$scope.metadivisions_promise = TimeoutResources.GetAllMetadivisions($scope.player_active_entries_count_promise)        
 	$scope.player_teams_promise = TimeoutResources.GetPlayerTeams($scope.metadivisions_promise,{player_id:$scope.player_id})	
 	$scope.player_promise = TimeoutResources.GetPlayer($scope.player_teams_promise,{player_id:$scope.player_id})	
-	$scope.tournaments_promise = TimeoutResources.GetActiveTournaments($scope.player_promise);
+	$scope.tournaments_promise = TimeoutResources.GetActiveTournaments($scope.player_promise);                
 	$scope.player_tokens_promise = TimeoutResources.GetPlayerTokens($scope.tournaments_promise,{player_id:$scope.player_id});
-	$scope.player_team_tokens_promise = TimeoutResources.GetPlayerTeamTokens($scope.player_tokens_promise,{player_id:$scope.player_id});	
+	$scope.player_team_tokens_promise = TimeoutResources.GetPlayerTeamTokens($scope.player_tokens_promise,{player_id:$scope.player_id});
+        
 	$scope.player_team_tokens_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();	    
 	    Utils.build_added_tokens($scope.resources.player_tokens,$scope.resources.player_team_tokens,$scope.added_tokens);

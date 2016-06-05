@@ -11,8 +11,16 @@ import time
 
 @App.route('/metadivision', methods=['GET'])
 def get_metadivisions():
-    """Get a list of all metadivisions"""
-    
+    """
+description: get all metadivisions
+post data: 
+    none
+url params: 
+    none
+returns:
+    dict of metadivisions
+    key of dict is metadivision_id
+    """
     return jsonify({m.metadivision_id: m.to_dict_with_divisions() for m in
         Metadivision.query.all()
     })
@@ -23,6 +31,7 @@ def get_metadivisions():
 @App.route('/metadivision', methods=['POST'])
 def add_metadivision():
     """Add a metadivision"""
+    #FIXME : need to make a division can't be part of 2 metadivisions    
     metadivision_data = json.loads(request.data)
 
     new_metadivision = Metadivision(

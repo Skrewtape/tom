@@ -26,20 +26,23 @@ def check_linked_division(division_id, player_id=None, team_id=None):
     #FIXME : this should have actual contents
     pass
         
-def check_add_token_for_max_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None,team_id=None):    
-    #FIXME : need to take into account active entries
+def check_add_token_for_max_tokens(num_tokens,div_id,metadiv_id=None,player_id=None,team_id=None):        
     if player_id:
         existing_token_count = get_existing_token_info(div_id=div_id,metadiv_id=metadiv_id,player_id=player_id)
+        active_entry_count=Entry.query.filter_by(division_id=div_id,active=True,player_id=player_id).count()        
     if team_id:
         existing_token_count = get_existing_token_info(div_id=div_id,team_id=team_id)
+        active_entry_count=Entry.query.filter_by(division_id=div_id,active=True,team_id=team_id).count()        
     if metadiv_id:
-        existing_token_count = get_existing_token_info(metadiv_id=metadiv_id,player_id=player_id)        
-    if int(num_tokens) + int(existing_token_count) > tom_config.max_unstarted_tokens:
+        existing_token_count = get_existing_token_info(metadiv_id=metadiv_id,player_id=player_id)
+        #FIXME : we assume metadivisions are not also team divisions
+        active_entry_count=Entry.query.filter_by(division_id=div_id,active=True,player_id=player_id).count()        
+    if int(num_tokens) + int(existing_token_count) + active_entry_count > tom_config.max_unstarted_tokens:
         raise Conflict('Token add requested will push you over the max tokens for this division')
 
 
 def check_player_valid_for_add_token_request(tokens_data):
-    if tokens_data.has_key('player_id') is False:# and tokens_data.has_key('team_id') is None:
+    if tokens_data.has_key('player_id') is False:
         raise BadRequest('No player_id specified')            
     
     if Player.query.filter_by(player_id=tokens_data['player_id']) is None:        
@@ -62,13 +65,24 @@ def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None
     return tokens
 
 @App.route('/token/teams/<player_id>', methods=['GET'])
-def get_team_tokens_for_player(player_id):
-    teams = Team.query.filter(Team.players.any(Player.player_id.__eq__(player_id))).all()    
-    if len(teams) == 0:
-        return jsonify({})
-    print teams
-    tokens = Token.query.filter_by(team_id=teams[0].team_id).all()
-    token_dict = {'teams':{}}
+@fetch_entity(Player, 'player')
+def get_team_tokens_for_player(player):
+    """
+description: Get list of of all tokens for a team (that player is part of)
+post data: 
+    none
+url params: 
+    player_id: int : id of player to retrieve team tokens for
+returns:
+    dict of all team tokens
+    dict key is "teams".  value is a dict - the key is a division_id, value is number of tokens for player team or 0 if none 
+    """
+    token_dict = {'teams':{}}    
+    team = Team.query.filter(Team.players.any(Player.player_id.__eq__(player.player_id))).first()    
+    if team is None:
+        return jsonify(token_dict)    
+    tokens = Token.query.filter_by(team_id=team.team_id).all()
+    
     #FIXME : need only active divisions
     divisions = Division.query.all()
     for division in divisions:
@@ -79,8 +93,19 @@ def get_team_tokens_for_player(player_id):
     return jsonify(token_dict)
 
 @App.route('/token/player_id/<player_id>', methods=['GET'])
-def get_tokens_for_player(player_id):
-    tokens = Token.query.filter_by(player_id=player_id).all()
+@fetch_entity(Player, 'player')
+def get_tokens_for_player(player):
+    """
+description: Get list of of all tokens for a player 
+post data: 
+    none
+url params: 
+    player_id: int : id of player to retrieve tokens for
+returns:
+    dict of all player tokens
+    dict key is "divisions" and "metadivisions".  values are dicts - the key is a division_id/metadivision_id, value is number of tokens for player in that division/metadivision or 0 if none 
+    """    
+    tokens = Token.query.filter_by(player_id=player.player_id).all()
     token_dict = {'divisions':{},'metadivisions':{}}
     #FIXME : need only active divisions
     divisions = Division.query.all()
@@ -98,10 +123,22 @@ def get_tokens_for_player(player_id):
             token_dict['metadivisions'][token.metadivision_id]=token_dict['metadivisions'][token.metadivision_id] + 1      
     return jsonify(token_dict)
 
-
-
 @App.route('/token', methods=['POST'])
 def add_token():
+    """
+description: Add a token for a player or team
+post data: 
+    player_id: int : id of player to add token for
+    team_id: int : (optional) id of team to add token for
+    divisions: dict : Key is division id.   Value is number of tokens requested for that division, or 0 if none
+    metadivisions: dict : Key is metadivision id.  Value is number of tokens requested for that metadivision, or 0 if none
+    teams: dict : Key is division id.  Value is number of tokens requested for that division for team specified by team_id, or 0 if none
+url params: 
+    none
+returns:
+    empty dict
+    """
+
     tokens_data = json.loads(request.data)
     check_player_valid_for_add_token_request(tokens_data)    
     player_id = tokens_data['player_id']
@@ -119,8 +156,6 @@ def add_token():
         check_add_token_for_max_tokens(num_tokens,div_id=div_id,player_id=player_id)
         if num_tokens > 0:
             tokens = create_division_tokens(num_tokens,div_id=div_id,player_id=player_id)
-            #if entry.shared_check_player_can_start_new_entry(player,division):
-            #    entry.shared_create_active_entry(division,player=player)
 
     for div_id in tokens_data['teams']:
         division=Division.query.filter_by(division_id=div_id).first()
@@ -130,21 +165,17 @@ def add_token():
         if num_tokens > 0 and team_id:
             check_add_token_for_max_tokens(num_tokens,div_id=div_id,team_id=team_id)
             tokens = create_division_tokens(num_tokens,div_id=div_id,team_id=team_id)
-            #if entry.shared_check_team_can_start_new_entry(team,division):    
-            #    entry.shared_create_active_entry(division,player=player)            
 
     for metadiv_id in tokens_data['metadivisions']:
         if Metadivision.query.filter_by(metadivision_id=metadiv_id) is None:
             raise BadRequest('Bad metadivision specified for token create')
         num_tokens = tokens_data['metadivisions'][metadiv_id]
-        check_add_token_for_max_tokens(num_tokens,metadiv_id=metadiv_id,player_id=player_id)
         division = get_division_from_metadivision(metadiv_id)
         if division is None:
-            raise BadRequest('No active divisions in metadivision')            
+            raise BadRequest('No active divisions in metadivision')                    
+        check_add_token_for_max_tokens(num_tokens,div_id=division.division_id,metadiv_id=metadiv_id,player_id=player_id)
         if num_tokens > 0:
             tokens = create_division_tokens(num_tokens,metadiv_id=metadiv_id,player_id=player_id)
-            #if entry.shared_check_player_can_start_new_entry(player,division):    
-            #    entry.shared_create_active_entry(division,player=player)            
     
     DB.session.commit()
     

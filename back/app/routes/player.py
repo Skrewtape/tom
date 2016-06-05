@@ -9,48 +9,6 @@ from app.routes.util import fetch_entity, calculate_score_points_from_rank
 from werkzeug.exceptions import Conflict
 from flask_restless.helpers import to_dict
     
-@App.route('/player/rank', methods=['GET'])
-def calculate_ranks():
-    DB.engine.execute('UPDATE entry set refresh=true')    
-    max_rank = 200
-                
-    for division in Division.query.all():
-        division_machines = division.machines    
-        entries = Entry.query.filter_by(division_id=division.division_id,completed=True,voided=False).all()        
-        entries_dict = {}
-        for entry in entries:
-            entries_dict[entry.entry_id]=entry
-            
-        for division_machine in division_machines:
-            division_machine_scores=Score.query.filter_by(division_machine_id=division_machine.machine_id).join(Entry).filter_by(division_id=division.division_id,completed=True,voided=False).join(Player).filter_by(active=True).join(Division).join(Tournament).filter_by(active=True).order_by(Score.score.desc()).all()
-            rank = 1
-            for score in division_machine_scores:
-                score.rank = rank
-                point_for_entry = calculate_score_points_from_rank(rank)
-                entry = entries_dict[score.entry_id]
-                if entry.refresh:
-                    entry.refresh=False
-                    entry.score=point_for_entry
-                else:
-                    entry.score=entry.score+point_for_entry
-                rank = rank + 1
-        rank = 0
-        division_machine_entries = sorted(entries_dict, key=lambda entry: entries_dict[entry].score,reverse=True)
-        for entry in division_machine_entries:            
-            rank = rank + 1
-            entries_dict[entry].rank = rank
-
-    for asshole in Player.query.filter_by(active=False).all():
-        for asshole_entry in asshole.entries:
-            asshole_entry.rank = 0
-            asshole_entry.score = 0
-            for score in asshole_entry.scores:
-                 score.rank = 0
-    DB.session.commit()    
-
-    return jsonify()
-
-
 @App.route('/player', methods=['GET'])
 def get_players():
     """Get a list of players"""
@@ -82,7 +40,18 @@ def get_latest_players(num_players):
 @login_required
 @Desk_permission.require(403)
 def add_player():
-    """Add a player"""
+    """
+description: Add a Player
+post data: 
+    first_name: string : first name of new player 
+    last_name: string : last name of new player
+    email: string : (optional) email address of new player
+    linked_division : int : division id of main tournament division 
+url params: 
+    none
+returns:
+    new player
+    """
     player_data = json.loads(request.data)
     new_player = Player(
         first_name = player_data['first_name'],
@@ -95,6 +64,8 @@ def add_player():
         new_player.email = player_data['email']
     if 'linked_division' in player_data:
         division = Division.query.filter_by(division_id=player_data['linked_division']).first()
+        if division is None:
+            raise BadRequest('Bad division specified')            
         new_player.linked_division.append(division)
     DB.session.add(new_player)
     DB.session.commit()
@@ -111,8 +82,15 @@ def linked_divisions_to_dict(linked_divisions):
 @App.route('/player/<player_id>', methods=['GET'])
 @fetch_entity(Player, 'player')
 def get_player(player):
-    """Get a player"""
-    #player_dict = player.to_dict_simple()
+    """
+description: Add a Player
+post data: 
+    none
+url params: 
+    player_id: int :id of player to retrieve
+returns:
+    player
+    """
     player_dict = player.to_dict_with_team()
     #FIXME : this should be in the model
     player_dict['linked_division'] = linked_divisions_to_dict(player.linked_division)
@@ -133,14 +111,30 @@ def check_old_division_can_be_removed(old_division,new_division):
 def void_entrys_from_old_linked_division(player,old_division):
     if old_division is not None:
         for entry in Entry.query.filter_by(player_id=player.player_id, division_id=old_division.division_id).all(): 
-            entry.voided = True                                
+            entry.voided = True
+        DB.session.commit()
 
 @App.route('/player/<player_id>', methods=['PUT'])
 @login_required
 @Desk_permission.require(403)
 @fetch_entity(Player, 'player')
 def edit_player(player):
-    """edit a player"""
+    """
+description: Edit a player
+post data: 
+    first_name: string : (optional) player first name
+    last_name: string : (optional) player last name
+    email: string : (optional) player email address
+    division_id: int : (optional) division id of linked main division
+url params: 
+    none
+returns:
+    edited player
+notes:
+    if a new division_id is specified, and there was an existing one,
+    this will trigger all entries associated with the old division_id 
+    to be marked as voided
+    """
     player_data = json.loads(request.data)    
     if 'first_name' in player_data:
         player.first_name=player_data['first_name']
@@ -252,10 +246,20 @@ def get_active_player_entries(player):
 @App.route('/player/<player_id>/entry/active_count', methods=['GET'])
 @fetch_entity(Player, 'player')
 def get_active_player_entries_count(player):
-    """Get a list of open(i.e. not completed, not voided) entries for a player"""
+    """
+description: Get all active (i.e. not voided, not completed) entries for a given player (including team entries)
+post data: 
+    none
+url params: 
+    player_id: int : id of player to retreive entries for 
+returns:
+    dict of all active entries for player
+    dict key is division id.  value is 1 if there is an active entry for division, or 0 if there is no active entry for division
+    """
     entries = Entry.query.filter_by(player_id=player.player_id,completed=False,voided=False,active=True).all()
-    teams = Team.query.filter(Team.players.any(Player.player_id.__eq__(player.player_id))).all()
-    if len(teams) > 0:        
+    #FIXME : this should be able to handle multiple teams    
+    team = Team.query.filter(Team.players.any(Player.player_id.__eq__(player.player_id))).first()
+    if team:
         team_entries = Entry.query.filter_by(team_id=teams[0].team_id,completed=False,voided=False,active=True).all()
     else:
         team_entries = []
