@@ -6,7 +6,7 @@ from app import App
 from app.types import DivisionMachine, Division, Machine, Entry, Metadivision
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest,Conflict
 import time
 
 @App.route('/metadivision', methods=['GET'])
@@ -30,8 +30,16 @@ returns:
 @Admin_permission.require(403)
 @App.route('/metadivision', methods=['POST'])
 def add_metadivision():
-    """Add a metadivision"""
-    #FIXME : need to make a division can't be part of 2 metadivisions    
+    """
+description: Add new metadivision
+post data: 
+    metadivision_name: string : name of new metadivision
+    divisions: dict : key is division_id. value is a non null value
+url params: 
+    none
+returns:
+    dict of new metadivision
+    """
     metadivision_data = json.loads(request.data)
 
     new_metadivision = Metadivision(
@@ -43,6 +51,12 @@ def add_metadivision():
         division = Division.query.filter_by(division_id=int(div_id)).first()
         if division is None:
             raise BadRequest('bad division specified for creating metadivision')
+        division_id_comparison = Division.division_id.__eq__(division.division_id)        
+        check_metadivision_contains_division = Metadivision.divisions.any(division_id_comparison)
+        previous_metadivision = Metadivision.query.filter(check_metadivision_contains_division).first()
+        if previous_metadivision:
+            raise Conflict('a division specified is already part of a metadivision')
+            
     for div_id,jsondivision in metadivision_data['divisions'].iteritems():
         division = Division.query.filter_by(division_id=int(div_id)).first()
         new_metadivision.divisions.append(division)

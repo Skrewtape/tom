@@ -10,9 +10,9 @@ angular.module('app.teamname_team_add.playeroneselect_team_add.playertwoselect_t
 	}
 	
 	StatusModal.loading();
-	$scope.player_one_promise = TimeoutResources.GetPlayer(undefined,{player_id:$scope.player_one_id});
-	$scope.player_two_promise = TimeoutResources.GetPlayer($scope.player_one_promise,{player_id:$scope.player_two_id});
-	$scope.team_add_promise = TimeoutResources.AddTeam($scope.player_two_promise,undefined,{team_name:$scope.team_name,players:[$scope.player_one_id,$scope.player_two_id]})
+	// $scope.player_one_promise = TimeoutResources.GetPlayer(undefined,{player_id:$scope.player_one_id});
+	// $scope.player_two_promise = TimeoutResources.GetPlayer($scope.player_one_promise,{player_id:$scope.player_two_id});
+	$scope.team_add_promise = TimeoutResources.AddTeam(undefined,undefined,{team_name:$scope.team_name,players:[$scope.player_one_id,$scope.player_two_id]})
 	$scope.team_add_promise.then(function(data){
 	    StatusModal.loaded()
 	    $scope.resources = TimeoutResources.GetAllResources();

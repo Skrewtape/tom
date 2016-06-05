@@ -54,14 +54,29 @@ def get_active_team_entry(team,division):
         return jsonify({'entry':None})
 
 @App.route('/team', methods=['POST'])
-def add_team():
-    #FIXME : need to make sure you can't be part of 2 teams
+def add_team():    
+    """
+description: Add new team
+post data: 
+    players: list : list of player ids to create team with
+    team_name: string : (optional) name of new team 
+url params: 
+    none
+returns:
+    dict of new team
+notes:
+    if no team name is specified, a team name will be created using the player first names
+    """
+
     team_data = json.loads(request.data)    
     num_posted_players = len(team_data['players'])
     num_actual_players = Player.query.filter(Player.player_id.in_(team_data['players'])).count()
     if num_actual_players != num_posted_players:
         raise BadRequest('One of the players submitted was not valid')
     actual_players = Player.query.filter(Player.player_id.in_(team_data['players'])).all()
+    for player in actual_players:
+        if shared_get_player_teams(player.player_id):
+            raise Conflict('One of the players specified is already on another team')
     if team_data.has_key('team_name') == False:
         team_data['team_name'] = " and ".join(["%s %s" % (x.first_name,x.last_name) for x in actual_players])
     new_team = Team(

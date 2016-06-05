@@ -13,16 +13,11 @@ angular.module('app.teamname_team_add.playeroneselect_team_add.playertwoselect_t
 	})
 	$scope.player_two_promise = TimeoutResources.GetPlayer($scope.player_one_promise,{player_id:$scope.player_two_id})		
 	$scope.player_two_promise.then(function(data){
-	    $scope.resources = TimeoutResources.GetAllResources();
-	    $scope.player_two = $scope.resources.player;
+	    $scope.player_two = TimeoutResources.GetAllResources().player;            
 	    if($scope.team_name == ''){
 		$scope.team_name = $scope.player_one.first_name+' and '+$scope.player_two.first_name;
 	    }
 	    StatusModal.loaded();
 	})
-	//if($scope.checkForBlankParams($scope.player_info) == true){
-	//    return;
-	//}
-	//$scope.player = TimeoutResources.addPlayerResource().addPlayer(submit_data);	    
     }
 );
