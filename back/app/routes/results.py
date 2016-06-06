@@ -135,7 +135,46 @@ def results_players():
                            tournament=tournament,tournaments=tournament_results,
                            divisions=division_results, division_machines=division_machine_results)
 
-                           
+
+@App.route('/results/index', methods=['GET'])
+def results_index():
+    players = Player.query.all()
+    divisions = Division.query.all()
+    tournaments = Tournament.query.all()
+    division_machines = DivisionMachine.query.all()
+    player_results = []
+    division_machine_results = {}
+    division_results = {}
+    tournament_results = {}
+    return_entry_results = []
+    return_score_results = []
+
+    for player in players:
+        player_results.append(player.to_dict_simple())
+
+    for tournament in tournaments:
+        tournament_results[tournament.tournament_id]=to_dict(tournament)
+
+    for division in divisions:
+        division_dict = to_dict(division)
+        tournament = tournament_results[division.tournament_id]
+        if tournament['single_division'] is True:
+            division_dict['name']=tournament['name']
+        else:
+            division_dict['name']="%s %s" % (tournament['name'], division.name)            
+        division_results[division.division_id]=division_dict
+        division_machine_results[division.division_id] = []
+
+    for division_machine in division_machines:
+        division_machine_results[division_machine.division_id].append(division_machine.to_dict_simple())
+
+    return render_template('index.html', 
+                           players=player_results,division=division,
+                           tournament=tournament,tournaments=tournament_results,
+                           divisions=division_results, division_machines=division_machine_results)
+
+
+
 @App.route('/results/division_machine/<division_machine_id>', methods=['GET'])
 def results_division_machine(division_machine_id):
     score_results = DB.engine.execute("select machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as entry_score, entry.player_id from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and score.division_machine_id = %s and entry.completed = true and entry.voided = false order by entry_score desc" % division_machine_id)
@@ -191,6 +230,7 @@ def results_division_machine(division_machine_id):
                            divisions=division_results, division_machines=division_machine_results,
                            division_machine=return_division_machine)
         
+
 
 
 @App.route('/results/division/<division_id>', methods=['GET'])
