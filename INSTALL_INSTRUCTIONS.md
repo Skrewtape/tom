@@ -4,17 +4,19 @@ This document lists the steps to setting up TOM.  This document assumes you are 
 
 ### Install packages
 Run the following command
-
-> sh back/utils/install_packages.sh
-> sh front/utils/install_packages.sh
+```
+sh back/utils/install_packages.sh
+sh front/utils/install_packages.sh
+```
 
 ### Postgress configuration 
 Run the following commands.  Insert a username and password where specified (<tom_user_password> and <tom_user>) - this will be the username and password that TOM uses to access postgresql with.  
-
-> sudo su - postgres
-> psql -c "CREATE USER <tom_user> WITH PASSWORD '<tom_user_password>'; create database tom_server; GRANT ALL PRIVILEGES ON DATABASE tom_server to <tom_user>;"
-> psql tom_server -c "CREATE FUNCTION testing_papa_scoring(rank real) RETURNS real AS \$\$ BEGIN IF rank = 1 THEN RETURN 100; ELSIF rank = 2 THEN RETURN 90; ELSIF rank = 3 THEN RETURN 85; ELSIF rank < 88 THEN  RETURN 100-rank-12; ELSIF rank >= 88 THEN RETURN 0; END IF; END; \$\$ LANGUAGE plpgsql;"
-> psql tom_server -c "CREATE FUNCTION finals_papa_scoring(rank real) RETURNS real AS \$\$  BEGIN IF rank = 1 THEN RETURN 3; ELSIF rank = 2 THEN RETURN 2; ELSIF rank = 3 THEN RETURN 1; ELSIF rank = 4 THEN RETURN 0; END IF; END; \$\$ LANGUAGE plsgsql;"
+```
+sudo su - postgres
+psql -c "CREATE USER <tom_user> WITH PASSWORD '<tom_user_password>'; create database tom_server; GRANT ALL PRIVILEGES ON DATABASE tom_server to <tom_user>;"
+psql tom_server -c "CREATE FUNCTION testing_papa_scoring(rank real) RETURNS real AS \$\$ BEGIN IF rank = 1 THEN RETURN 100; ELSIF rank = 2 THEN RETURN 90; ELSIF rank = 3 THEN RETURN 85; ELSIF rank < 88 THEN  RETURN 100-rank-12; ELSIF rank >= 88 THEN RETURN 0; END IF; END; \$\$ LANGUAGE plpgsql;"
+psql tom_server -c "CREATE FUNCTION finals_papa_scoring(rank real) RETURNS real AS \$\$  BEGIN IF rank = 1 THEN RETURN 3; ELSIF rank = 2 THEN RETURN 2; ELSIF rank = 3 THEN RETURN 1; ELSIF rank = 4 THEN RETURN 0; END IF; END; \$\$ LANGUAGE plsgsql;"
+```
 
 ### Install python dependencies
 
