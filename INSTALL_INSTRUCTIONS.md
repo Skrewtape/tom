@@ -10,7 +10,7 @@ sh front/utils/install_packages.sh
 ```
 
 ### Postgress configuration 
-Run the following commands.  Insert a username and password where specified (<tom_user_password> and <tom_user>) - this will be the username and password that TOM uses to access postgresql with.  
+Run the following commands.  Insert a username and password where specified (`<tom_user_password>` and `<tom_user>`) - this will be the username and password that TOM uses to access postgresql with.  
 ```
 sudo su - postgres
 psql -c "CREATE USER <tom_user> WITH PASSWORD '<tom_user_password>'; create database tom_server; GRANT ALL PRIVILEGES ON DATABASE tom_server to <tom_user>;"
