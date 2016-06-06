@@ -204,7 +204,7 @@ def void_entry(entry):
 @login_required
 @Admin_permission.require(403)
 @fetch_entity(Entry, 'entry')
-def toggle_entry_voided(entry,voided_state):
+def toggle_entry_voided(entry,voided_state): #killroy
     """set a entry voided state, and DOES NOT try and start a new entry"""
     #FIXME : this should have better checks
     entry.voided = True if voided_state=="void" else False
@@ -222,7 +222,7 @@ def toggle_entry_voided(entry,voided_state):
 @login_required
 @Admin_permission.require(403)
 @fetch_entity(Score, 'score')
-def remove_score(score):
+def remove_score(score): #killroy
     """remove a score"""   
     old_entry = Entry.query.filter_by(entry_id=score.entry_id).first()            
     old_entry.scores.remove(score)
@@ -233,7 +233,7 @@ def remove_score(score):
 @login_required
 @Admin_permission.require(403)
 @fetch_entity(Score, 'score')
-def edit_score(score):
+def edit_score(score): #killroy
     """change a score"""   
     score_data = json.loads(request.data)
     #FIXME : oops - will probably need to change the frontend to machine the division_machine_id key

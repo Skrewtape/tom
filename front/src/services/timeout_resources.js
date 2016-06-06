@@ -267,15 +267,15 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 					{
 					    'addTokens': {method:'POST', 'timeout': 15000}
 					})
-    resources['changeScore'] =  $resource('[APIHOST]/score/:score_id', null,			     
+    resources['changeScore'] =  $resource('[APIHOST]/score/:score_id', null, //killroy			     
 					{
 					    'changeScore': {method:'PUT', 'timeout': 15000}
 					})	        
-    resources['deleteScore'] =  $resource('[APIHOST]/score/:score_id', null,			     
+    resources['deleteScore'] =  $resource('[APIHOST]/score/:score_id', null, //killroy			     
 					{
 					    'deleteScore': {method:'DELETE', 'timeout': 15000}
 					})
-    resources['voidEntryToggle'] =  $resource('[APIHOST]/entry/:entry_id/void/:void_state',
+    resources['voidEntryToggle'] =  $resource('[APIHOST]/entry/:entry_id/void/:void_state',//killroy
 					      {entry_id:'@entry_id', void_state:'@void_state'},
 					      {
 						  'voidEntryToggle': {method:'PUT', 'timeout': 15000}
@@ -391,15 +391,15 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	AddDivision: generic_resource('addDivision','add_division_result','post', false),	//killroy was here	
 	AddUser: generic_resource('addUser','user','post', false),
 	AddScore: generic_resource('addScore','entry','post',false),
-	ChangeScore: generic_resource('changeScore','score','post', false),
+	ChangeScore: generic_resource('changeScore','score','post', false), //killroy
         ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','empty','post', false),
 	CompleteEntry: generic_resource('completeEntry','entry','post', false),
-	DeleteScore: generic_resource('deleteScore','score','get', false),
+	DeleteScore: generic_resource('deleteScore','score','get', false), //killroy
         EditPlayer: generic_resource('editPlayer','edited_player','post', false),//killroy
 	EnableMachineInDivision: generic_resource('enableMachineInDivision','edited_player','post', false),//killroy
         FillFinalsRounds: generic_resource('fillFinalsRounds','fill_finals_rounds_result','post', false),//killroy was here		
 	GenerateFinalsRounds: generic_resource('generateFinalsRounds','generate_finals_rounds_result','post', false),	//killroy was here	
-        GetActiveMachines: generic_resource('getActiveMachines','machines','get',false),
+        GetActiveMachines: generic_resource('getActiveMachines','machines','get',false), //killroy
 	GetActiveMachinesArray: generic_resource('getActiveMachinesArray','machines_array','get',false),        
 	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments','get',false), //killroy
 	GetAllDivisions: generic_resource('getAllDivisions','divisions','get', false),//killroy
@@ -434,7 +434,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	SetMatchMachine: generic_resource('setMatchMachine','match_machine','post', false),
 	SetMatchScore: generic_resource('setMatchScore','match_score','post', false),
         ToggleTournamentActive: generic_resource('toggleTournamentActive','toggled_tournament','post', false), //killroy was here
-	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false),
+	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false), //killroy
 	VoidEntry: generic_resource('voidEntry','entry','post', false),
 	
 	FlushResourceCache:flush_resource_cache,

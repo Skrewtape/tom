@@ -12,7 +12,7 @@ angular.module('tom_services.utils').factory('Utils', function($filter,StatusMod
 	return undefined;
     }
     return {
-	setEntryVoidStatus:function(void_state,entry){
+	setEntryVoidStatus:function(void_state,entry){ //killroy
 	    StatusModal.loading()
 	    if(void_state == true){
 		void_state = "void"
@@ -32,7 +32,7 @@ angular.module('tom_services.utils').factory('Utils', function($filter,StatusMod
             }
             return x;
         },
-        remove_score:function(score){
+        remove_score:function(score){ //killroy
             StatusModal.loading();
 	    score.removed = true;
 	    score_promise = TimeoutResources.DeleteScore(undefined,{score_id:score.score_id});
@@ -40,8 +40,7 @@ angular.module('tom_services.utils').factory('Utils', function($filter,StatusMod
 		StatusModal.loaded()
 	    })	                
         },	
-	change_score: function(score){
-            console.log('poooooop');
+	change_score: function(score){ //killroy            
 	    score.changed = undefined;
 	    score_to_submit = {}
             score_to_submit.division_machine_id = score.machine.division_machine_id;		
@@ -52,7 +51,7 @@ angular.module('tom_services.utils').factory('Utils', function($filter,StatusMod
 		StatusModal.loaded()
 	    })
         },
-	score_and_machine_change:function(score){
+	score_and_machine_change:function(score){  //killroy
             score.changed = 'dirty';
         },
 	convertObjToArray: function(obj){
