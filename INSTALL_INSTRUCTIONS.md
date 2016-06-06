@@ -20,10 +20,11 @@ psql tom_server -c "CREATE FUNCTION finals_papa_scoring(rank real) RETURNS real 
 
 ### Install python dependencies
 ```
-> export DATABASE_URL=postgres://postgres:`<tom_user>`:`<tom_user_password>`@localhost/tom_server
-> cd back
-> ./setup.py
+export DATABASE_URL=postgres://postgres:`<tom_user>`:`<tom_user_password>`@localhost/tom_server
+cd back
+./setup.py
 ```
+
 ### Bootstrap database
 Note that the seed_db.py will create default users ( admin, scorekeeper, and desk ) - if you are planning on using this in production, REMOVE THESE USERS
 ```
@@ -43,7 +44,7 @@ cd front
 
 ### Setting up DB Replication on Server
 **_create replication user on server_**:
-> sudo -u postgres psql -c "CREATE USER replicator REPLICATION LOGIN ENCRYPTED PASSWORD 'thepassword';"
+``` sudo -u postgres psql -c "CREATE USER replicator REPLICATION LOGIN ENCRYPTED PASSWORD 'thepassword';" ```
 **_edit postgres configs on the server_**:
 postgresql.conf :
 ```
@@ -60,5 +61,5 @@ pg_hba.conf:
   host  replication     replication     <replication_machine_ip>/32         md5
 ```
 ##Configure replication on replicated machine:
-> <path_to_tom>/back/util/start_replication.sh <ip_of_server>
+``` <path_to_tom>/back/util/start_replication.sh <ip_of_server> ```
 
