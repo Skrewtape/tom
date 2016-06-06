@@ -10,7 +10,7 @@ sh front/utils/install_packages.sh
 ```
 
 ### Postgress configuration 
-Run the following commands.  Insert a username and password where specified (`<tom_user_password>` and `<tom_user>`) - this will be the username and password that TOM uses to access postgresql with.  
+Run the following commands.  Insert a username and password where specified (`<tom_user_password>` and `<tom_user>`) - this will be the username and password that TOM uses to access postgresql with, and will be needed in further steps.  
 ```
 sudo su - postgres
 psql -c "CREATE USER <tom_user> WITH PASSWORD '<tom_user_password>'; create database tom_server; GRANT ALL PRIVILEGES ON DATABASE tom_server to <tom_user>;"
@@ -19,29 +19,31 @@ psql tom_server -c "CREATE FUNCTION finals_papa_scoring(rank real) RETURNS real 
 ```
 
 ### Install python dependencies
-
-> export DATABASE_URL=postgres://postgres:tom:tomPassword@localhost/tom_server
+```
+> export DATABASE_URL=postgres://postgres:`<tom_user>`:`<tom_user_password>`@localhost/tom_server
 > cd back
 > ./setup.py
-
+```
 ### Bootstrap database
 Note that the seed_db.py will create default users ( admin, scorekeeper, and desk ) - if you are planning on using this in production, REMOVE THESE USERS
-
-> cd back
-> export PYTHONPATH=`pwd`
-> cd utils
-> ptyhon ./seed_db.py
+```
+cd back
+export PYTHONPATH=`pwd`
+cd utils
+ptyhon ./seed_db.py
+```
 
 ### Install Angular dependencies 
-> front/npm install
-> cd front
-> ./node_modules/bower/bin/bower --allow-root install
-> ./node_modules/grunt-cli/bin/grunt
-
+```
+front/npm install
+cd front
+./node_modules/bower/bin/bower --allow-root install
+./node_modules/grunt-cli/bin/grunt
+```
 
 ### Setting up DB Replication on Server
 **_create replication user on server_**:
-sudo -u postgres psql -c "CREATE USER replicator REPLICATION LOGIN ENCRYPTED PASSWORD 'thepassword';"
+> sudo -u postgres psql -c "CREATE USER replicator REPLICATION LOGIN ENCRYPTED PASSWORD 'thepassword';"
 **_edit postgres configs on the server_**:
 postgresql.conf :
 ```
