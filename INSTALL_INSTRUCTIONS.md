@@ -44,8 +44,11 @@ cd front
 
 ### Setting up DB Replication on Server
 **_create replication user on server_**:
+
 ``` sudo -u postgres psql -c "CREATE USER replicator REPLICATION LOGIN ENCRYPTED PASSWORD 'thepassword';" ```
+
 **_edit postgres configs on the server_**:
+
 postgresql.conf :
 ```
 listen_addresses = '<replication_machine_ip>'
