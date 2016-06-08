@@ -1,5 +1,11 @@
 module.exports = function(grunt) {
-  var dest = '/var/www/html/'	  
+    var dest = '/var/www/html/'
+    var backend_ip = grunt.option('backend_ip') || undefined;
+    if(backend_ip == undefined){
+        console.log('OOPS!  No backend ip was specified.');
+        console.log('Usage : grunt --backend_ip=<backend ip>');
+        return;
+    }
   grunt.initConfig({
 	shell: {
 	    makeRevHistory: {
@@ -38,9 +44,11 @@ module.exports = function(grunt) {
                 replacements: [
                     {
                         from: '[APIHOST]',
+                        to: 'http://'+backend_ip+':8000'
                         //to: 'http://localhost:8000'
-		        to: 'http://104.196.56.67:8000'
+		        //to: 'http://9.75.197.78:8000'
 			//to: 'http://192.168.1.178:8000',
+			//to:'http://9.75.197.28:8000',
 			//to: 'http://9.75.197.139:8000',
 			//to: 'http://192.168.1.36:8000',
 			//to: 'http://192.168.5.32:8000',
