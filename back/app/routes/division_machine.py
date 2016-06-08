@@ -25,6 +25,7 @@ def get_active_machines():
 
 
 @App.route('/divisionmachine/<divisionmachine_id>/team/<team_id>', methods=['PUT'])
+@Scorekeeper_permission.require(403)
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
 @fetch_entity(Team, 'team')
@@ -59,6 +60,7 @@ returns:
 
 
 @App.route('/divisionmachine/<divisionmachine_id>/player/<player_id>', methods=['PUT'])
+@Scorekeeper_permission.require(403)
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
 @fetch_entity(Player, 'player')
@@ -93,6 +95,7 @@ returns:
     return jsonify(divisionmachine.to_dict_simple())
 
 @App.route('/divisionmachine/<divisionmachine_id>/entry/<entry_id>/asshole', methods=['PUT'])
+@Scorekeeper_permission.require(403)
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
 @fetch_entity(Entry, 'entry')
@@ -140,6 +143,7 @@ returns:
 
 
 @App.route('/divisionmachine/<divisionmachine_id>/player/<player_id>/clear', methods=['PUT'])
+@Scorekeeper_permission.require(403)
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
 @fetch_entity(Player, 'player')
@@ -164,6 +168,7 @@ returns:
     return jsonify({})
 
 @App.route('/divisionmachine/<divisionmachine_id>/team/<team_id>/clear', methods=['PUT'])
+@Scorekeeper_permission.require(403)
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
 @fetch_entity(Player, 'player')

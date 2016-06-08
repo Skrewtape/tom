@@ -1,5 +1,4 @@
 import json
-#killroy_was_here
 from sqlalchemy import null
 from flask import jsonify, request, abort
 from flask_login import login_required
@@ -81,7 +80,7 @@ url params:
     none
 returns:
     dict of all tournaments
-    dict key is tournament id
+    dict key is tournament id, value is dict of tournament
     """
 
     return jsonify({t.tournament_id: t.to_dict_with_divisions() for t in

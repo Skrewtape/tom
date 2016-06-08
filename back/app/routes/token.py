@@ -124,6 +124,8 @@ returns:
     return jsonify(token_dict)
 
 @App.route('/token', methods=['POST'])
+@login_required
+@Admin_permission.require(403)
 def add_token():
     """
 description: Add a token for a player or team

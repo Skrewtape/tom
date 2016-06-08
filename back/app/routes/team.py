@@ -12,7 +12,7 @@ from werkzeug.exceptions import Conflict, BadRequest
 def shared_get_player_teams(player_id):
     return Team.query.filter(Team.players.any(Player.player_id.__eq__(player_id))).all()    
 
-@App.route('/team/player/<player_id>', methods=['get'])
+@App.route('/team/player/<player_id>', methods=['GET'])
 def get_player_teams(player_id):
     """
 description: Get teams for a given player
@@ -28,7 +28,7 @@ returns:
     teams = shared_get_player_teams(player_id)
     return jsonify({'teams':[x.to_dict_simple() for x in teams]})
 
-@App.route('/team/<team_id>', methods=['get'])
+@App.route('/team/<team_id>', methods=['GET'])
 @fetch_entity(Team, 'team')
 def get_team(team):
     return jsonify(team.to_dict_with_players())
@@ -66,6 +66,8 @@ returns:
         return jsonify({'entry':None})
 
 @App.route('/team', methods=['POST'])
+@Admin_permission.require(403)
+@login_required
 def add_team():    
     """
 description: Add new team

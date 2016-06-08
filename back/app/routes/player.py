@@ -116,7 +116,7 @@ def void_entrys_from_old_linked_division(player,old_division):
 
 @App.route('/player/<player_id>', methods=['PUT'])
 @login_required
-@Desk_permission.require(403)
+@Admin_permission.require(403)
 @fetch_entity(Player, 'player')
 def edit_player(player):
     """
@@ -218,8 +218,10 @@ def get_unstarted_player_entries(player):
     return jsonify(entries_grouped_dict)
 
 
-@Admin_permission.require(403)
+
 @App.route('/player/<player_id>/deactivate', methods=['PUT'])
+@login_required
+@Admin_permission.require(403)
 @fetch_entity(Player, 'player')
 def deactivate_player(player):
     """Bad player! No cookie!"""
@@ -227,6 +229,7 @@ def deactivate_player(player):
     DB.session.commit()        
     return jsonify(player.to_dict_simple())
 
+#FIXME : is this function needed?
 @App.route('/player/<player_id>/entry/active', methods=['GET'])
 @fetch_entity(Player, 'player')
 def get_active_player_entries(player):
@@ -285,28 +288,39 @@ returns:
         
     return jsonify(entries_grouped_dict)
 
-#Guyh - need to remove all the team stuff from this?
+
 @App.route('/player/<player_id>/division/<division_id>/entry/active', methods=['GET'])
 @fetch_entity(Player, 'player')
 @fetch_entity(Division, 'division')
 def get_active_player_entry(player,division):
-    """Get a list of open(i.e. not completed, not voided) entries for a player"""
+    """
+description: Get a list of active(i.e. not completed, not voided) entries for a player in a given division
+post data: 
+    none
+url params:     
+    player_id: int : id of player to get entry for
+    division_id : int : id of division to look for active entries in
+returns:
+    dict of active entry for player.
+    key for dict is "entry", value is a dict of entry   
+    """     
+ 
     entries = Entry.query.filter_by(division_id=division.division_id,player_id=player.player_id,completed=False,voided=False,active=True).all()
-    teams = Team.query.filter(Team.players.any(Player.player_id.__eq__(player.player_id))).all()
-    if len(teams) > 0:        
-        team_entries = Entry.query.filter_by(division_id=division.division_id,team_id=teams[0].team_id,completed=False,voided=False,active=True).all()
-    else:
-        team_entries = []
+    #teams = Team.query.filter(Team.players.any(Player.player_id.__eq__(player.player_id))).all()
+    #if len(teams) > 0:        
+    #    team_entries = Entry.query.filter_by(division_id=division.division_id,team_id=teams[0].team_id,completed=False,voided=False,active=True).all()
+    #else:
+    #    team_entries = []
     #FIXME : should only get active divisions
-    divisions = Division.query.all()
+    #divisions = Division.query.all()
     entries_grouped_dict = {}
     entry_id=None
     for entry in entries:
         if entry.division_id == division.division_id:
             matched_entry = entry
-    for entry in team_entries:
-        if entry.division_id == division.division_id:
-            matched_entry = entry
+    #for entry in team_entries:
+    #    if entry.division_id == division.division_id:
+    #        matched_entry = entry
         
     return jsonify({'entry':matched_entry.to_dict_with_scores()})
 

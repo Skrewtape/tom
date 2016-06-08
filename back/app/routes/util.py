@@ -13,7 +13,7 @@ def i_am_a_teapot(message,goto_state): #killroy
     return new_exception
 
 def get_division_from_metadivision(metadiv_id): #killroy
-    # WE ASSUME ONLY ONE DIVISION IN A METADIVISION IS ACTIVE AT ONCE
+    #FIXME: WE ASSUME ONLY ONE DIVISION IN A METADIVISION IS ACTIVE AT ONCE
     return Division.query.filter_by(metadivision_id=metadiv_id).join(Tournament).filter_by(active=True).first()
 
 #FIXME : this should not be needed anymore

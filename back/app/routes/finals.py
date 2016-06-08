@@ -99,6 +99,8 @@ def get_all_active_finals():
         finals_dict['sorted_by_division_id'][final.division_id]=final.to_dict_simple()
     return jsonify(finals_dict)
 
+@Scorekeeper_permission.require(403)
+@login_required
 @App.route('/finals/divisionMachineId/<divisionmachine_id>/score/<finalsmatch_id>/game_num/<game_number>', methods=['POST'])
 @fetch_entity(DivisionMachine, 'divisionmachine')
 @fetch_entity(FinalsMatch, 'finalsmatch')
@@ -145,6 +147,8 @@ def generate_ranking_list(playerlist=None,num_players_per_group=4):
 def get_finals_player_seed(finals_player_id):
     return FinalsPlayer.query.filter_by(finals_player_id=finals_player_id).first()
 
+@Scorekeeper_permission.require(403)
+@login_required
 @App.route('/finals/finals_score/<finalsscore_id>/score/<score>', methods=['POST'])
 @fetch_entity(FinalsScore, 'finalsscore')
 def set_match_score(finalsscore, score):
@@ -197,7 +201,8 @@ def set_match_score(finalsscore, score):
     return jsonify({})
 
 
-
+@Scorekeeper_permission.require(403)
+@login_required
 @App.route('/finals/division/<division_id>', methods=['POST'])
 @fetch_entity(Division, 'division')
 def create_finals(division):
@@ -210,6 +215,8 @@ def create_finals(division):
     DB.session.commit()
     return jsonify(to_dict(new_finals))
 
+@Scorekeeper_permission.require(403)
+@login_required
 @App.route('/finals/<finals_id>/division_machine/<machine_id>', methods=['POST'])
 @fetch_entity(Finals, 'finals')
 @fetch_entity(Machine, 'machine')
@@ -266,7 +273,8 @@ def gen_finals_match(round_id,finals_id,match_with_byes=False):
     gen_finals_score(new_finals_match.match_id)
     return new_finals_match
 
-
+@Scorekeeper_permission.require(403)
+@login_required
 @App.route('/finals/<finals_id>/generate_rounds', methods=['POST'])
 @fetch_entity(Finals, 'finals')
 def generate_finals_rounds(finals):
@@ -308,6 +316,8 @@ def generate_finals_rounds(finals):
         next_round_matches = []
     return jsonify({})
 
+@Scorekeeper_permission.require(403)
+@login_required
 @App.route('/finals/<finals_id>/fill_rounds', methods=['POST'])
 @fetch_entity(Finals, 'finals')
 def fill_finals_rounds(finals):
