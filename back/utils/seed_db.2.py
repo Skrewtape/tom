@@ -19,7 +19,7 @@ from random import randint
 
 ROLE_MAP = {}
 
-ALL_ROLES = ['admin', 'scorekeeper', 'desk']
+ALL_ROLES = ['admin', 'scorekeeper', 'desk', 'void']
 division_machines = []
 machines = []
 tournaments = []
