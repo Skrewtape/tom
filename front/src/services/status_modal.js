@@ -69,7 +69,7 @@ angular.module('tom_services.status_modal')
                   };
 
 		  
-		  launch_void_modal = function(resources,type){
+		  launch_void_modal = function(resources,type){ //killroy
 		      close_status_modal();
                       modalInstance = $uibModal.open({
 			  controller: function($scope){

@@ -22,20 +22,31 @@ def get_active_machines():
             active_machines[machine.division_machine_id]=machine.to_dict_simple()
     return jsonify(active_machines)
 
+
+
 @App.route('/divisionmachine/<divisionmachine_id>/team/<team_id>', methods=['PUT'])
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
 @fetch_entity(Team, 'team')
-def set_machine_team(divisionmachine, team):
-    """claim a machine for a team - its mine - ARRRRR"""
+def set_machine_team(divisionmachine, team): #killroy
+    """
+description: Mark a division_machine as being played by a specific team, and create new entry 
+             if team has available tokens and no active entry
+post data: 
+    none
+url params: 
+    divisionmachine_id: int : id of division_machine being player
+    team_id: int : id of team playing division_machine
+returns:
+    dict of updated division_machine
+    """
     if team.division_machine:
         raise i_am_a_teapot('Team is already playing the machine %s !' % team.division_machine.machine.name,"^")    
     if divisionmachine.team_id or divisionmachine.player_id:
         raise i_am_a_teapot('%s is already in use !' % divisionmachine.machine.name,"^")                    
     team_entry = route_entry.shared_get_query_for_active_entries(team_id=team.team_id,div_id=divisionmachine.division_id).first()
     if team_entry is None:        
-        if route_entry.shared_check_team_can_start_new_entry(team,divisionmachine.division) is False:            
-            #FIXME : goto_state should be handled on the client side, but I'm being lazy
+        if route_entry.shared_check_team_can_start_new_entry(team,divisionmachine.division) is False:                        
             raise i_am_a_teapot('Team does not have any entries',"^")
         route_entry.shared_create_active_entry(divisionmachine.division,team=team)
     team_entry = route_entry.shared_get_query_for_active_entries(team_id=team.team_id,div_id=divisionmachine.division_id).first()            
@@ -51,16 +62,25 @@ def set_machine_team(divisionmachine, team):
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
 @fetch_entity(Player, 'player')
-def set_machine_player(divisionmachine, player):
-    """claim a machine for a player - its mine - ARRRRR"""
+def set_machine_player(divisionmachine, player): #killroy
+    """
+description: Mark a division_machine as being played by a specific player, and create new entry 
+             if player has available tokens and no active entry
+post data: 
+    none
+url params: 
+    divisionmachine_id: int : id of division_machine being player
+    player_id: int : id of player playing division_machine
+returns:
+    dict of updated division_machine
+    """
     if player.division_machine:
         raise i_am_a_teapot('Player already is playing the machine %s !' % player.division_machine.machine.name,"^")    
     if divisionmachine.player_id or divisionmachine.team_id:
         raise i_am_a_teapot('%s is already in use !' % divisionmachine.machine.name,"^")                
     player_entry = route_entry.shared_get_query_for_active_entries(player_id=player.player_id,div_id=divisionmachine.division_id).first()            
     if player_entry is None:        
-        if route_entry.shared_check_player_can_start_new_entry(player,divisionmachine.division) is False:            
-            #FIXME : goto_state should be handled on the client side, but I'm being lazy
+        if route_entry.shared_check_player_can_start_new_entry(player,divisionmachine.division) is False:                        
             raise i_am_a_teapot('Player does not have any entries',"^")
         route_entry.shared_create_active_entry(divisionmachine.division,player=player)
     player_entry = route_entry.shared_get_query_for_active_entries(player_id=player.player_id,div_id=divisionmachine.division_id).first()
@@ -72,23 +92,50 @@ def set_machine_player(divisionmachine, player):
     DB.session.commit()
     return jsonify(divisionmachine.to_dict_simple())
 
-@App.route('/divisionmachine/<divisionmachine_id>/player/<player_id>/entry/<entry_id>/asshole', methods=['PUT'])
+@App.route('/divisionmachine/<divisionmachine_id>/entry/<entry_id>/asshole', methods=['PUT'])
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
-@fetch_entity(Player, 'player')
 @fetch_entity(Entry, 'entry')
-def declare_player_asshole(divisionmachine, player, entry):
-    """clear a machine and declare player on it an asshole - ARRRRR"""
-    if player.division_machine is None:
-        raise Conflict('Player %s is not playing machine %s !' % (player.player_id,divisionmachine.machine.name))                
-    if player.division_machine.division_machine_id != divisionmachine.division_machine_id:
-        raise Conflict('Player %s is not playing machine %s (but in a really weird way)!' % (player.player_id,divisionmachine.machine.name))
+def declare_player_or_team_an_asshole(divisionmachine, entry):
+    """
+description: increment the "asshole count" for whoever is playing a specified entry and give them a score of 0
+post data: 
+    none
+url params: 
+    divisionmachine_id: int : id of division_machine asshole(s) was playing on 
+    entry_id: int : id of current entry of asshole 
+returns:
+    empty dict
+    """
+    if entry.player is None and entry.team is None:
+        BadRequest("Entry has no team or player associated with it.  This should not happen.")
+    if entry.team:
+        asshole = entry.team        
+    #FIXME : should not be setting player in entry when it's a team entry
+    if entry.player is not None and entry.team is None:        
+        asshole = entry.player        
+
+    if asshole.division_machine is None:
+        raise Conflict('Asshole is not playing any machines !')                
+    if asshole.division_machine.division_machine_id != divisionmachine.division_machine_id:
+        raise Conflict('Asshole is not playing machine %s !' % (divisionmachine.machine.name))
     divisionmachine.player_id = None
-    if player.player_is_an_asshole_count is None:
-        player.player_is_an_asshole_count=0        
-    player.player_is_an_asshole_count=player.player_is_an_asshole_count+1
-    route_entry.add_score(entry,divisionmachine,0)
-    DB.session.commit()    
+    divisionmachine.team_id = None
+    if entry.team:
+        asshole_players = entry.team.players
+    if entry.player:
+        asshole_players = [entry.player]
+    for player in asshole_players:
+        if player.player_is_an_asshole_count is None:
+            player.player_is_an_asshole_count=0        
+        player.player_is_an_asshole_count=player.player_is_an_asshole_count+1
+    route_entry.add_score(entry,divisionmachine,0)    
+    DB.session.commit()
+    division = Division.query.filter_by(division_id=divisionmachine.division_id).first()
+    if len(entry.scores) >= division.number_of_scores_per_entry:
+        entry.active=False
+        entry.voided=True
+    DB.session.commit()
     return jsonify({})
 
 
@@ -96,27 +143,50 @@ def declare_player_asshole(divisionmachine, player, entry):
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
 @fetch_entity(Player, 'player')
-def clear_machine_player(divisionmachine, player):
-    """clear a machine - its not mine - ARRRRR"""
+def clear_machine_player(divisionmachine, player): #killroy
+    """
+description: Mark a division_machine as not being played (by clearing the played_id from the division_machine)
+post data: 
+    none
+url params: 
+    divisionmachine_id: int : id of division_machine being player
+    player_id: int : id of player playing division_machine
+returns:
+    empty dict
+    """ 
     if player.division_machine is None:
         raise Conflict('Player %s is not playing machine %s !' % (player.player_id,divisionmachine.machine.name))                
     if player.division_machine.division_machine_id != divisionmachine.division_machine_id:
-        raise Conflict('Player %s is not playing machine %s (but in a really weird way)!' % (player.player_id,divisionmachine.machine.name))
+        raise Conflict('Player %s is not playing machine %s !' % (player.player_id,divisionmachine.machine.name))
     divisionmachine.player_id = None
-    # player.division_machine = None
-    # division_id = machine.division[0].division_id
-    # entry = Entry.query.filter_by(player_id=player.player_id,completed=False,active=True,voided=False,division_id=division_id).first()
-    # if entry is None:
-    #     raise Conflict('What the shit?!')
-    # app.routes.entry.add_score(entry,machine,'-1')    
-    # if len(entry.scores) >= tom_config.scores_per_entry:
-    #     app.routes.entry.complete_entry(entry)
-    # if player.player_is_an_asshole_count is None:
-    #     player.player_is_an_asshole_count=0        
-    # player.player_is_an_asshole_count=player.player_is_an_asshole_count+1
     DB.session.commit()
     
     return jsonify({})
+
+@App.route('/divisionmachine/<divisionmachine_id>/team/<team_id>/clear', methods=['PUT'])
+@login_required
+@fetch_entity(DivisionMachine, 'divisionmachine')
+@fetch_entity(Player, 'player')
+def clear_machine_team(divisionmachine, team): #killroy
+    """
+description: Mark a division_machine as not being played (by clearing the team_id from the division_machine)
+post data: 
+    none
+url params: 
+    divisionmachine_id: int : id of division_machine being played
+    team_id: int : id of team playing division_machine
+returns:
+    empty dict
+    """ 
+    if team.division_machine is None:
+        raise Conflict('Team %s is not playing machine %s !' % (team.team_name,divisionmachine.machine.name))                
+    if team.division_machine.division_machine_id != divisionmachine.division_machine_id:
+        raise Conflict('Team %s is not playing machine %s !' % (team.team_name,divisionmachine.machine.name))
+    divisionmachine.player_id = None
+    DB.session.commit()
+    
+    return jsonify({})
+
 
 
 @App.route('/machine/<divisionmachine_id>/rankings', methods=['GET'])
@@ -131,5 +201,13 @@ def get_machine_rankings(divisionmachine):
 @App.route('/divisionmachine/<divisionmachine_id>', methods=['GET'])
 @fetch_entity(DivisionMachine, 'divisionmachine')
 def get_division_machine(divisionmachine):
-    """get a division machine"""
+    """
+description: get a specific division_machine
+post data: 
+    none
+url params: 
+    divisionmachine_id: int : id of division_machine to return    
+returns:
+    dict of division_machine requested
+    """  
     return jsonify(divisionmachine.to_dict_simple())

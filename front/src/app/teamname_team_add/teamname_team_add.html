@@ -9,9 +9,15 @@
 <div class="scrollable">
   <div class="scrollable-content"  style='padding:10px'>
     <form>
-      <div class='form-group form-group-xlg input-group input-group-xlg'>        
+      <div
+         class='form-group form-group-xlg input-group input-group-xlg'>        
 	<span  class="input-group-addon" id="team_name">Team Name</span>
 	<input
+           popover-placement="bottom"
+           uib-popover="string 'team' not allowed in team name"
+           popover-trigger='none'
+           popover-is-open='team.team_name.match("team").length'                    
+           
 	   type='text'
 	   class='form-control'
 	   aria-describedby='team_name'
@@ -20,7 +26,8 @@
 	   />
       </div>
     </form>
-    <a
+    <button
+       ng-disabled='team.team_name.match("team").length'
        class='btn btn-info btn-xlg'
        ui-sref='.playeroneselect_team_add({teamName:team.team_name})'
        > Next</a>    

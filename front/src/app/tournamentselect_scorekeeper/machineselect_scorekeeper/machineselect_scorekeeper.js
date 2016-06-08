@@ -3,17 +3,12 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper').con
     'app.tournamentselect_scorekeeper.machineselect_scorekeeper',    
     function($scope, $state, StatusModal, TimeoutResources) {
 	$scope.division_id=$state.params.divisionId;
-	StatusModal.loading();
+	StatusModal.loading();        
 	$scope.tournaments_promise = TimeoutResources.GetActiveTournaments();
 	$scope.division_promise = TimeoutResources.GetDivision($scope.tournaments_promise,{division_id:$scope.division_id});
 	$scope.division_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
-	    console.log($scope.resources.division);
-	    StatusModal.loaded();
+            StatusModal.loaded();
 	});
-	//if($scope.checkForBlankParams($scope.player_info) == true){
-	//    return;
-	//}
-	//$scope.player = TimeoutResources.addPlayerResource().addPlayer(submit_data);	    
     }
 );

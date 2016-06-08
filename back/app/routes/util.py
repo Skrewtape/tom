@@ -6,35 +6,17 @@ from werkzeug.exceptions import BadRequest, ImATeapot
 from flask_restless.helpers import to_dict
 from app.types import Division, Tournament
 
-def i_am_a_teapot(message,goto_state):
+def i_am_a_teapot(message,goto_state): #killroy
+    #FIXME : goto_state should be handled on the client side, but I'm being lazy
     new_exception = ImATeapot(message)
     new_exception.state_go = goto_state
     return new_exception
 
-def get_division_from_metadivision(metadiv_id):
+def get_division_from_metadivision(metadiv_id): #killroy
     # WE ASSUME ONLY ONE DIVISION IN A METADIVISION IS ACTIVE AT ONCE
     return Division.query.filter_by(metadivision_id=metadiv_id).join(Tournament).filter_by(active=True).first()
-# def entry_dict(entry):    
-#     #FIXME : need to use marshmellow here to make more generalized version
-#     #http://marshmallow.readthedocs.org/en/latest/examples.html
-#     entry_dict = to_dict(entry)
-#     #entry_dict['player'] = to_dict(entry.player)
-#     #entry_dict['machine'] = to_dict(entry.machine)
-#     entry_dict['division'] = to_dict(entry.division)    
-#     entry_dict['scores'] = []
-#     for i in entry.scores:        
-#         entry_dict['scores'].append(to_dict(i))
-#     #entry_dict['scores'] = to_dict(entry.scores)
-#     return entry_dict
 
-# def player_dict(player):
-#     player_dict = to_dict(player)
-#     #print player_dict
-#     player_dict['entries'] = []
-#     for i in player.entries:
-#         player_dict['entries'].append(entry_dict(i))
-#     return player_dict
-
+#FIXME : this should not be needed anymore
 def calculate_score_points_from_rank(rank):
     if rank == 0:
         return 0

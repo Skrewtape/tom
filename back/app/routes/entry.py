@@ -10,37 +10,7 @@ from app.routes import team as route_team
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
 
-# setting player_id and team_id on entries
-# 
-# buying tokens
-## buy team token - check
-## set team id on entry - not needed anymore
-# start game
-## if tournamen it team tournament - check
-### if no entry exists for team for division - check
-#### if tokens exist for team in division - check
-##### create entry with team id - check
-### set division_machine team id - check
-# add score
-## add score to entry
-## if tournament is team tournament
-### set division_machine team id to none
-# void
-## if tournament is team tourney
-### set division_machine team_id to none
-# undo
-## whatever
-
-#ui
-# start game
-## need tournament id
-## on succes, get team
-# record score
-## need tournament id
-## need team id
-
-
-def shared_get_query_for_active_entries(player_id=None,team_id=None,div_id=None,metadiv_id=None):
+def shared_get_query_for_active_entries(player_id=None,team_id=None,div_id=None,metadiv_id=None): #killroy
     if metadiv_id is None and div_id is None:
         raise Exception('no metadiv_id or div_id specified')
     if team_id is None and player_id is None:
@@ -110,15 +80,9 @@ def shared_check_player_can_start_new_entry(player,division):
     return True
 
 def shared_create_active_entry(division,player=None,team=None):
-    # if division tournament is team, lookup team_id for player
     if not division.tournament.active:
         raise Conflict('tournament closed')
     teams = []
-    #if team:
-    #    teams = route_team.shared_get_player_teams(player.player_id)
-    #if len(teams) > 0:
-        #FIXME : will eventually need to deal with multiple teams
-        #team_id = teams[0].team_id
     if division.metadivision_id:        
         token_query = Token.query.filter_by(player_id=player.player_id,metadivision_id=division.metadivision_id)               
     else:
@@ -177,7 +141,17 @@ def create_new_entry(player,division):
 @Admin_permission.require(403)
 @fetch_entity(Entry, 'entry')
 def void_entry(entry):
-    """set a entry to voided, and tries to start a new entry if available"""
+    """
+description: Voids an entry
+post data: 
+    none
+url params: 
+    entry_id : int : id of entry to void
+returns:
+    dict of updated entry
+    """
+    if entry.voided is True or entry.complete is True:
+        raise Conflict("You are trying to void a ticket that should not be voided")
     entry.voided = True
     entry.active = False
     if entry.player_id:
@@ -187,16 +161,6 @@ def void_entry(entry):
         team = Team.query.filter_by(team_id=entry.team_id).first()        
         team.division_machine.team_id = None
     DB.session.commit()
-    # division = Division.query.filter_by(division_id=entry.division_id).first()    
-    # if entry.player_id and shared_check_player_can_start_new_entry(player,division) is False:
-    #     return jsonify(entry.to_dict_simple())        
-    # if entry.player_id and shared_check_player_can_start_new_entry(player,division) is True:
-    #     shared_create_active_entry(division,player=player)
-    # if entry.team_id and shared_check_team_can_start_new_entry(team,division) is False:
-    #     return jsonify(entry.to_dict_simple())        
-    # if entry.team_id and shared_check_team_can_start_new_entry(team,division) is True:
-    #     #back
-    #     shared_create_active_entrys(player,division)    
     return jsonify(entry.to_dict_simple())
 
 
@@ -244,21 +208,38 @@ def edit_score(score): #killroy
     DB.session.commit()
     return jsonify(score.to_dict_simple())
 
-def add_score(entry,division_machine,new_score_value):
-    #FIXME : check that player is actually the one playing machine
-    if entry.player.division_machine is None:
-        raise Conflict('Tried to add score for player who is not started on a machine!')        
-    if entry.player.division_machine.division_machine_id != division_machine.division_machine_id:
-        raise Conflict('Player is started on a different machine!')
+def add_score(entry,division_machine,new_score_value): #killroy   
+    if entry.player is None and entry.team is None:
+        raise BadRequest("Entry does not have a team or player assigned.  This should not happen.")
+    
+    if entry.player:
+        if entry.player.division_machine is None:
+            raise Conflict('Tried to add score for player who is not started on a machine!')
+
+        if entry.player.division_machine.division_machine_id != division_machine.division_machine_id:
+            raise Conflict('Player is started on a different machine!')
+
+        if entry.player.active is False:
+            raise Conflict('Player is no longer active.  Please see the front desk')
+
+    if entry.team:
+        if entry.team.division_machine is None:
+            raise Conflict('Tried to add score for team who is not started on a machine!')
+
+        if entry.team.division_machine.division_machine_id != division_machine.division_machine_id:
+            raise Conflict('Team is started on a different machine!')
+        
+
     if len(entry.scores) >= entry.number_of_scores_per_entry:
         raise Conflict('Entry already has enough scores')
+
     if any(score.division_machine_id ==  division_machine.division_machine_id for score in entry.scores):
         raise Conflict('Can not play the same game twice in one ticket')
-    if entry.player and entry.player.active is False:
-        raise Conflict('Player is no longer active.  Please see the front desk')
+
     division = Division.query.filter_by(division_id=entry.division_id).first()    
     if division_machine not in division.machines:
         raise Conflict('machine is not in division')            
+
     new_score = Score(
         score = new_score_value,
         division_machine_id = division_machine.division_machine_id
@@ -277,6 +258,17 @@ def add_score(entry,division_machine,new_score_value):
 @fetch_entity(Entry, 'entry')
 @fetch_entity(DivisionMachine, 'divisionmachine')
 def add_score_with_decorator(entry,divisionmachine,new_score_value):
+    """
+description: Add a score to a entry
+post data: 
+    none
+url params: 
+    entry_id : int : id of entry to add score to
+    divisionmachine_id : int : id of divisionmachine score was recorded on
+    new_score_value: int : score that was recorded    
+returns:
+    dict of updated entry
+    """
     return add_score(entry,divisionmachine,new_score_value)
 
 @App.route('/entry/<entry_id>', methods=['GET'])

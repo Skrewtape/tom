@@ -1,7 +1,7 @@
 angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper',['app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm','app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.void','app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole',/*REPLACEMECHILD*/]);
 angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper').controller(
     'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper',
-    function($scope, $state, StatusModal, TimeoutResources, $filter) {
+    function($scope, $state, StatusModal, TimeoutResources, $filter, $document) {
 	$scope.division_machine_id = $state.params.divisionMachineId;
 	$scope.division_id=$state.params.divisionId;
 	$scope.player_id = $state.params.playerId;
@@ -9,7 +9,13 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	$scope.formatted_score = {};
 	$scope.disabledScoreKeeping = true;
 	$scope.team_tournament = $state.params.teamTournament;
-	
+
+	$scope.fuckIos = function(){
+	    var input = window.document.querySelector("#realscoreinput");
+	    input.focus();
+	};
+
+        
 	$scope.onScoreChange = function(){
 	    $scope.formatted_score.score = $filter('number')($scope.new_score);
 	    if($scope.new_score > 0){
@@ -17,23 +23,22 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	    } else {
 		$scope.disabledScoreKeeping = true;
 	    }
-	}
+	};
 	
 	//SIGH : loading modal causes problem with input field focus
 	//StatusModal.loading();
 	$scope.machines_promise = TimeoutResources.GetActiveMachines();
-	$scope.division_machine_promise = TimeoutResources.GetDivisionMachine($scope.machines_promise,{division_machine_id:$scope.division_machine_id});
-	//$scope.tournament_promise = TimeoutResources.GetTournament($scope.division_machine_promise,{tournament_id:$scope.tournament_id});	
+	$scope.division_machine_promise = TimeoutResources.GetDivisionMachine($scope.machines_promise,{division_machine_id:$scope.division_machine_id});        
 	if($scope.team_tournament == "false"){
 	    $scope.player_promise = TimeoutResources.GetPlayer($scope.division_machine_promise,{player_id:$scope.player_id});	    
 	    $scope.entry_promise = TimeoutResources.GetPlayerActiveEntry($scope.player_promise,
 									 {player_id:$scope.player_id,
-									  division_id:$scope.division_id})
+									  division_id:$scope.division_id});
 	} else {
 	    $scope.team_promise = TimeoutResources.GetTeam($scope.division_machine_promise,{team_id:$scope.team_id});	    
 	    $scope.entry_promise = TimeoutResources.GetTeamActiveEntry($scope.team_promise,
 								       {team_id:$scope.team_id,
-									division_id:$scope.division_id})
+									division_id:$scope.division_id});
 	}
 	
 	$scope.entry_promise.then(function(data){
@@ -46,6 +51,6 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	    } else {
 		$scope.active_entry = $scope.resources.team_active_entry
 	    }
-	})
+	});
     }
 );

@@ -20,7 +20,7 @@ def get_players():
 
 @App.route('/player/asshole', methods=['GET'])
 def get_asshole_players():
-    """Get a list of players"""
+    """Get a list of asshole players"""
     return jsonify(asshole_players=[
         p.to_dict_simple() for p in
         Player.query.filter(Player.player_is_an_asshole_count > 0).order_by(Player.first_name.asc(), Player.last_name.asc()).all()
@@ -83,13 +83,13 @@ def linked_divisions_to_dict(linked_divisions):
 @fetch_entity(Player, 'player')
 def get_player(player):
     """
-description: Add a Player
+description: Get a specific Player
 post data: 
     none
 url params: 
     player_id: int :id of player to retrieve
 returns:
-    player
+    dict of player requested
     """
     player_dict = player.to_dict_with_team()
     #FIXME : this should be in the model
@@ -230,7 +230,16 @@ def deactivate_player(player):
 @App.route('/player/<player_id>/entry/active', methods=['GET'])
 @fetch_entity(Player, 'player')
 def get_active_player_entries(player):
-    """Get a list of open(i.e. not completed, not voided) entries for a player"""
+    """
+description: Get a list of active(i.e. not completed, not voided) entries for a player
+post data: 
+    none
+url params:     
+    player_id: int : id of player to get entries for
+returns:
+    dict of active entries for player.
+    key for dict is division id.  value is a dict with a key of an entry_id, value of dict of entry   
+    """     
     entries = Entry.query.filter_by(player_id=player.player_id,completed=False,voided=False,active=True).all()
     #FIXME : should only get active divisions
     divisions = Division.query.all()
@@ -239,6 +248,7 @@ def get_active_player_entries(player):
         entries_grouped_dict[division.division_id]={}
     for entry in entries:
         if entry.division_id not in entries_grouped_dict:
+            #FIXME : you can only have one active entry per division, so no need for this to be a dict
             entries_grouped_dict[entry.division_id]={}
         entries_grouped_dict[entry.division_id][entry.entry_id]=entry.to_dict_with_scores()
     return jsonify(entries_grouped_dict)

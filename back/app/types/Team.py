@@ -17,7 +17,8 @@ class Team(DB.Model):
         'Player',
         secondary=Team_Player_mapping        
     )
-    division_machine = DB.relationship('DivisionMachine', uselist=False)
+    division_machine = DB.relationship('DivisionMachine',                                       
+                                       uselist=False)
 
     def to_dict_with_players(self):
         team = to_dict(self)

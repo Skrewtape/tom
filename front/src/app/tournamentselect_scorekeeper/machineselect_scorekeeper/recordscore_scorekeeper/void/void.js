@@ -9,7 +9,6 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	$scope.void_promise = TimeoutResources.VoidEntry(undefined,{entry_id:$scope.entry_id})
 	$scope.void_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
-	})
-	//$scope.player = TimeoutResources.addPlayerResource().addPlayer(submit_data);	    
+	})        
     }
 );

@@ -37,11 +37,23 @@ def get_team(team):
 @fetch_entity(Team, 'team')
 @fetch_entity(Division, 'division')
 def get_active_team_entry(team,division):
-    """Get a list of open(i.e. not completed, not voided) entries for a team"""
+    #FIXME : this should be able to handle returning all division, not just a specified one
+    """
+description: Get a list of active(i.e. not completed, not voided) entries for a team in a given division
+post data: 
+    none
+url params:     
+    team_id: int : id of team to get entries for
+    division_id : int : id of division to look for active entries in
+returns:
+    dict of active entry for team.
+    key for dict is "entry", value is a dict of entry   
+    """     
+ 
     team = Team.query.filter_by(team_id=team.team_id).first()
     team_entries = Entry.query.filter_by(team_id=team.team_id,division_id=division.division_id,completed=False,voided=False,active=True).all()
     #FIXME : should only get active divisions
-    divisions = Division.query.all()
+    #divisions = Division.query.all()
     entries_grouped_dict = {}
     entry_id=None
     matched_entry=None

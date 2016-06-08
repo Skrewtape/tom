@@ -6,7 +6,15 @@
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
   <div class="scrollable-content big-web-font"  style='padding:10px'>
-    Player {{player_id}} has been declared a Jagoff!!
+    <span ng-if='team_tournament == "false"'>
+      Player #{{player_id}} has been declared a Jagoff!!
+    </span>
+    <span ng-if='team_tournament == "true"'>
+      The following players have been declared jagoffs: <br>
+      <div ng-repeat='player in resources.team.players'>
+        {{player.first_name}} {{player.last_name}} (#{{player.player_id}})
+      </div>
+    </span>
     <br>
       <a
 	 class='btn btn-info btn-xlg big-web-font'

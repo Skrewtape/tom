@@ -2,9 +2,11 @@ angular.module('app.tournamentselect_scorekeeper',['app.tournamentselect_scoreke
 angular.module('app.tournamentselect_scorekeeper').controller(
     'app.tournamentselect_scorekeeper',
     function($scope, $state, StatusModal, TimeoutResources) {
-	$scope.tournaments_promise = TimeoutResources.GetActiveTournaments()
+        StatusModal.loading();
+	$scope.tournaments_promise = TimeoutResources.GetActiveTournaments();
 	$scope.tournaments_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
-	})
+            StatusModal.loaded();
+	});
     }
 );

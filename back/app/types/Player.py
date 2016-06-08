@@ -36,15 +36,6 @@ class Player(DB.Model):
     )
     
     division_machine = DB.relationship('DivisionMachine', uselist=False)
-    #team = DB.relationship('Team')
-    # active_tournaments_entries = DB.relationship(
-    #     'Entry',
-    #     secondary="join(Entry,Division,Entry.division_id==Division.division_id)",        
-    #     primaryjoin="Player.player_id==Entry.player_id",                
-    #     secondaryjoin="and_(Division.division_id==Entry.division_id,"
-    #     "and_(Division.tournament_id==Tournament.tournament_id,"
-    #     "Tournament.active==True))"
-    # )
             
     def to_dict_with_team(self):
         player_dict = to_dict(self)

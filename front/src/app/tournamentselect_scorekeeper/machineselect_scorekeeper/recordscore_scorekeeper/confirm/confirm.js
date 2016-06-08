@@ -2,11 +2,14 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm').controller(
     'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm',
     function($scope, $state, StatusModal, TimeoutResources) {
-	$scope.resources = TimeoutResources.GetAllResources();
-	$scope.score=$state.params.score
-	//if($scope.checkForBlankParams($scope.player_info) == true){
-	//    return;
-	//}
-	//$scope.player = TimeoutResources.addPlayerResource().addPlayer(submit_data);	    
+	$scope.division_machine_id = $state.params.divisionMachineId;
+        $scope.score=$state.params.score;        
+        StatusModal.loading();
+        $scope.division_machine_promise = TimeoutResources.GetDivisionMachine($scope.machines_promise,{division_machine_id:$scope.division_machine_id});        
+        $scope.division_machine_promise.then(function(data){
+	    $scope.resources = TimeoutResources.GetAllResources();
+            StatusModal.loaded();
+        });
+        
     }
 );

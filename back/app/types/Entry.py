@@ -37,6 +37,10 @@ class Entry(DB.Model):
         backref=DB.backref('entries'),
         foreign_keys=[player_id]
     )
+    team = DB.relationship(
+        'Team',
+        foreign_keys=[team_id]
+    )    
     
     scores = DB.relationship("Score",
                              lazy='joined'

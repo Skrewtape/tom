@@ -8,15 +8,18 @@
 </div>
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
-    <div class="big-web-font scrollable-content"  style='padding:10px'>
+    <div class="big-web-font scrollable-content"  style='padding:10px;'>
       Score : {{score|number}}<br>
       Machine : {{resources.division_machine.name}}
       <br>
       <button
+         style='margin-top:15px;'
 	 class='btn btn-info btn-xlg big-web-font'
 	 ui-sref='.process({finalScore:score})'
 	 >Record Score</button>
+      <br>
       <button
+         style='margin-top:15px;'
 	 class='btn btn-info btn-xlg big-web-font'
 	 ui-sref='^'
 	 >Re-enter Score</button>      

@@ -10,15 +10,26 @@
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
     <div class="big-web-font scrollable-content"  style='padding:10px'>
       <h2>UH OH</h2>
-      Please confirm the player standing next to you is NOT {{resources.player.first_name}} {{resources.player.last_name}} ({{resources.player.player_id}})     
+      <span ng-if='team_tournament == "false"'>
+        Please confirm the player standing next to you is NOT {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}})
+      </span>
+      <span ng-if='team_tournament == "true"'>
+        Please confirm the players standing next to you are NOT <br> {{resources.team.players[0].first_name}} {{resources.team.players[0].last_name}}<br>
+        {{resources.team.players[1].first_name}}  {{resources.team.players[1].last_name}} <br>
+        (<i>Team {{resources.team.team_name}}</i>)
+      </span>
+      <br>
       <a
 	 class='btn btn-info btn-xlg big-web-font'
-	 style='width:50%;margin:auto'
+	 style='width:75%;margin:auto;margin-bottom:15px;margin-top:15px'
 	 ui-sref='.process({asshole:true})'
-	 >#{{resources.player.player_id}} is a Jagoff</a>
+	 >
+        <span ng-if='team_tournament == "false"'>#{{resources.player.player_id}} is a Jagoff</span>
+        <span ng-if='team_tournament == "true"'>Team {{resources.team.team_name}} is a Jagoff</span>
+      </a>
       <a
 	 class='btn btn-info btn-xlg big-web-font'
-	 style='width:50%;margin:auto'
+	 style='width:75%;margin:auto'
 	 ui-sref='^'
 	 >Never Mind</a>
     </div>      

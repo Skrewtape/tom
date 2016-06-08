@@ -6,26 +6,31 @@
 
 <div class="scrollable">
   <div class="big-web-font scrollable-content"  style='padding:10px'>
-    {{final_score}} was recorded on {{resources.division_machine.name}} for
+    {{final_score|number}} was recorded on {{resources.division_machine.name}} for
     <span ng-if='team_tournament=="false"'>
       player {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}})
     </span>
     <span ng-if='team_tournament=="true"'>
       team {{resources.team.team_name}}
     </span>
-    <br>
     <span ng-if='complete==true'>
+      <br>
     <button
+       style='margin-top:15px;'
        class='btn btn-info btn-xlg big-web-font'
        ui-sref='.complete({entryId:entry_id})'
        >Complete Ticket</button>      
     </span>
     <span ng-if='complete==false'>
-    <button
-       class='btn btn-info btn-xlg big-web-font'
-       ui-sref='^.^.^.playerselect_scorekeeper({divisionMachineId:division_machine_id})'
-       >Add New Player on Machine</button>
-    <button
+      <br>      
+      <button
+         style='margin-top:15px;'
+         class='btn btn-info btn-xlg big-web-font'
+         ui-sref='^.^.^.playerselect_scorekeeper({divisionMachineId:division_machine_id})'
+         >Add New Player on Machine</button>
+      <br>
+      <button
+       style='margin-top:15px;'         
        class='btn btn-info btn-xlg big-web-font'
        ui-sref='^.^.^'
        >Return to Machine List</button>
