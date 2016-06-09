@@ -17,8 +17,9 @@ class Division(DB.Model):
         'metadivision.metadivision_id'
     ))
     division_id = DB.Column(DB.Integer, primary_key=True)
-    name = DB.Column(DB.String(1000))
+    name = DB.Column(DB.String(100))
     number_of_scores_per_entry = DB.Column(DB.Integer)
+    stripe_sku = DB.Column(DB.String(100))
     tournament_id = DB.Column(DB.Integer, DB.ForeignKey(
         'tournament.tournament_id'
     ))

@@ -113,6 +113,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     // resource_results['player_token'] = undefined;
     // resource_results['players'] = undefined;
     // resource_results['ifpa_player'] = undefined;
+    resources['getDivTicketCostFromStripe'] = $resource('[APIHOST]/sale/sku', null,
+     					      {
+     						  'getDivTicketCostFromStripe': {method:'GET', 'timeout': 15000}
+     					      })    
     resources['login'] = $resource('[APIHOST]/login', null,
 			           {
 				       'login': { method:'PUT' , 'timeout': 15000}
@@ -420,6 +424,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetAllTournaments: generic_resource('getAllTournaments','tournaments','get',false),//killroy was here
 	GetAssholes: generic_resource('getAssholes','assholes','get',false),        
 	GetDivision: generic_resource('getDivision','division','get',false), //killroy
+        GetDivTicketCostFromStripe: generic_resource('getDivTicketCostFromStripe','divisions_costs','get', false),
 	GetDivisionsForFinals: generic_resource('getDivisionsForFinals','divisions_ready_for_finals','get', false),
 	GetDivisionMachine: generic_resource('getDivisionMachine','division_machine','get',false), //killroy
 	GetEntry: generic_resource('getEntry','entry','get',false),		

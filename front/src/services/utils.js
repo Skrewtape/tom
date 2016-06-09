@@ -69,10 +69,10 @@ angular.module('tom_services.utils').factory('Utils', function($filter,StatusMod
             }
             return $filter('limitTo')(name,trunc_length);            
         },
-	change_division_tickets: function(player_tokens,added_tokens,type,division_id,amount){
-	    //player_tokens[type][division_id]=player_tokens[type][division_id]+amount;
-	    added_tokens[type][division_id]=added_tokens[type][division_id]+amount;
-	},
+	// change_division_tickets: function(player_tokens,added_tokens,type,division_id,amount){
+	//     //player_tokens[type][division_id]=player_tokens[type][division_id]+amount;
+	//     added_tokens[type][division_id]=added_tokens[type][division_id]+amount;
+	// },
 	get_metadivision_for_division:get_metadivision_for_division,
 	division_in_metadivision: function(metadivisions,division_id){
 	    if(get_metadivision_for_division(metadivisions,division_id) == undefined){		

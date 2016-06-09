@@ -4,20 +4,16 @@
    ng-if='added_tokens[tokenType][division[divisionIdName]]>0'
 							   >
 <i class="pull-left fa fa-minus-circle" aria-hidden="true"> </i></a>	      
-<div class='pull-left med-web-font' style='width:70%'>
+<div class='pull-left med-web-font mobile_purchase_ticket_summary_left_column'>
   <span ng-if='division.metadivision_id != undefined'>
     {{get_metadivision_for_division(resources[tokenType],division['division_id']).name}}
   </span>
   <span ng-if='division.metadivision_id == undefined'>
-    {{tournament.name}}
-  </span>
-  tournament
-  <span ng-if='tournament.single_division == false'>
-    ,{{division.name}} division
+    {{tournament.name}}</span><span ng-if='tournament.single_division == false'>, {{division.name}} division
   </span>
   ticket
 </div>
-<div class='med-web-font pull-right' style='width:25%'>
+<div class='med-web-font pull-right mobile_purchase_ticket_summary_right_column'>
   New : <span class='badge med-web-font' style='margin-top:0px;'>{{added_tokens[tokenType][division[divisionIdName]]}} </span>
   Existing : <span class='badge med-web-font' style='margin-top:0px;'>{{resources[resourceType][tokenType][division[divisionIdName]] +  resources.player_active_entries_count[division.division_id]}} </span>
 </div>

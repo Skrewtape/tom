@@ -1,22 +1,18 @@
 <button
-   style='width:80%'
-   ng-disabled='resources[resourceType][tokenType][division[divisionIdName]] + resources.player_active_entries_count[division.division_id] >= max_unstarted_tickets'
-    class='btn btn-info btn-xlg'
+    ng-disabled='added_tokens[tokenType][division[divisionIdName]]+resources[resourceType][tokenType][division[divisionIdName]] + resources.player_active_entries_count[division.division_id] >= max_unstarted_tickets'
+    class='btn btn-info btn-xlg mobile_purchase_ticket_left_column'
     ng-click='change_division_tickets(resources[resourceType], added_tokens, tokenType, division[divisionIdName],1)'>
     <span class='pull-left'>Add
       <span ng-if='division.metadivision_id != undefined'>
 	{{get_metadivision_for_division(resources[tokenType],division['division_id']).name}}
       </span>
       <span ng-if='division.metadivision_id == undefined'>
-	{{tournament.name}}
-      </span>
-      tournament
-      <span ng-if='tournament.single_division == false'>
-	,{{division.name}} division
+	{{tournament.name}}</span><span ng-if='tournament.single_division == false'>, {{division.name}} division
       </span>
       ticket
+      <!--FIXME: metadivisions need price sku field also -->
+      <span>(${{resources.divisions_costs[division.division_id]}})</span>
+      
     </span>
 </button>
-<div class='big-web-font pull-right' style='width:15%;margin-top:10px'>{{added_tokens[tokenType][division[divisionIdName]]}} </div>
-
-<!-- <div class='big-web-font pull-right' style='width:15%;margin-left:10px;margin-top:0px'>{{max_unstarted_tickets - resources[resourceType][tokenType][division[divisionIdName]] -  resources.player_active_entries_count[division.division_id]}} Left</div> -->
+<div class='big-web-font pull-right mobile_purchase_ticket_right_column' style='margin-top:10px'>{{added_tokens[tokenType][division[divisionIdName]]}} </div>

@@ -57,7 +57,8 @@ angular.module('tom_services.status_modal')
                           templateUrl: 'services/status.html',
                           backdrop: 'static',
                           size: 'md',
-                          openedClass: 'modal_decorations',                
+                          //windowClass: 'modal-center',
+                          //openedClass: 'modal_decorations',                
                           keyboard: false,
 			  controller: function($scope){
 			      $scope.debug_msg = debug_msg;

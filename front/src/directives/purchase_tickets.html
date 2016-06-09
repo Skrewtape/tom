@@ -26,26 +26,33 @@
     <h3 class="panel-title big-web-font">Ticket Summary</h3>
   </div>
   <div class="panel-body">
-<div ng-repeat='tournament in resources.tournaments'>      
-    <div ng-repeat='division in tournament.divisions'>
-      <div ng-if='tournament.single_division == true  || division.division_id == resources.player.linked_division.division_id'>
-        <span ng-if='division.metadivision_id != undefined'>
-          <purchase-ticketssummarybutton tokentype='metadivisions' resourcetype='player_tokens' divisionidname='metadivision_id'></purchase-ticketssummarybutton><br>
-        </span>
-        <span ng-if='division.metadivision_id == undefined && tournament.team_tournament == false' >
-          <purchase-ticketssummarybutton tokentype='divisions' resourcetype='player_tokens' divisionidname='division_id'></purchase-ticketssummarybutton><br>
-        </span>
-        <span ng-if='tournament.team_tournament == true && resources.player.team != undefined'>
-          <purchase-ticketssummarybutton tokentype='teams' resourcetype='player_team_tokens' divisionidname='division_id'></purchase-ticketssummarybutton><br>
-        </span>
-      </div>      
+    <div ng-repeat='tournament in resources.tournaments'>      
+      <div ng-repeat='division in tournament.divisions'>
+        <div ng-if='tournament.single_division == true  || division.division_id == resources.player.linked_division.division_id'>
+          <span ng-if='division.metadivision_id != undefined'>
+            <purchase-ticketssummarybutton tokentype='metadivisions' resourcetype='player_tokens' divisionidname='metadivision_id'></purchase-ticketssummarybutton><br>
+          </span>
+          <span ng-if='division.metadivision_id == undefined && tournament.team_tournament == false' >
+            <purchase-ticketssummarybutton tokentype='divisions' resourcetype='player_tokens' divisionidname='division_id'></purchase-ticketssummarybutton><br>
+          </span>
+          <span ng-if='tournament.team_tournament == true && resources.player.team != undefined'>
+            <purchase-ticketssummarybutton tokentype='teams' resourcetype='player_team_tokens' divisionidname='division_id'></purchase-ticketssummarybutton><br>
+          </span>
+        </div>      
+      </div>
+    </div>
+    <hr>
+    <div class='pull-left med-web-font mobile_purchase_ticket_summary_left_column'><i>Total Cost</i></div><div class='pull-right mobile_purchase_ticket_summary_right_column med-web-font'>${{total_cost}}</div>
+    
   </div>
 </div>
-  </div>
-</div>
+<br>
 <button
-   ng-click='stripe_dialog()'
-   > boom </button>
+   ng-disabled='total_cost<=0'
+   class='btn btn-info btn-xlg'
+   ng-click='stripe_dialog(total_cost*100)'
+   > Purchase Tickets With Stripe </button> <span ng-if='ticket_purchase_in_progress==true'><i style='font-size:40px' class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i></span>
+<br>
 <br>
 <button
    class='btn btn-info btn-xlg'

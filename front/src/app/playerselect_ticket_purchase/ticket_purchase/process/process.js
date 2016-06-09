@@ -9,7 +9,7 @@ angular.module('app.playerselect_ticket_purchase.ticket_purchase.process').contr
 	}
 	tokensToPost = {};
 	tokensToPost.player_id = $scope.player_id;
-	tokensToPost.tokens = [];
+	tokensToPost.tokens = [];        
 	StatusModal.loading();
 	$scope.metadivisions_promise = TimeoutResources.GetAllMetadivisions();
 	$scope.player_teams_promise = TimeoutResources.GetPlayerTeams($scope.metadivisions_promise,{player_id:$scope.player_id})		
@@ -18,6 +18,7 @@ angular.module('app.playerselect_ticket_purchase.ticket_purchase.process').contr
 	$scope.tokens_submit_promise = TimeoutResources.AddTokens($scope.tournaments_promise,undefined,$scope.added_tokens);	
 	$scope.tokens_submit_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
+            console.log('hi there');
 	    StatusModal.loaded();
 	})
 
