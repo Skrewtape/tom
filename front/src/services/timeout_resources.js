@@ -2,10 +2,10 @@
 //poop page
 angular.module('tom_services.timeout_resources', ['ngResource']);
 angular.module('tom_services.timeout_resources').factory('TimeoutResources', function($resource,$q) {
-    var all_active_tournaments_resource = $resource('[APIHOST]/tournament/active', null,
-     		      {
-     			  'getActiveTournaments': {method:'GET', 'timeout': 15000}
-     		      })    
+    // var all_active_tournaments_resource = $resource('[APIHOST]/tournament/active', null,
+    //  		      {
+    //  			  'getActiveTournaments': {method:'GET', 'timeout': 15000}
+    //  		      })    
     var resource_results = {};
     var resources = {};    
     var timestamps = {};
@@ -107,13 +107,16 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	return machines_array;
     }
     
-    resource_results['tournaments'] = undefined;
-    resource_results['metadivisions'] = undefined;
-    resource_results['player'] = undefined;
-    resource_results['player_token'] = undefined;
-    resource_results['players'] = undefined;
-    resource_results['ifpa_player'] = undefined;
-
+    // resource_results['tournaments'] = undefined;
+    // resource_results['metadivisions'] = undefined;
+    // resource_results['player'] = undefined;
+    // resource_results['player_token'] = undefined;
+    // resource_results['players'] = undefined;
+    // resource_results['ifpa_player'] = undefined;
+    resources['login'] = $resource('[APIHOST]/login', null,
+			           {
+				       'login': { method:'PUT' , 'timeout': 15000}
+			           });
     resources['addMachineToDivision'] = $resource('[APIHOST]/division/:division_id/machine/:machine_id', {division_id:'@division_id',machine_id:'@machine_id'},
 			     {
 				 'addMachineToDivision': {method:'PUT', 'timeout': 15000}
@@ -366,25 +369,27 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetAllResources: function(){//killroy was here
 	    return resource_results;
 	},
+        //FIXME : refactor so we don't need GetPlayerNameSmushed and GetPlayerLinkedTournamentId
 	GetPlayerNameSmushed: function(){
 	    return resource_results.player.first_name+resource_results.player.last_name;
 	},
-	GetEntryId: function(){
-	    return resource_results.player_active_entry.entry.entry_id
-	},
-	GetTeamEntryId: function(){
-	    return resource_results.team_active_entry.entry.entry_id
-	},		
-	GetTournamentIdFromDivision: function(){
-	    return resource_results.division.tournament_id
-	},
-	GetPlayerIdFromDivisionMachine: function(){
-	    return resource_results.division_machine.player_id;
-	},	
 	GetPlayerLinkedTournamentId: function(){
 	    return resource_results.player.linked_division.tournament_id;
 	    //return 1;
 	},
+	// GetEntryId: function(){
+	//     return resource_results.player_active_entry.entry.entry_id
+	// },
+	// GetTeamEntryId: function(){
+	//     return resource_results.team_active_entry.entry.entry_id
+	// },		
+	// GetTournamentIdFromDivision: function(){
+	//     return resource_results.division.tournament_id
+	// },
+	// GetPlayerIdFromDivisionMachine: function(){
+	//     return resource_results.division_machine.player_id;
+	// },	
+        
 	AddFinals: generic_resource('addFinals','added_finals','post', false),	//killroy was here
 	AddMetadivision: generic_resource('addMetadivision','meta_division','post', false), //killroy
 	AddMachineToDivision: generic_resource('addMachineToDivision','added_machine','post',false), //killroy
@@ -441,145 +446,145 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
         ToggleTournamentActive: generic_resource('toggleTournamentActive','toggled_tournament','post', false), //killroy was here
 	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false), //killroy
 	VoidEntry: generic_resource('voidEntry','entry','post', false),
-	
+	Login: generic_resource('login','logged_in_user','post', false),
 	FlushResourceCache:flush_resource_cache,
-	getAllMetadivisionsResource: function(){
-	    return $resource('[APIHOST]/metadivision', null,			     
-			     {
-				 'getAllMetadivisions': {method:'GET', 'timeout': 15000}
-			     })	    
-	},	
-	loginResource: function (){
-	    return $resource('[APIHOST]/login', null,
-			     {
-				 'login': { method:'PUT' , 'timeout': 15000}
-			     });
-	},
+	// getAllMetadivisionsResource: function(){
+	//     return $resource('[APIHOST]/metadivision', null,			     
+	// 		     {
+	// 			 'getAllMetadivisions': {method:'GET', 'timeout': 15000}
+	// 		     })	    
+	// },	
+	// loginResource: function (){
+	//     return $resource('[APIHOST]/login', null,
+	// 		     {
+	// 			 'login': { method:'PUT' , 'timeout': 15000}
+	// 		     });
+	// },
 	// addTournamentResource: function(){
 	//     return $resource('[APIHOST]/tournament', null,
 	// 		     {
 	// 			 'addTournament': {method:'POST', 'timeout': 15000}
 	// 		     })
 	// },
-	getAllTournamentsResource: function(){
-	    return $resource('[APIHOST]/tournament', null,
-			     {
-				 'getAllTournaments': {method:'GET', 'timeout': 15000}
-			     })
-	},
-	getActiveTournamentsResource: function(){
-	    return $resource('[APIHOST]/tournament/active', null,
-			     {
-				 'getActiveTournaments': {method:'GET', 'timeout': 15000}
-			     })
-	},
-	getTournamentResource: function(){
-	    return $resource('[APIHOST]/tournament/:tournament_id', null,
-			     {
-				 'getTournament': {method:'GET', 'timeout': 15000}
-			     })
-	},
-	addDivisionResource: function(){
-	    return $resource('[APIHOST]/division', null,			     
-			     {
-				 //FIXME : need to standardize return format - specifically
-				 //        need to always return dict's, even in things that
-				 //        are sub-objects (i.e. list of machines under division
-				 //        should be a dict, not an array ).  We can do 
-				 //        response massaging at the resourc
-				 'addDivision': {method:'POST', 'timeout': 15000}
-			     })
-	},
-	getDivisionResource: function(){
-	    return $resource('[APIHOST]/division/:division_id', null,
-			     {
-				 'getDivision': {method:'GET', 'timeout': 15000}
-			     })
-	},
-	getAllDivisionsResource: function(){
-	    return $resource('[APIHOST]/division', null,
-			     {
-				 'getAllDivisions': {method:'GET', 'timeout': 15000}
-			     })
-	},
-	getAllMachinesResource: function(){
-	    return $resource('[APIHOST]/machine', null,
-			     {
-				 'getAllMachines': {method:'GET', 'timeout': 15000}
-			     })
-	},
-	getAllMachinesArrayResource: function(){
-	    return $resource('[APIHOST]/machine', null,
-			     {
-				 'getAllMachinesArray': {
-				     method:'GET',
-				     'timeout': 15000,
-				     isArray:true,
-				     transformResponse:function(data,headersGetter){
-					 machines_array = [];
-					 machines_dict = angular.fromJson(data);
-					 for(machine_index in machines_dict){
-					     machine = machines_dict[machine_index];
-					     machines_array.push(machine);
-					 }
-					 return machines_array;
-				     }
-				 }
-			     })
-	},
-	addMachineToDivisionResource: function(){
-	    return $resource('[APIHOST]/division/:division_id/machine/:machine_id', {division_id:'@division_id',machine_id:'@machine_id'},
-			     {
-				 'addMachineToDivision': {method:'PUT', 'timeout': 15000}
-			     })
-	},
-	removeMachineFromDivisionResource: function(){
-	    return $resource('[APIHOST]/division_machine/:division_machine_id', {division_machine_id:'@division_machine_id'},
-			     {
-				 'removeMachineFromDivision': {method:'DELETE', 'timeout': 15000}
-			     })
-	},
-	enableMachineInDivisionResource: function(){
-	    return $resource('[APIHOST]/division_machine/:division_machine_id', {division_machine_id:'@division_machine_id'},
-			     {
-				 'enableMachineInDivision': {method:'PUT', 'timeout': 15000}
-			     })
-	},
-	addPlayerResource: function(){
-	    return $resource('[APIHOST]/player', null,			     
-			     {
-				 'addPlayer': {method:'POST', 'timeout': 15000}
-			     })
-	},
-	getPlayerResource: function(){
-	    return $resource('[APIHOST]/player/:player_id', null,			     
-			     {
-				 'getPlayer': {method:'GET', 'timeout': 15000}
-			     })
-	},
-	editPlayerResource: function(){
-	    return $resource('[APIHOST]/player/:player_id', {player_id:'@player_id'},			     
-			     {
-				 'editPlayer': {method:'PUT','timeout': 15000}
-			     })
-	},
-	toggleTournamentActiveResource: function(){
-	    return $resource('[APIHOST]/tournament/:tournament_id/:action', {tournament_id:'@tournament_id',action:'@action'},			     
-			     {
-				 'toggleTournamentActive': {method:'PUT','timeout': 15000}
-			     })
-	},
-	getTokensForPlayerResource: function(){
-	    return $resource('[APIHOST]/token/player_id/:player_id', null,			     
-			     {
-				 'getTokensForPlayer': {method:'GET', 'timeout': 15000}
-			     })	    
-	},
-	addTokensResource: function(){
-	    return $resource('[APIHOST]/token', null,			     
-			     {
-				 'addTokens': {method:'POST', 'timeout': 15000}
-			     })	    
-	}
+	// getAllTournamentsResource: function(){
+	//     return $resource('[APIHOST]/tournament', null,
+	// 		     {
+	// 			 'getAllTournaments': {method:'GET', 'timeout': 15000}
+	// 		     })
+	// },
+	// getActiveTournamentsResource: function(){
+	//     return $resource('[APIHOST]/tournament/active', null,
+	// 		     {
+	// 			 'getActiveTournaments': {method:'GET', 'timeout': 15000}
+	// 		     })
+	// },
+	// getTournamentResource: function(){
+	//     return $resource('[APIHOST]/tournament/:tournament_id', null,
+	// 		     {
+	// 			 'getTournament': {method:'GET', 'timeout': 15000}
+	// 		     })
+	// },
+	// addDivisionResource: function(){
+	//     return $resource('[APIHOST]/division', null,			     
+	// 		     {
+	// 			 //FIXME : need to standardize return format - specifically
+	// 			 //        need to always return dict's, even in things that
+	// 			 //        are sub-objects (i.e. list of machines under division
+	// 			 //        should be a dict, not an array ).  We can do 
+	// 			 //        response massaging at the resourc
+	// 			 'addDivision': {method:'POST', 'timeout': 15000}
+	// 		     })
+	// },
+	// getDivisionResource: function(){
+	//     return $resource('[APIHOST]/division/:division_id', null,
+	// 		     {
+	// 			 'getDivision': {method:'GET', 'timeout': 15000}
+	// 		     })
+	// },
+	// getAllDivisionsResource: function(){
+	//     return $resource('[APIHOST]/division', null,
+	// 		     {
+	// 			 'getAllDivisions': {method:'GET', 'timeout': 15000}
+	// 		     })
+	// },
+	// getAllMachinesResource: function(){
+	//     return $resource('[APIHOST]/machine', null,
+	// 		     {
+	// 			 'getAllMachines': {method:'GET', 'timeout': 15000}
+	// 		     })
+	// },
+	// getAllMachinesArrayResource: function(){
+	//     return $resource('[APIHOST]/machine', null,
+	// 		     {
+	// 			 'getAllMachinesArray': {
+	// 			     method:'GET',
+	// 			     'timeout': 15000,
+	// 			     isArray:true,
+	// 			     transformResponse:function(data,headersGetter){
+	// 				 machines_array = [];
+	// 				 machines_dict = angular.fromJson(data);
+	// 				 for(machine_index in machines_dict){
+	// 				     machine = machines_dict[machine_index];
+	// 				     machines_array.push(machine);
+	// 				 }
+	// 				 return machines_array;
+	// 			     }
+	// 			 }
+	// 		     })
+	// },
+	// addMachineToDivisionResource: function(){
+	//     return $resource('[APIHOST]/division/:division_id/machine/:machine_id', {division_id:'@division_id',machine_id:'@machine_id'},
+	// 		     {
+	// 			 'addMachineToDivision': {method:'PUT', 'timeout': 15000}
+	// 		     })
+	// },
+	// removeMachineFromDivisionResource: function(){
+	//     return $resource('[APIHOST]/division_machine/:division_machine_id', {division_machine_id:'@division_machine_id'},
+	// 		     {
+	// 			 'removeMachineFromDivision': {method:'DELETE', 'timeout': 15000}
+	// 		     })
+	// },
+	// enableMachineInDivisionResource: function(){
+	//     return $resource('[APIHOST]/division_machine/:division_machine_id', {division_machine_id:'@division_machine_id'},
+	// 		     {
+	// 			 'enableMachineInDivision': {method:'PUT', 'timeout': 15000}
+	// 		     })
+	// },
+	// addPlayerResource: function(){
+	//     return $resource('[APIHOST]/player', null,			     
+	// 		     {
+	// 			 'addPlayer': {method:'POST', 'timeout': 15000}
+	// 		     })
+	// },
+	// getPlayerResource: function(){
+	//     return $resource('[APIHOST]/player/:player_id', null,			     
+	// 		     {
+	// 			 'getPlayer': {method:'GET', 'timeout': 15000}
+	// 		     })
+	// },
+	// editPlayerResource: function(){
+	//     return $resource('[APIHOST]/player/:player_id', {player_id:'@player_id'},			     
+	// 		     {
+	// 			 'editPlayer': {method:'PUT','timeout': 15000}
+	// 		     })
+	// },
+	// toggleTournamentActiveResource: function(){
+	//     return $resource('[APIHOST]/tournament/:tournament_id/:action', {tournament_id:'@tournament_id',action:'@action'},			     
+	// 		     {
+	// 			 'toggleTournamentActive': {method:'PUT','timeout': 15000}
+	// 		     })
+	// },
+	// getTokensForPlayerResource: function(){
+	//     return $resource('[APIHOST]/token/player_id/:player_id', null,			     
+	// 		     {
+	// 			 'getTokensForPlayer': {method:'GET', 'timeout': 15000}
+	// 		     })	    
+	// },
+	// addTokensResource: function(){
+	//     return $resource('[APIHOST]/token', null,			     
+	// 		     {
+	// 			 'addTokens': {method:'POST', 'timeout': 15000}
+	// 		     })	    
+	// }
     };
 });

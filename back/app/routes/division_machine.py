@@ -5,7 +5,7 @@ from flask import jsonify, request
 from flask_login import login_required
 from app import App
 from app.types import Machine, Player, Entry, Score, Division, DivisionMachine, Team
-from app import App, Admin_permission, DB
+from app import App, Admin_permission, Scorekeeper_permission, DB
 from app.routes.util import fetch_entity, i_am_a_teapot
 from app.routes import entry as route_entry
 from app.routes import team as route_team
