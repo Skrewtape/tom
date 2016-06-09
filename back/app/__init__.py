@@ -10,12 +10,11 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_principal import Principal, Permission, RoleNeed
 from flask_cors import CORS
-
+from app import secret_config
 from werkzeug.exceptions import default_exceptions, HTTPException
 
 App = Flask(__name__)
-App.secret_key = '\xee\xaa\x99\xdc\xcd\xbf\x0e2\xf5D\x94\xe4\xc7\x90\xaf\xd2\xea\x89\x95_\x94\x82\x8b\xdc'
-
+App.secret_key = secret_config.app_secret_key
 App.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 App.config['SQLALCHEMY_POOL_SIZE']=20
 App.config['SQLALCHEMY_POOL_TIMEOUT']=5
