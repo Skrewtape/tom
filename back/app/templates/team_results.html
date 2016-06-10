@@ -1,0 +1,90 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class='panel-title'>Team Info</h3>
+  </div>
+  <div class='panel-body'>
+    Team Name : {{"%s" % (team.team_name)}}<br>
+    Player 1 : {{team['players'][0].first_name}} {{team['players'][0].last_name}}<br>
+    Player 2 : {{team['players'][1].first_name}} {{team['players'][1].last_name}}<br>
+  </div>
+</div>
+{% if inprogress_entries|length > 0 %}
+{% for entry_division_id,entries in inprogress_entries.iteritems() %}
+{% if entries | length > 0 %}
+<div class="panel panel-default">
+  <div class="panel-heading">      
+    <h3 class='panel-title'>"{{sidebar_info['divisions'][entry_division_id].name}}" In Progress</h3>
+  </div>
+  <div class='panel-body'>
+    Entry #{{ entries[0].entry_id }}:<br>
+    <table class='table table-condensed'>
+      <tr>
+	<th>Machine</th><th>Score</th><th>Rank</th><th>Points</th>
+      </tr>
+      {% for score in entries[0].scores %}
+      <tr>
+	<td>{{score.machine_name}}</td><td>{{score.machine_score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_points}}</td>
+      </tr>
+      {% endfor %}
+      <td></td><td></td><td></td><td>{{entries[0].total_score}}</td>    
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if player_entries|length > 0 %}
+{% for entry_division_id,entries in team_entries.iteritems() %}
+{% if entries | length > 0 %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class='panel-title'> {{sidebar_info['divisions'][entry_division_id].name}} Best Entry</h3>
+    </div>
+    <div class='panel-body'>
+      Entry #{{ entries[0].entry_id }}:<br>
+      <table class='table'>
+	<tr>
+	  <th>Machine</th><th>Score</th><th>Rank</th><th>Points</th>
+	</tr>
+	{% for score in entries[0].scores %}
+	<tr>
+	  <td>{{score.machine_name}}</td><td>{{score.machine_score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_points}}</td>
+	</tr>
+	{% endfor %}
+	<td></td><td></td><td></td><td>{{entries[0].total_score}}</td>    
+      </table>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+<hr>
+<h2>All Entries</h2>
+{% for entry_division_id,entries in team_entries.iteritems() %}
+{% if entries | length > 0 %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class='panel-title'> {{sidebar_info['divisions'][entry_division_id].name}} </h3>
+    </div>
+    <div class='panel-body'>
+      {% for entry in entries %}  
+      Entry #{{ entry.entry_id }}:<br>
+      <table class='table'>
+	<tr>
+	  <th>Machine</th><th>Score</th><th>Rank</th><th>Points</th>
+	</tr>
+	{% for score in entry.scores %}
+	<tr>
+	  <td>{{score.machine_name}}</td><td>{{score.machine_score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_points}}</td>
+	</tr>
+	{% endfor %}
+	<td></td><td></td><td></td><td>{{entry.total_score}}</td>    
+      </table>
+      {% endfor %}      
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endblock %}
