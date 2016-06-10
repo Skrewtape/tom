@@ -1,5 +1,5 @@
 import os
-
+import sys
 from json import loads, dumps
 
 from traceback import format_exception_only
@@ -10,11 +10,16 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_principal import Principal, Permission, RoleNeed
 from flask_cors import CORS
-from app import secret_config
+from app import secret_config, tom_config
 from werkzeug.exceptions import default_exceptions, HTTPException
+
+if secret_config.app_secret_key == "" or (secret_config.stripe_api_key == "" and tom_config.use_stripe is True):    
+    raise Exception("You didn't configure your secrets!")
+
 
 App = Flask(__name__)
 App.secret_key = secret_config.app_secret_key
+
 App.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 App.config['SQLALCHEMY_POOL_SIZE']=20
 App.config['SQLALCHEMY_POOL_TIMEOUT']=5
