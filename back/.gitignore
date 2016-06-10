@@ -5,4 +5,4 @@ venv
 *.pyc
 *~
 #*#
-*secret_config*
+*secret_config.py*
