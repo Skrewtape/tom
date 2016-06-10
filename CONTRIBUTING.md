@@ -130,7 +130,7 @@ A Team of Players can be created.  Tournaments can be configured as team Tournam
 
 A User is someone who needs to login to TOM (i.e. scorekeepers, admin, desk worker, etc).
 
-A Finals is associated with a specific division (i.e. Classics single division is associated with a Finals) - it represents the Finals for a specific division.  Each Finals is associated with a series of FinalsMatches - each FinalsMatch represents a round for a group of players.  It is associated with a list of FinalsPlayers - a new set of FinalsPlayer is created for each Match - each FinalsPlayer represents a player in a specific FinalsMatch.  Each FinalsPlayer is linked to a Player.  For each FinalsPlayer, there is a list of FinalsScore - a FinalsScore records the score on a specific machine in a round.   
+A Finals is associated with a specific division (i.e. Classics single division is associated with a Finals) - it represents the Finals for a specific division.  Each Finals is associated with a series of FinalsMatches - each FinalsMatch represents a round for a group of players.  Each FinalsMatch is associated with a list of FinalsPlayers - a new set of FinalsPlayer is created for each Match - each FinalsPlayer represents a player in a specific FinalsMatch.  Each FinalsPlayer is linked to a Player.  For each FinalsPlayer, there is a list of FinalsScore - a FinalsScore records the score on a specific machine in a round.   
 
 #Backend : Ranking
 
