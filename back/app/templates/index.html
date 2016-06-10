@@ -33,16 +33,16 @@
       <div class="scrollable-content">
 	<div class="list-group" ui-turn-off='uiSidebarLeft'>
 	  <a class="list-group-item">Tournaments</a>
-	  {% for menu_division_key,menu_division in divisions.iteritems() %}
+	  {% for menu_division_key,menu_division in sidebar_info['divisions'].iteritems() %}
 	  <a class="list-group-item" href="/results/division/{{menu_division.division_id}}">
 	      {{ menu_division['name'] }}
 	      <i class="fa fa-chevron-right pull-right"></i>
 	  </a>
 	  {% endfor %}
 	  <a class="list-group-item">Machines</a>
-	  {% for division_id,division_machines in division_machines.iteritems() %}
+	  {% for division_id,division_machines in sidebar_info['division_machines'].iteritems() %}
 	  <a class="list-group-item" href="/results/division_machine/{{division_machines[0]['division_machine_id']}}">
-	    {{divisions[division_id].name}}
+	    {{sidebar_info['divisions'][division_id].name}}
 	    <i class="fa fa-chevron-right pull-right"></i>	    
 	  </a>
 	  {% endfor %}

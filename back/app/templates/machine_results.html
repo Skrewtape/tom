@@ -7,7 +7,7 @@
       <br>
       <select ng-model='new_machine.data' ng-change='poop()'>
 	<option value='-1'> Select Machine </option>	
-	{% for div_machine in division_machines[division_machine['division_id']] %}	  
+	{% for div_machine in sidebar_info['division_machines'][division_machine['division_id']] %}	  
 	<option value="{{div_machine.division_machine_id}}">{{div_machine.name}}</option>
 	{% endfor %}
       </select>

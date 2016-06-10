@@ -19,7 +19,7 @@
     </div>
     <div class='panel-body'>
       {% for div_id,div_tokens in division_tokens.iteritems() %}
-      {{divisions[div_id].name}} : {{div_tokens}}<br>
+      {{sidebar_info['divisions'][div_id].name}} : {{div_tokens}}<br>
       {% endfor %}
       {% for metadiv_id,metadiv_tokens in metadivision_tokens.iteritems() %}
       {{metadivisions[metadiv_id].name}} : {{metadiv_tokens}}<br>
@@ -32,7 +32,7 @@
 {% if entries | length > 0 %}
 <div class="panel panel-default">
   <div class="panel-heading">      
-    <h3 class='panel-title'>"{{divisions[entry_division_id].name}}" In Progress</h3>
+    <h3 class='panel-title'>"{{sidebar_info['divisions'][entry_division_id].name}}" In Progress</h3>
   </div>
   <div class='panel-body'>
     Entry #{{ entries[0].entry_id }}:<br>
@@ -57,7 +57,7 @@
 {% if entries | length > 0 %}
 <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class='panel-title'> {{divisions[entry_division_id].name}} Best Entry</h3>
+      <h3 class='panel-title'> {{sidebar_info['divisions'][entry_division_id].name}} Best Entry</h3>
     </div>
     <div class='panel-body'>
       Entry #{{ entries[0].entry_id }}:<br>
@@ -82,7 +82,7 @@
 {% if entries | length > 0 %}
 <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class='panel-title'> {{divisions[entry_division_id].name}} </h3>
+      <h3 class='panel-title'> {{sidebar_info['divisions'][entry_division_id].name}} </h3>
     </div>
     <div class='panel-body'>
       {% for entry in entries %}  
