@@ -31,7 +31,7 @@ def shared_check_team_can_start_new_entry(team,division):
     if team is None or division.tournament.team_tournament is False:
         return False    
     if division.tournament.team_tournament and team:
-        active_entries = shared_get_query_for_active_entries(team_id=team_id,div_id=division.division_id).all()            
+        active_entries = shared_get_query_for_active_entries(team_id=team.team_id,div_id=division.division_id).all()            
     if len(active_entries) != 0:
         return False
     available_tokens = Token.query.filter_by(team_id=team.team_id,division_id=division.division_id).all()
