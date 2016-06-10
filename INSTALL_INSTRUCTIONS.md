@@ -39,8 +39,14 @@ ptyhon ./seed_db.py
 front/npm install
 cd front
 ./node_modules/bower/bin/bower --allow-root install
-./node_modules/grunt-cli/bin/grunt
 ```
+
+### "Compile" and Install Angular App
+```
+./node_modules/grunt-cli/bin/grunt --backend_ip=<ip address of backend machine>
+```
+
+If you are running everything on one machine, then the ip address of the backend machine is the ip of the machine you are running currently working on.
 
 ### Setting up DB Replication on Server
 **_create replication user on server_**:

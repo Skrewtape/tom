@@ -11,7 +11,7 @@ TOM is pinball tournament scoring software that lets you run multiple concurrent
 These steps assume that you are logged in as root, and running from the top level of the TOM git repo, and you are installing on the machine you are running a browser on.
 
 * Follow the steps in [INSTALL_INSTRUCTIONS.md](INSTALL_INSTRUCTIONS.md)
-* Run the following commands
+* To start the TOM backend, run the following commands
 
 ```
 cd back
