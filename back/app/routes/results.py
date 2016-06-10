@@ -11,6 +11,27 @@ from flask import render_template
 from flask.ext.cors import cross_origin
 from flask_restless.helpers import to_dict
 
+# refactor :
+# split out sql queries
+#
+entry_id_idx=0
+player_id_idx=1
+entry_score_sum_idx=2
+entry_rank_idx=3
+voided_idx=4
+completed_idx=5
+
+machine_name_idx=0
+score_idx=1
+score_entry_id_idx=2
+score_rank_idx=3
+papa_points_idx=4
+
+def get_entries_ranked_by_division(division_id):
+    return DB.engine.execute("select entry_id, player_id, entry_score_sum, rank() over (order by entry_score_sum desc), voided, completed from (select voided, completed, entry_id, player_id, sum(entry_score) as entry_score_sum  from (select entry.voided, entry.completed, entry.player_id, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s) as ss group by ss.entry_id, player_id,voided,completed order by entry_score_sum desc) as tt" % division_id )        
+def get_scores_ranked_by_machine(division_id):
+        return DB.engine.execute("select machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as entry_score from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and entry.division_id = %s order by entry_score desc" % division_id)
+        
 @App.route('/results/player/<player_id>', methods=['GET'])
 def results_player(player_id):
     divisions = Division.query.all()
@@ -20,26 +41,32 @@ def results_player(player_id):
     
     for division in divisions:
         division_id = division.division_id
-        #return_entry_results[division_id]=[]
-        #return_inprogress_entry_results[division_id]=[]
-        entry_results = DB.engine.execute("select entry_id, player_id, entry_score_sum, rank() over (order by entry_score_sum desc), voided, completed from (select voided, completed, entry_id, player_id, sum(entry_score) as entry_score_sum  from (select entry.voided, entry.completed, entry.player_id, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s) as ss group by ss.entry_id, player_id,voided,completed order by entry_score_sum desc) as tt" % division_id )    
-        score_results = DB.engine.execute("select machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as entry_score from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and entry.division_id = %s order by entry_score desc" % division_id)
+        entry_results = get_entries_ranked_by_division(division_id)
+        score_results = get_scores_ranked_by_machine(division_id)
         for score in score_results:
-            if not score[2] in return_score_results:
-                return_score_results[score[2]] = []
-            return_score_results[score[2]].append({'machine_name':score[0], 'machine_rank':score[3], 'machine_score':score[1], 'machine_points':score[4]})
-
+            score_entry_id = score[score_entry_id_idx]
+            if not score_entry_id in return_score_results:
+                return_score_results[score_entry_id] = []
+            return_score_results[score_entry_id].append({'machine_name':score[machine_name_idx], 'machine_rank':score[score_rank_idx], 'machine_score':score[score_idx], 'machine_points':score[papa_points_idx]})
+            
         for result in entry_results:
-            if result[1] != int(player_id):
-                continue            
-            if result[5] == False and result[4] == False :
-                if division_id not in return_inprogress_entry_results:
-                    return_inprogress_entry_results[division_id]=[]
-                return_inprogress_entry_results[division_id].append({'rank':result[3],'entry_id':result[0],'player_id':result[1],'total_score':result[2], 'completed':result[5],'voided':result[4],'scores':return_score_results[result[0]]})
-                continue
             if division_id not in return_entry_results:
                 return_entry_results[division_id]=[]            
-            return_entry_results[division_id].append({'rank':result[3],'entry_id':result[0],'player_id':result[1],'total_score':result[2], 'completed':result[5],'voided':result[4],'scores':return_score_results[result[0]]})
+            entry_player_id = result[player_id_idx]
+            completed = result[completed_idx]
+            entry_id = result[entry_id_idx]
+            entry_score_sum = result[entry_score_sum_idx]
+            entry_rank = result[entry_rank_idx]
+            voided = result[voided_idx]
+            entry_info = {'rank':entry_rank,'entry_id':entry_id,'player_id':entry_player_id,'total_score':entry_score_sum, 'completed':completed,'voided':voided,'scores':return_score_results[entry_id]}            
+            if entry_player_id != int(player_id):
+                continue            
+            if completed is False and voided is False:
+                if division_id not in return_inprogress_entry_results:
+                    return_inprogress_entry_results[division_id]=[]
+                return_inprogress_entry_results[division_id].append(entry_info)
+                continue
+            return_entry_results[division_id].append(entry_info)
     tokens = Token.query.filter_by(player_id=player_id).all()
     player = Player.query.filter_by(player_id=player_id).first()
     tournaments = Tournament.query.all()
