@@ -253,6 +253,15 @@ def get_entry(entry):
     """Return specific entry"""    
     return jsonify(entry.to_dict_with_scores())
 
+@App.route('/entry/count/<count>', methods=['GET'])
+def get_entry_range(count):
+    """Return most recent <count> entries"""    
+    entries_dict={}
+    for entry in Entry.query.order_by(Entry.entry_id.desc()).limit(count):
+        entries_dict[entry.entry_id]=entry.to_dict_with_scores()
+    return jsonify(entries_dict)
+
+
 def complete_entry(entry):
     """Complete specific entry"""    
     if entry.completed == True or entry.voided == True or entry.active == True:

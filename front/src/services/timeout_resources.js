@@ -328,7 +328,11 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     resources['getTeamActiveEntry'] = $resource('[APIHOST]/team/:team_id/division/:division_id/entry/active', null,
 			     {
 				 'getTeamActiveEntry': {method:'GET', 'timeout': 15000}
-			     })        
+			     })
+    resources['getAllEntries'] = $resource('[APIHOST]/entry/count/:count', null,
+			     {
+				 'getAllEntries': {method:'GET', 'timeout': 15000}
+			     })            
     resources['getEntry'] = $resource('[APIHOST]/entry/:entry_id', null,
 			     {
 				 'getEntry': {method:'GET', 'timeout': 15000}
@@ -417,6 +421,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetActiveMachinesArray: generic_resource('getActiveMachinesArray','machines_array','get',false),        
 	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments','get',false), //killroy
 	GetAllDivisions: generic_resource('getAllDivisions','divisions','get', false),//killroy
+        GetAllEntries: generic_resource('getAllEntries','all_entries','get', false),
 	GetAllMachinesArray: generic_resource('getAllMachinesArray','machines','get',false), //killroy
 	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions','get',false), //killroy	
         GetAllPlayers: generic_resource('getAllPlayers','players','get',false),        
