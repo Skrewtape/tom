@@ -20,6 +20,7 @@ class Division(DB.Model):
     name = DB.Column(DB.String(100))
     number_of_scores_per_entry = DB.Column(DB.Integer)
     stripe_sku = DB.Column(DB.String(100))
+    local_price = DB.Column(DB.Integer)
     tournament_id = DB.Column(DB.Integer, DB.ForeignKey(
         'tournament.tournament_id'
     ))

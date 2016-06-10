@@ -8,7 +8,7 @@ from app import App, Admin_permission, Desk_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank
 from werkzeug.exceptions import Conflict
 from flask_restless.helpers import to_dict
-from app import secret_config
+from app import secret_config, tom_config
 import stripe
 
 @App.route('/sale/sku', methods=['GET'])
@@ -19,6 +19,11 @@ def get_sku_prices():
     items = product_list['data']
     dict_sku_prices={}
     dict_div_to_sku={}
+    if tom_config.use_stripe is False:
+        for division in divisions:
+            dict_div_to_sku[division.division_id]=division.local_price
+        return jsonify(dict_div_to_sku)    
+    
     for item in items:        
         dict_sku_prices[item['skus']['data'][0]['id']]=item['skus']['data'][0]['price']/100    
     for division in divisions:

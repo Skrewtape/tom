@@ -179,14 +179,20 @@ def results_divisions(division_id=None):
     
     entry_results = get_ranked_division_entries(division_id)
     score_results= get_scores_ranked_by_machine(division_id)
+    
     players = Player.query.all()
+    teams = Teams.query.all()
     player_results = {}
     return_entry_results = []
     return_score_results = {}
-
+    return_team_results={}
+    
     for player in players:
         player_results[player.player_id]=to_dict(player)
 
+    for team in teams:
+        return_team_results[team_id]=team.to_dict_with_players()
+        
     for score in score_results:
         score_entry_id = score[score_entry_id_idx]
         if not score_entry_id in return_score_results:
@@ -200,7 +206,7 @@ def results_divisions(division_id=None):
     tournament = Tournament.query.filter_by(tournament_id=division['tournament_id']).first().to_dict_simple()
     return render_template('division_results.html', division_entrys=return_entry_results,
                            players=player_results,division=division,
-                           tournament=tournament,
+                           tournament=tournament, teams=return_team_results,
                            sidebar_info=get_index_sidebar_info())
 
 
