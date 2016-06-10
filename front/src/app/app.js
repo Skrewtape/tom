@@ -33,7 +33,7 @@ app = angular.module(
 	    'app.metadivision_add',
 	    'app.user_add',
 	    'app.playerselect_player_info',
-	    'app.tournamentselect_scorekeeper','app.finalselect_finals','app.finals_activate','app.assholes',/*REPLACEMECHILD*/
+	    'app.tournamentselect_scorekeeper','app.finalselect_finals','app.finals_activate','app.assholes','app.edit_all_entries',/*REPLACEMECHILD*/
 	]
 );
 
@@ -135,4 +135,21 @@ app.run(function($rootScope, $uibModalStack) {
     // 		   });
 });
 
+app.filter('orderObjectBy', function() {
+  return function(items, field, reverse) {
+    var filtered = [];
+      angular.forEach(items, function(item,index) {
+          if(index == "$promise" || index == "$resolved"){
+              
+          } else {
+              filtered.push(item);
+          }
+    });
+    filtered.sort(function (a, b) {
+      return (a[field] > b[field] ? 1 : -1);
+    });
+    if(reverse) filtered.reverse();
+    return filtered;
+  };
+});
 
