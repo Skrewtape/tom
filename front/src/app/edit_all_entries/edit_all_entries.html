@@ -1,0 +1,62 @@
+<div ui-content-for="title">
+  <span>Add Player</span>
+</div>
+<div  ui-content-for="navbarAction">
+    <a ui-sref='^' style='font-size:35px'>
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"> </i>
+    </a>
+</div>
+<div  ui-content-for="navbarActionDesc">
+  <span class='big-web-font'> Back </span> 
+</div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+  <div class="scrollable-content"  style='padding:10px'>
+
+    <div style='margin-bottom:25px;' ng-repeat="entry in resources.all_entries|orderObjectBy:'entry_id':true">
+	<span>
+	  <b>ENTRY #{{entry.entry_id}} -
+            <span ng-if='entry.player_id != undefined'>Player #{{entry.player_id}}</span>
+            <span ng-if='entry.team_id != undefined'>Team #{{entry.team_id}}</span>
+            
+          </b> <span class='badge' style='background:red;font-size:16px;' ng-if='entry.voided'>VOIDED</span>
+	</span>
+	<table class='table' style='width:100%'>
+	  <td style='padding:5px;border-style:solid;border-width:0;border-right-width:1px;width:20%' ng-repeat='score in entry.scores'>
+	    {{truncateString(resources.machines[score.division_machine_id].name,10)}}
+	  </td>
+	</table>
+	<ui-switch ng-change='setEntryVoidStatus(entry.voided,entry)' class='pull-left' ng-model='entry.voided'></ui-switch>
+	<span style='padding-left:10px' class='big-web-font'>Click to
+	  <span ng-if='entry.voided == false'>Void</span>
+	  <span ng-if='entry.voided == true'>UnVoid</span>
+	</span>
+	<br>
+	<table>
+          <tr ng-repeat='score in entry.scores' ng-if='score.removed == undefined'>
+            <td>
+              <a ng-click='remove_score(score)'><span class="fa fa-times-circle pull-right" style='color:red'></a>
+            </td>
+            <td>
+              <input type="text" ng-change='score_and_machine_change(score)' placeholder='{{resources.machines[score.division_machine_id].name}}' ng-model="score.machine" uib-typeahead="machine as machine.name for machine in machines_array | filter:$viewValue | limitTo:8" class="form-control">
+            </td>
+            <td>
+              <input ng-change='score_and_machine_change(score)' type="text" ng-model="score.score" class="form-control">
+            </td>
+            <td>
+              <a
+		 ng-if='score.changed != undefined'
+		 class='btn btn-info'
+		 ng-click='change_score(score)' 
+		 >save score</a>
+              <!-- <a class='btn btn-success' -->
+	      <!-- 	 ng-if='score_modified[score.score_id] == "updated"'> -->
+	      <!-- 	Successfully updated score. -->
+              </a>
+            </td>
+          </tr>
+	</table>	
+    </div>
+    
+  </div>
+</div>
