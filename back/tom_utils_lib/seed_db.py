@@ -42,7 +42,8 @@ def create_user(username,password,roles):
         role = app.types.Role.query.filter_by(name=role_name).first()
         user.roles.append(role)
     DB.session.add(user)
-
+    DB.session.commit()
+    
 #create machines in db
 def init_machines():
     for line in open('%s/machines.dat' % base_dir, mode='r'):
@@ -92,6 +93,7 @@ def create_metadivision(name,divisions):
     for division in divisions:
         metadivision.divisions.append(division)
     DB.session.add(metadivision)
+    DB.session.commit()
     return metadivision
 
 def create_team(name, player_one, player_two):

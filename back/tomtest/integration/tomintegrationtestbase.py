@@ -13,4 +13,6 @@ class TomIntegrationTestCase(unittest.TestCase):
         init_db()
         init_roles()
         init_users()
-        pass
+        self.tom_url_base='http://localhost/dist'
+        self.tom_results_url_base='http://192.168.1.178:8000/results'
+        
