@@ -1,11 +1,12 @@
+#!/usr/bin/env python
 import os
 import sys
 base_dir = os.path.dirname(__file__)
 dir = base_dir+"../"
 sys.path.append(dir)
 
-from seed_db import *
-from first_names import first_names
+from tom_utils_lib.seed_db import *
+from tom_utils_lib.first_names import first_names
 import app
 from app import DB
 import random

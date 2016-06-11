@@ -25,9 +25,10 @@ machines = []
 tournaments = []
 divisions = []
 
-DB.reflect()
-DB.drop_all()
-DB.create_all()
+def init_db():
+    DB.reflect()
+    DB.drop_all()
+    DB.create_all()
 
 def init_roles():
     for role_name in ALL_ROLES:
@@ -90,6 +91,7 @@ def create_division(name,number_of_scores_per_entry=5):
     global divisions
     division = app.types.Division(name=name)
     division.number_of_scores_per_entry=number_of_scores_per_entry
+    division.local_price = 5
     divisions.append(division)
     DB.session.add(division)
     return division
@@ -138,6 +140,7 @@ def init_tournaments():
     main_c = create_division('C')
     main_d = create_division('D')
     add_machines_to_division(classics_all_1,machines[0:10])
+    
     add_machines_to_division(classics_all_2,machines[11:20])
     add_machines_to_division(classics_all_3,machines[21:30])
     add_machines_to_division(test_all,machines[31:40])    
@@ -154,6 +157,17 @@ def init_tournaments():
     classics_3.divisions.append(classics_all_3)
     test.divisions.append(test_all)
     DB.session.commit()
+
+def init_stripe_tournaments():    
+    
+    classics_1 = create_tournament('classics 1')
+    classics_all_1 = create_division('all')
+    classics_all_1.stripe_sku="sku_8bU4ZwvW1UMtxy"
+    DB.session.commit()
+    add_machines_to_division(classics_all_1,machines[0:10])
+    classics_1.divisions.append(classics_all_1)
+    DB.session.commit()
+    
     
 def add_scores_to_entry(division,player,active=True,num=5,void=False):
     entry = create_entry(division,False,True,False,5)    
@@ -173,27 +187,10 @@ def add_scores_to_entry(division,player,active=True,num=5,void=False):
 
     player.entries.append(entry)
     DB.session.commit()
-    
-# def add_scores_to_entry(division,player):
-#     entry = create_entry(division,False,True,False,5)
-#     for entry_num in range(5):                
-#         random_int = randint(0,10000)
-#         score = app.types.Score(machine_id=division.machines[entry_num].machine_id,score=random_int)
-#         DB.session.add(score)
-#         entry.scores.append(score)                
-#     player.entries.append(entry)
-#     DB.session.commit()
-    
-def init_players(division):
-    #DB.reflect()
-    #app.types.Score.__table__.drop(DB.engine)
-    #app.types.Entry.__table__.drop(DB.engine)
-    #app.types.Player.__table__.drop(DB.engine)
-    #for player in app.types.Player.query.all():
-    #    player.delete()
-    #    DB.session.commit()
         
-    for play_num in range(0,1):
+def init_players(division):
+        
+    for play_num in range(0,50):
         first_name = first_names[random.randrange(0,len(first_names))]
         last_name = first_names[random.randrange(0,len(first_names))]
         player = create_player(first_name,last_name)
@@ -208,10 +205,12 @@ def init_players(division):
                 add_scores_to_entry(division,player,active=False)
         DB.session.commit()            
         print " player %d is done \n" % play_num
-            
+
+init_db()            
 init_roles()
 init_users()
 init_machines()
+#init_stripe_tournaments()
 init_tournaments()
 init_players([x for x in divisions if x.division_id == 1][0])
 

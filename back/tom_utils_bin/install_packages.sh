@@ -10,3 +10,4 @@ apt-get install python-psycopg2
 apt-get install python2.7-dev
 apt-get install apache2
 apt-get install gunicorn
+apt-get install phantomjs
