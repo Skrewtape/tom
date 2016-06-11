@@ -204,6 +204,8 @@ def edit_score(score): #killroy
 def add_score(entry,division_machine,new_score_value): #killroy   
     if entry.player is None and entry.team is None:
         raise BadRequest("Entry does not have a team or player assigned.  This should not happen.")
+    if division_machine.removed is True:
+        raise BadRequest("DivisionMachine has been removed from division.  This should not happen.")        
     
     if entry.player:
         if entry.player.division_machine is None:
@@ -248,6 +250,7 @@ def add_score(entry,division_machine,new_score_value): #killroy
 
 @App.route('/entry/<entry_id>/divisionmachine/<divisionmachine_id>/new_score/<new_score_value>', methods=['POST'])
 @login_required
+@Scorekeeper_permission.require(403)
 @fetch_entity(Entry, 'entry')
 @fetch_entity(DivisionMachine, 'divisionmachine')
 def add_score_with_decorator(entry,divisionmachine,new_score_value):
