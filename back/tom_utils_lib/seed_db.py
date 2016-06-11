@@ -23,6 +23,16 @@ from random import randint
 
 ALL_ROLES = ['admin', 'scorekeeper', 'desk', 'void']
 
+default_users = [['avi', 'finkel.org', ALL_ROLES],
+                 ['elizabeth', 'papa.org', ALL_ROLES],
+                 ['admin', 'papa.org', ['admin']],
+                 ['scorekeeper', 'papa.org', ['scorekeeper']],
+                 ['desk', 'papa.org', ['desk']],
+]    
+
+def get_default_admin_username_password():
+    return {'username':default_users[1][0],'password':default_users[1][0]}
+
 def init_db():
     DB.reflect()
     DB.drop_all()
@@ -43,7 +53,7 @@ def create_user(username,password,roles):
         user.roles.append(role)
     DB.session.add(user)
     DB.session.commit()
-    
+
 #create machines in db
 def init_machines():
     for line in open('%s/machines.dat' % base_dir, mode='r'):
@@ -162,15 +172,10 @@ def create_entry_and_add_scores(division,active=False,num=5,void=False, team=Non
 
 def init_users():
 #create users in db
-
-   default_users = [['avi', 'finkel.org', ALL_ROLES],
-                    ['elizabeth', 'papa.org', ALL_ROLES],
-                    ['admin', 'papa.org', ['admin']],
-                    ['scorekeeper', 'papa.org', ['scorekeeper']],
-                    ['desk', 'papa.org', ['desk']],
-   ]    
-   for user in default_users:
-       create_user(user[0],user[0],user[2]) 
+    global default_users
+    
+    for user in default_users:
+        create_user(user[0],user[0],user[2]) 
 
     
 
