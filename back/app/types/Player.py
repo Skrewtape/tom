@@ -40,25 +40,46 @@ class Player(DB.Model):
     
     division_machine = DB.relationship('DivisionMachine', uselist=False)
 
+    def verify_password(self, pin):        
+        #return sha512_crypt.verify(password, self.password_crypt)
+        if int(pin) == self.pin:
+            return True
+        else:
+            return False
+        
+    
+    @staticmethod
+    def is_authenticated():
+        """Players are always authenticated"""
+        return True
+
+    @staticmethod
+    def is_active():
+        """Players are always active"""
+        return True
+
+    @staticmethod
+    def is_anonymous():
+        """No anon players"""
+        return False
+
+    def get_id(self):
+        """Get the players's id"""
+        return self.player_id
+    
     def gen_pin(self):        
-        random.seed()
-        random_pin = random.randint(100,999)
-        if self.player_id < 10:
-            random_pin = self.player_id*100000+random_pin
-        if self.player_id >=10 and self.player_id < 100:            
-            random_pin = self.player_id*10000+random_pin
-        if self.player_id >=100:            
-            random_pin = self.player_id*1000+random_pin            
-        #self.pin = random_pin
         self.pin = self.player_id
     
     def to_dict_with_team(self):
         player_dict = to_dict(self)
+        player_dict['pin']=None
         if self.team:
             player_dict['team'] = self.team[0].to_dict_simple()
         return player_dict
     
     def to_dict_simple(self):
-        return to_dict(self)        
+        player_dict = to_dict(self)
+        player_dict['pin']=None        
+        return player_dict
 
     

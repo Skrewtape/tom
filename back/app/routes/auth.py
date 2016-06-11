@@ -13,11 +13,13 @@ from werkzeug.exceptions import Conflict,Unauthorized
 
 from app import App, DB, Admin_permission
 
-from app.types import User, Role
+from app.types import User, Role, Player
 
 from app.routes.util import fetch_entity
 
 from sqlalchemy.exc import ArgumentError,InvalidRequestError,IntegrityError
+from werkzeug.exceptions import Conflict, BadRequest
+
 import time
 
 @App.route('/user', methods=['GET'])
@@ -34,6 +36,16 @@ def get_roles():
     """Get a list of roles"""
     #return jsonify(roles=[r.to_dict_simple() for r in Role.query.all()])
     return jsonify({r.role_id:r.to_dict_simple() for r in Role.query.all()})
+
+@App.route('/login/player/pin/<pin>', methods=['PUT'])
+def login_player(pin):    
+    #FIXME : need to seperate out player purchase
+    # pylint: disable=unexpected-keyword-arg, no-value-for-parameter
+    # pylint doesn't understand the argument name magic that happens with @fetch_entity
+    player = Player.query.filter_by(pin=int(pin)).first()    
+    if player is None:
+        raise BadRequest("Player pin is not valid")    
+    return jsonify(player.to_dict_with_team())
 
 @App.route('/user/current', methods=['PUT'])
 def update_current_user():

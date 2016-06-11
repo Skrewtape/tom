@@ -68,6 +68,8 @@ returns:
             raise BadRequest('Bad division specified')            
         new_player.linked_division.append(division)
     DB.session.add(new_player)
+    DB.session.commit()    
+    new_player.gen_pin()
     DB.session.commit()
     return jsonify(new_player.to_dict_simple())
 
@@ -194,8 +196,7 @@ def get_most_player_entries(player):
 @login_required
 @fetch_entity(Player, 'player')
 def get_open_player_entries(player):
-    """Get a list of open(i.e. not completed, not voided) entries for a player"""
-    print "hi there"
+    """Get a list of open(i.e. not completed, not voided) entries for a player"""    
     entries = Entry.query.filter_by(player_id=player.player_id,completed=False,voided=False).all()        
     entries_grouped_dict = {}
     for entry in entries:

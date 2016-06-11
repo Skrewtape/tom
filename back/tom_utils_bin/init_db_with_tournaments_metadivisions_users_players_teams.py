@@ -54,6 +54,8 @@ def init_players(division, num_players):
         print " adding player %d " % play_num
         DB.session.add(player)        
         DB.session.commit()
+        player.gen_pin()
+        DB.session.commit()        
         print " player %d is done \n" % play_num
 
 def init_player_entries(num_entries, division,player=None,team=None):
@@ -73,7 +75,7 @@ linked_division = main_divisions[0]
 team_division = app.types.Division.query.join(app.types.Tournament).filter_by(single_division=True,team_tournament=True).first()
 create_metadivision("Classics",[single_divisions[0],single_divisions[1],single_divisions[2]])
 
-init_players(linked_division,3)
+init_players(linked_division,150)
 players=app.types.Player.query.order_by(app.types.Player.player_id).all()
 player_entry_divisions=single_divisions
 player_entry_divisions.append(linked_division)
