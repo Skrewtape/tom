@@ -3,6 +3,8 @@
 from app import DB
 from flask_restless.helpers import to_dict
 from app.types import util, Team
+import random
+import math
 
 Player_Division_mapping = DB.Table(
     'player_division',
@@ -21,6 +23,7 @@ class Player(DB.Model):
     search_name = DB.Column(DB.String(1000))
     email = DB.Column(DB.String(120))
     active = DB.Column(DB.Boolean, default=True)
+    pin=DB.Column(DB.Integer,autoincrement=True)
     @DB.validates('email')
     def validate_email_wrapper(self,key,address):
         return util.validate_email(key,address)
@@ -36,7 +39,19 @@ class Player(DB.Model):
     )
     
     division_machine = DB.relationship('DivisionMachine', uselist=False)
-            
+
+    def gen_pin(self):        
+        random.seed()
+        random_pin = random.randint(100,999)
+        if self.player_id < 10:
+            random_pin = self.player_id*100000+random_pin
+        if self.player_id >=10 and self.player_id < 100:            
+            random_pin = self.player_id*10000+random_pin
+        if self.player_id >=100:            
+            random_pin = self.player_id*1000+random_pin            
+        #self.pin = random_pin
+        self.pin = self.player_id
+    
     def to_dict_with_team(self):
         player_dict = to_dict(self)
         if self.team:
