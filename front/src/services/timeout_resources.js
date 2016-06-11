@@ -121,6 +121,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 			           {
 				       'login': { method:'PUT' , 'timeout': 15000}
 			           });
+    resources['loginPlayer'] = $resource('[APIHOST]/login/player/pin/:player_pin', null,
+			           {
+				       'loginPlayer': { method:'PUT' , 'timeout': 15000}
+			           });    
     resources['addMachineToDivision'] = $resource('[APIHOST]/division/:division_id/machine/:machine_id', {division_id:'@division_id',machine_id:'@machine_id'},
 			     {
 				 'addMachineToDivision': {method:'PUT', 'timeout': 15000}
@@ -463,6 +467,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false), //killroy
 	VoidEntry: generic_resource('voidEntry','entry','post', false),
 	Login: generic_resource('login','logged_in_user','post', false),
+	LoginPlayer: generic_resource('loginPlayer','logged_in_player','post', false),
+        
 	FlushResourceCache:flush_resource_cache,
 	// getAllMetadivisionsResource: function(){
 	//     return $resource('[APIHOST]/metadivision', null,			     
