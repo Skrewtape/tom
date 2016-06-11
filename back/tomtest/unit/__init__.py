@@ -1,4 +1,4 @@
 dir = os.path.dirname(__file__)
-dir = dir+"../"
+dir = dir+"../../"
 sys.path.append(dir)
 

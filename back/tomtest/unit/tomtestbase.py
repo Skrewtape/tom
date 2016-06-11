@@ -1,12 +1,12 @@
 import os
 import sys
 dir = os.path.dirname(__file__)
-dir = dir+"../"
+dir = dir+"../../"
 sys.path.append(dir)
 from app import App
 import unittest
 import tempfile
-from seed_testing_db import init_clean_db
+#from seed_testing_db import init_clean_db
 import inspect
 import sqlalchemy
 from flask import json, Response
@@ -45,5 +45,5 @@ class TomTestCase(unittest.TestCase):
     def setUp(self):
         App.config['TESTING'] = True
         self.app = App.test_client()
-        init_clean_db()
+        #init_clean_db()
         
