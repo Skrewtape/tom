@@ -25,6 +25,19 @@ angular.module('tom_services.utils').factory('Utils', function($filter,StatusMod
 	    })	                
 	    
 	},
+	setEntryCompleteStatus:function(complete_state,entry){ //killroy
+	    StatusModal.loading();
+	    // if(complete_state == true){
+	    //      complete_state = "true"
+	    //  } else {
+	    //      void_state = "false"
+	    //  }
+	    entry_promise = TimeoutResources.CompleteEntryToggle(undefined,{entry_id:entry.entry_id,complete_state:complete_state});
+	    entry_promise.then(function(data){
+		StatusModal.loaded()
+	    });	                
+	    
+	},
 	count_keys:function(object_to_count){
             x = 0;
             for(i in object_to_count){

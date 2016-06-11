@@ -40,6 +40,13 @@
 	  <span ng-if='entry.voided == true'>UnVoid</span>
 	</span>
 	<br>
+        <span ng-if='entry.scores.length == entry.number_of_scores_per_entry'>
+	<ui-switch ng-change='setEntryCompleteStatus(entry.voided,entry)' class='pull-left' ng-model='entry.completed'></ui-switch>
+	<span style='padding-left:10px' class='big-web-font'>Click to
+	  <span ng-if='entry.completed == false'>Complete</span>
+	  <span ng-if='entry.completed == true'>UnComplete</span>          
+	</span>
+        </span>       
 	<table>
           <tr ng-repeat='score in entry.scores' ng-if='score.removed == undefined'>
             <td>

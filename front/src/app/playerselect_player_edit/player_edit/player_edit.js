@@ -7,7 +7,8 @@ angular.module('app.playerselect_player_edit.player_edit').controller(
 	$scope.change_score = Utils.change_score;
 	$scope.score_and_machine_change = Utils.score_and_machine_change
 	$scope.remove_score = Utils.remove_score
-	$scope.setEntryVoidStatus = Utils.setEntryVoidStatus
+        $scope.setEntryVoidStatus = Utils.setEntryVoidStatus
+        $scope.setEntryCompleteStatus = Utils.setEntryCompleteStatus
 	$scope.score_machine={}
 	StatusModal.loading()
 

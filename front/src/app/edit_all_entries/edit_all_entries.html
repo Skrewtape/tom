@@ -11,7 +11,7 @@
 </div>
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
-  <div class="scrollable-content"  style='padding:10px'>
+  <div class="scrollable-content big-web-font"  style='padding:10px'>
 
     <div style='margin-bottom:25px;' ng-repeat="entry in resources.all_entries|orderObjectBy:'entry_id':true">
 	<span>
@@ -32,6 +32,14 @@
 	  <span ng-if='entry.voided == true'>UnVoid</span>
 	</span>
 	<br>
+        <span ng-if='entry.scores.length == entry.number_of_scores_per_entry'>
+	<ui-switch ng-change='setEntryCompleteStatus(entry.voided,entry)' class='pull-left' ng-model='entry.completed'></ui-switch>
+	<span style='padding-left:10px' class='big-web-font'>Click to
+	  <span ng-if='entry.completed == false'>Complete</span>
+	  <span ng-if='entry.completed == true'>UnComplete</span>          
+	</span>
+        </span>       
+
 	<table>
           <tr ng-repeat='score in entry.scores' ng-if='score.removed == undefined'>
             <td>

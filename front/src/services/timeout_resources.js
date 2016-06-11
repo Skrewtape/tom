@@ -287,6 +287,11 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 					      {
 						  'voidEntryToggle': {method:'PUT', 'timeout': 15000}
 					      })
+    resources['completeEntryToggle'] =  $resource('[APIHOST]/entry/:entry_id/complete/:complete_state',//killroy
+					      {entry_id:'@entry_id', void_state:'@complete_state'},
+					      {
+						  'completeEntryToggle': {method:'PUT', 'timeout': 15000}
+					      })    
     resources['voidEntry'] =  $resource('[APIHOST]/entry/:entry_id/void',
 					      {entry_id:'@entry_id'},
 					      {
@@ -412,6 +417,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
         ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','empty','post', false), //killroy
         ClearDivisionMachineTeam: generic_resource('clearDivisionMachineTeam','empty','post', false), //killroy
 	CompleteEntry: generic_resource('completeEntry','entry','post', false),
+	CompleteEntryToggle: generic_resource('completeEntryToggle','entry','post', false),        
 	DeleteScore: generic_resource('deleteScore','score','get', false), //killroy
         EditPlayer: generic_resource('editPlayer','edited_player','post', false),//killroy
 	EnableMachineInDivision: generic_resource('enableMachineInDivision','edited_player','post', false),//killroy

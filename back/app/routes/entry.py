@@ -140,6 +140,23 @@ returns:
     return jsonify(entry.to_dict_simple())
 
 
+@App.route('/entry/<entry_id>/complete/<complete_state>', methods=['PUT'])
+@login_required
+@Admin_permission.require(403)
+@fetch_entity(Entry, 'entry')
+def toggle_entry_completed(entry,complete_state): #killroy
+    """Set a entry completed state, and DOES NOT try and start a new entry.  For admin use only"""
+    #FIXME : this should have better checks
+    print complete_state
+    if len(entry.scores) == entry.number_of_scores_per_entry:
+        if complete_state == "true":
+            entry.completed = True
+        else:
+            entry.completed = False
+    DB.session.commit()
+    return jsonify(entry.to_dict_simple())
+
+
 @App.route('/entry/<entry_id>/void/<voided_state>', methods=['PUT'])
 @login_required
 @Admin_permission.require(403)
