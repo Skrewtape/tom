@@ -39,6 +39,7 @@ class Entry(DB.Model):
     )
     team = DB.relationship(
         'Team',
+        backref=DB.backref('entries'),        
         foreign_keys=[team_id]
     )    
     
