@@ -237,7 +237,7 @@ def results_divisions(division_id=None):
         player_results[player.player_id]=to_dict(player)
 
     for team in teams:
-        return_team_results[team_id]=team.to_dict_with_players()
+        return_team_results[team.team_id]=team.to_dict_with_players()
         
     for score in score_results:
         score_entry_id = score[score_entry_id_idx]
