@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
     var dest = '/var/www/html/'
+    var admin_dest = '/var/www/html/dist/'
+    var player_dest = '/var/www/html/player/'    
     var backend_ip = grunt.option('backend_ip') || undefined;
     if(backend_ip == undefined){
         console.log('OOPS!  No backend ip was specified.');
@@ -9,53 +11,75 @@ module.exports = function(grunt) {
   grunt.initConfig({
 	shell: {
 	    makeRevHistory: {
-		command: ["git log --pretty=format:'%H<msgst>%b<msge>' | fgrep -v '<msgst><msge>' | fgrep '<msgst>' | cut -b1-40 | git log --stdin --no-walk > "+dest+"dist/rev.txt",
-			  "echo '<pre>' > "+dest+"dist/rev.html",
-			  "cat "+dest+"dist/rev.txt >> "+dest+"dist/rev.html",
-			  "echo '<pre>' >> "+dest+"dist/rev.html"
+		command: ["git log --pretty=format:'%H<msgst>%b<msge>' | fgrep -v '<msgst><msge>' | fgrep '<msgst>' | cut -b1-40 | git log --stdin --no-walk > "+admin_dest+"rev.txt",
+			  "echo '<pre>' > "+admin_dest+"rev.html",
+			  "cat "+admin_dest+"rev.txt >> "+admin_dest+"rev.html",
+			  "echo '<pre>' >> "+admin_dest+"rev.html"
 			 ].join('&&')
 	    }
 	},
         pkg: [grunt.file.readJSON('package.json')],
         copy: {
-            main: {
+            admin: {
                 files : [
-                    { expand: true, cwd: 'img/', src: '**', dest: dest+'dist/img/' },
-                    { expand: true, cwd: 'src/app/', src: 'index.html', dest: dest+'dist/' },		    
+                    { expand: true, cwd: 'img/', src: '**', dest: admin_dest+'img/' },
+                    { expand: true, cwd: 'src/app/', src: 'index.html', dest: admin_dest },		    
                     {
                         expand: true,
                         cwd: 'node_modules/bootstrap-sass/assets/fonts/bootstrap/',
                         src: '*',
-                        dest: dest+'dist/bootstrap/'
+                        dest: admin_dest+'bootstrap/'
                     },
                     {
                         expand: true,
                         cwd: 'bower_components/mobile-angular-ui/dist/fonts/',
                         src: '*',
-                        dest: dest+'dist/fonts'
+                        dest: admin_dest+'fonts'
                     }		    
                 ]
             },
+            player: {
+                files : [
+                    { expand: true, cwd: 'src/app/', src: 'player.html', dest: player_dest },
+                    { expand: true, cwd: 'img/', src: '**', dest: player_dest+'img/' },
+                    { expand: true, cwd: admin_dest, src: 'app_html_templates.js', dest: player_dest },
+                    
+                    {
+                        expand: true,
+                        cwd: 'node_modules/bootstrap-sass/assets/fonts/bootstrap/',
+                        src: '*',
+                        dest: player_dest+'bootstrap/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/mobile-angular-ui/dist/fonts/',
+                        src: '*',
+                        dest: player_dest+'fonts'
+                    }		    
+                ]
+            },            
         },
         replace: {
-            dev: {
-                src: [dest+'dist/app.js', dest+'dist/**/*html'],
+            admin: {
+                src: [admin_dest+'app.js', admin_dest+'**/*html'],
                 overwrite: true,
                 replacements: [
                     {
                         from: '[APIHOST]',
                         to: 'http://'+backend_ip+':8000'
-                        //to: 'http://localhost:8000'
-		        //to: 'http://9.75.197.78:8000'
-			//to: 'http://192.168.1.178:8000',
-			//to:'http://9.75.197.28:8000',
-			//to: 'http://9.75.197.139:8000',
-			//to: 'http://192.168.1.36:8000',
-			//to: 'http://192.168.5.32:8000',
-                        //to: 'http://72.77.58.216:8000',
                     },
                 ],
             },
+            player: {
+                src: [player_dest+'app.js', player_dest+'**/*html'],
+                overwrite: true,
+                replacements: [
+                    {
+                        from: '[APIHOST]',
+                        to: 'http://'+backend_ip+':8001'
+                    },
+                ],
+            },            
         },
         watch: {
             main: {		
@@ -67,16 +91,23 @@ module.exports = function(grunt) {
             },
         },
         compass: {
-            main: {
+            admin: {
                 options: {
                     sassDir: 'styles',
-                    cssDir: dest+'dist',
+                    cssDir: admin_dest,
                     importPath: 'node_modules'
                 },
             },
+            player: {
+                options: {
+                    sassDir: 'styles',
+                    cssDir: player_dest,
+                    importPath: 'node_modules'
+                },
+            },            
         },
         browserify: {
-            js: {
+            admin: {
                 options: {
                     browserifyOptions: {
                         debug: true,
@@ -84,25 +115,40 @@ module.exports = function(grunt) {
                     transform: ['browserify-ngannotate'],
                 },
                 src: 'src/app/app.js',
-                dest: dest+'dist/app.js',
+                dest: admin_dest+'app.js',
+            },
+            player: {
+                options: {
+                    browserifyOptions: {
+                        debug: true,
+                    },
+                    transform: ['browserify-ngannotate'],
+                },
+                src: 'src/app/app.js',
+                dest: player_dest+'app.js',
             },
         },
       clean: {
 	  options: {'force':true},
-	  build: [dest+'dist']
+	  admin: [admin_dest],
+          player: [player_dest]
       },
 	ngtemplates: {
 	    TOMApp: {
 		cwd: 'src',
 		src: '**/**.html',
-		dest: dest+'dist/app_html_templates.js'
+		dest: admin_dest+'app_html_templates.js'
 	    }
 	},
 	concat: {
-	    main: {
-		src: [ dest+'dist/app.js','src/services/**.js','src/directives/**.js','src/app/routes.js',dest+'dist/app_html_templates.js',dest+'dist/service_html_templates.js','src/app/**/*.js','!src/app/app.js',dest+'dist/js/_bower.js' ],
-		dest: dest+'dist/app.js' 
-	    }
+	    admin: {
+		src: [ admin_dest+'app.js','src/services/**.js','src/directives/**.js','src/app/routes.js',admin_dest+'app_html_templates.js',admin_dest+'service_html_templates.js','src/app/**/*.js','!src/app/app.js',admin_dest+'js/_bower.js' ],
+		dest: admin_dest+'app.js' 
+	    },
+	    player: {
+		src: [ player_dest+'app.js','src/services/**.js','src/directives/**.js','src/app/routes.js',player_dest+'app_html_templates.js',player_dest+'service_html_templates.js','src/app/**/*.js','!src/app/app.js',player_dest+'js/_bower.js' ],
+		dest: player_dest+'app.js' 
+	    }            
 	},
         prettify: {
             main: {
@@ -116,15 +162,24 @@ module.exports = function(grunt) {
             },
         },
 	bower_concat: {
-	    all: {
+	    admin: {
 		dest: {
-		    'js': dest+'dist/js/_bower.js',
-		    'css': dest+'dist/css/_bower.css'
+		    'js': admin_dest+'js/_bower.js',
+		    'css': admin_dest+'css/_bower.css'
 		},
 		bowerOptions: {
 		    relative: false
 		}
-	    }
+	    },
+	    player: {
+		dest: {
+		    'js': player_dest+'js/_bower.js',
+		    'css': player_dest+'css/_bower.css'
+		},
+		bowerOptions: {
+		    relative: false
+		}
+	    }            
 	}
     });
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -138,19 +193,31 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-angular-templates');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-bower-concat');    
-    grunt.registerTask('build', [
-	'clean',
-        'copy',
-        'compass',
-	'bower_concat',
-        'browserify',
+    grunt.registerTask('admin_build', [
+	'clean:admin',
+        'compass:admin',
+	'bower_concat:admin',
+        'browserify:admin',
 	'ngtemplates:TOMApp',
-	'concat',
+	'concat:admin',
+        'copy:admin',        
 	'shell:makeRevHistory'
     ]);
+    grunt.registerTask('player_build', [
+	'clean:player',
+        'compass:player',
+	'bower_concat:player',
+        'browserify:player',
+        //	'ngtemplates:PlayerApp',
+        'copy:player',        
+	'concat:player',
+	'shell:makeRevHistory'
+    ]);    
 
     grunt.registerTask('default', [
-        'build',
-        'replace:dev',
+        'admin_build',
+        'replace:admin',
+        'player_build',
+        'replace:player'
     ]);
 };
