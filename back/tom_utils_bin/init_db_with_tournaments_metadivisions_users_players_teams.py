@@ -10,7 +10,15 @@ from tom_utils_lib.first_names import first_names
 import app
 from app import DB
 import random
+import argparse
 
+parser = argparse.ArgumentParser(description='Initialize a TOM db with some test data.')
+parser.add_argument('--numplayers', type=int, default=5, 
+                    help='number of players to initialize db with (default: 5)')
+parser.add_argument('--numentries', default=1, type=int,
+                    help='number of full tickets to create per player(default:1)')
+
+args = parser.parse_args()
 
 def init_tournaments():
     machines=app.types.Machine.query.all()
@@ -69,7 +77,7 @@ def init_players(division, num_players):
         print " player %d is done \n" % play_num
 
 def init_player_entries(num_entries, division,player=None,team=None):
-    for i in range(num_entries):
+    for i in range(num_entries):        
         create_entry_and_add_scores(division,player=player,team=team)
     DB.session.commit()            
 
@@ -85,13 +93,14 @@ linked_division = main_divisions[0]
 team_division = app.types.Division.query.join(app.types.Tournament).filter_by(single_division=True,team_tournament=True).first()
 create_metadivision("Classics",[single_divisions[0],single_divisions[1],single_divisions[2]])
 
-init_players(linked_division,150)
+init_players(linked_division,args.numplayers)
 players=app.types.Player.query.order_by(app.types.Player.player_id).all()
 player_entry_divisions=single_divisions
 player_entry_divisions.append(linked_division)
 for player in players:
+    print " creating entry for player %d" % player.player_id    
     for division in player_entry_divisions:
-        init_player_entries(1,division,player=player)
+        init_player_entries(args.numentries,division,player=player)
 teams = app.types.Team.query.all()
 for team in teams:
     init_player_entries(1,team_division,team=team)
