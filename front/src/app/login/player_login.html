@@ -1,0 +1,30 @@
+<div ui-content-for="title">
+  <span>Login</span>
+</div>
+<div ui-content-for="navbarAction">
+  <div class="btn">
+    <a ui-sref='^'>
+      <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+    </a>
+  </div>
+</div>
+<div  ui-content-for="navbarActionDesc">
+  <span class='big-web-font'>  Back </span> 
+</div>
+
+<form>
+        <div class='form-group input-group' style='width:250px;'>
+          <span class="input-group-addon" id="pinnum">Player Pin #</span>
+          <input type='text' class='form-control' aria-describedby="pinnum" name='pinnum' ng-model='player.pin' />
+        </div>
+        <br>
+        <button class='btn btn-primary' ng-click="player_login()" id="login_button">Login</button>
+
+        
+        <br>
+        <div style='width:350px;height:50px'>
+          <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+        </div>
+
+</form>
+

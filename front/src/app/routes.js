@@ -11,13 +11,21 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                 }
 
             }
-	}).state(
-	    //FIXME : move this to the login dir
+	}).state(            
             'app.login', {
             url: '/login',
             views: {
                 '@': {
                     templateUrl: 'app/login/login.html',
+                    controller: 'app.login',
+                }
+            }
+	}).state(            
+            'app.playerlogin', {
+            url: '/playerlogin',
+            views: {
+                '@': {
+                    templateUrl: 'app/login/player_login.html',
                     controller: 'app.login',
                 }
             }

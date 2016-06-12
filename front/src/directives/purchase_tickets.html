@@ -47,18 +47,4 @@
   </div>
 </div>
 <br>
-<button
-   ng-disabled='total_cost<=0'
-   class='btn btn-info btn-xlg'
-   ng-click='stripe_dialog(total_cost*100)'
-   > Purchase Tickets With Stripe </button> <span ng-if='ticket_purchase_in_progress==true'><i style='font-size:40px' class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i></span>
-<br>
-<br>
-<button
-   class='btn btn-info btn-xlg'
-   ui-sref='.process({addedTokens:added_tokens})'
-   > Add Tickets</button>
-<br>
-<br>
-<br>
 

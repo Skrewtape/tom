@@ -1,0 +1,33 @@
+<div ui-content-for="title">
+  <span>Tickets Purchased</span>
+</div>
+<div  ui-content-for="navbarAction">
+</div>
+<div  ui-content-for="navbarActionDesc">
+  <span class='big-web-font'></span> 
+</div>
+
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+  <div class="big-web-font scrollable-content"  style='padding:10px'>
+    The following tickets were added
+    <div  ng-repeat='(metadiv_id,metadiv_count) in added_tokens.metadivisions' ng-if='metadiv_count !=0'>
+      {{resources.metadivisions[metadiv_id].name}} : {{added_tokens.metadivisions[metadiv_id]}}<br>
+    </div>
+    <div  ng-repeat='(div_id,div_count) in added_tokens.divisions' ng-if='div_count != 0'>
+      {{resources.tournaments[resources.divisions[div_id].tournament_id].name}} tournament
+      <span ng-if='resources.tournaments[resources.divisions[div_id].tournament_id].single_division==false'>, {{resources.divisions[div_id].name}} division</span>
+      : {{added_tokens.divisions[div_id]}}<br>
+    </div>
+   <div  ng-repeat='(div_id,team_count) in added_tokens.teams' ng-if='team_count!=0'>
+      {{resources.tournaments[resources.divisions[div_id].tournament_id].name}} tournament
+      : {{added_tokens.teams[div_id]}}<br>
+    </div>
+    
+    <hr>
+    <button
+       class='btn btn-info btn-xlg'
+       ui-sref='app.player_purchasetickets'
+       > Buy More Tickets </button>
+  </div>
+</div>

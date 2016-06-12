@@ -33,7 +33,7 @@ app = angular.module(
 	    'app.metadivision_add',
 	    'app.user_add',
 	    'app.playerselect_player_info',
-	    'app.tournamentselect_scorekeeper','app.finalselect_finals','app.finals_activate','app.assholes','app.edit_all_entries',/*REPLACEMECHILD*/
+	    'app.tournamentselect_scorekeeper','app.finalselect_finals','app.finals_activate','app.assholes','app.edit_all_entries','app.player_purchasetickets',/*REPLACEMECHILD*/
 	]
 );
 
@@ -75,6 +75,43 @@ app.controller(
 	}
     }
 );
+
+app.controller(
+    'PlayerController',    
+    function($scope, $location, $http, 
+             $state, $injector, $uibModal, Page, StatusModal) {
+	$scope.Page = Page;
+
+        //FIXME : wipeStateParamToPreventRepost is a hack, and should be handled at the
+        //        REST level
+	$scope.checkForBlankParams = function(param){
+
+	    if(Object.keys(param).length === 0 && JSON.stringify(param) === JSON.stringify({})){
+		StatusModal.http_error("Oops.  Looks like you tried to reload a page which submits data.  That is a no no!");	         return true;
+	    }
+	}
+	
+	//FIXME : change this to use $resource	
+        $scope.logout = function() {
+	    StatusModal.loading();            	    
+	    $http.put('[APIHOST]/logout',{},{timeout:5000}).success(
+		function() {		    
+		    Page.set_logged_in_player({});
+		    $state.go('app');
+		    StatusModal.loaded();            
+		}
+	    )
+	};
+
+	//FIXME : change this to use $resource
+	if(Page.logged_in_player().first_name == undefined){
+            $http.get('[APIHOST]/session/player/current',{timeout:5000}).success(function (data) {
+		Page.set_logged_in_player(data);			
+            });
+	}
+    }
+);
+
 
 app.factory('myHttpInterceptor', function($q,$injector,$rootScope) {
     return {

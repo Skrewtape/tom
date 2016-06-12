@@ -49,6 +49,14 @@ angular.module('tom_directives.purchase_tickets').controller(
                 div_count = $scope.added_tokens.divisions[div_index];
                 $scope.total_cost = $scope.total_cost + $scope.resources.divisions_costs[div_index]*div_count;
             }
+            for(div_index in $scope.added_tokens.metadivisions){
+                div_count = $scope.added_tokens.metadivisions[div_index];
+                $scope.total_cost = $scope.total_cost + $scope.resources.divisions_costs[div_index]*div_count;
+            }
+            for(div_index in $scope.added_tokens.teams){
+                div_count = $scope.added_tokens.teams[div_index];
+                $scope.total_cost = $scope.total_cost + $scope.resources.divisions_costs[div_index]*div_count;
+            }            
         };
         
         $scope.change_division_tickets =  function(player_tokens,added_tokens,type,division_id,amount){
