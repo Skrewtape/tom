@@ -227,7 +227,7 @@ def results_divisions(division_id=None):
     score_results= get_scores_ranked_by_machine(division_id)
     
     players = Player.query.all()
-    teams = Teams.query.all()
+    teams = Team.query.all()
     player_results = {}
     return_entry_results = []
     return_score_results = {}
