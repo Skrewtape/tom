@@ -47,7 +47,8 @@ returns:
         single_division_data={}
         single_division_data['division_name']="%s_all" % new_tournament.name
         single_division_data['tournament_id']=str(new_tournament.tournament_id)
-        single_division_data['number_of_scores_per_entry']=str(tournament_data['number_of_scores_per_entry'])        
+        single_division_data['number_of_scores_per_entry']=str(tournament_data['number_of_scores_per_entry'])
+        single_division_data['stripe_sku']=str(tournament_data['stripe_sku'])
         division.shared_add_division(single_division_data)
     else:
         new_tournament.single_division=False                

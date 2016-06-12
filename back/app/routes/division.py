@@ -90,7 +90,8 @@ description: Add a division to a tournament
 post data: 
     division_name: string : name of division
     tournament_id: int : tournament_id of tournament to add division to
-    number_of_scores_per_entry: number of scores per ticket for division
+    number_of_scores_per_entry: int : number of scores per ticket for division
+    stripe_sku: string : the stripe sku for this ticket
 url params: 
     none
 returns:
@@ -108,6 +109,8 @@ returns:
     else:
         #FIXME : this should not be hardcoded
         new_division.number_of_scores_per_entry = 4
+    if 'stripe_sku' in division_data:
+        new_division.stripe_sku = division_data['stripe_sku']
     DB.session.add(new_division)
     DB.session.commit()
     return jsonify(new_division.to_dict_with_machines())
