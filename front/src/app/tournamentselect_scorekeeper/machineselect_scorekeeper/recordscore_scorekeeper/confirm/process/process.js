@@ -39,11 +39,12 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	}
 	$scope.entry_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
-	    if($scope.team_tournament == "true"){                
-		$scope.entry_id = $scope.resources.team_active_entry.entry.entry_id;
-	    } else {
-		$scope.entry_id = $scope.resources.player_active_entry.entry.entry_id;		
-	    }
+	    // if($scope.team_tournament == "true"){                
+	    //     $scope.entry_id = $scope.resources.team_active_entry.entry.entry_id;
+	    // } else {
+	    //     $scope.entry_id = $scope.resources.player_active_entry.entry.entry_id;		
+	    // }
+            $scope.entry_id = $scope.resources.entry.entry_id;
 	    if($scope.resources.entry.scores.length >= $scope.resources.entry.number_of_scores_per_entry){
 		$scope.complete = true;
 	    } else {
