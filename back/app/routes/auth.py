@@ -42,10 +42,23 @@ def login_player(pin):
     #FIXME : need to seperate out player purchase
     # pylint: disable=unexpected-keyword-arg, no-value-for-parameter
     # pylint doesn't understand the argument name magic that happens with @fetch_entity
-    player = Player.query.filter_by(pin=int(pin)).first()    
-    if player is None:
-        raise BadRequest("Player pin is not valid")    
-    return jsonify(player.to_dict_with_team())
+    #input_data = json.loads(request.data)
+    #user = User.query.filter_by(username=input_data['username']).first()
+    player = Player.query.filter_by(pin=int(pin)).first()
+    if player and not player.verify_password(int(pin)):
+        player = None
+    if  player is not None:
+        login_user(player)
+        identity_changed.send(current_app._get_current_object(), identity=Identity(player.player_id))
+        player_dict = player.to_dict_with_team()        
+        return jsonify(player_dict)
+    else:
+        raise Unauthorized('Bad username or password')
+
+    # player = Player.query.filter_by(pin=int(pin)).first()    
+    # if player is None:
+    #     raise BadRequest("Player pin is not valid")    
+    # return jsonify(player.to_dict_with_team())
 
 @App.route('/user/current', methods=['PUT'])
 def update_current_user():
@@ -82,6 +95,18 @@ def update_user(user):
     DB.session.commit()
     return jsonify(user.to_dict_simple())
 
+@App.route('/session/player/current', methods=['GET'])
+def get_current_player():
+    """Get information about the current logged in player"""
+    # pylint: disable=unexpected-keyword-arg, no-value-for-parameter
+    # pylint doesn't understand the argument name magic that happens with @fetch_entity    
+    if hasattr(current_user,'player_id'):        
+        return jsonify(Player.query.filter_by(player_id=current_user.player_id).first().to_dict_with_team())
+        #return get_user(user_id=current_user.user_id)        
+    else:
+        return jsonify({})
+
+
 @App.route('/user/current', methods=['GET'])
 def get_current_user():
     """Get information about the current logged in user"""
@@ -110,8 +135,7 @@ def get_user_shared(user):
 
 @App.route('/login', methods=['PUT'])
 def login():
-    """Check credentials and login a user"""
-    print "logging in"
+    """Check credentials and login a user"""    
     input_data = json.loads(request.data)
     user = User.query.filter_by(username=input_data['username']).first()
     if user and not user.verify_password(input_data['password']):

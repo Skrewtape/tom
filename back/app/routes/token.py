@@ -9,6 +9,7 @@ from app.routes.util import fetch_entity, calculate_score_points_from_rank, get_
 from app.routes import entry
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
+from flask_login import current_user
 
 def get_existing_token_info(player_id=None,team_id=None,div_id=None,metadiv_id=None):
     query = None
@@ -125,7 +126,6 @@ returns:
 
 @App.route('/token', methods=['POST'])
 @login_required
-@Admin_permission.require(403)
 def add_token():
     """
 description: Add a token for a player or team
@@ -140,7 +140,7 @@ url params:
 returns:
     empty dict
     """
-
+    
     tokens_data = json.loads(request.data)
     check_player_valid_for_add_token_request(tokens_data)    
     player_id = tokens_data['player_id']

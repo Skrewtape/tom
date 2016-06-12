@@ -20,13 +20,23 @@ def init_tournaments():
     classics_3 = create_tournament('classics 3')
     split_flipper = create_tournament('split flipper',team_tournament=True)    
     classics_all_1 = create_division('all')
+    classics_all_1.stripe_sku = "sku_8beHMnaBSdH4NA"
     classics_all_2 = create_division('all')
+    classics_all_2.stripe_sku = "sku_8beHMnaBSdH4NA"    
     classics_all_3 = create_division('all')
+    classics_all_3.stripe_sku = "sku_8beHMnaBSdH4NA"    
     split_flipper_all = create_division('splitflipper_all',1)
+    split_flipper_all.stripe_sku = "sku_8cVf2tetzJ4f8D"
     main_a = create_division('A')
+    main_a.stripe_sku = ""
     main_b = create_division('B')
     main_c = create_division('C')
     main_d = create_division('D')
+    main_d.stripe_sku = "sku_8beJOPdNmnoQgw"
+    main_c.stripe_sku = "sku_8beFqmlhh0y6Wa"
+    main_b.stripe_sku = "sku_8bU4ZwvW1UMtxy"
+    main_a.stripe_sku = "sku_8bY4j0VdBxGmPu"    
+    
     add_machines_to_division(classics_all_1,machines[0:10])
     
     add_machines_to_division(classics_all_2,machines[11:20])

@@ -14,11 +14,12 @@ import stripe
 @App.route('/sale/sku', methods=['GET'])
 def get_sku_prices():
     stripe.api_key = secret_config.stripe_api_key
+    #divisions = Division.query.all()
     divisions = Division.query.all()
     product_list = stripe.Product.list()
     items = product_list['data']
-    dict_sku_prices={}
-    dict_div_to_sku={}
+    dict_sku_prices={}    
+    dict_div_to_sku={}    
     if tom_config.use_stripe is False:
         for division in divisions:
             dict_div_to_sku[division.division_id]=division.local_price
@@ -27,7 +28,7 @@ def get_sku_prices():
     for item in items:        
         dict_sku_prices[item['skus']['data'][0]['id']]=item['skus']['data'][0]['price']/100    
     for division in divisions:
-        dict_div_to_sku[division.division_id]=dict_sku_prices[division.stripe_sku]
+        dict_div_to_sku[division.division_id]=dict_sku_prices[division.stripe_sku]        
     return jsonify(dict_div_to_sku)
     
 @App.route('/sale', methods=['POST'])
