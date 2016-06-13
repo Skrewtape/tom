@@ -166,9 +166,9 @@ def set_match_score(finalsscore, score):
     next_round_matches = FinalsMatch.query.filter_by(finals_id=finals_match.finals_id,round_id=finals_match.round_id+1).all()    
 
     if all_scores_for_match_entered is False:
-        return
+        return jsonify({})
     if finals_match.round_id==4:
-        return
+        return jsonify({})
     advancing_players=[]
     for match in finals_matches:        
         match_results = get_finals_match_results(match.match_id)
