@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+{% block content %}
+<table class='table'>
+  <div class='big-web-font'>
+    <center>
+      {{tournament.name}}
+      {% if tournament.single_division != True %}
+      - {{division.name}} Division
+      {% endif %}
+    </center>
+  </div>
+  <th>Rank</th><th>Name</th><th>Score</th><th class='mobile_only'>Top&nbsp;3&nbsp;Games</th>
+  {% for entry in division_entrys %}
+  <tr>
+    <td>{{entry.rank}}</td><td>
+      {% if tournament.team_tournament == False %}
+      {{"%s %s" % (players[entry.player_id].first_name,players[entry.player_id].last_name)}}
+      {% elif tournament.team_tournament == True %}
+      {{"Team %s" % (teams[entry.team_id].team_name)}}
+      {% endif %}
+    </td><td>{{entry.score}}</td>
+    <td class='mobile_only'>
+      {% for score in entry.scores %}      
+      #{{score[3]}} on {{score[0]}} <b>/</b>
+      {% endfor %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>	  
+{% endblock %}
+
