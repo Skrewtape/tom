@@ -26,13 +26,17 @@ def init_tournaments():
     classics_1 = create_tournament('classics 1')
     classics_2 = create_tournament('classics 2')
     classics_3 = create_tournament('classics 3')
+    herb = create_tournament('herb',scoring_type='herb')
+    
     split_flipper = create_tournament('split flipper',team_tournament=True)    
     classics_all_1 = create_division('all')
     classics_all_1.stripe_sku = "sku_8beHMnaBSdH4NA"
     classics_all_2 = create_division('all')
     classics_all_2.stripe_sku = "sku_8beHMnaBSdH4NA"    
     classics_all_3 = create_division('all')
-    classics_all_3.stripe_sku = "sku_8beHMnaBSdH4NA"    
+    classics_all_3.stripe_sku = "sku_8beHMnaBSdH4NA"
+    herb_all = create_division('herb_all')
+    herb_all.stripe_sku = "sku_8beHMnaBSdH4NA"    
     split_flipper_all = create_division('splitflipper_all',1)
     split_flipper_all.stripe_sku = "sku_8cVf2tetzJ4f8D"
     main_a = create_division('A')
@@ -44,7 +48,8 @@ def init_tournaments():
     main_c.stripe_sku = "sku_8beFqmlhh0y6Wa"
     main_b.stripe_sku = "sku_8bU4ZwvW1UMtxy"
     main_a.stripe_sku = "sku_8bY4j0VdBxGmPu"    
-    
+
+    add_machines_to_division(herb_all,machines[0:10])
     add_machines_to_division(classics_all_1,machines[0:10])
     
     add_machines_to_division(classics_all_2,machines[11:20])
@@ -61,6 +66,7 @@ def init_tournaments():
     classics_1.divisions.append(classics_all_1)
     classics_2.divisions.append(classics_all_2)
     classics_3.divisions.append(classics_all_3)
+    herb.divisions.append(herb_all)
     split_flipper.divisions.append(split_flipper_all)
     DB.session.commit()
 
@@ -81,16 +87,24 @@ def init_player_entries(num_entries, division,player=None,team=None):
         create_entry_and_add_scores(division,player=player,team=team)
     DB.session.commit()            
 
+def init_player_herb_entries(num_entries, division,player=None,team=None, division_machine_id=None):
+    for i in range(num_entries):        
+        create_herb_entry(division,player=player,team=team,division_machine_id=division_machine_id)
+    DB.session.commit()            
+
+    
         
 init_db()            
 init_roles()
 init_users()
 init_machines()
 init_tournaments()
-single_divisions = app.types.Division.query.join(app.types.Tournament).filter_by(single_division=True,team_tournament=False).all()
+single_divisions = app.types.Division.query.join(app.types.Tournament).filter_by(single_division=True,team_tournament=False,scoring_type="papa").all()
 main_divisions = app.types.Division.query.join(app.types.Tournament).filter_by(single_division=False).all()
 linked_division = main_divisions[0]
 team_division = app.types.Division.query.join(app.types.Tournament).filter_by(single_division=True,team_tournament=True).first()
+herb_division = app.types.Division.query.join(app.types.Tournament).filter_by(single_division=True,scoring_type="herb").first()
+herb_machines = herb_division.machines[0:5]
 create_metadivision("Classics",[single_divisions[0],single_divisions[1],single_divisions[2]])
 
 init_players(linked_division,args.numplayers)
@@ -100,7 +114,11 @@ player_entry_divisions.append(linked_division)
 for player in players:
     print " creating entry for player %d" % player.player_id    
     for division in player_entry_divisions:
-        init_player_entries(args.numentries,division,player=player)
+        init_player_entries(args.numentries,division,player=player)        
+for player in players:
+    for herb_machine in herb_machines:
+        init_player_herb_entries(2,herb_division,player=player,division_machine_id=herb_machine.division_machine_id)
+
 teams = app.types.Team.query.all()
 for team in teams:
     init_player_entries(1,team_division,team=team)

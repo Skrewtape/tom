@@ -76,12 +76,13 @@ def init_machines():
         DB.session.add(machine)
         DB.session.commit()        
 
-def create_tournament(name, single_division=True, team_tournament=False):
+def create_tournament(name, single_division=True, team_tournament=False, scoring_type="papa"):
     global tournaments
     tournament = app.types.Tournament(name=name)
     tournament.active = True
     tournament.single_division = single_division
     tournament.team_tournament = team_tournament
+    tournament.scoring_type = scoring_type
     DB.session.add(tournament)
     return tournament
 
@@ -150,17 +151,17 @@ def create_entry(division,active,completed,voided,num_scores_per_entry):
 
         
 def create_entry_and_add_scores(division,active=False,num=5,void=False, team=None, player=None):
-    entry = create_entry(division,False,True,False,5)    
+    entry = create_entry(division,False,True,False,5)        
+    
     for entry_num in range(num):                
-        random_int = randint(0,100000000) - randint(0,510252)
-        
+        random_int = randint(0,100000000) - randint(0,510252)        
         score = app.types.Score(division_machine_id=division.machines[entry_num].division_machine_id,score=random_int)
         DB.session.add(score)
         entry.scores.append(score)
     if num==5:
         entry.completed = True
         entry.active=False
-    else:
+    else:       
         entry.completed = False
         entry.active=active
     entry.voided = void
@@ -170,6 +171,22 @@ def create_entry_and_add_scores(division,active=False,num=5,void=False, team=Non
         team.entries.append(entry)
     DB.session.commit()
 
+def create_herb_entry(division,active=False,void=False,team=None,player=None,division_machine_id=None):
+    entry = create_entry(division,False,True,False,1)        
+        
+    random_int = randint(0,100000000) - randint(0,510252)        
+    score = app.types.Score(division_machine_id=division_machine_id,score=random_int)
+    DB.session.add(score)
+    entry.scores.append(score)
+    entry.completed = True
+    entry.active=False
+    entry.voided = void
+    if player:
+        player.entries.append(entry)
+    if team:
+        team.entries.append(entry)
+    DB.session.commit()
+    
 def init_users():
 #create users in db
     global default_users
