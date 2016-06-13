@@ -36,7 +36,10 @@ returns:
         new_tournament.team_tournament = True
     else:
         new_tournament.team_tournament = False    
-    
+
+    if 'scoring_type' in tournament_data:
+        new_tournament.scoring_type = tournament_data['scoring_type']
+        
     try:
         DB.session.add(new_tournament)        
         DB.session.commit()        

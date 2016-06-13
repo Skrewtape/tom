@@ -13,7 +13,8 @@ class Tournament(DB.Model):
     active = DB.Column(DB.Boolean)
     single_division = DB.Column(DB.Boolean)
     divisions = DB.relationship('Division',lazy='joined')
-
+    scoring_type = DB.Column(DB.String(100))
+    
     def to_dict_with_divisions(self): #killroy was here
         tournament = to_dict(self)
         if self.divisions:

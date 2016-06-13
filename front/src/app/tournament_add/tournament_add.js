@@ -3,6 +3,6 @@ angular.module('app.tournament_add',['app.tournament_add.process']);
 angular.module('app.tournament_add').controller(
     'app.tournament_add',
     function($scope) {
-	$scope.tournament = {};
+	$scope.tournament = {scoring_type:'papa'};
     }
 );
