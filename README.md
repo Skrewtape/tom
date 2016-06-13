@@ -11,20 +11,20 @@ TOM is pinball tournament scoring software that lets you run multiple concurrent
 These steps assume that you are logged in as root, and running from the top level of the TOM git repo, and you are installing on the machine you are running a browser on.
 
 * Follow the steps in [INSTALL_INSTRUCTIONS.md](INSTALL_INSTRUCTIONS.md)
-* To start the TOM backend, run the following commands
+* To start the TOM backend, run the following commands ( substitue tom database username/password you created while following INSTALL_INSTRUCTIONS )
 
 ```
 cd back
-export PYTHONPATH=`pwd`
-./util/gunicorn.cmd
+source venv/bin/activate
+export DATABASE_URL=postgres://<tom_username>:<tom_password>@localhost/tom_server
+env PYTHONPATH=`pwd` ./tom_util_bin/gunicorn.cmd
 ```
 
 Congratulations!  TOM is now running on your machine.  The admin/scorekeeping/desk worker interface is available at the following url: 
 ```
 http://localhost/dist
 ```
-You can login using the users created by seed_db.py script.
-
+You can login using the users created by init_clean_db script.
 
 The results page is at the following url : 
 ```

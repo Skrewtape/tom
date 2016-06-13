@@ -99,7 +99,7 @@ back/utils
 Utilities and helpers
 
 #Backend : Getting Started
-Follow the instructions in the [INSTALL_INSTRUCTIONS.md](INSTALL_INSTRUCTIONS.md).  Once you are done, open up 2 new terminal windows.  In the first one, run the following comman
+Follow the instructions in the [INSTALL_INSTRUCTIONS.md](INSTALL_INSTRUCTIONS.md).  Once you are done, open up 2 new shells.  In the first one, run the following comman
 ```
 ./node_modules/grunt-cli/bin/grunt --backend_ip=<ip address of backend machine> watch
 
@@ -107,11 +107,10 @@ Follow the instructions in the [INSTALL_INSTRUCTIONS.md](INSTALL_INSTRUCTIONS.md
 
 This will setup a watcher - while it is running, any files changed under front/src will cause grunt to be rerun.  
 
-In the second terminal window, run the following commands :
+In the seperate shell, run the following commands :
 ```
 cd back
-export PYTHONPATH=`pwd`
-./util/gunicorn.cmd
+env PYTHONPATH=`pwd` ./tom_util_bin/gunicorn.cmd
 ```
 
 This will start the backend - while it is running, any files changed under back/app will cause gunicorn to restart the backend.  
@@ -139,7 +138,7 @@ You'll notice that rankings are not stored in the database.  This is because cal
 * When people look at rankings, they will be looking at a subset (i.e. a single division, a single machine, a single player).
 * Write operations are far more expensive than query operations.
 
-The downside is that we get this great performance through extremely ugly sql queries.  These queries have been documented in thier files (in back/app/routes/results.py and back/app/routes/finals.py) - please review the comments if you want to see how the queries work.
+The downside is that we get this great performance through extremely ugly sql queries.  These queries have been documented in the [sql queries README](back/app/routes/SQL_QUERIES.md) - please it if you want to see how the queries work.
 
 #Backend : Routes
 
