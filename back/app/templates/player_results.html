@@ -54,6 +54,7 @@
 {% endif %}
 {% if player_entries|length > 0 %}
 {% for entry_division_id,entries in player_entries.iteritems() %}
+{% if sidebar_info['tournaments'][sidebar_info['divisions'][entry_division_id].tournament_id].scoring_type != 'herb' %}
 {% if entries | length > 0 %}
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -75,10 +76,12 @@
     </div>
 </div>
 {% endif %}
+{% endif %}
 {% endfor %}
 <hr>
 <h2>All Entries</h2>
 {% for entry_division_id,entries in player_entries.iteritems() %}
+{% if sidebar_info['tournaments'][sidebar_info['divisions'][entry_division_id].tournament_id].scoring_type != 'herb' %}
 {% if entries | length > 0 %}
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -101,6 +104,7 @@
       {% endfor %}      
     </div>
 </div>
+{% endif %}
 {% endif %}
 {% endfor %}
 {% endif %}
