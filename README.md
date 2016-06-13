@@ -16,7 +16,7 @@ These steps assume that you are logged in as root, and running from the top leve
 ```
 cd back
 source venv/bin/activate
-export DATABASE_URL=postgres://<tom_username>:<tom_password>@localhost/tom_server
+export DATABASE_URL=postgres://<tom_db_username>:<tom_db_user_password>@localhost/tom_server
 env PYTHONPATH=`pwd` ./tom_util_bin/gunicorn.cmd
 ```
 
