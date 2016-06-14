@@ -51,7 +51,13 @@ This contains callbacks called by the flask-login and flask-principal - see the 
 ```
 back/app/routes
 ```
-This directory contains all the files that define the flask routes
+This directory contains all the files that define the flask routes.  NOTE : this is in the process of being replaced with back/app/routes/v1
+
+```
+back/app/routes/v1
+```
+This directory WILL contain all the files that define the flask routes.  NOTE : this is in the process of replacing back/app/routes.  Please add any new routes to this directory.
+
 
 ```
 back/app/templates
@@ -111,15 +117,7 @@ Contains code used by utils in back/tom_utils_bin
 
 
 #Backend : Getting Started
-Follow the instructions in the [INSTALL_INSTRUCTIONS.md](INSTALL_INSTRUCTIONS.md).  Once you are done, open up 2 new shells.  In the first one, run the following command
-```
-./node_modules/grunt-cli/bin/grunt --backend_ip=<ip address of backend machine> watch
-
-```
-
-This will setup a watcher - while it is running, any files changed under front/src will cause grunt to be rerun.  
-
-In the seperate shell, run the following commands :
+Follow the instructions in the [INSTALL_INSTRUCTIONS.md](INSTALL_INSTRUCTIONS.md).  Once you are done, open up a new shell and run the following command
 ```
 cd back
 env PYTHONPATH=`pwd` ./tom_util_bin/gunicorn.cmd
@@ -146,7 +144,7 @@ A Finals is associated with a specific division (i.e. Classics single division i
 #Backend : Ranking
 
 You'll notice that rankings are not stored in the database.  This is because we calculate all rankings on the fly.  It turns out that calculating ranks on demand for specific divisions, machines, or players produces better results (in terms of performance) than calculating ranks on a regular basis for everything and recording it in the DB.  This is because :
-* The number of people who will be trying to view rankings at any given time will not be that high (i.e. no more than 30-40 in the same second).
+* The number of people who will be trying to view rankings at any given time (i.e. within the same second) will not be that high (i.e. no more than 30-40 in the same second).
 * When people look at rankings, they will be looking at a subset (i.e. a single division, a single machine, a single player).
 * Write operations are far more expensive than query operations.
 
@@ -175,6 +173,190 @@ Note the ImATeapot excepetion is different - the AngularJS app will display an e
 
 **FetchEntity :**
 
-FetchEntity is a decorator function in back/app/routes/util.py.  It's purpose is to take url param of the format <entity>_id (i.e. player_id), and then use that variable (which has the id for that entity) to lookup the requested entity (i.e. use player_id to lookup and return the Player with player_id) and pass it along to the route function.  If the <entity>_id can not be looked up, it throws an exception. 
+FetchEntity is a decorator function in back/app/routes/util.py.  It's purpose is to take url param of the format <entity>_id (i.e. player_id - note that it is expecting the entity to be all lowercase), and then use that variable (which has the id for that entity) to lookup the requested entity (i.e. use player_id to lookup and return the Player with player_id) and pass it along to the route function.  If the <entity>_id can not be looked up, it throws an exception. 
 
+#Backend : rendering results pages
+
+FILL ME IN
+
+
+#Backend : tomtests - unit and integration tests
+
+FILL ME IN
+
+#Frontend : What's Where?
+
+This is what the top level backend directory looks like
+```
+Gruntfile.js
+```
+The config file for grunt ( see section below on Gruntfile )
+
+```
+bower.json
+```
+package list of dependencies to install with bower
+
+```
+src
+```
+The actual AngularJS html and javascript
+
+```
+add_to_controller.pl
+```
+Helper for adding a new route/controller/html for the AngularJS app
+
+```
+styles
+```
+Any custom css we want pulled into our AngularJS app
+
+```
+package.json
+```
+package list of dependencies to install with npm
+
+```
+util
+```
+utilities and helpers
+
+#Frontend : Before you start
+Please read the docs and do the quickstart/tutorial for each of these components :  
+* [AngularJS](https://docs.angularjs.org/tutorial)
+* [MobileAngular](http://mobileangularui.com/)
+* [AngularUI router](https://github.com/angular-ui/ui-router/wiki)
+* [Angular Bootstrap](https://angular-ui.github.io/bootstrap/)
+* Bootstrap(http://getbootstrap.com/)
+
+#Frontend : Gruntfile
+In the [Installation Instructions](INSTALLATION_INSTRUCTIONS.md), there was a step with the following command 
+```
+./node_modules/grunt-cli/bin/grunt --backend_ip=<ip address of backend machine>
+
+```
+[Grunt](http://http://gruntjs.com/) is a javascript task runner.  We use it to prepare the AngularJS web app part of TOM and deploy it.  The Gruntfile.js specifies the following things be done when we run grunt :
+
+* cleans the directory where the AngularJS web app gets deployed (/var/www/html/dist and /var/www/html/player)
+* pulls all the files downloaded from bower, and concats them into a single file (_bower.js)
+* pulls all the files downloaded from npm, and concats them all and appends to the main file that defines the AngularJS app (app.js) 
+* concats all html files and inserts them into a javascript file (app_html_templates.js)
+* concats all the files we've been concating and appends them to a single file ( app.js )
+* copies all non-html and javascript files and top level index.html (or player.html) to deploy directories
+* replaces the string '[APIHOST]' in the deployed app.js to the ip specified with the --backend_ip option
+
+This Gruntfile.js assumes the following things :
+* That you have write access to /var/www/html
+* That apache is installed and service docs from /var/www/html
+* That you have a TOM backend server running on port 8000 (with the player_login config option set to False)
+* If you want to allow player login for purchasing tickets, you also must have a TOM backend server running on port 8001 (with the player_login config option set to True)
+
+Once you run the grunt command listed above, the end result will be two directories created in /var/www/html :
+```
+dist/
+player/
+```
+
+The dist/ directory will have the web interface to admin/scorekeeper/deskworker functionality - it can be accessed to http://<host_ip>/dist
+
+The player/ directory will have the web interface to player ticket purchase functionality - it can be accessed to http://<host_ip>/player
+
+What is the difference between what is deployed in dist/ and player/?  The javascript code deployed to dist/ and player/ is the same - the difference is the top level html file.  The player.html will only allow you to do three things : login as a player, purchase tickets as a player, and logout.   
+
+NOTE : if you run the following program, it will setup a watcher - if anything is changed under front/src, grunt will be rerun and your AngularJS app will be reployed:
+```
+./node_modules/grunt-cli/bin/grunt --backend_ip=<ip address of backend machine> watch
+
+```
+
+
+
+#Frontend : The AngularJS App
+
+The AngularJS app is defined in front/src/app/app.js.  Actually, it might be more accurate to say we start to define it in front/src/app/app.js.  If you look in app.js, you'll see three things :
+* module TOMApp is defined
+* a controller named IndexController is defined
+* the TOMApp module includes a number of modules - a number of them start with 'app.' - these are where we define the rest of the modules and controllers.
+
+TOMApp is the toplevel angular module - it includes everything else.  The IndexController (added to the TOMApp function) is used in the toplevel index.html.  The 'app.*' modules are all defined in subdirectories of front/src/app.  The html files and javscript files in these directories are appended to the app.js via grunt.          
+
+The directory structure under front/src/app mirrors the AngularUI Router routes.  Where do the routes get defined?  There is a routes.js file in front/src/app and in each of the toplevel subdirs under front/src/app.  All of these get appended to app.js via grunt.
+
+If we look at one of the javascript files in one of the subdirectories under front/src/app, you'll notice 2 things :
+* that the module defined in the javascript file is named the same as the directory
+* that the controller defined in the javascript file is named the same as the directory
+
+The end result of all this is that the javascript and html for each AngularUI route is nicely grouped in a directory named after the route.  It's also easy during debugging to identify which directory a controller or module is located in.
+
+#Frontend : Whats under front/src/
+
+The following is a description of the directories under front/src :
+
+```
+front/src/app
+```
+This is where all the modules and controllers live, along with html for each AngularUI route
+
+```
+front/src/services
+```
+Where the angular services live
+
+```
+front/src/directives
+```
+Where the custom Angular directives live
+
+```
+front/src/shared_html
+```
+html chunks that are shared between various AngularUI routes
+
+#Frontend : Angular services
+
+There are 3 services you are going to care about initially - if you want to know more about them, please read the comments in the code :
+
+```
+timeout_resources.js
+```
+This defines a number of Angualr $resources for talking to the TOM backend REST api.  
+
+```
+status_modal.js
+```
+This takes care of displaying a number of modals : the loading modal, the error modal, and the "pay fucking attention" modal
+
+```
+page.js
+```
+This keeps track of if you are logged in or not, and if you are, who you are logged in as
+
+#Frontend : using timeout_resources.js
+
+The main job of the frontend is to talk to the backend.  We use [Angular $resources](https://docs.angularjs.org/api/ngResource/service/$resource) to do this.  The problem with $resources is they are asynchronous - and dealing with async operations in javascript is a pain in the ass.  In addition, global timeout times for $resources are ignored - so if we want to specify a timeout value for http requests, we have to do it for each $resource created (this is a known problem).  So, to solve this problem we have two functions in timeout_resources.js :
+* generate_resource_definition()
+* generic_resource()
+* GetAllResources()
+
+generate_resource_definition() generates a $resource for a given URL and HTTP action (i.e. put,post,get,delete) - this $resource has a timeout value set for the http request.  generic_resource() takes the $resouce and generates a function.  This function starts the $resource http request, and immediately returns a $resource promise which gets resolved when the http request either finishes or times out.  The function returned by generic_resource() can also take a $resource promise as an argument - if a $resource argument is passed in, it will wait for that promise to resolve before starting the http request.
+
+One the function returned by generic_resource() gets a result back from the http request, it will put the results in a global dictonary/object - the key used in the global dictionary/object is specified as an argument to the function returned by generic_resource().  This global dictionary/object can be retrieved by using the GetAllResources() function.
+
+Every Angular controller in the AngularJS app uses this for communicating with the backend so there are plenty of examples to look at.
+
+Let's say you want to use information returned from a first http request into a second http request.  You can't just pass the information into the function generated by generic_resource() for the second request because the value you pass in won't exist yet.  For example,  I use the GetPlayer() function to get player info and then the GetTeam() function to get team info based on the player_id I'm expecting from GetPlayer.  The problem is the controller won't wait for GetPlayer() to finish before it calls GetTeam().  Here is an example of how you can get around this :
+```
+$scope.player_promise = TimeoutResources.GetPlayer($scope.tournaments_promise,{player_id:$scope.player_id});
+
+$scope.player_promise.then(function(data){            
+   return TimeoutResources.GetIfpaPlayer(undefined,{player_name:data.first_name+data.last_name});            
+})
+
+```
+Note that you need to use the .then() method of the promise, you MUST return the promise returned by GetIfpaPlayer() inside that .then(), and that the "data" argument will contain the results of thehttp request run inside GetPlayer().
+
+#Frontend : AngularMobile,Bootstrap, and Angular Bootstrap
+
+FILL ME IN
 
