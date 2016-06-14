@@ -11,10 +11,12 @@ angular.module('app.playerselect_player_edit.player_edit.link_division.process')
 	$scope.player_edit_promise = TimeoutResources.EditPlayer(undefined,{player_id:$scope.player_id},{division_id:$scope.division_id})
 	$scope.division_promise = TimeoutResources.GetAllDivisions($scope.player_edit_promise)
 	$scope.player_promise = TimeoutResources.GetPlayer($scope.division_promise,{player_id:$scope.player_id})
-	$scope.tournament_promise = TimeoutResources.GetTournament($scope.player_promise,{tournament_id:TimeoutResources.GetPlayerLinkedTournamentId})
-	$scope.tournament_promise.then(function(data){
+        $scope.player_promise.then(function(data){
+	    return TimeoutResources.GetTournament($scope.player_promise,{tournament_id:data.linked_division.tournament_id});            
+        }).then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    StatusModal.loaded();	    
-	})
+        });
+        
     }
 );

@@ -248,14 +248,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetAllResources: function(){//killroy was here
 	    return resource_results;
 	},
-        //FIXME : refactor so we don't need GetPlayerNameSmushed and GetPlayerLinkedTournamentId
-	// GetPlayerNameSmushed: function(){
-	//     return resource_results.player.first_name+resource_results.player.last_name;
-	// },
-	GetPlayerLinkedTournamentId: function(){
-	    return resource_results.player.linked_division.tournament_id;
-	    //return 1;
-	},
+
 	AddFinals: generic_resource(addFinalsResource,'added_finals','post', false),	//killroy was here
 	AddMetadivision: generic_resource(addMetadivisionResource,'meta_division','post', false), //killroy
 	AddMachineToDivision: generic_resource(addMachineToDivisionResource,'added_machine','post',false), //killroy
