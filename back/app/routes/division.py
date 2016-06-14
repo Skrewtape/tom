@@ -111,6 +111,9 @@ returns:
         new_division.number_of_scores_per_entry = 4
     if 'stripe_sku' in division_data:
         new_division.stripe_sku = division_data['stripe_sku']
+    if 'local_price' in division_data:
+        new_division.local_price = division_data['local_price']
+        
     DB.session.add(new_division)
     DB.session.commit()
     return jsonify(new_division.to_dict_with_machines())
