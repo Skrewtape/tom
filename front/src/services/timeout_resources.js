@@ -4,6 +4,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     var resources = {};    
     var timestamps = {};
 
+    var flush_resource_cache = function(){
+        resource_results = {};
+    };
+    
     var resolved_promise = function(){
 	var defer = $q.defer()
 	defer.resolve();
