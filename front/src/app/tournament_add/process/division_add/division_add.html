@@ -22,16 +22,7 @@
 	   />
       </div>
       <br>
-      <div class='form-group form-group-xlg input-group input-group-xlg'>        
-	<span  class="input-group-addon" id="number_of_scores_per_entry">Scores Per Ticket</span>
-	<input
-	   type='number'
-	   class='form-control'
-	   aria-describedby='number_of_scores_per_entry'
-	   ng-model='form_division.number_of_scores_per_entry'
-	   style='width:100px'
-	   />
-      </div>
+      <div ui-view='division_config_params'></div>
       <br>
       <button
 	 ng-disabled='form_division.division_name == undefined || form_division.division_name == "" || form_division.number_of_scores_per_entry == undefined || form_division.number_of_scores_per_entry == ""'
