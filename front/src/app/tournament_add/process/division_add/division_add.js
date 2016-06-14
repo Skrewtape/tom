@@ -6,7 +6,8 @@ angular.module('app.tournament_add.process.division_add').controller(
 	$scope.tournament_id=$state.params.tournamentId;
 	$scope.form_division = {tournament_id:$scope.tournament_id};
 	StatusModal.loading();
-	$scope.tournament_promise = TimeoutResources.GetTournament(undefined,{tournament_id:$scope.tournament_id});
+        $scope.tom_config_promise = TimeoutResources.GetTomConfig();
+	$scope.tournament_promise = TimeoutResources.GetTournament($scope.tom_config_promise,{tournament_id:$scope.tournament_id});
 	$scope.tournament_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    StatusModal.loaded();

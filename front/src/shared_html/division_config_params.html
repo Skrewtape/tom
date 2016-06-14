@@ -4,17 +4,26 @@
      type='number'
      class='form-control'
      aria-describedby='number_of_scores_per_entry'
-     ng-model='tournament.number_of_scores_per_entry'
+     ng-model='form_division.number_of_scores_per_entry'
      style='width:100px'
      />
 </div>
 <br>
-<div class='form-group form-group-xlg input-group input-group-xlg'>        
+<div ng-if='resources.tom_config.use_stripe == true' class='form-group form-group-xlg input-group input-group-xlg'>        
   <span  class="input-group-addon" id="stripe_sku">Stripe SKU</span>
   <input
      class='form-control'
      aria-describedby='stripe_sku'
-     ng-model='tournament.stripe_sku'
+     ng-model='form_division.stripe_sku'
+     style='width:300px'
+     />
+</div>
+<div ng-if='resources.tom_config.use_stripe == false' class='form-group form-group-xlg input-group input-group-xlg'>        
+  <span  class="input-group-addon" id="local_price">Price</span>
+  <input
+     class='form-control'
+     aria-describedby='local_price'
+     ng-model='form_division.local_price'
      style='width:300px'
      />
 </div>

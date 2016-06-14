@@ -166,6 +166,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                    'GET');
     getTeamActiveEntryResource = generate_resource_definition('/team/:team_id/division/:division_id/entry/active',
                                                               'GET');
+    getTomConfigResource = generate_resource_definition('/config/tom',
+                                                         'GET');    
     getTournamentResource = generate_resource_definition('/tournament/:tournament_id',
                                                          'GET');
     loginResource = generate_resource_definition('/login',
@@ -243,6 +245,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetPlayerTeamTokens: generic_resource(getPlayerTeamTokensResource,'player_team_tokens','get',false),
 	GetRoles: generic_resource(getRolesResource,'roles','get', false),
 	GetTeam: generic_resource(getTeamResource,'team','get', false),
+        GetTomConfig: generic_resource(getTomConfigResource,'tom_config','get', false),
 	GetTeamActiveEntry: generic_resource(getTeamActiveEntryResource,'team_active_entry','get', false),
 	GetTournament: generic_resource(getTournamentResource,'tournament','get',false), //killroy was here
 	PlayerIsAsshole: generic_resource(playerIsAssholeResource,'empty','post', false), //killroy
