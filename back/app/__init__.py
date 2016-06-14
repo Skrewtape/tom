@@ -47,6 +47,7 @@ Scorekeeper_permission = Permission(RoleNeed('scorekeeper'))
 
 from app import auth
 from app import routes
+from app.routes import v1
 
 def make_json_error(ex):
     """Turn an exception into a chunk of JSON"""

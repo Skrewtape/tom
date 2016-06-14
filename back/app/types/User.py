@@ -70,6 +70,8 @@ class User(DB.Model):
     def to_dict_simple(self):
         user = to_dict(self)
         del user['password_crypt']
+        user['roles'] = [r.name for r in self.roles]
+        
         #if Admin_permission.can() or self.user_id == current_user.user_id:
         #    user['roles'] = [r.name for r in self.roles]
         return user

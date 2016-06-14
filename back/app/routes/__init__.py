@@ -1,5 +1,5 @@
 """Flask Route Definitions"""
-import app.routes.auth
+#import app.routes.auth
 import app.routes.player
 import app.routes.tournament
 import app.routes.division
