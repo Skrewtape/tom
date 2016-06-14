@@ -123,40 +123,6 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	}
     }
 
-    machineDictToArray = function(data,headersGetter){
-	machines_array = [];
-	machines_dict = angular.fromJson(data);
-	for(machine_index in machines_dict){
-	    machine = machines_dict[machine_index];
-	    machines_array.push(machine);
-	}
-	return machines_array;
-    }
-
-    resources['getAllMachinesArray'] = $resource('[APIHOST]/machine',null,
-				       {
-					'getAllMachinesArray': {method:'GET','timeout': 15000,
-								isArray:true,
-								transformResponse:machineDictToArray
-							       }
-                                       })    
-    resources['getActiveMachinesArray'] = $resource('[APIHOST]/machine/active',null,
-						    {
-							'getActiveMachinesArray': {method:'GET','timeout': 15000,
-										   isArray:true,
-										   transformResponse:function(data,headersGetter){
-										       machines_array = [];
-										       machines_dict = angular.fromJson(data);
-										       for(machine_index in machines_dict){
-											   machine = machines_dict[machine_index];
-											   machines_array.push(machine);
-										       }
-										       return machines_array;
-										   }
-										  }			     
-							
-						    })
-
     addDivisionResource = generate_resource_definition('/division',
                                                        'POST');
     addFinalsResource = generate_resource_definition('/finals/division/:division_id',
@@ -207,6 +173,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                          'GET');
     getAllMetadivisionsResource = generate_resource_definition('/metadivision',
                                                                'GET');
+    getAllMachinesResource = generate_resource_definition('/machine',
+                                                               'GET');    
     getAllPlayerEntriesResource = generate_resource_definition('/player/:player_id/entry/all',
                                                                'GET');
     getAllPlayersResource = generate_resource_definition('/player',
@@ -312,6 +280,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetActiveTournaments: generic_resource(getActiveTournamentsResource,'tournaments','get',false), //killroy
 	GetAllDivisions: generic_resource(getAllDivisionsResource,'divisions','get', false),//killroy
         GetAllEntries: generic_resource(getAllEntriesResource,'all_entries','get', false),
+        GetAllMachines: generic_resource(getAllMachinesResource,'machines','get', false),
 	GetAllMetadivisions: generic_resource(getAllMetadivisionsResource,'metadivisions','get',false), //killroy
         GetAllPlayers: generic_resource(getAllPlayersResource,'players','get',false),
 	GetAllPlayerEntries: generic_resource(getAllPlayerEntriesResource,'player_entries','get',false),
@@ -347,8 +316,6 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	VoidEntry: generic_resource(voidEntryResource,'entry','post', false),
 	Login: generic_resource(loginResource,'logged_in_user','post', false),
 	LoginPlayer: generic_resource(loginPlayerResource,'logged_in_player','post', false),
-	GetActiveMachinesArray: generic_resource('getActiveMachinesArray','machines_array','get',false),        
-	GetAllMachinesArray: generic_resource('getAllMachinesArray','machines','get',false), //killroy
 	FlushResourceCache:flush_resource_cache
     };
 });

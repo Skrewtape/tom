@@ -7,8 +7,8 @@ angular.module('app.tournamentselect_machine_add.machine_add').controller(
 	$scope.division_id=$state.params.divisionId;
 
 	StatusModal.loading();        
-	$scope.division_promise = TimeoutResources.GetDivision(undefined,{division_id:$scope.division_id});
-        $scope.all_machines_promise = TimeoutResources.GetAllMachinesArray($scope.division_promise);
+	$scope.division_promise = TimeoutResources.GetDivision(undefined,{division_id:$scope.division_id});        
+        $scope.all_machines_promise = TimeoutResources.GetAllMachines($scope.division_promise);        
 	$scope.all_machines_promise.then(function(data){
 	    StatusModal.loaded();
             $scope.resources = TimeoutResources.GetAllResources();

@@ -11,10 +11,11 @@ angular.module('app.finalselect_finals.matchselect_finals.matchscores_finals').c
 	//}
 	//$scope.player = TimeoutResources.addPlayerResource().addPlayer(submit_data);
 	StatusModal.loading()
-	TimeoutResources.GetActiveMachinesArray();
+	//TimeoutResources.GetActiveMachinesArray();
+        //TimeoutResources.GetActiveMachines();
 	$scope.active_machines = TimeoutResources.GetActiveMachines();
 	//$scope.finals_match_promise = TimeoutResources.GetFinalsMatch($scope.active_machines,{match_id:$scope.match_id});
-	$scope.finals_matches_promise = TimeoutResources.GetFinalsMatches(undefined,{finals_id:$scope.finals_id});
+	$scope.finals_matches_promise = TimeoutResources.GetFinalsMatches($scope.active_machines,{finals_id:$scope.finals_id});
         
 	$scope.finals_matches_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources()

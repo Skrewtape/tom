@@ -22,8 +22,8 @@
 	       type='text'
 	       class='form-control'
 	       aria-describedby='machine_name'
-	       ng-model='selected_machine'
-	       uib-typeahead="machine as machine.name for machine in resources.machines | filter:$viewValue | limitTo:8"
+	       ng-model='selected_machine'               
+	       uib-typeahead="machine as machine.name for machine in resources.machines | orderObjectBy:'machine_id':true | filter:$viewValue | limitTo:8"
 	       />
 	  </div>
 	</td>
