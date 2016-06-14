@@ -249,9 +249,9 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	    return resource_results;
 	},
         //FIXME : refactor so we don't need GetPlayerNameSmushed and GetPlayerLinkedTournamentId
-	GetPlayerNameSmushed: function(){
-	    return resource_results.player.first_name+resource_results.player.last_name;
-	},
+	// GetPlayerNameSmushed: function(){
+	//     return resource_results.player.first_name+resource_results.player.last_name;
+	// },
 	GetPlayerLinkedTournamentId: function(){
 	    return resource_results.player.linked_division.tournament_id;
 	    //return 1;

@@ -5,18 +5,30 @@ angular.module('tom_directives.link_division').controller(
 	$scope.player_id=$state.params.playerId;
 	$scope.linked_division = {value:undefined};
         StatusModal.loading();
-	$scope.player_promise = TimeoutResources.GetPlayer(undefined,{player_id:$scope.player_id});
-        $scope.tournaments_promise = TimeoutResources.GetActiveTournaments($scope.player_promise);
-	//FIXME : guyh - need a cleaner way to pass results from previous TimeoutResources call as params for current call
-	$scope.ifpa_player_promise = TimeoutResources.GetIfpaPlayer($scope.tournaments_promise,{player_name:TimeoutResources.GetPlayerNameSmushed});
-	$scope.ifpa_player_promise.then(function(data){
+        $scope.tournaments_promise = TimeoutResources.GetActiveTournaments();
+	$scope.player_promise = TimeoutResources.GetPlayer($scope.tournaments_promise,{player_id:$scope.player_id});
+
+        $scope.player_promise.then(function(data){            
+            return TimeoutResources.GetIfpaPlayer($scope.player_promise,{player_name:data.first_name+data.last_name});            
+        }).then(function(data){
 	    StatusModal.loaded();
+            console.log('hi there');
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    if($scope.resources.player.linked_division==null){
 		return;
 	    }
 	    $scope.linked_division.value = $scope.resources.player.linked_division.division_id;
-	})
+        });
+	//FIXME : guyh - need a cleaner way to pass results from previous TimeoutResources call as params for current call
+	//$scope.ifpa_player_promise = TimeoutResources.GetIfpaPlayer($scope.tournaments_promise,{player_name:TimeoutResources.GetPlayerNameSmushed});
+	// $scope.ifpa_player_promise.then(function(data){
+	//     StatusModal.loaded();
+	//     $scope.resources = TimeoutResources.GetAllResources();
+	//     if($scope.resources.player.linked_division==null){
+	// 	return;
+	//     }
+	//     $scope.linked_division.value = $scope.resources.player.linked_division.division_id;
+	// })
 
 	$scope.check_for_division_warning = function(division){
 	    if($scope.resources.player.linked_division != null && $scope.resources.player.linked_division.name>division.name){
