@@ -187,12 +187,6 @@ def create_herb_entry(division,active=False,void=False,team=None,player=None,div
         team.entries.append(entry)
     DB.session.commit()
     
-def init_users():
-#create users in db
-    global default_users
-    
-    for user in default_users:
-        create_user(user[0],user[0],user[2]) 
 
     
 

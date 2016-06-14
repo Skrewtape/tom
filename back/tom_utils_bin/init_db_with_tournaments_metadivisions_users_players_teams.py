@@ -20,6 +20,7 @@ parser.add_argument('--numentries', default=1, type=int,
 
 args = parser.parse_args()
 
+
 def init_tournaments():
     machines=app.types.Machine.query.all()
     main = create_tournament('main', False)
@@ -96,7 +97,7 @@ def init_player_herb_entries(num_entries, division,player=None,team=None, divisi
         
 init_db()            
 init_roles()
-init_users()
+create_user('elizabeth','elizabeth',ALL_ROLES)
 init_machines()
 init_tournaments()
 single_divisions = app.types.Division.query.join(app.types.Tournament).filter_by(single_division=True,team_tournament=False,scoring_type="papa").all()
