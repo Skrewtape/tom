@@ -55,11 +55,7 @@ def get_index_sidebar_info():
     return {'divisions':division_results,'division_machines':division_machine_results,'tournaments':tournament_results,'divisions_scoring_type':division_scoring_type}
 
 def get_scores_ranked_by_machine(division_id):
-    return DB.engine.execute("select machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as entry_score from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and entry.division_id = %s and entry.voided = false order by entry_score desc" % division_id)
-
-# def get_herb_scores_ranked_by_machine(division_id):
-#     return DB.engine.execute("select 'machine_name', score, entry_id, rank() over (partition by division_machine_id order by score desc) as rank, testing_papa_scoring(rank() over (partition by division_machine_id order by score desc)) as entry_score from (select e.player_id, a.score, a.score_id,a.division_machine_id,a.entry_id from score as a inner join (select division_machine_id,player_id, max(score.score) as max_score from score,entry where score.entry_id=entry.entry_id and entry.division_id = %s group by division_machine_id,player_id) as b on a.division_machine_id = b.division_machine_id and a.score = b.max_score join entry as e on a.entry_id=e.entry_id join division_machine as d on a.division_machine_id=d.division_machine_id) as zz order by entry_score desc" % division_id)
-
+    return DB.engine.execute("select machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as entry_score from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and entry.division_id = %s entry.completed = true and entry.voided = false order by entry_score desc" % division_id)
 
 def get_herb_scores_for_machine(division_machine_id):
     """
