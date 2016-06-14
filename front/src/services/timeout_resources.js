@@ -2,10 +2,6 @@
 //poop page
 angular.module('tom_services.timeout_resources', ['ngResource']);
 angular.module('tom_services.timeout_resources').factory('TimeoutResources', function($resource,$q) {
-    // var all_active_tournaments_resource = $resource('[APIHOST]/tournament/active', null,
-    //  		      {
-    //  			  'getActiveTournaments': {method:'GET', 'timeout': 15000}
-    //  		      })    
     var resource_results = {};
     var resources = {};    
     var timestamps = {};
@@ -40,8 +36,13 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	if(args == undefined){
 	    args={}
 	}
-	resource_results[scope_name] = resources[res_name][res_name](args);
-	timestamps[res_name] = Date.now();
+        if ((typeof res_name) == "string"){            
+            res_name=resources[res_name][res_name];                
+        } else {
+            res_name=res_name['custom_http'];                
+        }                
+        resource_results[scope_name] = res_name(args);
+	//timestamps[res_name] = Date.now();
 	return resource_results[scope_name].$promise;	
     }
     var generic_putpost_resource = function(res_name,scope_name,url_args,post_args){
@@ -50,9 +51,15 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	}
 	if(post_args == undefined){
 	    post_args={}
-	}	
-	resource_results[scope_name] = resources[res_name][res_name](url_args, post_args);
-	timestamps[res_name] = Date.now();
+	}
+        if ((typeof res_name) == "string"){
+            res_name=resources[res_name][res_name];            
+        } else {
+            res_name=res_name['custom_http'];                
+        };
+                
+        resource_results[scope_name] = res_name(url_args, post_args);
+	//timestamps[res_name] = Date.now();
 	return resource_results[scope_name].$promise;	
     }
     
@@ -62,14 +69,33 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
     }
 
-    var generic_resource = function(res_name,scope_name,type,cache_resource){
+    generate_resource_definition = function(url,http_method){
+        console.log('generating');
+        url_chunks = url.split("/");
+        gen_post_args = {}
+        for(url_chunk_index in url_chunks){
+            url_chunk = url_chunks[url_chunk_index];
+            if(url_chunk.indexOf(':')>=0){
+                arg_name = url_chunk.substr(1)
+                gen_post_args[arg_name]='@'+arg_name;
+            };
+        }
+        return $resource('[APIHOST]/'+url,gen_post_args,
+                         {                             
+                             'custom_http':{method:http_method, timeout:15000}
+                         }
+                        );
+    };
+
+
+    var generic_resource = function(res_name,scope_name,type,cache_resource){        
 	return function(promise,url_args,post_args,runtime_cache_override){
-	    if(runtime_cache_override!=undefined){
-		cache_resource==runtime_cache_override;
-	    }
-	    if(cache_resource==true && check_resource_is_fresh(res_name)){
-		return resolved_promise();
-	    }
+	    // if(runtime_cache_override!=undefined){
+	    //     cache_resource==runtime_cache_override;
+	    // }
+	    // if(cache_resource==true && check_resource_is_fresh(res_name)){
+	    //     return resolved_promise();
+	    // }
 	    if(promise == undefined){
 	     	for(arg_key in url_args){
 	     	    if(isFunction(url_args[arg_key])){
@@ -106,143 +132,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	}
 	return machines_array;
     }
-    
-    // resource_results['tournaments'] = undefined;
-    // resource_results['metadivisions'] = undefined;
-    // resource_results['player'] = undefined;
-    // resource_results['player_token'] = undefined;
-    // resource_results['players'] = undefined;
-    // resource_results['ifpa_player'] = undefined;
-    resources['getDivTicketCostFromStripe'] = $resource('[APIHOST]/sale/sku', null,
-     					      {
-     						  'getDivTicketCostFromStripe': {method:'GET', 'timeout': 15000}
-     					      })    
-    resources['login'] = $resource('[APIHOST]/login', null,
-			           {
-				       'login': { method:'PUT' , 'timeout': 15000}
-			           });
-    resources['loginPlayer'] = $resource('[APIHOST]/login/player/pin/:player_pin', null,
-			           {
-				       'loginPlayer': { method:'PUT' , 'timeout': 15000}
-			           });    
-    resources['addMachineToDivision'] = $resource('[APIHOST]/division/:division_id/machine/:machine_id', {division_id:'@division_id',machine_id:'@machine_id'},
-			     {
-				 'addMachineToDivision': {method:'PUT', 'timeout': 15000}
-			     })
-    resources['enableMachineInDivision']=$resource('[APIHOST]/division_machine/:division_machine_id', {division_machine_id:'@division_machine_id'},
-			     {
-				 'enableMachineInDivision': {method:'PUT', 'timeout': 15000}
-			     })
-    resources['removeMachineFromDivision'] = $resource('[APIHOST]/division_machine/:division_machine_id', {division_machine_id:'@division_machine_id'},
-			     {
-				 'removeMachineFromDivision': {method:'DELETE', 'timeout': 15000}
-			     })    
-    resources['toggleTournamentActive'] = $resource('[APIHOST]/tournament/:tournament_id/:action', {tournament_id:'@tournament_id',action:'@action'},			     //killroy was here
-			                            {
-				                        'toggleTournamentActive': {method:'PUT','timeout': 15000}
-			                            })
-    resources['setMatchScore'] = $resource('[APIHOST]/finals/finals_score/:finalsScoreId/score/:score', null,     //killroy was here
-					     {
-						 'setMatchScore': {method:'POST', 'timeout': 15000}
-					     })        
-    resources['setMatchMachine'] = $resource('[APIHOST]/finals/divisionMachineId/:divisionMachineId/score/:finalsMatchId/game_num/:gameNumber', null,     //killroy was here
-					     {
-						 'setMatchMachine': {method:'POST', 'timeout': 15000}
-					     })    
-    resources['addTournament'] = $resource('[APIHOST]/tournament', null,     //killroy was here
-					   {
-					       'addTournament': {method:'POST', 'timeout': 15000}
-					   })
-    resources['addFinals'] = $resource('[APIHOST]/finals/division/:division_id', null,     //killroy was here
-					   {
-					       'addFinals': {method:'POST', 'timeout': 15000}
-					   })
-    resources['generateFinalsRounds'] = $resource('[APIHOST]/finals/:finals_id/generate_rounds', null,     //killroy was here
-					   {
-					       'generateFinalsRounds': {method:'POST', 'timeout': 15000}
-					   })
-    resources['fillFinalsRounds'] = $resource('[APIHOST]/finals/:finals_id/fill_rounds', null,     //killroy was here
-					   {
-					       'fillFinalsRounds': {method:'POST', 'timeout': 15000}
-					   })            
-    resources['addDivision'] = $resource('[APIHOST]/division', null, //killroy was here			     
-					 {
-					     'addDivision': {method:'POST', 'timeout': 15000}
-					 })
-    resources['getFinalsMatches'] = $resource('[APIHOST]/finals/:finals_id/match', null,
-     					      {
-     						  'getFinalsMatches': {method:'GET', 'timeout': 15000}
-     					      })
-    resources['getFinals'] = $resource('[APIHOST]/finals', null,
-     				       {
-     					   'getFinals': {method:'GET', 'timeout': 15000}
-     				       })    
-    resources['getDivisionsForFinals'] = $resource('[APIHOST]/division/ready_for_finals', null,
-     					      {
-     						  'getDivisionsForFinals': {method:'GET', 'timeout': 15000}
-     					      })    
-    resources['getFinalsMatch'] = $resource('[APIHOST]/finals/match/match_id/:match_id', null,
-     					      {
-     						  'getFinalsMatch': {method:'GET', 'timeout': 15000}
-     					      })        
-    resources['getActiveTournaments'] = $resource('[APIHOST]/tournament/active', null, //killroy
-     						    {
-     							'getActiveTournaments': {method:'GET', 'timeout': 15000}
-     						    })    
-    resources['getAllMetadivisions'] = $resource('[APIHOST]/metadivision', null, //killroy			     
-						 {
-						     'getAllMetadivisions': {method:'GET', 'timeout': 15000}
-						 })
-    resources['getAllTournaments'] = $resource('[APIHOST]/tournament', null,			     
-						 {
-						     'getAllTournaments': {method:'GET', 'timeout': 15000}
-						 })
-    resources['getAssholes'] = $resource('[APIHOST]/player/asshole', null,			     
-						 {
-						     'getAssholes': {method:'GET', 'timeout': 15000}
-						 })    
-    
-    resources['addPlayer'] = $resource('[APIHOST]/player', null, //killroy			     
-			     {
-				 'addPlayer': {method:'POST', 'timeout': 15000}
-			     })
-    resources['getPlayer'] =  $resource('[APIHOST]/player/:player_id', null, //killroy was here			     
-					{
-					    'getPlayer': {method:'GET', 'timeout': 15000}
-					})
-    resources['getPlayerTokens']= $resource('[APIHOST]/token/player_id/:player_id', null, //killroy			     
-					       {
-						   'getPlayerTokens': {method:'GET', 'timeout': 15000}
-					       })
-    resources['getPlayerTeamTokens']= $resource('[APIHOST]/token/teams/:player_id', null, //killroy			     
-					       {
-						   'getPlayerTeamTokens': {method:'GET', 'timeout': 15000}
-					       })    
-    resources['getAllPlayers'] = $resource('[APIHOST]/player', null,			     
-			     {
-				 'getAllPlayers': {method:'GET', 'timeout': 15000}
-			     })
-    resources['getIfpaPlayer'] = $resource('[APIHOST]/ifpa/:player_name', null,			     
-			     {
-				 'getIfpaPlayer': {method:'GET', 'timeout': 15000}
-			     })
-    resources['getPlayerTeams'] = $resource('[APIHOST]/team/player/:player_id', null, //killroy			     
-			     {
-				 'getPlayerTeams': {method:'GET', 'timeout': 15000}
-			     })    
-    resources['addTeam'] = $resource('[APIHOST]/team', null, //killroy			     
-			     {
-				 'addTeam': {method:'POST', 'timeout': 15000}
-			     })
 
-    resources['getAllDivisions'] =  $resource('[APIHOST]/division', null, //killroy
-			 {
-			     'getAllDivisions': {method:'GET', 'timeout': 15000}
-			 })
-    resources['getActiveMachines'] =  $resource('[APIHOST]/machine/active', null,
-			 {
-			     'getActiveMachines': {method:'GET', 'timeout': 15000}
-			 })
     resources['getAllMachinesArray'] = $resource('[APIHOST]/machine',null,
 				       {
 					'getAllMachinesArray': {method:'GET','timeout': 15000,
@@ -266,121 +156,125 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 										  }			     
 							
 						    })
-    resources['getDivisionMachine'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id', null,
-			 {
-			     'getDivisionMachine': {method:'GET', 'timeout': 15000}
-			 })        
-    resources['getAllPlayerEntries'] =  $resource('[APIHOST]/player/:player_id/entry/all', null,
-			 {
-			     'getAllPlayerEntries': {method:'GET', 'timeout': 15000}
-			 })    
-    resources['addTokens'] =  $resource('[APIHOST]/token', null, //killroy			     
-					{
-					    'addTokens': {method:'POST', 'timeout': 15000}
-					})
-    resources['changeScore'] =  $resource('[APIHOST]/score/:score_id', null, //killroy			     
-					{
-					    'changeScore': {method:'PUT', 'timeout': 15000}
-					})	        
-    resources['deleteScore'] =  $resource('[APIHOST]/score/:score_id', null, //killroy			     
-					{
-					    'deleteScore': {method:'DELETE', 'timeout': 15000}
-					})
-    resources['voidEntryToggle'] =  $resource('[APIHOST]/entry/:entry_id/void/:void_state',//killroy
-					      {entry_id:'@entry_id', void_state:'@void_state'},
-					      {
-						  'voidEntryToggle': {method:'PUT', 'timeout': 15000}
-					      })
-    resources['completeEntryToggle'] =  $resource('[APIHOST]/entry/:entry_id/complete/:complete_state',//killroy
-					      {entry_id:'@entry_id', void_state:'@complete_state'},
-					      {
-						  'completeEntryToggle': {method:'PUT', 'timeout': 15000}
-					      })    
-    resources['voidEntry'] =  $resource('[APIHOST]/entry/:entry_id/void',
-					      {entry_id:'@entry_id'},
-					      {
-						  'voidEntry': {method:'PUT', 'timeout': 15000}
-					      })    
-    resources['addMetadivision'] =  $resource('[APIHOST]/metadivision', null, //killroy			     
-					  {
-					      'addMetadivision': {method:'POST', 'timeout': 15000}
-					  })
-    resources['getRoles'] =  $resource('[APIHOST]/role', null,			     
-					  {
-					      'getRoles': {method:'GET', 'timeout': 15000}
-					  })
-    resources['addUser'] =  $resource('[APIHOST]/user', null,			     
-					  {
-					      'addUser': {method:'POST', 'timeout': 15000}
-					  })
-    resources['editPlayer'] =  $resource('[APIHOST]/player/:player_id', {player_id:'@player_id'}, //killroy			     
-			     {
-				 'editPlayer': {method:'PUT','timeout': 15000}
-			     })
-    resources['addScore'] =  $resource('[APIHOST]/entry/:entry_id/divisionmachine/:division_machine_id/new_score/:new_score',
-				       {entry_id:'@entry_id',division_machine_id:'@division_machine_id',new_score_value:'@new_score_value'},			     
-			     {
-				 'addScore': {method:'POST','timeout': 15000}
-			     })	    
-    resources['getTournament'] = $resource('[APIHOST]/tournament/:tournament_id', null, //killroy was here
-			     {
-				 'getTournament': {method:'GET', 'timeout': 15000}
-			     })
-    resources['getPlayerActiveEntriesCount'] = $resource('[APIHOST]/player/:player_id/entry/active_count', null, //killroy
-			     {
-				 'getPlayerActiveEntriesCount': {method:'GET', 'timeout': 15000}
-			     })
-    resources['getPlayerActiveEntry'] = $resource('[APIHOST]/player/:player_id/division/:division_id/entry/active', null,
-			     {
-				 'getPlayerActiveEntry': {method:'GET', 'timeout': 15000}
-			     })
-    resources['getTeamActiveEntry'] = $resource('[APIHOST]/team/:team_id/division/:division_id/entry/active', null,
-			     {
-				 'getTeamActiveEntry': {method:'GET', 'timeout': 15000}
-			     })
-    resources['getAllEntries'] = $resource('[APIHOST]/entry/count/:count', null,
-			     {
-				 'getAllEntries': {method:'GET', 'timeout': 15000}
-			     })            
-    resources['getEntry'] = $resource('[APIHOST]/entry/:entry_id', null,
-			     {
-				 'getEntry': {method:'GET', 'timeout': 15000}
-			     })        
-    
-    resources['getDivision'] = $resource('[APIHOST]/division/:division_id', null,
-			     {
-				 'getDivision': {method:'GET', 'timeout': 15000}
-			     })
-    resources['getTeam'] = $resource('[APIHOST]/team/:team_id', null,
-			     {
-				 'getTeam': {method:'GET', 'timeout': 15000}
-			     })    
-    resources['setDivisionMachinePlayer'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/player/:player_id', {division_machine_id:'@division_machine_id',player_id:'@player_id'},  
-			     {
-				 'setDivisionMachinePlayer': {method:'PUT','timeout': 15000}
-			     })
-    resources['setDivisionMachineTeam'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/team/:team_id', {division_machine_id:'@division_machine_id',player_id:'@team_id'},  
-			     {
-				 'setDivisionMachineTeam': {method:'PUT','timeout': 15000}
-			     })    
-    resources['clearDivisionMachinePlayer'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/player/:player_id/clear', {division_machine_id:'@division_machine_id',player_id:'@player_id'},  
-			     {
-				 'clearDivisionMachinePlayer': {method:'PUT','timeout': 15000}
-			     })
-    resources['clearDivisionMachineTeam'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/team/:team_id/clear', {division_machine_id:'@division_machine_id',team_id:'@team_id'},  
-			     {
-				 'clearDivisionMachineTeam': {method:'PUT','timeout': 15000}
-			     })    
-    resources['playerIsAsshole'] =  $resource('[APIHOST]/divisionmachine/:division_machine_id/entry/:entry_id/asshole', {division_machine_id:'@division_machine_id',entry_id:'@entry_id'},  
-			     {
-				 'playerIsAsshole': {method:'PUT','timeout': 15000}
-			     })    
-    resources['completeEntry'] =  $resource('[APIHOST]/entry/:entry_id/complete', {entry_id:'@entry_id'},  
-			     {
-				 'completeEntry': {method:'PUT','timeout': 15000}
-			     })	
-    
-    
+
+    addDivisionResource = generate_resource_definition('/division',
+                                                       'POST');
+    addFinalsResource = generate_resource_definition('/finals/division/:division_id',
+                                                     'POST');
+    addMachineToDivisionResource = generate_resource_definition('/division/:division_id/machine/:machine_id',
+                                                                'PUT');
+    addMetadivisionResource = generate_resource_definition('/metadivision',
+                                                           'POST');
+    addPlayerResource = generate_resource_definition('/player',
+                                                     'POST');
+    addScoreResource = generate_resource_definition('/entry/:entry_id/divisionmachine/:division_machine_id/new_score/:new_score',
+                                                    'addScore');
+    addTeamResource = generate_resource_definition('/team',
+                                                   'POST');
+    addTokensResource = generate_resource_definition('/token',
+                                                     'POST');
+    addTournamentResource = generate_resource_definition('/tournament',
+                                                         'POST');
+    addUserResource = generate_resource_definition('/user',
+                                                   'POST');
+    changeScoreResource = generate_resource_definition('/score/:score_id',
+                                                       'PUT');
+    clearDivisionMachinePlayerResource = generate_resource_definition('/divisionmachine/:division_machine_id/player/:player_id/clear',
+                                                                      'PUT');
+    clearDivisionMachineTeamResource = generate_resource_definition('/divisionmachine/:division_machine_id/team/:team_id/clear',
+                                                                    'PUT');
+    completeEntryResource = generate_resource_definition('/entry/:entry_id/complete',
+                                                         'PUT');
+    completeEntryToggleResource = generate_resource_definition('/entry/:entry_id/complete/:complete_state',
+                                                               'completeEntryToggle');
+    deleteScoreResource = generate_resource_definition('/score/:score_id',
+                                                       'DELETE');
+    editPlayerResource = generate_resource_definition('/player/:player_id',
+                                                      'PUT');
+    enableMachineInDivisionResource = generate_resource_definition('/division_machine/:division_machine_id',
+                                                                   'PUT');
+    fillFinalsRoundsResource = generate_resource_definition('/finals/:finals_id/fill_rounds',
+                                                            'POST');
+    generateFinalsRoundsResource = generate_resource_definition('/finals/:finals_id/generate_rounds',
+                                                                'POST');
+    getActiveMachinesResource = generate_resource_definition('/machine/active',
+                                                             'GET');
+    getActiveTournamentsResource = generate_resource_definition('/tournament/active',
+                                                                'GET');
+    getAllDivisionsResource = generate_resource_definition('/division',
+                                                           'GET');
+    getAllEntriesResource = generate_resource_definition('/entry/count/:count',
+                                                         'GET');
+    getAllMetadivisionsResource = generate_resource_definition('/metadivision',
+                                                               'GET');
+    getAllPlayerEntriesResource = generate_resource_definition('/player/:player_id/entry/all',
+                                                               'GET');
+    getAllPlayersResource = generate_resource_definition('/player',
+                                                         'GET');
+    getAllTournamentsResource = generate_resource_definition('/tournament',
+                                                             'GET');
+    getAssholesResource = generate_resource_definition('/player/asshole',
+                                                       'GET');
+    getDivTicketCostFromStripeResource = generate_resource_definition('/sale/sku',
+                                                                      'GET');
+    getDivisionResource = generate_resource_definition('/division/:division_id',
+                                                       'GET');
+    getDivisionMachineResource = generate_resource_definition('/divisionmachine/:division_machine_id',
+                                                              'GET');
+    getDivisionsForFinalsResource = generate_resource_definition('/division/ready_for_finals',
+                                                                 'GET');
+    getEntryResource = generate_resource_definition('/entry/:entry_id',
+                                                    'GET');
+    getFinalsResource = generate_resource_definition('/finals',
+                                                     'GET');
+    getFinalsMatchResource = generate_resource_definition('/finals/match/match_id/:match_id',
+                                                          'GET');
+    getFinalsMatchesResource = generate_resource_definition('/finals/:finals_id/match',
+                                                            'GET');
+    getIfpaPlayerResource = generate_resource_definition('/ifpa/:player_name',
+                                                         'GET');
+    getPlayerResource = generate_resource_definition('/player/:player_id',
+                                                     'GET');
+    getPlayerActiveEntriesCountResource = generate_resource_definition('/player/:player_id/entry/active_count',
+                                                                       'GET');
+    getPlayerActiveEntryResource = generate_resource_definition('/player/:player_id/division/:division_id/entry/active',
+                                                                'GET');
+    getPlayerTeamTokensResource = generate_resource_definition('/token/teams/:player_id',
+                                                               'GET');
+    getPlayerTeamsResource = generate_resource_definition('/team/player/:player_id',
+                                                          'GET');
+    getPlayerTokensResource = generate_resource_definition('/token/player_id/:player_id',
+                                                           'GET');
+    getRolesResource = generate_resource_definition('/role',
+                                                    'GET');
+    getTeamResource = generate_resource_definition('/team/:team_id',
+                                                   'GET');
+    getTeamActiveEntryResource = generate_resource_definition('/team/:team_id/division/:division_id/entry/active',
+                                                              'GET');
+    getTournamentResource = generate_resource_definition('/tournament/:tournament_id',
+                                                         'GET');
+    loginResource = generate_resource_definition('/login',
+                                                 'PUT');
+    loginPlayerResource = generate_resource_definition('/login/player/pin/:player_pin',
+                                                       'PUT');
+    playerIsAssholeResource = generate_resource_definition('/divisionmachine/:division_machine_id/entry/:entry_id/asshole',
+                                                           'PUT');
+    removeMachineFromDivisionResource = generate_resource_definition('/division_machine/:division_machine_id',
+                                                                     'DELETE');
+    setDivisionMachinePlayerResource = generate_resource_definition('/divisionmachine/:division_machine_id/player/:player_id',
+                                                                    'PUT');
+    setDivisionMachineTeamResource = generate_resource_definition('/divisionmachine/:division_machine_id/team/:team_id',
+                                                                  'PUT');
+    setMatchMachineResource = generate_resource_definition('/finals/divisionMachineId/:divisionMachineId/score/:finalsMatchId/game_num/:gameNumber',
+                                                           'POST');
+    setMatchScoreResource = generate_resource_definition('/finals/finals_score/:finalsScoreId/score/:score',
+                                                         'POST');
+    toggleTournamentActiveResource = generate_resource_definition('/tournament/:tournament_id/:action',                                                              
+                                                                  'PUT');        
+    voidEntryResource = generate_resource_definition('/entry/:entry_id/void',
+                                                     'voidEntry');
+    voidEntryToggleResource = generate_resource_definition('/entry/:entry_id/void/:void_state',
+                                                           'voidEntryToggle');
     
     return {
 	GetAllResources: function(){//killroy was here
@@ -394,219 +288,67 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	    return resource_results.player.linked_division.tournament_id;
 	    //return 1;
 	},
-	// GetEntryId: function(){
-	//     return resource_results.player_active_entry.entry.entry_id
-	// },
-	// GetTeamEntryId: function(){
-	//     return resource_results.team_active_entry.entry.entry_id
-	// },		
-	// GetTournamentIdFromDivision: function(){
-	//     return resource_results.division.tournament_id
-	// },
-	// GetPlayerIdFromDivisionMachine: function(){
-	//     return resource_results.division_machine.player_id;
-	// },	
-        
-	AddFinals: generic_resource('addFinals','added_finals','post', false),	//killroy was here
-	AddMetadivision: generic_resource('addMetadivision','meta_division','post', false), //killroy
-	AddMachineToDivision: generic_resource('addMachineToDivision','added_machine','post',false), //killroy
-	AddPlayer: generic_resource('addPlayer','added_player','post',false), //killroy       
-        AddTeam: generic_resource('addTeam','team','post',false), //killroy
-	AddTokens: generic_resource('addTokens','add_tokens_result','post', false),//killroy
-	AddTournament: generic_resource('addTournament','add_tournament_result','post', false),	//killroy was here	
-	AddDivision: generic_resource('addDivision','add_division_result','post', false),	//killroy was here	
-	AddUser: generic_resource('addUser','user','post', false),
-	AddScore: generic_resource('addScore','entry','post',false), //killroy
-	ChangeScore: generic_resource('changeScore','score','post', false), //killroy
-        ClearDivisionMachinePlayer: generic_resource('clearDivisionMachinePlayer','empty','post', false), //killroy
-        ClearDivisionMachineTeam: generic_resource('clearDivisionMachineTeam','empty','post', false), //killroy
-	CompleteEntry: generic_resource('completeEntry','entry','post', false),
-	CompleteEntryToggle: generic_resource('completeEntryToggle','entry','post', false),        
-	DeleteScore: generic_resource('deleteScore','score','get', false), //killroy
-        EditPlayer: generic_resource('editPlayer','edited_player','post', false),//killroy
-	EnableMachineInDivision: generic_resource('enableMachineInDivision','edited_player','post', false),//killroy
-        FillFinalsRounds: generic_resource('fillFinalsRounds','fill_finals_rounds_result','post', false),//killroy was here		
-	GenerateFinalsRounds: generic_resource('generateFinalsRounds','generate_finals_rounds_result','post', false),	//killroy was here	
-        GetActiveMachines: generic_resource('getActiveMachines','machines','get',false), //killroy
+	AddFinals: generic_resource(addFinalsResource,'added_finals','post', false),	//killroy was here
+	AddMetadivision: generic_resource(addMetadivisionResource,'meta_division','post', false), //killroy
+	AddMachineToDivision: generic_resource(addMachineToDivisionResource,'added_machine','post',false), //killroy
+	AddPlayer: generic_resource(addPlayerResource,'added_player','post',false), //killroy
+        AddTeam: generic_resource(addTeamResource,'team','post',false), //killroy
+	AddTokens: generic_resource(addTokensResource,'add_tokens_result','post', false),//killroy
+	AddTournament: generic_resource(addTournamentResource,'add_tournament_result','post', false),	//killroy was here
+	AddDivision: generic_resource(addDivisionResource,'add_division_result','post', false),	//killroy was here
+	AddUser: generic_resource(addUserResource,'user','post', false),
+	AddScore: generic_resource(addScoreResource,'entry','post',false), //killroy
+	ChangeScore: generic_resource(changeScoreResource,'score','post', false), //killroy
+        ClearDivisionMachinePlayer: generic_resource(clearDivisionMachinePlayerResource,'empty','post', false), //killroy
+        ClearDivisionMachineTeam: generic_resource(clearDivisionMachineTeamResource,'empty','post', false), //killroy
+	CompleteEntry: generic_resource(completeEntryResource,'entry','post', false),
+	CompleteEntryToggle: generic_resource(completeEntryToggleResource,'entry','post', false),
+	DeleteScore: generic_resource(deleteScoreResource,'score','get', false), //killroy
+        EditPlayer: generic_resource(editPlayerResource,'edited_player','post', false),//killroy
+	EnableMachineInDivision: generic_resource(enableMachineInDivisionResource,'edited_player','post', false),//killroy
+        FillFinalsRounds: generic_resource(fillFinalsRoundsResource,'fill_finals_rounds_result','post', false),//killroy was here
+	GenerateFinalsRounds: generic_resource(generateFinalsRoundsResource,'generate_finals_rounds_result','post', false),	//killroy was here
+        GetActiveMachines: generic_resource(getActiveMachinesResource,'machines','get',false), //killroy
+	GetActiveTournaments: generic_resource(getActiveTournamentsResource,'tournaments','get',false), //killroy
+	GetAllDivisions: generic_resource(getAllDivisionsResource,'divisions','get', false),//killroy
+        GetAllEntries: generic_resource(getAllEntriesResource,'all_entries','get', false),
+	GetAllMetadivisions: generic_resource(getAllMetadivisionsResource,'metadivisions','get',false), //killroy
+        GetAllPlayers: generic_resource(getAllPlayersResource,'players','get',false),
+	GetAllPlayerEntries: generic_resource(getAllPlayerEntriesResource,'player_entries','get',false),
+	GetAllTournaments: generic_resource(getAllTournamentsResource,'tournaments','get',false),//killroy was here
+	GetAssholes: generic_resource(getAssholesResource,'assholes','get',false),
+	GetDivision: generic_resource(getDivisionResource,'division','get',false), //killroy
+        GetDivTicketCostFromStripe: generic_resource(getDivTicketCostFromStripeResource,'divisions_costs','get', false),
+	GetDivisionsForFinals: generic_resource(getDivisionsForFinalsResource,'divisions_ready_for_finals','get', false),
+	GetDivisionMachine: generic_resource(getDivisionMachineResource,'division_machine','get',false), //killroy
+	GetEntry: generic_resource(getEntryResource,'entry','get',false),
+	GetFinals: generic_resource(getFinalsResource,'finals','get', false),
+	GetFinalsMatches: generic_resource(getFinalsMatchesResource,'finals_matches','get', false),
+	GetFinalsMatch: generic_resource(getFinalsMatchResource,'finals_match','get', false),
+	GetIfpaPlayer: generic_resource(getIfpaPlayerResource,'ifpa_player','get',false), //killroy
+	GetPlayer: generic_resource(getPlayerResource,'player','get', false),//killroy
+	GetPlayerActiveEntriesCount: generic_resource(getPlayerActiveEntriesCountResource,'player_active_entries_count','get', false), //killroy
+	GetPlayerActiveEntry: generic_resource(getPlayerActiveEntryResource,'player_active_entry','get', false),
+	GetPlayerTeams: generic_resource(getPlayerTeamsResource,'player_teams','get', false), //killroy
+	GetPlayerTokens: generic_resource(getPlayerTokensResource,'player_tokens','get', false),//killroy
+	GetPlayerTeamTokens: generic_resource(getPlayerTeamTokensResource,'player_team_tokens','get',false),
+	GetRoles: generic_resource(getRolesResource,'roles','get', false),
+	GetTeam: generic_resource(getTeamResource,'team','get', false),
+	GetTeamActiveEntry: generic_resource(getTeamActiveEntryResource,'team_active_entry','get', false),
+	GetTournament: generic_resource(getTournamentResource,'tournament','get',false), //killroy was here
+	PlayerIsAsshole: generic_resource(playerIsAssholeResource,'empty','post', false), //killroy
+        RemoveMachineFromDivision: generic_resource(removeMachineFromDivisionResource,'empty','get', false),//enable
+	SetDivisionMachinePlayer: generic_resource(setDivisionMachinePlayerResource,'division_machine','post', false), //killroy
+	SetDivisionMachineTeam: generic_resource(setDivisionMachineTeamResource,'division_machine','post', false), //killroy
+	SetMatchMachine: generic_resource(setMatchMachineResource,'match_machine','post', false),
+	SetMatchScore: generic_resource(setMatchScoreResource,'match_score','post', false),
+        ToggleTournamentActive: generic_resource(toggleTournamentActiveResource,'toggled_tournament','post', false), //killroy was here
+	VoidEntryToggle: generic_resource(voidEntryToggleResource,'entry','post', false), //killroy
+	VoidEntry: generic_resource(voidEntryResource,'entry','post', false),
+	Login: generic_resource(loginResource,'logged_in_user','post', false),
+	LoginPlayer: generic_resource(loginPlayerResource,'logged_in_player','post', false),
 	GetActiveMachinesArray: generic_resource('getActiveMachinesArray','machines_array','get',false),        
-	GetActiveTournaments: generic_resource('getActiveTournaments','tournaments','get',false), //killroy
-	GetAllDivisions: generic_resource('getAllDivisions','divisions','get', false),//killroy
-        GetAllEntries: generic_resource('getAllEntries','all_entries','get', false),
 	GetAllMachinesArray: generic_resource('getAllMachinesArray','machines','get',false), //killroy
-	GetAllMetadivisions: generic_resource('getAllMetadivisions','metadivisions','get',false), //killroy	
-        GetAllPlayers: generic_resource('getAllPlayers','players','get',false),        
-	GetAllPlayerEntries: generic_resource('getAllPlayerEntries','player_entries','get',false),
-	GetAllTournaments: generic_resource('getAllTournaments','tournaments','get',false),//killroy was here
-	GetAssholes: generic_resource('getAssholes','assholes','get',false),        
-	GetDivision: generic_resource('getDivision','division','get',false), //killroy
-        GetDivTicketCostFromStripe: generic_resource('getDivTicketCostFromStripe','divisions_costs','get', false),
-	GetDivisionsForFinals: generic_resource('getDivisionsForFinals','divisions_ready_for_finals','get', false),
-	GetDivisionMachine: generic_resource('getDivisionMachine','division_machine','get',false), //killroy
-	GetEntry: generic_resource('getEntry','entry','get',false),		
-	GetFinals: generic_resource('getFinals','finals','get', false),
-	GetFinalsMatches: generic_resource('getFinalsMatches','finals_matches','get', false),
-	GetFinalsMatch: generic_resource('getFinalsMatch','finals_match','get', false),	
-	GetIfpaPlayer: generic_resource('getIfpaPlayer','ifpa_player','get',false), //killroy
-	GetPlayer: generic_resource('getPlayer','player','get', false),//killroy
-	GetPlayerActiveEntriesCount: generic_resource('getPlayerActiveEntriesCount','player_active_entries_count','get', false), //killroy
-	GetPlayerActiveEntry: generic_resource('getPlayerActiveEntry','player_active_entry','get', false),	
-	GetPlayerTeams: generic_resource('getPlayerTeams','player_teams','get', false), //killroy
-	GetPlayerTokens: generic_resource('getPlayerTokens','player_tokens','get', false),//killroy
-	GetPlayerTeamTokens: generic_resource('getPlayerTeamTokens','player_team_tokens','get',false),
-	GetRoles: generic_resource('getRoles','roles','get', false),
-	GetTeam: generic_resource('getTeam','team','get', false),
-	GetTeamActiveEntry: generic_resource('getTeamActiveEntry','team_active_entry','get', false),	
-	GetTournament: generic_resource('getTournament','tournament','get',false), //killroy was here
-	PlayerIsAsshole: generic_resource('playerIsAsshole','empty','post', false), //killroy
-        RemoveMachineFromDivision: generic_resource('removeMachineFromDivision','empty','get', false),//enable
-	SetDivisionMachinePlayer: generic_resource('setDivisionMachinePlayer','division_machine','post', false), //killroy
-	SetDivisionMachineTeam: generic_resource('setDivisionMachineTeam','division_machine','post', false), //killroy        
-	SetMatchMachine: generic_resource('setMatchMachine','match_machine','post', false),
-	SetMatchScore: generic_resource('setMatchScore','match_score','post', false),
-        ToggleTournamentActive: generic_resource('toggleTournamentActive','toggled_tournament','post', false), //killroy was here
-	VoidEntryToggle: generic_resource('voidEntryToggle','entry','post', false), //killroy
-	VoidEntry: generic_resource('voidEntry','entry','post', false),
-	Login: generic_resource('login','logged_in_user','post', false),
-	LoginPlayer: generic_resource('loginPlayer','logged_in_player','post', false),
-        
-	FlushResourceCache:flush_resource_cache,
-	// getAllMetadivisionsResource: function(){
-	//     return $resource('[APIHOST]/metadivision', null,			     
-	// 		     {
-	// 			 'getAllMetadivisions': {method:'GET', 'timeout': 15000}
-	// 		     })	    
-	// },	
-	// loginResource: function (){
-	//     return $resource('[APIHOST]/login', null,
-	// 		     {
-	// 			 'login': { method:'PUT' , 'timeout': 15000}
-	// 		     });
-	// },
-	// addTournamentResource: function(){
-	//     return $resource('[APIHOST]/tournament', null,
-	// 		     {
-	// 			 'addTournament': {method:'POST', 'timeout': 15000}
-	// 		     })
-	// },
-	// getAllTournamentsResource: function(){
-	//     return $resource('[APIHOST]/tournament', null,
-	// 		     {
-	// 			 'getAllTournaments': {method:'GET', 'timeout': 15000}
-	// 		     })
-	// },
-	// getActiveTournamentsResource: function(){
-	//     return $resource('[APIHOST]/tournament/active', null,
-	// 		     {
-	// 			 'getActiveTournaments': {method:'GET', 'timeout': 15000}
-	// 		     })
-	// },
-	// getTournamentResource: function(){
-	//     return $resource('[APIHOST]/tournament/:tournament_id', null,
-	// 		     {
-	// 			 'getTournament': {method:'GET', 'timeout': 15000}
-	// 		     })
-	// },
-	// addDivisionResource: function(){
-	//     return $resource('[APIHOST]/division', null,			     
-	// 		     {
-	// 			 //FIXME : need to standardize return format - specifically
-	// 			 //        need to always return dict's, even in things that
-	// 			 //        are sub-objects (i.e. list of machines under division
-	// 			 //        should be a dict, not an array ).  We can do 
-	// 			 //        response massaging at the resourc
-	// 			 'addDivision': {method:'POST', 'timeout': 15000}
-	// 		     })
-	// },
-	// getDivisionResource: function(){
-	//     return $resource('[APIHOST]/division/:division_id', null,
-	// 		     {
-	// 			 'getDivision': {method:'GET', 'timeout': 15000}
-	// 		     })
-	// },
-	// getAllDivisionsResource: function(){
-	//     return $resource('[APIHOST]/division', null,
-	// 		     {
-	// 			 'getAllDivisions': {method:'GET', 'timeout': 15000}
-	// 		     })
-	// },
-	// getAllMachinesResource: function(){
-	//     return $resource('[APIHOST]/machine', null,
-	// 		     {
-	// 			 'getAllMachines': {method:'GET', 'timeout': 15000}
-	// 		     })
-	// },
-	// getAllMachinesArrayResource: function(){
-	//     return $resource('[APIHOST]/machine', null,
-	// 		     {
-	// 			 'getAllMachinesArray': {
-	// 			     method:'GET',
-	// 			     'timeout': 15000,
-	// 			     isArray:true,
-	// 			     transformResponse:function(data,headersGetter){
-	// 				 machines_array = [];
-	// 				 machines_dict = angular.fromJson(data);
-	// 				 for(machine_index in machines_dict){
-	// 				     machine = machines_dict[machine_index];
-	// 				     machines_array.push(machine);
-	// 				 }
-	// 				 return machines_array;
-	// 			     }
-	// 			 }
-	// 		     })
-	// },
-	// addMachineToDivisionResource: function(){
-	//     return $resource('[APIHOST]/division/:division_id/machine/:machine_id', {division_id:'@division_id',machine_id:'@machine_id'},
-	// 		     {
-	// 			 'addMachineToDivision': {method:'PUT', 'timeout': 15000}
-	// 		     })
-	// },
-	// removeMachineFromDivisionResource: function(){
-	//     return $resource('[APIHOST]/division_machine/:division_machine_id', {division_machine_id:'@division_machine_id'},
-	// 		     {
-	// 			 'removeMachineFromDivision': {method:'DELETE', 'timeout': 15000}
-	// 		     })
-	// },
-	// enableMachineInDivisionResource: function(){
-	//     return $resource('[APIHOST]/division_machine/:division_machine_id', {division_machine_id:'@division_machine_id'},
-	// 		     {
-	// 			 'enableMachineInDivision': {method:'PUT', 'timeout': 15000}
-	// 		     })
-	// },
-	// addPlayerResource: function(){
-	//     return $resource('[APIHOST]/player', null,			     
-	// 		     {
-	// 			 'addPlayer': {method:'POST', 'timeout': 15000}
-	// 		     })
-	// },
-	// getPlayerResource: function(){
-	//     return $resource('[APIHOST]/player/:player_id', null,			     
-	// 		     {
-	// 			 'getPlayer': {method:'GET', 'timeout': 15000}
-	// 		     })
-	// },
-	// editPlayerResource: function(){
-	//     return $resource('[APIHOST]/player/:player_id', {player_id:'@player_id'},			     
-	// 		     {
-	// 			 'editPlayer': {method:'PUT','timeout': 15000}
-	// 		     })
-	// },
-	// toggleTournamentActiveResource: function(){
-	//     return $resource('[APIHOST]/tournament/:tournament_id/:action', {tournament_id:'@tournament_id',action:'@action'},			     
-	// 		     {
-	// 			 'toggleTournamentActive': {method:'PUT','timeout': 15000}
-	// 		     })
-	// },
-	// getTokensForPlayerResource: function(){
-	//     return $resource('[APIHOST]/token/player_id/:player_id', null,			     
-	// 		     {
-	// 			 'getTokensForPlayer': {method:'GET', 'timeout': 15000}
-	// 		     })	    
-	// },
-	// addTokensResource: function(){
-	//     return $resource('[APIHOST]/token', null,			     
-	// 		     {
-	// 			 'addTokens': {method:'POST', 'timeout': 15000}
-	// 		     })	    
-	// }
+	FlushResourceCache:flush_resource_cache
     };
 });
