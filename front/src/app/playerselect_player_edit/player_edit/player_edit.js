@@ -18,6 +18,7 @@ angular.module('app.playerselect_player_edit.player_edit').controller(
 	$scope.player_entries_promise = TimeoutResources.GetAllPlayerEntries($scope.machines_promise,{player_id:$scope.player_id})	
 	$scope.player_entries_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
+            $scope.player_entries = $scope.resources.player_entries;
             //FIXME : not actual fixme, but should be using this convertObjToArray instead of doing it at the timeoutresrouces level
 	    $scope.machines_array = Utils.convertObjToArray($scope.resources.machines)
 	    StatusModal.loaded()

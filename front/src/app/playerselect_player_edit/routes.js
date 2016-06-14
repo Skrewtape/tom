@@ -17,7 +17,10 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/playerselect_player_edit/player_edit/player_edit.html',
  	       controller: 'app.playerselect_player_edit.player_edit',
- 	     }
+ 	     },
+             'edit_entries@app.playerselect_player_edit.player_edit': {
+                 templateUrl: 'shared_html/edit_entries.html',
+             }
  	   }
        }).state('app.playerselect_player_edit.player_edit.link_division', 
         { 

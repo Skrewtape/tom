@@ -8,7 +8,10 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/edit_all_entries/edit_all_entries.html',
  	       controller: 'app.edit_all_entries',
- 	     }
+ 	     },
+             'edit_entries@app.edit_all_entries': {
+                 templateUrl: 'shared_html/edit_entries.html',
+             }
  	   }
        })//REPLACE_ME
 

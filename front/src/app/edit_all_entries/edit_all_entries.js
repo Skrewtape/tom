@@ -19,9 +19,9 @@ angular.module('app.edit_all_entries').controller(
         
         $scope.all_entries_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();            
-            
+            $scope.entries = $scope.resources.all_entries;
 	    StatusModal.loaded()
-	})
+	});
 
 
 	//$scope.player_info=$state.params.newPlayerInfo;
