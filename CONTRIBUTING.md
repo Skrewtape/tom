@@ -69,6 +69,12 @@ back/app/tom_config.py
 This is where we put options that are configurable at runtime (i.e. number of max allowed unstarted tickets, etc) 
 
 ```
+back/app/secret_config.py
+```
+This is where we put secret options that are configurable at runtime (i.e. api key for stripe, etc) 
+
+
+```
 back/app/types
 ```
 This is where the sqlalchemy objects are defined.  
@@ -94,12 +100,18 @@ back/tomtest
 This is where all the unit tests live.  See section on unit tests for more details
 
 ```
-back/utils
+back/tom_utils_bin
 ```
 Utilities and helpers
 
+```
+back/tom_utils_lib
+```
+Contains code used by utils in back/tom_utils_bin
+
+
 #Backend : Getting Started
-Follow the instructions in the [INSTALL_INSTRUCTIONS.md](INSTALL_INSTRUCTIONS.md).  Once you are done, open up 2 new shells.  In the first one, run the following comman
+Follow the instructions in the [INSTALL_INSTRUCTIONS.md](INSTALL_INSTRUCTIONS.md).  Once you are done, open up 2 new shells.  In the first one, run the following command
 ```
 ./node_modules/grunt-cli/bin/grunt --backend_ip=<ip address of backend machine> watch
 
@@ -133,12 +145,12 @@ A Finals is associated with a specific division (i.e. Classics single division i
 
 #Backend : Ranking
 
-You'll notice that rankings are not stored in the database.  This is because calculate all rankings on the fly.  It turns out that calculating ranks on demand for specific divisions, machines, or players produces better results (in terms of performance) than calculating ranks on a regular basis for everything and recording it in the DB.  This is because :
+You'll notice that rankings are not stored in the database.  This is because we calculate all rankings on the fly.  It turns out that calculating ranks on demand for specific divisions, machines, or players produces better results (in terms of performance) than calculating ranks on a regular basis for everything and recording it in the DB.  This is because :
 * The number of people who will be trying to view rankings at any given time will not be that high (i.e. no more than 30-40 in the same second).
 * When people look at rankings, they will be looking at a subset (i.e. a single division, a single machine, a single player).
 * Write operations are far more expensive than query operations.
 
-The downside is that we get this great performance through extremely ugly sql queries.  These queries have been documented in the [sql queries README](back/app/routes/SQL_QUERIES.md) - please it if you want to see how the queries work.
+The downside is that we get this great performance through extremely ugly sql queries.  These queries have been documented in the [sql queries README](back/app/routes/SQL_QUERIES.md) - please read it if you want to see how the queries work.
 
 #Backend : Routes
 
