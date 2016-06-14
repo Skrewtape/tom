@@ -23,7 +23,7 @@ args = parser.parse_args()
 
 def init_tournaments():
     machines=app.types.Machine.query.all()
-    main = create_tournament('main', False)
+    main = create_tournament('main', single_division=False)
     classics_1 = create_tournament('classics 1')
     classics_2 = create_tournament('classics 2')
     classics_3 = create_tournament('classics 3')
@@ -98,7 +98,7 @@ def init_player_herb_entries(num_entries, division,player=None,team=None, divisi
 init_db()            
 init_roles()
 create_user('elizabeth','elizabeth',ALL_ROLES)
-init_machines()
+init_ipdb_machines()
 init_tournaments()
 single_divisions = app.types.Division.query.join(app.types.Tournament).filter_by(single_division=True,team_tournament=False,scoring_type="papa").all()
 main_divisions = app.types.Division.query.join(app.types.Tournament).filter_by(single_division=False).all()

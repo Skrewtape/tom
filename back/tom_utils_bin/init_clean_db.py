@@ -44,5 +44,5 @@ init_roles()
 print "initializing users"
 init_users()
 print "initializing machines"
-init_machines()
+init_ipdb_machines()
 print "all done!"

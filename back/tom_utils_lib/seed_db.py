@@ -3,6 +3,7 @@
 #This is importing sqlAlchemy
 import os
 import sys
+import json
 base_dir = os.path.dirname(__file__)
 dir = base_dir+"../"
 sys.path.append(dir)
@@ -54,6 +55,19 @@ def create_user(username,password,roles):
     DB.session.add(user)
     DB.session.commit()
 
+def init_ipdb_machines():
+    f = open(base_dir+'/machine_list.json', 'r')
+    machine_list_raw_json = f.read()
+    f.close()
+    machine_list = json.loads(machine_list_raw_json)
+    for machine in machine_list:
+        new_machine = app.types.Machine(
+            name=machine['machine_name'],
+            search_name=_strip_pattern.sub("", machine['machine_name'].lower())
+        )
+        DB.session.add(new_machine)
+        DB.session.commit()        
+        
 #create machines in db
 def init_machines():
     for line in open('%s/machines.dat' % base_dir, mode='r'):
