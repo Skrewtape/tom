@@ -1,5 +1,3 @@
-/*global app*/
-//poop page
 angular.module('tom_services.timeout_resources', ['ngResource']);
 angular.module('tom_services.timeout_resources').factory('TimeoutResources', function($resource,$q) {
     var resource_results = {};
@@ -12,62 +10,27 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	return defer.promise;
     }
 
-    var flush_resource_cache = function(resource_to_flush){
-	if(resource_to_flush != undefined){
-	    timestamps[resource_to_flush] = undefined;
-	    return;
-	}
 
-	for(timestamp_key in timestamps){
-	    timestamps[timestamp_key] = undefined;
-	}
-    }
-    
-    var check_resource_is_fresh = function(resource){
-	return false
-	if(timestamps[resource]!= undefined && Date.now() - 300000 > timestamps[resource]){
-	    return true;
-	} else {
-	    return false;
-	}
-    }
-
-    var generic_getdelete_resource = function(res_name,scope_name,args){
+    var generic_getdelete_resource = function(res,scope_name,args){
 	if(args == undefined){
 	    args={}
 	}
-        if ((typeof res_name) == "string"){            
-            res_name=resources[res_name][res_name];                
-        } else {
-            res_name=res_name['custom_http'];                
-        }                
-        resource_results[scope_name] = res_name(args);
-	//timestamps[res_name] = Date.now();
+            res=res['custom_http'];                
+        resource_results[scope_name] = res(args);
 	return resource_results[scope_name].$promise;	
     }
-    var generic_putpost_resource = function(res_name,scope_name,url_args,post_args){
+    var generic_putpost_resource = function(res,scope_name,url_args,post_args){
 	if(url_args == undefined){
 	    url_args={}
 	}
 	if(post_args == undefined){
 	    post_args={}
 	}
-        if ((typeof res_name) == "string"){
-            res_name=resources[res_name][res_name];            
-        } else {
-            res_name=res_name['custom_http'];                
-        };
-                
-        resource_results[scope_name] = res_name(url_args, post_args);
-	//timestamps[res_name] = Date.now();
+        res=res['custom_http'];                
+        resource_results[scope_name] = res(url_args, post_args);
 	return resource_results[scope_name].$promise;	
     }
     
-
-    function isFunction(functionToCheck) {
-	var getType = {};
-	return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
-    }
 
     generate_resource_definition = function(url,http_method){
         console.log('generating');
@@ -88,36 +51,16 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     };
 
 
-    var generic_resource = function(res_name,scope_name,type,cache_resource){        
+    var generic_resource = function(res,scope_name,type,cache_resource){        
 	return function(promise,url_args,post_args,runtime_cache_override){
-	    // if(runtime_cache_override!=undefined){
-	    //     cache_resource==runtime_cache_override;
-	    // }
-	    // if(cache_resource==true && check_resource_is_fresh(res_name)){
-	    //     return resolved_promise();
-	    // }
 	    if(promise == undefined){
-	     	for(arg_key in url_args){
-	     	    if(isFunction(url_args[arg_key])){
-	     		url_args[arg_key] = url_args[arg_key]();
-	     	    }
-	     	}		
-		if(type == "get"){
-		    return generic_getdelete_resource(res_name,scope_name,url_args);
-		} else {
-		    return generic_putpost_resource(res_name,scope_name,url_args,post_args);
-		}
+                promise = resolved_promise();
 	    }	    
 	    return promise.then(function(data){
-	     	for(arg_key in url_args){
-	     	    if(isFunction(url_args[arg_key])){
-	     		url_args[arg_key] = url_args[arg_key]();
-	     	    }
-	     	}
 		if(type == "get"){
-	     	    return generic_getdelete_resource(res_name,scope_name,url_args);
+	     	    return generic_getdelete_resource(res,scope_name,url_args);
 		} else {
-	     	    return generic_putpost_resource(res_name,scope_name,url_args,post_args);
+	     	    return generic_putpost_resource(res,scope_name,url_args,post_args);
 		}
 	    })
 	}
