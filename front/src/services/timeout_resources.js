@@ -81,7 +81,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     addPlayerResource = generate_resource_definition('/player',
                                                      'POST');
     addScoreResource = generate_resource_definition('/entry/:entry_id/divisionmachine/:division_machine_id/new_score/:new_score',
-                                                    'addScore');
+                                                    'POST');
     addTeamResource = generate_resource_definition('/team',
                                                    'POST');
     addTokensResource = generate_resource_definition('/token',
@@ -99,7 +99,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     completeEntryResource = generate_resource_definition('/entry/:entry_id/complete',
                                                          'PUT');
     completeEntryToggleResource = generate_resource_definition('/entry/:entry_id/complete/:complete_state',
-                                                               'completeEntryToggle');
+                                                               'PUT');
     deleteScoreResource = generate_resource_definition('/score/:score_id',
                                                        'DELETE');
     editPlayerResource = generate_resource_definition('/player/:player_id',
@@ -189,9 +189,9 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     toggleTournamentActiveResource = generate_resource_definition('/tournament/:tournament_id/:action',                                                              
                                                                   'PUT');        
     voidEntryResource = generate_resource_definition('/entry/:entry_id/void',
-                                                     'voidEntry');
+                                                     'PUT');
     voidEntryToggleResource = generate_resource_definition('/entry/:entry_id/void/:void_state',
-                                                           'voidEntryToggle');
+                                                           'PUT');
     
     return {
 	GetAllResources: function(){//killroy was here
