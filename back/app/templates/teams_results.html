@@ -1,0 +1,9 @@
+{% extends "index.html" %}
+{% block content %}
+<table class='table'>
+  <div class='big-web-font'>
+  {% for team in teams| sort(attribute='team_name') %}
+   <a href='/results/team/{{team.team_id}}'>{{ "%s" % (team.team_name) }}</a><br>
+  {% endfor %}
+</table>
+{% endblock %}

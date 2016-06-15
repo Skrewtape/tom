@@ -16,12 +16,12 @@
       {% if tournament.team_tournament == False %}
       {{"%s %s" % (players[entry.player_id].first_name,players[entry.player_id].last_name)}}
       {% elif tournament.team_tournament == True %}
-      {{"Team %s" % (teams[entry.team_id].team_name)}}
+      {{"Team %s" % (sidebar_info['teams'][entry.team_id].team_name)}}
       {% endif %}
     </td><td>{{entry.entry_score_sum}}</td>
     <td class='mobile_only'>
       {% for score in entry.scores[0:3] %}
-      #{{score.machine_rank}} on {{score.machine_name}} <b>/</b>
+      #{{score.machine_rank}} on {{score.name}} <b>/</b>
       {% endfor %}
     </td>
   </tr>
