@@ -42,10 +42,10 @@
       </tr>
       {% for score in entries[0].scores %}
       <tr>
-	<td>{{score.machine_name}}</td><td>{{score.machine_score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_points}}</td>
+	<td>{{score.name}}</td><td>{{score.score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_papa_score}}</td>
       </tr>
       {% endfor %}
-      <td></td><td></td><td></td><td>{{entries[0].total_score}}</td>    
+      <td></td><td></td><td></td><td>{{entries[0].entry_score_sum}}</td>    
     </table>
   </div>
 </div>
@@ -68,10 +68,10 @@
 	</tr>
 	{% for score in entries[0].scores %}
 	<tr>
-	  <td>{{score.machine_name}}</td><td>{{score.machine_score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_points}}</td>
+	  <td>{{score.name}}</td><td>{{score.score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_papa_score}}</td>
 	</tr>
 	{% endfor %}
-	<td></td><td></td><td></td><td>{{entries[0].total_score}}</td>    
+	<td></td><td></td><td></td><td>{{entries[0].entry_score_sum}}</td>    
       </table>
     </div>
 </div>
@@ -96,10 +96,10 @@
 	</tr>
 	{% for score in entry.scores %}
 	<tr>
-	  <td>{{score.machine_name}}</td><td>{{score.machine_score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_points}}</td>
+	  <td>{{score.name}}</td><td>{{score.score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_papa_score}}</td>
 	</tr>
 	{% endfor %}
-	<td></td><td></td><td></td><td>{{entry.total_score}}</td>    
+	<td></td><td></td><td></td><td>{{entry.entry_score_sum}}</td>    
       </table>
       {% endfor %}      
     </div>
