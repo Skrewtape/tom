@@ -4,11 +4,12 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 	        <title>Tournament Operations Manager | {{ Page.title() }}</title>
 
-		<link rel="stylesheet" href="screen.css">		
 		<link rel="stylesheet" href="css/_bower.css">
                 <script src="https://checkout.stripe.com/checkout.js"></script>		
 		<script type="text/javascript" src="app.js"></script>
-                <link rel="stylesheet" href="/styles/loaders.css/loaders.css"/>                
+                <link rel="stylesheet" href="/styles/loaders.css/loaders.css"/>
+                <link rel="stylesheet" href="screen.css">		
+
                 <style>
 		  /* numbered buttons */
 		  #status-buttons                 {  }
@@ -21,271 +22,22 @@
 		  #status-buttons a.active span   { background:#AAAAAA; }
 
                   @media screen and (max-width: 640px) {
-                  .mobile_purchase_ticket_summary_left_column {
-                  width:50%;
-                  }
-                  .mobile_purchase_ticket_summary_right_column {
-                  width:45%;
-                  }
-                  .mobile_purchase_ticket_left_column {
-                  width:90%;
-                  }
-                  .mobile_purchase_ticket_right_column {
-                  width:5%;
-                  }
+
                   .tablet_only {
                   display:none
                   }
                   
                   }
-                  @media screen and (min-width: 641px) {
-                  .mobile_purchase_ticket_summary_left_column {
-                    width:70%
-                  }
-                  .mobile_purchase_ticket_summary_right_column {
-                    width:25%
-                  }
-                  .mobile_purchase_ticket_left_column {
-                  width:80%;
-                  }
-                  .mobile_purchase_ticket_right_column {
-                  width:15%;
-                  }
-                  
-                  }
 
                   
-		  .sidebarheader {
-		   background-color: lightblue;
-		  }
 		  .activeborder {
 		  border-style:solid;
 		  border-width:3px;
 		  }
-		  
-		  .switch.active {
-		    background-color: green;
-		  }
-
-		  .switch {
-		  background-color: red;
-		  margin-left:50px;
-		  }
-		  
-		  .btn-xlg,
-		  .btn-group-xlg > .btn {
-		  padding: 10px 16px;
-		  font-size: 28px;
-		  line-height: 1.3333333;
-		  border-radius: 12px;
-		  }
-
-		  
-		  .big-web-font {
-		    font-size:28px;
-		  }
-
-		  .med-web-font {
-		    font-size:18px;
-		  }
-
-		  		  .sidebar-left {
-		  background: #555555;
-		  width: 500px;
-		  left: 0;
-		  right: auto;
-		  -webkit-transition: width 400ms ease;
-		  -o-transition: width 400ms ease;
-		  transition: width 400ms ease;
-		  }
-
-		  .sidebar-left-in .app {
-		  width: 100%;
-		  -webkit-transform: translate(500px, 0);
-		  -ms-transform: translate(500px, 0);
-		  -o-transform: translate(500px, 0);
-		  transform: translate(500px, 0);
-		  -webkit-transition: -webkit-transform 400ms ease;
-		  -moz-transition: -moz-transform 400ms ease;
-		  -o-transition: -o-transform 400ms ease;
-		  transition: transform 400ms ease;
-		  }
-		  
-		  /*
-                  .fades.ng-enter {
-                    transition:2.5s linear all;
-                    opacity:1;
-                  }*/
-
-                  /* The finishing CSS styles for the enter animation */
-                  .fades.ng-enter.ng-enter-active {
-                    opacity:0;
-                  }
+		  		  		  
                                     
-                  ::-webkit-input-placeholder {
-                  font-style: italic;
-                  }
-                  :-moz-placeholder {
-                  font-style: italic;
-                  }
-                  ::-moz-placeholder {
-                  font-style: italic;
-                  }
-                  :-ms-input-placeholder {
-                  font-style: italic;
-                  }
 
-		  /*
-		  .nav-pills {
-                    font-family: 'Press Start 2P', cursive;
-		    font-size:20px;
-		  }
-
-		  .nav-pills > li {
-		  padding-right:10px;
-                  }
-
-		  .nav-pills > li > a {
-                  border-style:solid;
-		  border-width:0;
-		  border-left-width:1px;
-                  }
-
-                  .modal-center .modal-dialog{
-                   width:25%;
-                  }
-                  
-                  .modal-content {
-                   //background-image: url("img/pacman_BEZEL.jpg");
-                   //background-size: 600px 255px;
-                   //background-origin: border-box;
-                   //background-repeat: no-repeat;
-                  }
-                  */
-                  .ball-pulse > div {
-                  background: orange;
-                  }
-
-                  .arrow_box {
-                  position: relative;
-                  background: #88b7d5;
-                  border: 4px solid #c2e1f5;
-                  border-radius: 6px;
-                  font-family: 'Press Start 2P', cursive;
-                  font-size: 24px;
-                  text-align: center;
-                  padding:5px;
-                  -webkit-filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.75));
-                  -moz-filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.75));
-                  -ms-filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.75));
-                  -o-filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.75));
-                  filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.75));
-                  }
-                  
-                  .arrow_box:after, .arrow_box:before {
-                  top: 100%;
-                  left: 50%;
-                  border: solid transparent;
-                  content: " ";
-                  height: 0;
-                  width: 0;
-                  position: absolute;
-                  pointer-events: none;
-                  }
-
-                  .arrow_box:after {
-                  border-color: rgba(136, 183, 213, 0);
-                  border-top-color: #88b7d5;
-                  border-width: 15px;
-                  margin-left: -15px;
-                  }
-                  
-                  .arrow_box:before {
-                  border-color: rgba(194, 225, 245, 0);
-                  border-top-color: #c2e1f5;
-                  border-width: 21px;
-                  margin-left: -21px;
-                  }
-
-                  .twopfontsmall {
-                  font-family: 'Press Start 2P', cursive;
-                  font-size: 8px;
-                  }
-
-                  .twopfont {
-                  font-family: 'Press Start 2P', cursive;
-                  }
-
-                  .burst-8 {
-                  background: red;
-                  width: 80px;
-                  height: 80px;
-                  position: relative;
-                  text-align: center;
-                  -webkit-transform: rotate(20deg);
-                  -moz-transform: rotate(20deg);
-                  -ms-transform: rotate(20deg);
-                  -o-transform: rotate(20eg);
-                  }
-
-                  .burst-8:before {
-                  content: "";
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  height: 80px;
-                  width: 80px;
-                  background: red;
-                  -webkit-transform: rotate(135deg);
-                  -moz-transform: rotate(135deg);
-                  -ms-transform: rotate(135deg);
-                  -o-transform: rotate(135deg);
-                  }
-
-                  .arrow_right_box {
-                  position: relative;
-                  background: #88b7d5;
-                  border: 4px solid #c2e1f5;
-                  }
-                  .arrow_right_box:after, .arrow_right_box:before {
-                  left: 100%;
-                  top: 50%;
-                  border: solid transparent;
-                  content: " ";
-                  height: 0;
-                  width: 0;
-                  position: absolute;
-                  pointer-events: none;
-                  }
-		  
-                  .arrow_right_box:after {
-                  border-color: rgba(136, 183, 213, 0);
-                  border-left-color: #88b7d5;
-                  border-width: 30px;
-                  margin-top: -30px;
-                  }
-                  .arrow_right_box:before {
-                  border-color: rgba(194, 225, 245, 0);
-                  border-left-color: #c2e1f5;
-                  border-width: 36px;
-                  margin-top: -36px;
-                  }
-
-		  /*
-		  div.navbar-collapse.collapse {		  
-		  display: block;
-		    overflow: hidden;
-		    max-height: 0px;
-		    -webkit-transition: max-height .3s ease;
-		    -moz-transition: max-height .3s ease;
-		    -o-transition: max-height .3s ease;
-		    transition: max-height .3s ease;
-		  }
-
-		  div.navbar-collapse.collapse.in {
-		    max-height: 2000px;
-		  }*/
-                </style>
+		</style>
   </head>
   <body>
     <!--
@@ -296,7 +48,7 @@
     
     <div class="sidebar sidebar-left">
       <div class="scrollable">
-	<h1 class="scrollable-header app-name"><a ui-sref='app'>TOM</a><small>1.0</small></h1>
+	<h1 class="scrollable-header app-name"><a ui-toggle='uiSidebarLeft' ui-sref='app'>TOM</a><small>1.0</small></h1>
 	<div class="scrollable-content">
 	  <div class="list-group" style='font-size:35px' ui-turn-off='uiSidebarLeft'>
 	    <a id='sidebar-login-link' ng-if='Page.logged_in_user().username == undefined' class="list-group-item" ui-sref="app.login">
@@ -344,11 +96,11 @@
     </div>
     <div class="app">
       <div class="navbar navbar-app navbar-absolute-top">
-	<div class="navbar-brand navbar-brand-center" ui-yield-to="title" style='font-size:35px'>
-	  TOM
+	<div class="navbar-brand navbar-brand-center titlebar_title" ui-yield-to="title" >
+	  TOM 
 	</div>
 	<div class="btn-group pull-left">
-	  <div id='menu_icon' ui-toggle="uiSidebarLeft" class="btn sidebar-toggle" style='font-size:35px'>
+	  <div id='menu_icon' ui-toggle="uiSidebarLeft" class="btn sidebar-toggle" style='font-size:28px'>
 	    <i class="fa fa-bars"></i> <span class='tablet_only'> Menu </span>
 	  </div>
 	</div>
@@ -356,7 +108,7 @@
           
 	  <div class="pull-left" ui-yield-to="navbarAction">
 	  </div>
-          <div style='font-size:32px' class="pull-right tablet_only" ui-yield-to="navbarActionDesc">
+          <div style='margin-top:5px;margin-left:5px;font-size:28px' class="pull-right tablet_only" ui-yield-to="navbarActionDesc">
           </div>
         </div>
       </div>

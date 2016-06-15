@@ -1,0 +1,30 @@
+@media screen and (max-width: 640px) {
+                  
+                  .mobile_purchase_ticket_summary_left_column {
+                  width:50%;
+                  }
+                  .mobile_purchase_ticket_summary_right_column {
+                  width:45%;
+                  }
+                  .mobile_purchase_ticket_left_column {
+                  width:90%;
+                  }
+                  .mobile_purchase_ticket_right_column {
+                  width:5%;
+                  }
+}
+@media screen and (min-width: 641px) {
+                  .mobile_purchase_ticket_summary_left_column {
+                    width:70%
+                  }
+                  .mobile_purchase_ticket_summary_right_column {
+                    width:25%
+                  }
+                  .mobile_purchase_ticket_left_column {
+                  width:80%;
+                  }
+                  .mobile_purchase_ticket_right_column {
+                  width:15%;
+                  }
+
+}
