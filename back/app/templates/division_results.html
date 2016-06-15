@@ -12,13 +12,13 @@
   <th>Rank</th><th>Name</th><th>Score</th><th class='mobile_only'>Top&nbsp;3&nbsp;Games</th>
   {% for entry in division_entrys %}
   <tr>
-    <td>{{entry.rank}}</td><td>
+    <td>{{entry.entry_rank}}</td><td>
       {% if tournament.team_tournament == False %}
       {{"%s %s" % (players[entry.player_id].first_name,players[entry.player_id].last_name)}}
       {% elif tournament.team_tournament == True %}
       {{"Team %s" % (teams[entry.team_id].team_name)}}
       {% endif %}
-    </td><td>{{entry.total_score}}</td>
+    </td><td>{{entry.entry_score_sum}}</td>
     <td class='mobile_only'>
       {% for score in entry.scores[0:3] %}
       #{{score.machine_rank}} on {{score.machine_name}} <b>/</b>

@@ -59,7 +59,7 @@ def get_scores_ranked_by_machine(division_id):
     """
     Return all machines scores for a given division with ranks and points for each machine
     """
-    return DB.engine.execute("select machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as entry_score from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and entry.division_id = %s entry.completed = true and entry.voided = false order by entry_score desc" % division_id)
+    return DB.engine.execute("select machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as machine_rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as machine_papa_score from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and entry.division_id = %s and entry.completed = true and entry.voided = false order by machine_papa_score desc" % division_id)
 
 def get_scores_for_machine(division_machine_id):
     """
@@ -112,7 +112,10 @@ def get_herb_ranked_division_entries(division_id):
     return sorted_herb_player_results
 
 def get_ranked_division_entries(division_id):
-    return DB.engine.execute("select entry_id, player_id, entry_score_sum, rank() over (order by entry_score_sum desc) from (select entry_id, player_id, sum(entry_score) as entry_score_sum  from (select entry.player_id, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and completed = true and voided = false) as ss group by ss.entry_id, player_id order by entry_score_sum desc limit 200) as tt" % division_id )    
+
+    papa_score_for_each_score_in_division = "select entry.player_id, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as machine_papa_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and completed = true and voided = false" % int(division_id)
+    papa_score_for_each_entry_in_division = "select entry_id, player_id, sum(machine_papa_score) as entry_score_sum  from (%s) as ss group by ss.entry_id, player_id order by entry_score_sum desc limit 200" % papa_score_for_each_score_in_division
+    return DB.engine.execute("select entry_id, player_id, entry_score_sum, rank() over (order by entry_score_sum desc) as entry_rank from (%s) as tt" %  papa_score_for_each_entry_in_division)    
 
 def get_player_entries_ranked_by_division(division_id,player=False,team=False):
     """
@@ -122,46 +125,44 @@ def get_player_entries_ranked_by_division(division_id,player=False,team=False):
         entry_player_id="player_id"
     if team:
         entry_player_id="team_id"
-        
-    return DB.engine.execute("select entry_id, %s, entry_score_sum, rank() over (order by entry_score_sum desc), voided, completed from (select voided, completed, entry_id, %s, sum(entry_score) as entry_score_sum  from (select entry.voided, entry.completed, %s, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and entry.voided = false) as ss group by ss.entry_id, %s,voided,completed order by entry_score_sum desc) as tt" % (entry_player_id,entry_player_id,entry_player_id,division_id,entry_player_id) )        
+
+    papa_score_for_each_score_in_division = "select entry.completed, %s, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and entry.voided = false" % (entry_player_id,division_id)
+    papa_score_for_each_entry_in_division = "select completed, entry_id, %s, sum(entry_score) as entry_score_sum  from (%s) as ss group by ss.entry_id, %s,completed order by entry_score_sum desc" % (entry_player_id,papa_score_for_each_score_in_division,entry_player_id)    
+    return DB.engine.execute("select entry_id, %s, entry_score_sum, rank() over (order by entry_score_sum desc), completed from (%s) as tt" % (entry_player_id,papa_score_for_each_entry_in_division) )        
 
 
-def get_entries_from_entry_results(entry_results,return_score_results,division_id,player_id=None,team_id=None):
+def get_entries_from_entry_results(entry_results,return_score_results,player_id=None,team_id=None):
     #return_entry_results = {}
     return_entry_results = []
     return_inprogress_entry_results = []
     
     for result in entry_results:
-        #if division_id not in return_entry_results:
-        #    return_entry_results[division_id]=[]            
-        entry_player_id = result[player_id_idx]
-        entry_team_id = result[team_id_idx]
-        completed = result[completed_idx]
-        entry_id = result[entry_id_idx]
-        entry_score_sum = result[entry_score_sum_idx]
-        entry_rank = result[entry_rank_idx]
-        voided = result[voided_idx]
-        entry_info = {'rank':entry_rank,'entry_id':entry_id,'player_id':entry_player_id,'total_score':entry_score_sum, 'completed':completed,'voided':voided,'scores':return_score_results[entry_id]}            
+        entry_player_id = result['player_id']
+        if 'team_id' in result:
+            entry_team_id = result['team_id']        
+        entry_id = result['entry_id']
+        new_result = {}
+        
+        for k in result.keys():
+            new_result[k]=result[k]
+        new_result['scores']=return_score_results[entry_id]  
         if player_id and entry_player_id != int(player_id):
             continue
         if team_id and entry_team_id != int(team_id):
             continue
-        if completed is False and voided is False:
-            #if division_id not in return_inprogress_entry_results:
-            #    return_inprogress_entry_results[division_id]=[]
-            #return_inprogress_entry_results[division_id].append(entry_info)
-            return_inprogress_entry_results.append(entry_info)            
+        if new_result['completed'] is False:
+            return_inprogress_entry_results.append(new_result)            
             continue
-        return_entry_results.append(entry_info)
+        return_entry_results.append(new_result)
     return return_entry_results,return_inprogress_entry_results
 
 def get_scores_from_score_results(score_results):
     return_score_results = {}
     for score in score_results:
-        score_entry_id = score[score_entry_id_idx]
+        score_entry_id = score['entry_id']
         if not score_entry_id in return_score_results:
             return_score_results[score_entry_id] = []
-        return_score_results[score_entry_id].append({'machine_name':score[machine_name_idx], 'machine_rank':score[score_rank_idx], 'machine_score':score[score_idx], 'machine_points':score[papa_points_idx]})
+        return_score_results[score_entry_id].append(score)
     return return_score_results
 
 @App.route('/results/player/<player_id>', methods=['GET'])
@@ -176,7 +177,7 @@ def results_player(player_id):
         entry_results = get_player_entries_ranked_by_division(division_id,player=True)
         score_results = get_scores_ranked_by_machine(division_id)
         return_score_results = get_scores_from_score_results(score_results)
-        return_entry_results[division_id],return_inprogress_entry_results[division_id] = get_entries_from_entry_results(entry_results,return_score_results,division_id,player_id=player_id)
+        return_entry_results[division_id],return_inprogress_entry_results[division_id] = get_entries_from_entry_results(entry_results,return_score_results,player_id=player_id)
         
     tokens = Token.query.filter_by(player_id=player_id).all()
     player = Player.query.filter_by(player_id=player_id).first()
@@ -219,7 +220,7 @@ def results_team(team_id):
         entry_results = get_player_entries_ranked_by_division(division_id,player=True)
         score_results = get_scores_ranked_by_machine(division_id)
         return_score_results = get_scores_from_score_results(score_results)
-        return_entry_results[division_id],return_inprogress_entry_results[division_id] = get_entries_from_entry_results(entry_results,return_score_results,division_id,team_id=team_id)
+        return_entry_results[division_id],return_inprogress_entry_results[division_id] = get_entries_from_entry_results(entry_results,return_score_results,team_id=team_id)
 
     return render_template('team_results.html', team_entries=return_entry_results,
                            team=team_results,
@@ -301,20 +302,18 @@ def results_divisions(division_id=None):
         
     if tournament.scoring_type == "papa":    
         for score in score_results:
-            score_entry_id = score[score_entry_id_idx]
+            score_entry_id = score['entry_id']
             if not score_entry_id in return_score_results:
                 return_score_results[score_entry_id] = []
-            return_score_results[score_entry_id].append({'machine_name':score[machine_name_idx], 'machine_rank':score[score_rank_idx]})
+            return_score_results[score_entry_id].append({'machine_name':score['name'], 'machine_rank':score['machine_rank']})
 
     if tournament.scoring_type == "papa":            
         for result in entry_results:
-            result_dict = {}
-            result_dict['rank'] = result[entry_rank_idx]
-            result_dict['entry_id'] = result[entry_id_idx]
-            result_dict['player_id'] = result[player_id_idx]
-            result_dict['total_score'] = result[entry_score_sum_idx]
-            result_dict['scores'] = return_score_results[result[entry_id_idx]]
-            return_entry_results.append(result_dict)
+            new_result = {}
+            for k in result.keys():
+                new_result[k]=result[k]
+                new_result['scores'] = return_score_results[result['entry_id']]
+            return_entry_results.append(new_result)
     else:
         return_entry_results = entry_results
         
