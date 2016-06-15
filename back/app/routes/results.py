@@ -12,6 +12,7 @@ from flask.ext.cors import cross_origin
 from flask_restless.helpers import to_dict
 from operator import itemgetter
 import random
+import numpy
 
 entry_id_idx=0
 player_id_idx=1
@@ -55,15 +56,10 @@ def get_index_sidebar_info():
     return {'divisions':division_results,'division_machines':division_machine_results,'tournaments':tournament_results,'divisions_scoring_type':division_scoring_type}
 
 def get_scores_ranked_by_machine(division_id):
+    """
+    Return all machines scores for a given division with ranks and points for each machine
+    """
     return DB.engine.execute("select machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as entry_score from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and entry.division_id = %s entry.completed = true and entry.voided = false order by entry_score desc" % division_id)
-
-def get_herb_scores_for_machine(division_machine_id):
-    """
-    The same as get_scores_ranked_by_machine, except you only get scores for a specific division_machine_id
-    """
-    #
-    #This will get HERB style results for this query
-    return DB.engine.execute("select 'machine_name', ss.score, ss.entry_id, rank() over (partition by ss.division_machine_id order by ss.score desc) as rank, testing_papa_scoring(rank() over (partition by ss.division_machine_id order by ss.score desc)) as entry_score, ss.player_id from (select e.player_id, a.score, a.score_id,a.division_machine_id,a.entry_id from score as a inner join (select division_machine_id,player_id, max(score.score) as max_score from score,entry where score.entry_id=entry.entry_id and score.division_machine_id = %d group by division_machine_id,player_id) as b on a.division_machine_id = b.division_machine_id and a.score = b.max_score join entry as e on a.entry_id=e.entry_id join division_machine as d on a.division_machine_id=d.division_machine_id where a.division_machine_id=%d) as ss order by entry_score desc" % (int(division_machine_id),int(division_machine_id)));
 
 def get_scores_for_machine(division_machine_id):
     """
@@ -71,25 +67,37 @@ def get_scores_for_machine(division_machine_id):
     """    
     return DB.engine.execute("select machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as entry_score, entry.player_id from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and score.division_machine_id = %s and entry.completed = true and entry.voided = false order by entry_score desc" % division_machine_id)
 
-def get_herb_ranked_division_entries(division_id):
-    herb_results = DB.engine.execute("select tt.machine_name, tt.player_id, testing_papa_scoring(rank() over (partition by tt.division_machine_id order by score desc)) as papascore, rank() over (partition by tt.division_machine_id order by score desc) as paparank from (select e.division_id, e.player_id, a.score, a.score_id,a.division_machine_id,e.entry_id,m.name as machine_name from score as a inner join (select division_machine_id,player_id, max(score.score) as max_score from score,entry where entry.division_id = 4 and score.entry_id=entry.entry_id group by division_machine_id,player_id) as b on a.division_machine_id = b.division_machine_id and a.score = b.max_score join entry as e on a.entry_id=e.entry_id join division_machine as d on a.division_machine_id=d.division_machine_id join machine as m on d.machine_id=m.machine_id) as tt order by player_id, papascore desc");    
+def get_herb_scores_for_machine(division_machine_id):
 
+    inner_join_query = "select division_machine_id,player_id, max(score.score) as max_score from score,entry where score.entry_id=entry.entry_id and score.division_machine_id = %d and entry.voided=false group by division_machine_id,player_id" % int(division_machine_id)
+    
+    get_highest_score_for_each_player_subquery = "select e.player_id, a.score, a.score_id,a.division_machine_id,a.entry_id from score as a inner join (%s) as b on a.division_machine_id = b.division_machine_id and a.score = b.max_score join entry as e on a.entry_id=e.entry_id join division_machine as d on a.division_machine_id=d.division_machine_id where a.division_machine_id=%d" % (inner_join_query,int(division_machine_id))
+
+    return DB.engine.execute("select 'machine_name', ss.score, ss.entry_id, rank() over (partition by ss.division_machine_id order by ss.score desc) as rank, testing_papa_scoring(rank() over (partition by ss.division_machine_id order by ss.score desc)) as entry_score, ss.player_id from (%s) as ss order by entry_score desc" % (get_highest_score_for_each_player_subquery));
+
+def get_herb_ranked_division_entries(division_id):
+    """
+    Get all ranks and points for players in a given herb division using player's top 3 entries. 
+    Note that this returns a dict, not raw query results.
+    """
+    inner_join_query = "select division_machine_id,player_id, max(score.score) as max_score from score,entry where entry.division_id = %d and score.entry_id=entry.entry_id and entry.voided = false group by division_machine_id,player_id" % int(division_id)
+
+    get_highest_score_for_each_player_subquery = "select e.division_id, e.player_id, a.score, a.score_id,a.division_machine_id,e.entry_id,m.name as machine_name from score as a inner join (%s) as b on a.division_machine_id = b.division_machine_id and a.score = b.max_score join entry as e on a.entry_id=e.entry_id join division_machine as d on a.division_machine_id=d.division_machine_id join machine as m on d.machine_id=m.machine_id" % inner_join_query
+    
+    herb_results = DB.engine.execute("select tt.machine_name, tt.division_machine_id, tt.player_id, testing_papa_scoring(rank() over (partition by tt.division_machine_id order by score desc)) as papascore, rank() over (partition by tt.division_machine_id order by score desc) as paparank from (%s) as tt order by player_id, papascore desc" % get_highest_score_for_each_player_subquery);    
+    
     herb_player_results = {}
     sorted_herb_player_results = []
     
-    for herb_result in herb_results:
-        player_id = herb_result[player_id_idx]
-        division_machine_id = herb_result[entry_id_idx]
-        machine_score = herb_result[entry_score_sum_idx]
+    for result in herb_results:
+        player_id = result['player_id']
         if player_id not in herb_player_results:
             herb_player_results[player_id]=[]
-        herb_player_results[player_id].append(herb_result)
-    for (herb_player_id,herb_player_ranks) in herb_player_results.iteritems():
-        herb_player_results[herb_player_id]=herb_player_ranks[0:3]        
-        total_score = 0
-        for herb_result in herb_player_ranks[0:3]:
-            total_score = total_score + herb_result[entry_score_sum_idx]        
-        sorted_herb_player_results.append({'player_id':herb_player_id,'rank':0,'score':total_score,'scores':herb_player_ranks[0:3]})
+        if len(herb_player_results[player_id])<3:            
+            herb_player_results[player_id].append(result)
+    for (herb_player_id,herb_player_scores) in herb_player_results.iteritems():
+        total_score = sum(score['papascore'] for score in herb_player_scores)
+        sorted_herb_player_results.append({'player_id':herb_player_id,'rank':0,'score':total_score,'scores':herb_player_scores})
     sorted_herb_player_results = sorted(sorted_herb_player_results, key=itemgetter('score'), reverse=True)
     rank = 0
     actual_rank = 0
@@ -115,7 +123,6 @@ def get_player_entries_ranked_by_division(division_id,player=False,team=False):
     if team:
         entry_player_id="team_id"
         
-#    return DB.engine.execute("select entry_id, player_id, entry_score_sum, rank() over (order by entry_score_sum desc), voided, completed from (select voided, completed, entry_id, player_id, sum(entry_score) as entry_score_sum  from (select entry.voided, entry.completed, player_id, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and entry.voided = false) as ss group by ss.entry_id, player_id,voided,completed order by entry_score_sum desc) as tt" % division_id )
     return DB.engine.execute("select entry_id, %s, entry_score_sum, rank() over (order by entry_score_sum desc), voided, completed from (select voided, completed, entry_id, %s, sum(entry_score) as entry_score_sum  from (select entry.voided, entry.completed, %s, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and entry.voided = false) as ss group by ss.entry_id, %s,voided,completed order by entry_score_sum desc) as tt" % (entry_player_id,entry_player_id,entry_player_id,division_id,entry_player_id) )        
 
 
