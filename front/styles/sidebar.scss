@@ -1,5 +1,32 @@
+@media screen and (max-width: 600px) {
 
 .sidebar-left {
+font-size:22px;
+background: #555555;
+width: 275px;
+left: 0;
+right: auto;
+-webkit-transition: width 400ms ease;
+-o-transition: width 400ms ease;
+transition: width 400ms ease;
+}
+
+.sidebar-left-in .app {
+width: 100%;
+-webkit-transform: translate(275px, 0);
+-ms-transform: translate(275px, 0);
+-o-transform: translate(275px, 0);
+transform: translate(275px, 0);
+-webkit-transition: -webkit-transform 400ms ease;
+-moz-transition: -moz-transform 400ms ease;
+-o-transition: -o-transform 400ms ease;
+transition: transform 400ms ease;
+}
+
+}
+@media screen and (min-width: 601px) {
+.sidebar-left {
+font-size:35px;
 background: #555555;
 width: 500px;
 left: 0;
@@ -21,6 +48,7 @@ transform: translate(500px, 0);
 transition: transform 400ms ease;
 }
 
+}
 .sidebarheader {
 background-color: lightblue;
 }

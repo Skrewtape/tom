@@ -12,7 +12,8 @@ font-style: italic;
 font-style: italic;
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 600px) {
+
 
  .form-control-static.input-xlg,{
    padding-left: 0;
@@ -25,7 +26,9 @@ font-style: italic;
    padding: 10px 16px;
    font-size: 18px;
    line-height: 1.3333333;
-   border-radius: 6px;
+   border-radius: 6px;  
+   //border-top-right-radius: 6px;
+   //border-top-left-radius: 6px;     
  }
 
 
@@ -46,7 +49,13 @@ font-style: italic;
    padding: 10px 16px;
    font-size: 18px;
    line-height: 1.3333333;
-   border-radius: 6px;
+   border-top-right-radius: 15px;
+   border-bottom-right-radius: 15px;
+   // // border-radius: 6px;
+ }
+
+ .form-group-xlg .number-input{
+  width:72px;
  }
 
 
@@ -99,7 +108,10 @@ font-style: italic;
      padding: 10px 16px;
      font-size: 18px;
      line-height: 1.3333333;
-     border-radius: 6px;
+     border-top-left-radius: 15px;
+     border-bottom-left-radius: 15px;     
+
+     //border-radius: 6px;
 
  }
 
@@ -127,9 +139,16 @@ font-style: italic;
    font-size: 18px;
    border-radius: 6px;
  }
+ .player_popup_team_name {
+  display:none;
+ }
 }
 
-@media screen and (min-width: 641px) {
+@media screen and (min-width: 601px) {
+
+ .form-group-xlg .number-input{
+  width:112px;
+ }
 
  .form-control-static.input-xlg,{
    padding-left: 0;
@@ -163,7 +182,9 @@ font-style: italic;
    padding: 10px 16px;
    font-size: 18px;
    line-height: 1.3333333;
-   border-radius: 6px;
+   border-top-right-radius: 25px;
+   border-bottom-right-radius: 25px;     
+   //border-radius: 6px;
  }
 
 
@@ -217,7 +238,10 @@ font-style: italic;
      padding: 10px 16px;
      font-size: 28px;
      line-height: 1.3333333;
-     // border-radius: 12px;
+     border-top-left-radius: 25px;
+     border-bottom-left-radius: 25px;     
+
+// border-radius: 12px;
 
  }
 
@@ -244,7 +268,7 @@ font-style: italic;
    padding: 10px 16px;
    font-size: 18px;
    border-radius: 6px;
- }
+ } 
 }
 
 

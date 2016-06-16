@@ -1,9 +1,19 @@
 <br>
-
-<input
-       focus-if
-       name='thing'
-       type='number' popover-placement="right" uib-popover-template="popovertemplate" popover-is-open='popoverIsOpen' style='font-size:32px;width:75px;' popover-trigger='none' ng-change='onChange()' placeholder='ID #' ng-model='player.player_id'/><br>
+<div class='form-group form-group-xlg input-group input-group-xlg'>        
+  <span class="input-group-addon" id="player-num">Player #</span>
+  <input
+     focus-if
+     aria-describedby='player-num'
+     name='thing'
+     type='number'
+     class='form-control number-input'
+     popover-placement="right"
+     uib-popover-template="popovertemplate"
+     popover-is-open='popoverIsOpen'
+     popover-trigger='none'
+     ng-change='onChange()'
+     ng-model='player.player_id'/>
+</div>
 <!--    <a       
      class='btn btn-info'                 
      style='font-size:32px;margin-top:15px'
@@ -17,10 +27,12 @@
      >Enter Player Number</a>-->
 
 <script type="text/ng-template" id="myPopoverTemplate.html">
-  <div style='font-size:32px' ><center>{{keypad_player_name}}
+  <div class='player_popup'><center>{{keypad_player_name}}
       <br>
-      <span style='font-size:15px' ng-if='player_is_asshole != false'>{{player_is_asshole}}</span>
-      <span style='font-size:15px' ng-if='keypad_player_team != undefined'>team {{keypad_player_team}}</span>
+      <span  ng-if='keypad_player_team != undefined'><i class="fa fa-users" aria-hidden="true"></i><span class='player_popup_team_name'>{{keypad_player_team}}</span></span>
+      <br>
+      
+      <span  ng-if='player_is_asshole != false'><i style='color:red' class="fa fa-thumbs-o-down" aria-hidden="true"></i></span>      
     </center>
   </div>
 </script>

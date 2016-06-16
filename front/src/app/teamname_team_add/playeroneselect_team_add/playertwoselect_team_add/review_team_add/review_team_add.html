@@ -12,11 +12,12 @@
 
 <div class="scrollable">
     <div class="big-web-font scrollable-content"  style='padding:10px'>
-      Here is the proposed team name and members : <br>
+      <i>Proposed team name and members : </i><br>
       Team Name  : {{team_name}}<br>
       Player One : {{player_one.first_name}}<br>
       Player Two : {{player_two.first_name}}<br>
-      <a       
+      <a
+         style='margin-top:15px'
 	 class='btn btn-info btn-xlg'
 	 ui-sref='.process({finalTeamName:team_name})'
 	 ng-disabled='submitPlayerDisabled'
