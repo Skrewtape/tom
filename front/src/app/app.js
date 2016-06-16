@@ -51,9 +51,8 @@ app.controller(
 
         //FIXME : wipeStateParamToPreventRepost is a hack, and should be handled at the
         //        REST level
-	$scope.checkForBlankParams = function(param){
-
-	    if(Object.keys(param).length === 0 && JSON.stringify(param) === JSON.stringify({})){
+	$scope.checkForBlankParams = function(param){            
+	    if(/*Object.keys(param).length === 0 &&*/ JSON.stringify(param) === JSON.stringify({})){
 		StatusModal.http_error("Oops.  Looks like you tried to reload a page which submits data.  That is a no no!");	         return true;
 	    }
 	}
