@@ -35,6 +35,7 @@
     <h3 class='panel-title'>"{{sidebar_info['divisions'][entry_division_id].name}}" In Progress</h3>
   </div>
   <div class='panel-body'>
+  </div>
     Entry #{{ entries[0].entry_id }}:<br>
     <table class='table table-condensed'>
       <tr>
@@ -47,7 +48,7 @@
       {% endfor %}
       <td></td><td></td><td></td><td>{{entries[0].entry_score_sum}}</td>    
     </table>
-  </div>
+<!--</div>-->
 </div>
 {% endif %}
 {% endfor %}
@@ -61,6 +62,7 @@
       <h3 class='panel-title'> {{sidebar_info['divisions'][entry_division_id].name}} Best Entry</h3>
     </div>
     <div class='panel-body'>
+    </div>
       Entry #{{ entries[0].entry_id }}:<br>
       <table class='table'>
 	<tr>
@@ -73,7 +75,7 @@
 	{% endfor %}
 	<td></td><td></td><td></td><td>{{entries[0].entry_score_sum}}</td>    
       </table>
-    </div>
+      <!--</div>-->
 </div>
 {% endif %}
 {% endif %}
@@ -88,6 +90,7 @@
       <h3 class='panel-title'> {{sidebar_info['divisions'][entry_division_id].name}} </h3>
     </div>
     <div class='panel-body'>
+    </div>
       {% for entry in entries %}  
       Entry #{{ entry.entry_id }}:<br>
       <table class='table'>
@@ -102,7 +105,7 @@
 	<td></td><td></td><td></td><td>{{entry.entry_score_sum}}</td>    
       </table>
       {% endfor %}      
-    </div>
+      <!--</div>-->
 </div>
 {% endif %}
 {% endif %}
