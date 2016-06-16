@@ -200,7 +200,7 @@ def results_player(player_id):
         team_tournament = Tournament.query.filter_by(tournament_id=division.tournament_id).first().team_tournament
         if team_id and team_tournament:
             return_entry_results[division_id],return_inprogress_entry_results[division_id] = get_entries_from_entry_results(division_id,team_id=team_id)
-            
+
     tokens = Token.query.filter_by(player_id=player_id).all()
     player = Player.query.filter_by(player_id=player_id).first()
     token_results = {}
