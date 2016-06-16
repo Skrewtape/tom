@@ -115,10 +115,11 @@ player_entry_divisions.append(linked_division)
 for player in players:
     print " creating entry for player %d" % player.player_id    
     for division in player_entry_divisions:
-        init_player_entries(args.numentries,division,player=player)        
+        init_player_entries(args.numentries,division,player=player)
+        
 for player in players:
     for herb_machine in herb_machines:
-        init_player_herb_entries(2,herb_division,player=player,division_machine_id=herb_machine.division_machine_id)
+        init_player_herb_entries(args.numentries,herb_division,player=player,division_machine_id=herb_machine.division_machine_id)
 
 teams = app.types.Team.query.all()
 for team in teams:
