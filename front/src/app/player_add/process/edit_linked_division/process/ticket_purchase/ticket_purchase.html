@@ -13,7 +13,14 @@
     <div style='background-color:white' class='big-web-font'>
       Purchase tickets for {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}}).
       <hr>
-      <purchase-tickets />
+      <purchase-tickets></purchase-tickets>
+      <button
+         class='btn btn-info btn-xlg'
+         ui-sref='.process({addedTokens:added_tokens})'
+         > Add Tickets</button>
+      <br>
+      <br>
+      <br>
     </div>
   </div>
 </div>

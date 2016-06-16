@@ -4,6 +4,7 @@ angular.module('app.playerselect_player_edit.player_edit.link_division.process')
     function($scope, $state, StatusModal, TimeoutResources) {
 	$scope.player_id=$state.params.playerId;
 	$scope.division_id=$state.params.divisionId;
+        console.log($scope.division_id+" is the division id");        
 	if($scope.checkForBlankParams($scope.division_id) == true){
 	    return;
 	}
