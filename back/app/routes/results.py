@@ -12,7 +12,6 @@ from flask.ext.cors import cross_origin
 from flask_restless.helpers import to_dict
 from operator import itemgetter
 import random
-import numpy
 
 entry_id_idx=0
 player_id_idx=1
