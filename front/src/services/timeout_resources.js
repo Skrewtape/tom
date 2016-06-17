@@ -74,8 +74,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                        'POST');
     addFinalsResource = generate_resource_definition('/finals/division/:division_id',
                                                      'POST');
-    addMachineToDivisionResource = generate_resource_definition('/division/:division_id/machine/:machine_id',
-                                                                'PUT');
+    // addMachineToDivisionResource = generate_resource_definition('/division/:division_id/machine/:machine_id',
+    //                                                             'PUT');
+    addMachineToDivisionResource = generate_resource_definition('/division_machine/division/:division_id/machine/:machine_id',
+                                                                'POST');    
     addMetadivisionResource = generate_resource_definition('/metadivision',
                                                            'POST');
     addPlayerResource = generate_resource_definition('/player',
