@@ -151,6 +151,10 @@ def toggle_entry_completed(entry,complete_state): #killroy
     if len(entry.scores) == entry.number_of_scores_per_entry:
         if complete_state == "true":
             entry.completed = True
+            if entry.player and entry.player.division_machine:
+                entry.player.division_machine = None
+            if entry.team and entry.team.division_machine:
+                entry.team.division_machine = None            
         else:
             entry.completed = False
     DB.session.commit()
@@ -167,9 +171,10 @@ def toggle_entry_voided(entry,voided_state): #killroy
     entry.voided = True if voided_state=="void" else False
 
     if entry.active and entry.voided:
-        player = Player.query.filter_by(player_id=entry.player_id).first()
-        division_machine = player.division_machine
-        division_machine.player_id = None
+        if entry.player and entry.player.division_machine:
+            entry.player.division_machine = None
+        if entry.team and entry.team.division_machine:
+            entry.team.division_machine = None            
 
     entry.active = False if entry.voided else True
     DB.session.commit()
