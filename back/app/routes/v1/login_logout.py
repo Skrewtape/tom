@@ -22,7 +22,9 @@ from werkzeug.exceptions import Conflict, BadRequest
 
 import time
 
-@App.route('/login/player/pin/<pin>', methods=['PUT'])
+api_ver = ''
+
+@App.route(api_ver+'/login/player/pin/<pin>', methods=['PUT'])
 def login_player(pin):    
     #FIXME : need to seperate out player purchase
     # pylint: disable=unexpected-keyword-arg, no-value-for-parameter
@@ -41,7 +43,7 @@ def login_player(pin):
         raise Unauthorized('Bad username or password')
 
 
-@App.route('/login', methods=['PUT'])
+@App.route(api_ver+'/login', methods=['PUT'])
 def login():
     """Check credentials and login a user"""    
     input_data = json.loads(request.data)
@@ -57,7 +59,7 @@ def login():
     else:
         raise Unauthorized('Bad username or password')
 
-@App.route('/logout', methods=['PUT'])
+@App.route(api_ver+'/logout', methods=['PUT'])
 @login_required
 def logout():
     """Logout the user"""

@@ -21,7 +21,9 @@ from werkzeug.exceptions import Conflict, BadRequest
 
 import time
 
-@App.route('/role', methods=['GET'])
+api_ver = ''
+
+@App.route(api_ver+'/role', methods=['GET'])
 @login_required
 @Admin_permission.require(403)
 def get_roles():
