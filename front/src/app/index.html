@@ -51,6 +51,7 @@
 	<h1 class="scrollable-header app-name"><a ui-toggle='uiSidebarLeft' ui-sref='app'>TOM</a><small>1.0</small></h1>
 	<div class="scrollable-content">
 	  <div class="list-group"  ui-turn-off='uiSidebarLeft'>
+            
 	    <a id='sidebar-login-link' ng-if='Page.logged_in_user().username == undefined' class="list-group-item" ui-sref="app.login">
 	      login
 	      <i class="fa fa-chevron-right pull-right"></i></a>
@@ -100,16 +101,15 @@
 	  TOM 
 	</div>
 	<div class="btn-group pull-left">
-	  <div id='menu_icon' ui-toggle="uiSidebarLeft" class="btn sidebar-toggle" style='font-size:28px'>
-	    <i class="fa fa-bars"></i> <span class='tablet_only'> Menu </span>
+	  <div  ui-toggle="uiSidebarLeft" class="btn btn-navbar sidebar-toggle mobile_titlebar_action_icon">            
+	    <i class="fa fa-bars"><!-- <span style='style='font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;margin-left:5px' class='tablet_only'> Menu </span> --></i>            
 	  </div>
 	</div>
-	<div class="btn-group pull-right">
-          
-	  <div class="pull-left" ui-yield-to="navbarAction">
+	<div class="btn-group pull-right  mobile_titlebar_action_icon">          
+	  <div class="pull-left btn-navbar" ui-yield-to="navbarAction">
 	  </div>
-          <div style='margin-top:5px;margin-left:5px;font-size:28px' class="pull-right tablet_only" ui-yield-to="navbarActionDesc">
-          </div>
+          <!-- <div style='margin-top:5px;margin-left:5px;font-size:28px' class="btn-navbar tablet_only pull-right" ui-yield-to="navbarActionDesc"> -->
+          <!-- </div> -->
         </div>
       </div>
       <div class="app-body" ng-class="{loading: loading}" >

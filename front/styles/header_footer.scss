@@ -3,11 +3,19 @@
                   .titlebar_title {
                   font-size:18px;
                   }
+                  .mobile_titlebar_action_icon {
+                  font-size:38px;
+                  }
+
                   
+
                   }
                   @media screen and (min-width: 601px) {
                   .titlebar_title {
                   font-size:35px;
                   }
-                  
+
+                  .mobile_titlebar_action_icon {
+                  font-size:48px;
+                  }
                   }
