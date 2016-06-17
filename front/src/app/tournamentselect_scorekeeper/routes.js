@@ -8,7 +8,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/tournamentselect_scorekeeper.html',
  	       controller: 'app.tournamentselect_scorekeeper',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper', 
         { 
@@ -17,7 +23,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/machineselect_scorekeeper.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper',
-  	     }
+  	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper', 
         { 
@@ -26,7 +38,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/recordscore_scorekeeper.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	 }	   
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm', 
         { 
@@ -35,7 +53,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/confirm/confirm.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process', 
         { 
@@ -44,7 +68,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/confirm/process/process.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	 },
 	    params : {
 		finalScore: {}
@@ -56,7 +86,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/confirm/process/complete/complete.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.process', 
         { 
@@ -65,7 +101,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/confirm/process/complete/process/process.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.process',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.process':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.process':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.void', 
         { 
@@ -74,7 +116,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/void/void.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.void',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.void':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.void':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	 },
 	    params:{
 		entryId:{}
@@ -86,7 +134,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/confirm/process/complete/void/void.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.void',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.void':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.confirm.process.complete.void':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper', 
         { 
@@ -95,7 +149,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/playerselect_scorekeeper/playerselect_scorekeeper.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	 }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process', 
         { 
@@ -104,7 +164,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/playerselect_scorekeeper/process/process.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	 },
 	    params: {
 		playerId:{},
@@ -117,7 +183,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/playerselect_scorekeeper/process/undo/undo.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process.undo',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process.undo':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process.undo':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	 },
 	    params : {
 		undoPlayerId:{}
@@ -129,7 +201,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/asshole/asshole.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole.process', 
         { 
@@ -138,7 +216,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/recordscore_scorekeeper/asshole/process/process.html',
  	       controller: 'app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole.process',
- 	     }
+ 	     },
+		'backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole.process':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_scorekeeper.machineselect_scorekeeper.recordscore_scorekeeper.asshole.process':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	 },
             params: {
                 asshole:{}

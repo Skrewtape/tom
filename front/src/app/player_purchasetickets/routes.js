@@ -8,7 +8,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/player_purchasetickets/player_purchasetickets.html',
  	       controller: 'app.player_purchasetickets',
- 	     }
+ 	     },
+		'backbutton@app.player_purchasetickets':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.player_purchasetickets':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.player_purchasetickets.process', 
         { 
@@ -17,7 +23,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/player_purchasetickets/process/process.html',
  	       controller: 'app.player_purchasetickets.process',
- 	     }
+ 	     },
+		'backbutton@app.player_purchasetickets.process':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.player_purchasetickets.process':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	 },
             params: {addedTokens:{}}
        })//REPLACE_ME

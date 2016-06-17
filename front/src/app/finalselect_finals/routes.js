@@ -8,7 +8,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/finalselect_finals/finalselect_finals.html',
  	       controller: 'app.finalselect_finals',
- 	     }
+ 	     },
+		'backbutton@app.finalselect_finals':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.finalselect_finals':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.finalselect_finals.matchselect_finals', 
         { 
@@ -17,7 +23,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/finalselect_finals/matchselect_finals/matchselect_finals.html',
  	       controller: 'app.finalselect_finals.matchselect_finals',
- 	     }
+ 	     },
+		'backbutton@app.finalselect_finals.matchselect_finals':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.finalselect_finals.matchselect_finals':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.finalselect_finals.matchselect_finals.matchscores_finals', 
         { 
@@ -26,7 +38,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/finalselect_finals/matchselect_finals/matchscores_finals/matchscores_finals.html',
  	       controller: 'app.finalselect_finals.matchselect_finals.matchscores_finals',
- 	     }
+ 	     },
+		'backbutton@app.finalselect_finals.matchselect_finals.matchscores_finals':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.finalselect_finals.matchselect_finals.matchscores_finals':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        })//REPLACE_ME
 

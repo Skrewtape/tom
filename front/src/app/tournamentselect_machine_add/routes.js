@@ -6,7 +6,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                 '@': {
                     templateUrl: 'app/tournamentselect_machine_add/tournamentselect_machine_add.html',
                     controller: 'app.tournamentselect_machine_add',
-                }
+                },
+		'backbutton@app.tournamentselect_machine_add':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_machine_add':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
             }
 	}).state(
         'app.tournamentselect_machine_add.machine_add', {
@@ -15,7 +21,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                 '@': {
                     templateUrl: 'app/tournamentselect_machine_add/machine_add/machine_add.html',
                     controller: 'app.tournamentselect_machine_add.machine_add',
-                }
+                },
+		'backbutton@app.tournamentselect_machine_add.machine_add':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournamentselect_machine_add.machine_add':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
             }
 	})
 });

@@ -8,7 +8,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/teamname_team_add/teamname_team_add.html',
  	       controller: 'app.teamname_team_add',
- 	     }
+ 	     },
+		'backbutton@app.teamname_team_add':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.teamname_team_add':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.teamname_team_add.playeroneselect_team_add', 
         { 
@@ -17,7 +23,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/teamname_team_add/playeroneselect_team_add/playeroneselect_team_add.html',
  	       controller: 'app.teamname_team_add.playeroneselect_team_add',
- 	     }
+ 	     },
+		'backbutton@app.teamname_team_add.playeroneselect_team_add':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.teamname_team_add.playeroneselect_team_add':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add', 
         { 
@@ -26,7 +38,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/teamname_team_add/playeroneselect_team_add/playertwoselect_team_add/playertwoselect_team_add.html',
  	       controller: 'app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add',
- 	     }
+ 	     },
+		'backbutton@app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add.review_team_add', 
         { 
@@ -35,7 +53,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/teamname_team_add/playeroneselect_team_add/playertwoselect_team_add/review_team_add/review_team_add.html',
  	       controller: 'app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add.review_team_add',
- 	     }
+ 	     },
+		'backbutton@app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add.review_team_add':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add.review_team_add':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add.review_team_add.process', 
         { 
@@ -44,7 +68,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/teamname_team_add/playeroneselect_team_add/playertwoselect_team_add/review_team_add/process/process.html',
  	       controller: 'app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add.review_team_add.process',
- 	     }
+ 	     },
+		'backbutton@app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add.review_team_add.process':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.teamname_team_add.playeroneselect_team_add.playertwoselect_team_add.review_team_add.process':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	 },
 	    params: {
 		finalTeamName:{}

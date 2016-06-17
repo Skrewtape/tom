@@ -8,6 +8,12 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                     templateUrl: 'app/tournament_add/tournament_add.html',
                     controller: 'app.tournament_add',
                 },
+		'backbutton@app.tournament_add':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournament_add':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		},
 		'tournament_add_progress@app.tournament_add':{
                     templateUrl: 'app/tournament_add/tournament_add_progress.html',		    
 		},
@@ -24,6 +30,12 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                     templateUrl: 'app/tournament_add/process/process.html',
                     controller: 'app.tournament_add.process',
                 },
+		'backbutton@app.tournament_add.process':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournament_add.process':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		},
 		'tournament_add_progress@app.tournament_add.process':{
                     templateUrl: 'app/tournament_add/tournament_add_progress.html',		    
 		}
@@ -41,6 +53,12 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                     templateUrl: 'app/tournament_add/process/division_add/division_add.html',
                     controller: 'app.tournament_add.process.division_add',
                 },
+		'backbutton@app.tournament_add.process.division_add':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.tournament_add.process.division_add':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		},
 		'tournament_add_progress@app.tournament_add.process.division_add':{
                     templateUrl: 'app/tournament_add/tournament_add_progress.html',		    
 		},

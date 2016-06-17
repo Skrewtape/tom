@@ -8,7 +8,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/playerselect_ticket_purchase/playerselect_ticket_purchase.html',
  	       controller: 'app.playerselect_ticket_purchase',
- 	     }
+ 	     },
+		'backbutton@app.playerselect_ticket_purchase':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.playerselect_ticket_purchase':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.playerselect_ticket_purchase.ticket_purchase', 
         { 
@@ -17,7 +23,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/playerselect_ticket_purchase/ticket_purchase/ticket_purchase.html',
  	       controller: 'app.playerselect_ticket_purchase.ticket_purchase',
- 	     }
+ 	     },
+		'backbutton@app.playerselect_ticket_purchase.ticket_purchase':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.playerselect_ticket_purchase.ticket_purchase':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	   }
        }).state('app.playerselect_ticket_purchase.ticket_purchase.process', 
         { 
@@ -26,7 +38,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	     '@': {
  	       templateUrl: 'app/playerselect_ticket_purchase/ticket_purchase/process/process.html',
  	       controller: 'app.playerselect_ticket_purchase.ticket_purchase.process',
- 	     }
+ 	     },
+		'backbutton@app.playerselect_ticket_purchase.ticket_purchase.process':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.playerselect_ticket_purchase.ticket_purchase.process':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
  	 },
 	    params: {addedTokens:{}}
        })//REPLACE_ME

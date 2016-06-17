@@ -80,7 +80,13 @@ my $routes_string = <<"END_CONTROLLER";
  	     '\@': {
  	       templateUrl: '$module_relative_file_path/$new_module.html',
  	       controller: '$full_module_name',
- 	     }
+ 	     },
+             'backbutton\@$full_module_name':{
+               templateUrl: 'shared_html/backbutton.html'
+             },
+             'not_backbutton\@$full_module_name':{
+               templateUrl: 'shared_html/not_backbutton.html'
+             }
  	   }
        })//REPLACE_ME
 END_CONTROLLER

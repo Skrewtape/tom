@@ -8,7 +8,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                 '@': {
                     templateUrl: 'app/home.html',
                     controller: 'IndexController',
-                }
+                },
+		'backbutton@IndexController':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@IndexController':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
 
             }
 	}).state(            
@@ -18,7 +24,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                 '@': {
                     templateUrl: 'app/login/login.html',
                     controller: 'app.login',
-                }
+                },
+		'backbutton@app.login':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.login':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
             }
 	}).state(            
             'app.playerlogin', {
@@ -27,7 +39,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                 '@': {
                     templateUrl: 'app/login/player_login.html',
                     controller: 'app.login',
-                }
+                },
+		'backbutton@app.login':{
+		templateUrl: 'shared_html/backbutton.html'
+		},
+		'not_backbutton@app.login':{
+		templateUrl: 'shared_html/not_backbutton.html'
+		}
             }
 	}).state(
 	    //FIXME : move this to the login dir
