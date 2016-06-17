@@ -80,6 +80,11 @@
     <div class="app-body" >
       <div class="app-content scrollable-content" style='background:white'>
 	<div ui-view style='padding:10px'>
+          {% if index %}
+          WELCOME<br>
+          TO<br>
+          TOM<br>                    
+          {% endif %}
 	  {% block content %}
 	  {% endblock %}
 	</div>

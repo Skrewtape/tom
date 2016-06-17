@@ -8,7 +8,7 @@
     Player Name : {{"%s %s" % (player.first_name,player.last_name)}}
     <br>Player Number : {{player.player_id}}
     {% if "team" in player %}
-    <br>Team : {{player.team.team_name}}
+    <br>Team : <a href='/results/team/{{player.team.team_id}}'>{{player.team.team_name}}</a>
     {% endif %}
   </div>
 </div>
@@ -30,29 +30,31 @@
 {% if inprogress_entries|length > 0 %}
 {% for entry_division_id,entries in inprogress_entries.iteritems() %}
 {% if entries | length > 0 %}
+{% if sidebar_info['divisions_scoring_type'][entry_division_id] != 'herb' %}
 <div class="panel panel-default">
   <div class="panel-heading">      
     <h3 class='panel-title'>"{{sidebar_info['divisions'][entry_division_id].name}}" In Progress</h3>
   </div>
   <div class='panel-body'>
   </div>
-    Entry #{{ entries[0].entry_id }}:<br>
-    <table class='table table-condensed'>
-      <tr>
-	<th>Machine</th><th>Score</th><th>Rank</th><th>Points</th>
-      </tr>
-      {% for score in entries[0].scores %}
-      <tr>
-	<td>{{score.name}}</td><td>{{score.score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_papa_score}}</td>
-      </tr>
-      {% endfor %}
-      <td></td><td></td><td></td><td>{{entries[0].entry_score_sum}}</td>    
-    </table>
-<!--</div>-->
+  Entry #{{ entries[0].entry_id }}:<br>
+  <table class='table table-condensed'>
+    <tr>
+      <th>Machine</th><th>Score</th><th>Rank</th><th>Points</th>
+    </tr>
+    {% for score in entries[0].scores %}
+    <tr>
+      <td><a href='/results/machine/{{score.division_machine_id}}'>{{score.name}}</a></td><td>{{score.score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_papa_score}}</td>
+    </tr>
+    {% endfor %}
+    <td></td><td></td><td></td><td>{{entries[0].entry_score_sum}}</td>    
+  </table>
 </div>
+{% endif %}
 {% endif %}
 {% endfor %}
 {% endif %}
+
 {% if player_entries|length > 0 %}
 {% for entry_division_id,entries in player_entries.iteritems() %}
 {% if sidebar_info['divisions_scoring_type'][entry_division_id] != 'herb' %}
@@ -70,7 +72,7 @@
 	</tr>
 	{% for score in entries[0].scores %}
 	<tr>
-	  <td>{{score.name}}</td><td>{{score.score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_papa_score}}</td>
+	  <td><a href='/results/machine/{{score.division_machine_id}}'>{{score.name}}</a></td><td>{{score.score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_papa_score}}</td>
 	</tr>
 	{% endfor %}
 	<td></td><td></td><td></td><td>{{entries[0].entry_score_sum}}</td>    
@@ -99,7 +101,7 @@
 	</tr>
 	{% for score in entry.scores %}
 	<tr>
-	  <td>{{score.name}}</td><td>{{score.score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_papa_score}}</td>
+	  <td><a href='/results/machine/{{score.division_machine_id}}'>{{score.name}}</a></td><td>{{score.score}}</td><td>{{score.machine_rank}}</td><td>{{score.machine_papa_score}}</td>
 	</tr>
 	{% endfor %}
 	<td></td><td></td><td></td><td>{{entry.entry_score_sum}}</td>    

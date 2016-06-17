@@ -63,21 +63,21 @@ def get_scores_ranked_by_machine(division_id):
     """
     Return all machines scores for a given division with ranks and points for each machine
     """
-    return DB.engine.execute("select machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as machine_rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as machine_papa_score from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and entry.division_id = %s and entry.completed = true and entry.voided = false order by machine_papa_score desc" % division_id)
+    return DB.engine.execute("select division_machine.division_machine_id, machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as machine_rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as machine_papa_score from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and entry.division_id = %s and entry.completed = true and entry.voided = false order by machine_papa_score desc" % division_id)
 
 def get_scores_for_machine(division_machine_id):
     """
     The same as get_scores_ranked_by_machine, except you only get scores for a specific division_machine_id
     """    
-    return DB.engine.execute("select machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as machine_rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as machine_papa_score, entry.player_id from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and score.division_machine_id = %s and entry.completed = true and entry.voided = false order by machine_papa_score desc" % division_machine_id)
+    return DB.engine.execute("select machine.name, score.score, score.entry_id, rank() over (partition by score.division_machine_id order by score.score desc) as machine_rank, testing_papa_scoring(rank() over (partition by score.division_machine_id order by score.score desc)) as machine_papa_score, entry.player_id, entry.team_id from score,entry,division_machine,machine where score.division_machine_id = division_machine.division_machine_id and division_machine.machine_id = machine.machine_id and score.entry_id = entry.entry_id and score.division_machine_id = %s and entry.completed = true and entry.voided = false order by machine_papa_score desc" % division_machine_id)
 
 def get_herb_scores_for_machine(division_machine_id):
 
-    inner_join_query = "select division_machine_id,player_id, max(score.score) as max_score from score,entry where score.entry_id=entry.entry_id and score.division_machine_id = %d and entry.voided=false group by division_machine_id,player_id" % int(division_machine_id)
+    inner_join_query = "select division_machine_id, team_id, player_id, max(score.score) as max_score from score,entry where score.entry_id=entry.entry_id and score.division_machine_id = %d and entry.voided=false group by division_machine_id,player_id,team_id" % int(division_machine_id)
     
-    get_highest_score_for_each_player_subquery = "select e.player_id, a.score, a.score_id,a.division_machine_id,a.entry_id from score as a inner join (%s) as b on a.division_machine_id = b.division_machine_id and a.score = b.max_score join entry as e on a.entry_id=e.entry_id join division_machine as d on a.division_machine_id=d.division_machine_id where a.division_machine_id=%d" % (inner_join_query,int(division_machine_id))
+    get_highest_score_for_each_player_subquery = "select e.team_id, e.player_id, a.score, a.score_id,a.division_machine_id,a.entry_id from score as a inner join (%s) as b on a.division_machine_id = b.division_machine_id and a.score = b.max_score join entry as e on a.entry_id=e.entry_id join division_machine as d on a.division_machine_id=d.division_machine_id where a.division_machine_id=%d" % (inner_join_query,int(division_machine_id))
 
-    return DB.engine.execute("select 'machine_name', ss.score, ss.entry_id, rank() over (partition by ss.division_machine_id order by ss.score desc) as rank, testing_papa_scoring(rank() over (partition by ss.division_machine_id order by ss.score desc)) as entry_score, ss.player_id from (%s) as ss order by entry_score desc" % (get_highest_score_for_each_player_subquery));
+    return DB.engine.execute("select 'machine_name', ss.score, ss.entry_id, rank() over (partition by ss.division_machine_id order by ss.score desc) as machine_rank, testing_papa_scoring(rank() over (partition by ss.division_machine_id order by ss.score desc)) as machine_papa_score, ss.player_id, ss.team_id from (%s) as ss order by machine_papa_score desc" % (get_highest_score_for_each_player_subquery));
 
 def get_herb_ranked_division_entries(division_id):
     """
@@ -290,11 +290,12 @@ def results_division_machine(division_machine_id):
     return_division_machine=DivisionMachine.query.filter_by(division_machine_id=division_machine_id).first().to_dict_simple()    
 
     for score in score_results:        
-        return_score_results.append({'rank':score[3],'score':score[1],'player_id':score[5],'points':score[4],'entry_id':score[2]})
+        #return_score_results.append({'rank':score[3],'score':score[1],'player_id':score[5],'points':score[4],'entry_id':score[2]})
+        return_score_results.append(score)
         
 
     return render_template('machine_results.html', machine_scores=return_score_results,
-                           players=player_results,
+                           players=player_results, tournament=tournament,
                            division_machine=return_division_machine,
                            sidebar_info=get_index_sidebar_info())
         
@@ -334,17 +335,13 @@ def results_divisions(division_id=None):
     else:
         return_entry_results = entry_results
         
-    division = Division.query.filter_by(division_id=division_id).first().to_dict_simple()
+    division = Division.query.filter_by(division_id=division_id).first()
 
-    tournament_dict = Tournament.query.filter_by(tournament_id=division['tournament_id']).first().to_dict_simple()
+    tournament = Tournament.query.filter_by(tournament_id=division.tournament_id).first()
 
-    if tournament.scoring_type=="papa":
-        template_name = 'division_results.html'
-    else:
-        template_name = 'division_herb_results.html'
-    return render_template(template_name, division_entrys=return_entry_results,
-                           players=player_results,division=division,
-                           tournament=tournament_dict, teams=return_team_results,
+    return render_template('division_results.html', division_entrys=return_entry_results,
+                           players=player_results,division_id=division.division_id,
+                           tournament=tournament, teams=return_team_results,
                            sidebar_info=get_index_sidebar_info())
 
 

@@ -3,7 +3,7 @@
 <table class='table'>
   <div class='big-web-font'>
     <center>
-      {{division_machine.name}}
+      {{sidebar_info['divisions'][division_machine.division_id].name}} : {{division_machine.name}}
       <br>
       <select ng-model='new_machine.data' ng-change='poop()'>
 	<option value='-1'> Select Machine </option>	
@@ -16,7 +16,16 @@
   <th>Rank</th><th>Name</th><th>Score</th><th>Points</th>
   {% for score in machine_scores %}
   <tr>
-    <td>{{score.rank}}</td><td>{{"%s %s" % (players[score.player_id].first_name,players[score.player_id].last_name)}}</td><td>{{score.score}}</td><td>{{score.points}}</td>
+    <td>{{score.machine_rank}}</td><td>
+      {% if tournament.team_tournament == False %}
+      <a href="/results/player/{{score.player_id}}"> {{"%s %s" % (players[score.player_id].first_name,players[score.player_id].last_name)}} </a>
+      {% endif %}
+      {% if tournament.team_tournament == True %}
+      <a href="/results/team/{{score.team_id}}"> {{ sidebar_info['teams'][score.team_id].team_name}} </a>     
+      {% endif %}
+
+
+    </td><td>{{score.score}}</td><td>{{score.machine_papa_score}}</td>
   </tr>
   {% endfor %}
 </table>
