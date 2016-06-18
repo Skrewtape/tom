@@ -9,10 +9,7 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                     templateUrl: 'app/home.html',
                     controller: 'IndexController',
                 },
-		'backbutton@IndexController':{
-		templateUrl: 'shared_html/backbutton.html'
-		},
-		'not_backbutton@IndexController':{
+		'not_backbutton@app':{
 		templateUrl: 'shared_html/not_backbutton.html'
 		}
 
