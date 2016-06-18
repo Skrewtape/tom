@@ -24,6 +24,18 @@
 		   />
 	      </div>
 	      <!-- FIXME : need to add option for allowing teams in trounament/division-->
+	      <table>
+		<td class='form-group-xlg'>
+		  <select class='form-control' ng-model='tournament.scoring_type'>		    
+		    <option value="papa">Papa Scoring</option>
+                    <option value="herb">Herb Scoring</option>
+		  </select>
+		</td>
+		<td class='big-web-font' style='padding-left:10px'>
+		  Type of Tournament
+		</td>
+	      </table>
+              
 	      <table style='margin-top:15px'>
 		<td>
 	      <input		 
@@ -51,25 +63,18 @@
 		<td>
 	      	    <span class='big-web-font'>Is this a team tournament?</span>
 		</td>
-	      </table>	      	      
+	      </table>
+      	      <div ui-view='division_config_params' ng-if='tournament.single_division == true'></div>
+
 	      <br>
 	      <!-- FIXME : need to make sure non 0/empty value entered for scores per ticket -->
-              <div ui-view='division_config_params' ng-if='tournament.single_division == true'></div>
-	      <table>
-		<td class='form-group-xlg'>
-		  <select class='form-control' ng-model='tournament.scoring_type'>		    
-		    <option value="papa">Papa Scoring</option>
-                    <option value="herb">Herb Scoring</option>
-		  </select>
-		</td>
-		<td class='big-web-font' style='padding-left:10px'>
-		  Type of Tournament
-		</td>
-	      </table>
 	    </form>
 	    <br>
 	    <button
-	       ng-disabled='tournament.tournament_name == undefined || tournament.tournament_name == ""'
+	       ng-disabled='tournament.tournament_name == undefined ||
+                            tournament.tournament_name == "" ||
+                            (tournament.single_division == true && tournament.scoring_type == "papa" && form_division.number_of_scores_per_entry == undefined ) ||
+                            (tournament.single_division == true && resources.tom_config.use_stripe == true && form_division.stripe_sku == undefined )'
 	       class='btn btn-info btn-xlg'
 	       ui-sref='app.tournament_add.process({tournamentInfo:tournament})'
 	       > Create Tournament</button>

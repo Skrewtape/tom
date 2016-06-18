@@ -25,7 +25,12 @@
       <div ui-view='division_config_params'></div>
       <br>
       <button
-	 ng-disabled='form_division.division_name == undefined || form_division.division_name == "" || form_division.number_of_scores_per_entry == undefined || form_division.number_of_scores_per_entry == ""'
+	 ng-disabled='form_division.division_name == undefined ||
+         form_division.division_name == "" ||
+         (resources.tournament.scoring_type == "papa" && form_division.number_of_scores_per_entry == undefined ) ||
+         (resources.tom_config.use_stripe == true && form_division.stripe_sku == undefined )'
+
+         
 	 class='btn btn-info btn-xlg'
 	 ng-click='add_division()'
 	 > Add Division</button>

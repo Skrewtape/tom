@@ -10,6 +10,8 @@ angular.module('app.tournament_add.process.division_add').controller(
 	$scope.tournament_promise = TimeoutResources.GetTournament($scope.tom_config_promise,{tournament_id:$scope.tournament_id});
 	$scope.tournament_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
+            //Bluergh - need to add this so the shared html ui-view works
+            $scope.tournament = $scope.resources.tournament;
 	    StatusModal.loaded();
 	});
 	

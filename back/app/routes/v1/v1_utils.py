@@ -12,7 +12,7 @@ from werkzeug.exceptions import Conflict,Unauthorized
 
 from app import App, DB, Admin_permission
 
-from app.types import User, Role, Player, Division
+from app.types import User, Role, Player, Division, Tournament
 
 from app.routes.util import fetch_entity
 
@@ -25,15 +25,18 @@ import time
 def add_division(division_data): #killroy was here
     if 'division_name' not in division_data or 'tournament_id' not in division_data:
         raise BadRequest('Did not specify division_name or tournament_id in post data')
+    tournament = Tournament.query.filter_by(tournament_id=division_data['tournament_id']).first()        
+    if 'number_of_scores_per_entry' not in division_data and tournament.scoring_type != "herb":
+        raise BadRequest('Did not specify number of scores per entry')
     new_division = Division(
         name = division_data['division_name'],
         tournament_id = division_data['tournament_id']
     )
     if 'number_of_scores_per_entry' in division_data:
         new_division.number_of_scores_per_entry = division_data['number_of_scores_per_entry']
-    else:
-        #FIXME : this should not be hardcoded
-        new_division.number_of_scores_per_entry = 4
+    if 'number_of_scores_per_entry' not in division_data and tournament.scoring_type == "herb":
+        new_division.number_of_scores_per_entry = 1
+        
     if 'stripe_sku' in division_data:
         new_division.stripe_sku = division_data['stripe_sku']
     if 'local_price' in division_data:

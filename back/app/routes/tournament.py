@@ -9,7 +9,7 @@ from app.routes.util import fetch_entity,i_am_a_teapot
 from app.routes import division
 from werkzeug.exceptions import BadRequest
 from sqlalchemy.exc import IntegrityError
-
+from app.routes.v1 import v1_utils
 @App.route('/tournament', methods=['POST']) 
 @login_required
 @Admin_permission.require(403)
@@ -50,13 +50,14 @@ returns:
         single_division_data={}
         single_division_data['division_name']="%s_all" % new_tournament.name
         single_division_data['tournament_id']=str(new_tournament.tournament_id)
-        single_division_data['number_of_scores_per_entry']=str(tournament_data['number_of_scores_per_entry'])
+        if 'number_of_scores_per_entry' in tournament_data:
+            single_division_data['number_of_scores_per_entry']=str(tournament_data['number_of_scores_per_entry'])
         if 'stripe_sku' in tournament_data and tournament_data['stripe_sku']:    
             single_division_data['stripe_sku']=str(tournament_data['stripe_sku'])
         if 'local_price' in tournament_data and tournament_data['local_price']:    
-            single_division_data['local_price']=str(tournament_data['local_price'])
-            
-        division.shared_add_division(single_division_data)
+            single_division_data['local_price']=str(tournament_data['local_price'])            
+        #division.shared_add_division(single_division_data)
+        v1_utils.add_division(single_division_data)
     else:
         new_tournament.single_division=False                
     DB.session.commit()
