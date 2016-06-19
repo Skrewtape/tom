@@ -4,7 +4,8 @@ angular.module('app.playerselect_player_info.player_info').controller(
     function($scope, $state, StatusModal, TimeoutResources) {
 	$scope.player_id=$state.params.playerId;
 	StatusModal.loading();
-	$scope.metadivisions_promise = TimeoutResources.GetAllMetadivisions()
+        $scope.divisions_promise = TimeoutResources.GetActiveDivisions();
+	$scope.metadivisions_promise = TimeoutResources.GetAllMetadivisions($scope.divisions_promise);
 	$scope.tournaments_promise = TimeoutResources.GetActiveTournaments($scope.metadivisions_promise)
 	$scope.player_teams_promise = TimeoutResources.GetPlayerTeams($scope.tournaments_promise,{player_id:$scope.player_id})	
 	$scope.player_promise = TimeoutResources.GetPlayer($scope.player_teams_promise, {player_id:$scope.player_id})

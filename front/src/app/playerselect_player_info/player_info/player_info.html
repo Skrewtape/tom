@@ -9,33 +9,52 @@
     {{resources.player.first_name}}    {{resources.player.last_name}}      (#{{resources.player.player_id}}) <span ng-if='team_id != undefined'><br>
       On team {{resources.player_teams.teams[0].team_name}}</span><br>
     <span ng-if='resources.player.linked_division != null'> Linked to {{resources.player.linked_division.name}}</span><hr>
-    <u>Active Tickets</u> : 
-    <div ng-repeat='tournament in resources.tournaments'>
-      <div ng-repeat='division in tournament.divisions'>
-	<span ng-if='division.metadivision_id == undefined'>{{tournament.name}}</span>
-	<span ng-if='division.metadivision_id != undefined'>{{resources.metadivisions[division.metadivision_id].name}}</span>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <div class='panel-title big-web-font'> Active Tickets: </div>
+      </div>
+      <div class='panel-body'>
+        <table class='table'>
+          <th>Division</th><th>Active Ticket</th>
+          <tr ng-repeat='division in resources.active_divisions'>
+            <td>
+              <span ng-if='division.metadivision_id == undefined'>{{division.tournament_name}}</span>
+	      <span ng-if='division.metadivision_id != undefined'>{{resources.metadivisions[division.metadivision_id].name}}</span>              
+            </td>
+            <td>
+              {{resources.player_active_entries_count[division.division_id]}}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
 
-	Tournament <span ng-if='tournament.single_division == false'>, {{division.name}}</span> : {{resources.player_active_entries_count[division.division_id]}}
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        <div class='panel-title big-web-font'> Unstarted Tickets: </div>        
       </div>
-    </div>
-    <u>Unstarted Tickets</u> : 
-    <div ng-repeat='tournament in resources.tournaments' ng-if='tournament.team_tournament == false'>
-      <div ng-repeat='division in tournament.divisions'>
-	
-	<span ng-if='division.metadivision_id == undefined'>{{tournament.name}}</span>
-	<span ng-if='division.metadivision_id != undefined'>{{resources.metadivisions[division.metadivision_id].name}}</span>
-	Tournament <span ng-if='tournament.single_division == false'>, {{division.name}}</span> :
-	<span ng-if='division.metadivision_id == undefined'>
-	  {{resources.player_tokens.divisions[division.division_id]}}
-	</span>
-	<span ng-if='division.metadivision_id != undefined'>
-	  {{resources.player_tokens.metadivisions[division.metadivision_id]}}	  
-	</span>
-      </div>
-    </div>
-    <div ng-repeat='tournament in resources.tournaments' ng-if='tournament.team_tournament == true && resources.player_team_tokens.teams != undefined'>
-      <div ng-repeat='division in tournament.divisions'>
-	  {{tournament.name}} Tournament : {{resources.player_team_tokens.teams[division.division_id]}}
+      <div class='panel-body'>
+        <table class='table'>
+          <th>Division</th><th># Tickets</th>
+          <tr ng-repeat='division in resources.active_divisions'>
+            <td>
+              <span ng-if='division.metadivision_id == undefined'>{{division.tournament_name}}</span>
+	      <span ng-if='division.metadivision_id != undefined'>{{resources.metadivisions[division.metadivision_id].name}}</span>              
+            </td>
+            <td>
+              <span ng-if='division.metadivision_id == undefined'>
+                {{resources.player_tokens.divisions[division.division_id]}}
+              </span>
+              <span ng-if='division.metadivision_id != undefined'>
+	        {{resources.player_tokens.metadivisions[division.metadivision_id]}}	                  
+              </span>
+            </td>            
+          </tr>
+
+          <tr ng-repeat='division in resources.active_divisions' ng-if='resources.tournaments[division.tournament_id].team_tournament == true'>
+            <td>{{division.tournament_name}}</td><td>{{resources.player_team_tokens.teams[division.division_id]}}</td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
