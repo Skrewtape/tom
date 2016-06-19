@@ -49,7 +49,33 @@ angular.module('tom_services.status_modal')
 			      $scope.message = message;
 			  }	    
 		      });            
+		  };
+
+                  openGoBackModalWithMessage = function(message){
+		      modal_instance=$uibModal.open({
+			  templateUrl: 'services/go_back_modal.html',
+			  backdrop: 'static',
+			  keyboard: false,
+			  controller: function($scope){
+			      $scope.message = message;
+			  }	    
+		      });
+                      modal_instance.closed.then(function(){$state.go('^')});
+                      
+		  };
+                  
+                  openProblemModalWithMessage = function(message){
+		      modal_instance=$uibModal.open({
+			  templateUrl: 'services/go_back_modal.html',
+			  backdrop: 'static',
+			  keyboard: false,
+			  controller: function($scope){
+			      $scope.message = message;
+			  }	    
+		      });                                            
 		  };        			  
+
+
 		  
 		  
                   launch_status_modal = function(){
@@ -105,7 +131,7 @@ angular.module('tom_services.status_modal')
                           keyboard: false,
                       });
 		      if(goto_state == undefined){
-			  modalInstance.closed.then(function(){console.log('closing http error');$state.go('app')});
+                          modalInstance.closed.then(function(){console.log('closing http error');$state.go('app')});
 		      } else {
 			  modalInstance.closed.then(function(){console.log('closing http error');$state.go(goto_state)});
 		      }
@@ -126,6 +152,13 @@ angular.module('tom_services.status_modal')
 	              loaded: function(new_title) {
 			  $timeout(close_status_modal,500);
                       },
+                      goBackOnProblem: function(message){
+                        openGoBackModalWithMessage(message);
+                      },
+                      problemModal: function(message){
+                          openProblemModalWithMessage(message);
+                      },
+                      
 		      http_error: launch_http_error_modal,
 		      modalWithMessage: openModalWithMessage
                   };
