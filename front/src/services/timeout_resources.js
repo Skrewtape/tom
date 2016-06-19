@@ -241,14 +241,14 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetIfpaPlayer: generic_resource(getIfpaPlayerResource,'ifpa_player','get',false), //killroy
 	GetPlayer: generic_resource(getPlayerResource,'player','get', false),//killroy
 	GetPlayerActiveEntriesCount: generic_resource(getPlayerActiveEntriesCountResource,'player_active_entries_count','get', false), //killroy
-	GetPlayerActiveEntry: generic_resource(getPlayerActiveEntryResource,'player_active_entry','get', false),
+	GetPlayerActiveEntry: generic_resource(getPlayerActiveEntryResource,'active_entry','get', false),
 	GetPlayerTeams: generic_resource(getPlayerTeamsResource,'player_teams','get', false), //killroy
 	GetPlayerTokens: generic_resource(getPlayerTokensResource,'player_tokens','get', false),//killroy
 	GetPlayerTeamTokens: generic_resource(getPlayerTeamTokensResource,'player_team_tokens','get',false),
 	GetRoles: generic_resource(getRolesResource,'roles','get', false),
 	GetTeam: generic_resource(getTeamResource,'team','get', false),
         GetTomConfig: generic_resource(getTomConfigResource,'tom_config','get', false),
-	GetTeamActiveEntry: generic_resource(getTeamActiveEntryResource,'team_active_entry','get', false),
+	GetTeamActiveEntry: generic_resource(getTeamActiveEntryResource,'active_entry','get', false),
 	GetTournament: generic_resource(getTournamentResource,'tournament','get',false), //killroy was here
 	PlayerIsAsshole: generic_resource(playerIsAssholeResource,'empty','post', false), //killroy
         RemoveMachineFromDivision: generic_resource(removeMachineFromDivisionResource,'empty','get', false),//enable

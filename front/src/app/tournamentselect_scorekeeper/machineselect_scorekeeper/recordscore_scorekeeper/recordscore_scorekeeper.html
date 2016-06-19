@@ -42,14 +42,14 @@
       <button
 	 class='btn btn-info btn-xlg big-web-font'
 	 style='width:75%;margin:auto;margin-bottom:15px;margin-top:15px'
-	 ui-sref='.confirm({score:new_score,entryId:active_entry.entry.entry_id})'
+	 ui-sref='.confirm({score:new_score,entryId:resources.active_entry.entry.entry_id})'
 	 ng-disabled='disabledScoreKeeping'
 	 >Next</button>      
       <br>
       <button
 	 class='btn btn-info btn-xlg big-web-font'
 	 style='width:75%;margin:auto;margin-bottom:15px'
-	 ui-sref='.asshole({entryId:active_entry.entry.entry_id})'
+	 ui-sref='.asshole({entryId:resources.active_entry.entry.entry_id})'
 	 >Player Is Jagoff</button>
       <button
 	 ng-if='team_tournament == "false"'
@@ -64,12 +64,12 @@
 	 ng-click='launchVoidModal(resources,"team")'
 	 >Void</button>      
       <hr>
-      <div ng-repeat='score in resources.player_active_entry.entry.scores' ng-if='resources.player_active_entry.entry.scores != undefined && resources.player_active_entry.entry.division_id == division_id'>
+      <div ng-repeat='score in resources.active_entry.entry.scores' ng-if='resources.active_entry.entry.scores != undefined && resources.active_entry.entry.division_id == division_id'>
 	{{resources.machines[score.division_machine_id].name}} : {{score.score}}<br>
       </div>
-      <div ng-repeat='score in resources.team_active_entry.entry.scores' ng-if='resources.team_active_entry.entry.scores != undefined && resources.team_active_entry.entry.division_id == division_id'>
-	{{resources.machines[score.division_machine_id].name}} : {{score.score}}<br>
-      </div>
+      <!-- <div ng-repeat='score in resources.team_active_entry.entry.scores' ng-if='resources.team_active_entry.entry.scores != undefined && resources.team_active_entry.entry.division_id == division_id'> -->
+      <!--   {{resources.machines[score.division_machine_id].name}} : {{score.score}}<br> -->
+      <!-- </div> -->
       
     </div>
 </div>

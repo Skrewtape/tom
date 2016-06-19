@@ -46,11 +46,11 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    console.log($scope.resources);
 	    //FIXME : shouldn't have seperate resources.player_active_entry and resources.team_active_entry
-	    if($scope.team_tournament == "false"){
-		$scope.active_entry = $scope.resources.player_active_entry
-	    } else {
-		$scope.active_entry = $scope.resources.team_active_entry
-	    }
+	    // if($scope.team_tournament == "false"){
+	    //     $scope.active_entry = $scope.resources.active_entry
+	    // } else {
+	    //     $scope.active_entry = $scope.resources.active_entry
+	    // }
 	});
     }
 );
