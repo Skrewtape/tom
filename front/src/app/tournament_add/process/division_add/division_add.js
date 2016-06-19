@@ -17,9 +17,24 @@ angular.module('app.tournament_add.process.division_add').controller(
 	
 	$scope.add_division = function(){
 	    StatusModal.loading();
-	    $scope.division_promise = TimeoutResources.AddDivision(undefined,undefined,$scope.form_division);	    
-	    $scope.division_promise.then(function(data){
+            if($scope.resources.tom_config.use_stripe == false){
+                $scope.stripe_sku = "doesnotexist";            
+            } else {
+                $scope.stripe_sku = $scope.form_division.stripe_sku;
+            }
+            
+            $scope.sku_promise = TimeoutResources.GetSku(undefined,{sku:$scope.stripe_sku});
+            $scope.sku_promise.then(function(data){
+                if(data.sku != undefined || $scope.resources.tom_config.use_stripe == false){
+                    return TimeoutResources.AddDivision(undefined,undefined,$scope.form_division);	    
+                } else {
+                    StatusModal.problemModal("You did not enter a valid SKU.  Try again...");                    
+                }
+            }).then(function(data){
 		StatusModal.loaded();
+                if(data == undefined){
+                    return;
+                }
 		$scope.resources = TimeoutResources.GetAllResources();
 		if($scope.resources.tournament.divisions == undefined){
 	 	    $scope.resources.tournament.divisions = [];

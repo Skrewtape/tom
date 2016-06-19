@@ -10,9 +10,24 @@ angular.module('app.tournament_add.process').controller(
 	    return;
 	}
         StatusModal.loading();
-	var submit_data = angular.toJson($scope.tournament_info);        
-	$scope.add_tournament_promise = TimeoutResources.AddTournament(undefined,undefined,submit_data);		
-	$scope.add_tournament_promise.then(function(data){
+        
+	var submit_data = angular.toJson($scope.tournament_info);
+        if($scope.tournament_info.stripe_sku == undefined){
+            $scope.stripe_sku = "doesnotexist";            
+        } else {
+            $scope.stripe_sku = $scope.tournament_info.stripe_sku;
+        }
+        //Bleh - we're gonna do some weird contorting here - need to make a seperate "process" for single division and multiple division
+        $scope.sku_promise = TimeoutResources.GetSku(undefined,{sku:$scope.stripe_sku});
+        $scope.sku_promise.then(function(data){
+            console.log($scope.tournament_info);
+             if(data.sku != undefined || $scope.tournament_info.single_division == false || $scope.tournament_info.single_division == undefined){
+	         return TimeoutResources.AddTournament(undefined,undefined,submit_data);
+             } else {
+                 StatusModal.goBackOnProblem("You did not enter a valid SKU.  Try again.");
+             }
+            
+        }).then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    StatusModal.loaded();		
 	});        
