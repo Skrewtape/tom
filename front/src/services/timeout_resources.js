@@ -164,6 +164,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                           'GET');
     getPlayerTokensResource = generate_resource_definition('/token/player_id/:player_id',
                                                            'GET');
+    getSkuResource = generate_resource_definition('/sale/sku/:sku',
+                                                           'GET');    
     getRolesResource = generate_resource_definition('/role',
                                                     'GET');
     getTeamResource = generate_resource_definition('/team/:team_id',
@@ -249,6 +251,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetPlayerTeams: generic_resource(getPlayerTeamsResource,'player_teams','get', false), //killroy
 	GetPlayerTokens: generic_resource(getPlayerTokensResource,'player_tokens','get', false),//killroy
 	GetPlayerTeamTokens: generic_resource(getPlayerTeamTokensResource,'player_team_tokens','get',false),
+	GetSku: generic_resource(getSkuResource,'sku','get',false),        
 	GetRoles: generic_resource(getRolesResource,'roles','get', false),
 	GetTeam: generic_resource(getTeamResource,'team','get', false),
         GetTomConfig: generic_resource(getTomConfigResource,'tom_config','get', false),
