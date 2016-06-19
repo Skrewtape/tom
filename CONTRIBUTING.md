@@ -154,7 +154,9 @@ The downside is that we get this great performance through extremely ugly sql qu
 
 **Organization of routes :**
 
-Originally, routes were organized based on the sqlalchemy object they interacted with (i.e. routes that interacted with the Player class when in player.py).  Unfortunately, this strategy didn't scale well, and it got messy.  There is a issue opened to refactor the routes so that the file names are based on the head of the routes (i.e. /person, /entry, /score, etc).  
+Originally, routes were organized based on the sqlalchemy object they interacted with (i.e. routes that interacted with the Player class when in player.py).  Unfortunately, this strategy didn't scale well, and it got messy.  There is a issue opened to refactor the routes so that the file names are based on the head of the routes (i.e. /person, /entry, /score, etc).
+
+There is currently a directory back/app/routes/v1 - this is where the reorganized routes are going.  Not only are routes be reorganized, but the URLs will will be changed to make the operation they perform be more obvious.    
 
 **Permissions/Security :**
 
