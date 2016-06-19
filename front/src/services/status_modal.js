@@ -75,14 +75,13 @@ angular.module('tom_services.status_modal')
                       modalInstance = $uibModal.open({
 			  controller: function($scope){
 			      if(type == "player"){
-				  $scope.type = "player";
-				  $scope.entry_id = resources.player_active_entry.entry.entry_id;
+				  $scope.type = "player";                                  
 				  $scope.player = resources.player;				  
 			      } else {
-				  $scope.type = "team";
-				  $scope.entry_id = resources.team_active_entry.entry.entry_id;
+				  $scope.type = "team";                                  
 				  $scope.team = resources.team;				  
 			      }
+                              $scope.entry_id = resources.active_entry.entry.entry_id;
 			  },
                           templateUrl: 'services/void_entry_from_score.html',
                           backdrop: 'static',

@@ -126,16 +126,20 @@ url params:
 returns:
     dict of updated entry
     """
-    if entry.voided is True or entry.complete is True:
+    if entry.voided is True or entry.completed is True:
         raise Conflict("You are trying to void a ticket that should not be voided")
     entry.voided = True
     entry.active = False
     if entry.player_id:
         player = Player.query.filter_by(player_id=entry.player_id).first()
-        player.division_machine.player_id = None
+        #If we are voiding on a complete, the machine is already cleared
+        if player.division_machine:
+            player.division_machine.player_id = None
     if entry.team_id:
-        team = Team.query.filter_by(team_id=entry.team_id).first()        
-        team.division_machine.team_id = None
+        team = Team.query.filter_by(team_id=entry.team_id).first()
+        #If we are voiding on a complete, the machine is already cleared
+        if team.division_machine:
+            team.division_machine.team_id = None
     DB.session.commit()
     return jsonify(entry.to_dict_simple())
 
