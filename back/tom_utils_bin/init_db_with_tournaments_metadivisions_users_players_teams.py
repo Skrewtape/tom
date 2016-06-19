@@ -36,7 +36,7 @@ def init_tournaments():
     classics_all_2.stripe_sku = "sku_8beHMnaBSdH4NA"    
     classics_all_3 = create_division('all')
     classics_all_3.stripe_sku = "sku_8beHMnaBSdH4NA"
-    herb_all = create_division('herb_all')
+    herb_all = create_division('herb_all', number_of_scores_per_entry=1 )
     herb_all.stripe_sku = "sku_8beHMnaBSdH4NA"    
     split_flipper_all = create_division('splitflipper_all',1)
     split_flipper_all.stripe_sku = "sku_8cVf2tetzJ4f8D"
