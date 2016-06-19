@@ -12,7 +12,7 @@
     <span ng-if='team_tournament=="true"'>
       team {{resources.team.team_name}}
     </span>
-    <span ng-if='complete==true'>
+    <span ng-if='complete==true && resources.tournament.scoring_type == "papa"'>
       <br>
     <button
        style='margin-top:15px;'
@@ -20,7 +20,7 @@
        ui-sref='.complete({entryId:entry_id})'
        >Complete Ticket</button>      
     </span>
-    <span ng-if='complete==false'>
+    <span ng-if='complete==false || (complete==true && resources.tournament.scoring_type == "herb")'>
       <br>      
       <button
          style='margin-top:15px;'

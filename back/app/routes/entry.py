@@ -3,7 +3,7 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Entry, Score, Player, Division, Machine, DivisionMachine, Token, Team
+from app.types import Entry, Score, Player, Division, Machine, DivisionMachine, Token, Team, Tournament
 from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank, get_division_from_metadivision
 from app.routes import team as route_team
@@ -249,6 +249,9 @@ def add_score(entry,division_machine,new_score_value): #killroy
     division_machine.team_id = None
     if len(entry.scores) >= entry.number_of_scores_per_entry:
         entry.active=False
+        tournament = Tournament.query.join(Division).filter_by(division_id=entry.division_id).first()
+        if tournament.scoring_type=='herb':
+            entry.completed = True
     DB.session.commit()
     return jsonify(entry.to_dict_with_scores())
 
