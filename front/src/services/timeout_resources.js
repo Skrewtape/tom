@@ -118,6 +118,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                                 'GET');
     getAllDivisionsResource = generate_resource_definition('/division',
                                                            'GET');
+    getActiveDivisionsResource = generate_resource_definition('/division/active',
+                                                           'GET');    
     getAllEntriesResource = generate_resource_definition('/entry/count/:count',
                                                          'GET');
     getAllMetadivisionsResource = generate_resource_definition('/metadivision',
@@ -134,7 +136,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                        'GET');
     getDivTicketCostFromStripeResource = generate_resource_definition('/sale/sku',
                                                                       'GET');
-    getDivisionResource = generate_resource_definition('/division/:division_id',
+    getDivisionResource = generate_resource_definition('/division/division_id/:division_id',
                                                        'GET');
     getDivisionMachineResource = generate_resource_definition('/divisionmachine/:division_machine_id',
                                                               'GET');
@@ -231,6 +233,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetAllTournaments: generic_resource(getAllTournamentsResource,'tournaments','get',false),//killroy was here
 	GetAssholes: generic_resource(getAssholesResource,'assholes','get',false),
 	GetDivision: generic_resource(getDivisionResource,'division','get',false), //killroy
+	GetActiveDivisions: generic_resource(getActiveDivisionsResource,'active_divisions','get',false), //killroy
+        
         GetDivTicketCostFromStripe: generic_resource(getDivTicketCostFromStripeResource,'divisions_costs','get', false),
 	GetDivisionsForFinals: generic_resource(getDivisionsForFinalsResource,'divisions_ready_for_finals','get', false),
 	GetDivisionMachine: generic_resource(getDivisionMachineResource,'division_machine','get',false), //killroy

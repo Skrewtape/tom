@@ -41,7 +41,7 @@ def get_divisions_for_finals():
             divisions_dict[division.division_id]= division.to_dict_simple()
     return jsonify(divisions_dict)
 
-@App.route(api_ver+'/division/<division_id>', methods=['GET']) #killroy
+@App.route(api_ver+'/division/division_id/<division_id>', methods=['GET']) #killroy
 @fetch_entity(Division, 'division')
 def get_division(division):
     """
@@ -76,5 +76,12 @@ def get_divisions():
     """Get a list of divisions"""
     return jsonify({d.division_id: d.to_dict_with_machines() for d in
         Division.query.all()
+    })
+
+@App.route(api_ver+'/division/active', methods=['GET'])
+def get_active_divisions():
+    """Get a list of active divisions"""
+    return jsonify({d.division_id: d.to_dict_with_machines() for d in
+        Division.query.join(Tournament).filter_by(active=True).all()
     })
 

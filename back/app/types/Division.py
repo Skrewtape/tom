@@ -45,11 +45,19 @@ class Division(DB.Model):
             #FIXME : this should be returning the machines as a dict
             division['machines']=[]
             for machine in self.machines:
-                division['machines'].append(machine.to_dict_simple())        
+                division['machines'].append(machine.to_dict_simple())
+        division['tournament_name'] = self.get_tournament_name(self.tournament)
+        
         return division
     
     def to_dict_simple(self):
         division = to_dict(self)
-        division['tournament_name'] = self.tournament.name        
+        division['tournament_name'] = self.get_tournament_name(self.tournament)
+        
         return division
 
+    def get_tournament_name(self, tournament):
+        if tournament.single_division:
+            return tournament.name
+        return tournament.name+", "+self.name
+        
