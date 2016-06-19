@@ -11,6 +11,19 @@ from flask_restless.helpers import to_dict
 from app import secret_config, tom_config
 import stripe
 
+@App.route('/sale/sku/<sku>', methods=['GET'])
+def get_valid_sku(sku):
+    stripe.api_key = secret_config.stripe_api_key
+    product_list = stripe.Product.list()
+    items = product_list['data']
+    dict_sku_prices = {}
+    for item in items:        
+        dict_sku_prices[item['skus']['data'][0]['id']]=item['skus']['data'][0]['price']/100    
+    if sku in dict_sku_prices:
+        return jsonify({'sku':to_dict(item['skus']['data'][0])})
+    else:
+        return jsonify({'sku':None})
+    
 @App.route('/sale/sku', methods=['GET'])
 def get_sku_prices():
     stripe.api_key = secret_config.stripe_api_key
