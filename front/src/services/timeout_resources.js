@@ -118,6 +118,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                                 'GET');
     getAllDivisionsResource = generate_resource_definition('/division',
                                                            'GET');
+    getAllDivisionMachinesResource = generate_resource_definition('/division_machine',
+                                                           'GET');    
     getActiveDivisionsResource = generate_resource_definition('/division/active',
                                                            'GET');    
     getAllEntriesResource = generate_resource_definition('/entry/count/:count',
@@ -188,7 +190,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                                     'PUT');
     setDivisionMachineTeamResource = generate_resource_definition('/divisionmachine/:division_machine_id/team/:team_id',
                                                                   'PUT');
-    setMatchMachineResource = generate_resource_definition('/finals/divisionMachineId/:divisionMachineId/score/:finalsMatchId/game_num/:gameNumber',
+    setMatchMachineResource = generate_resource_definition('/finals/machineId/:machine_id/score/:finals_match_id/game_num/:game_number',
                                                            'POST');
     setMatchScoreResource = generate_resource_definition('/finals/finals_score/:finalsScoreId/score/:score',
                                                          'POST');
@@ -227,6 +229,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
         GetActiveMachines: generic_resource(getActiveMachinesResource,'machines','get',false), //killroy
 	GetActiveTournaments: generic_resource(getActiveTournamentsResource,'tournaments','get',false), //killroy
 	GetAllDivisions: generic_resource(getAllDivisionsResource,'divisions','get', false),//killroy
+        GetAllDivisionMachines: generic_resource(getAllDivisionMachinesResource,'division_machines','get', false),//killroy
         GetAllEntries: generic_resource(getAllEntriesResource,'all_entries','get', false),
         GetAllMachines: generic_resource(getAllMachinesResource,'machines','get', false),
 	GetAllMetadivisions: generic_resource(getAllMetadivisionsResource,'metadivisions','get',false), //killroy

@@ -13,18 +13,24 @@ angular.module('app.finalselect_finals.matchselect_finals.matchscores_finals').c
 	StatusModal.loading()
 	//TimeoutResources.GetActiveMachinesArray();
         //TimeoutResources.GetActiveMachines();
-	$scope.active_machines = TimeoutResources.GetActiveMachines();
+	$scope.division_machines_promise = TimeoutResources.GetAllDivisionMachines();
+        $scope.machines_promise = TimeoutResources.GetAllMachines($scope.division_machines_promise);
+        
 	//$scope.finals_match_promise = TimeoutResources.GetFinalsMatch($scope.active_machines,{match_id:$scope.match_id});
-	$scope.finals_matches_promise = TimeoutResources.GetFinalsMatches($scope.active_machines,{finals_id:$scope.finals_id});
+	$scope.finals_matches_promise = TimeoutResources.GetFinalsMatches($scope.machines_promise,{finals_id:$scope.finals_id});
         
 	$scope.finals_matches_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources()
+            console.log($scope.resources.active_machines);
 	    StatusModal.loaded()	    
 	})
 
-	$scope.save_machine = function(match,game_num,division_machine_id){
+	// $scope.save_machine = function(match,game_num,division_machine_id){
+        $scope.save_machine = function(match,game_num,machine_id){
+            console.log(machine_id);
 	    StatusModal.loading()
-	    $scope.promise = TimeoutResources.SetMatchMachine(undefined,{divisionMachineId:division_machine_id,finalsMatchId:match.match_id,gameNumber:game_num});	    
+            //	    $scope.promise = TimeoutResources.SetMatchMachine(undefined,{divisionMachineId:division_machine_id,finalsMatchId:match.match_id,gameNumber:game_num});
+            $scope.promise = TimeoutResources.SetMatchMachine(undefined,{machine_id:machine_id,finals_match_id:match.match_id,game_number:game_num});	    
 	    $scope.promise.then(function(data){
 		StatusModal.loaded();
 	    })

@@ -101,14 +101,20 @@ def get_all_active_finals():
 
 @Scorekeeper_permission.require(403)
 @login_required
-@App.route('/finals/divisionMachineId/<divisionmachine_id>/score/<finalsmatch_id>/game_num/<game_number>', methods=['POST'])
-@fetch_entity(DivisionMachine, 'divisionmachine')
+@App.route('/finals/machineId/<machine_id>/score/<finalsmatch_id>/game_num/<game_number>', methods=['POST'])
+@fetch_entity(Machine, 'machine')
 @fetch_entity(FinalsMatch, 'finalsmatch')
-def set_match_machine(divisionmachine, finalsmatch, game_number):
+def set_match_machine(machine, finalsmatch, game_number):
     finals_scores = FinalsScore.query.filter_by(match_id=finalsmatch.match_id,game_number=game_number).all()
     for finals_score in finals_scores:
-        finals_score.division_machine_id = divisionmachine.division_machine_id
-    DB.session.commit()
+        new_division_machine = DivisionMachine(
+            machine_id=machine.machine_id,
+            finals_id=finalsmatch.finals_id
+        )
+        DB.session.add(new_division_machine)
+        DB.session.commit()        
+        finals_score.division_machine_id = new_division_machine.division_machine_id
+        DB.session.commit()
     return jsonify({})
 
 @App.route('/finals/test')

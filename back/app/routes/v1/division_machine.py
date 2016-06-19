@@ -55,6 +55,21 @@ returns:
     DB.session.commit()
     return jsonify(divisionmachine.to_dict_simple())
 
+@App.route(api_ver+'/division_machine', methods=['GET']) #killroy
+def get_all_division_machines():
+    """    
+description: get all division_machines
+post data: 
+    None
+url params: 
+    None
+returns:
+    dict of all division_machines
+    """
+    return jsonify({d.division_machine_id: d.to_dict_simple() for d in
+                    DivisionMachine.query.all()})
+
+
 @App.route(api_ver+'/division_machine/<divisionmachine_id>', methods=['PUT']) #killroy
 @login_required
 @Admin_permission.require(403)

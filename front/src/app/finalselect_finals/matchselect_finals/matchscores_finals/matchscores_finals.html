@@ -10,7 +10,7 @@
       <div ng-repeat='game_count in [0,1,2]' class='table' style='width:75%'>
 	<table class='table'>
 	  <tr><td class='info'>Machine</td><td class='info'>
-	      <span ng-if='resources.finals_matches[1][match_id].games[game_count][0].division_machine_id!=null'>{{resources.machines[resources.finals_matches[1][match_id].games[game_count][0].division_machine_id].name}}</span>
+	      <span ng-if='resources.finals_matches[1][match_id].games[game_count][0].division_machine_id!=null'>{{resources.division_machines[resources.finals_matches[1][match_id].games[game_count][0].division_machine_id].name}}</span>
 	      <span ng-if='resources.finals_matches[1][match_id].games[game_count][0].division_machine_id==null'>
                 <input type="text" ng-change='score_and_machine_change(score)'  ng-model="resources.finals_matches[1][match_id].games[game_count][0].new_division_machine" uib-typeahead="machine as machine.name for machine in resources.machines | orderObjectBy:'machine_id':true | filter:$viewValue | limitTo:8" class="form-control">
 	      </span>
@@ -18,7 +18,7 @@
 	    <td class='info'>
 	      <button
 		 ng-if="resources.finals_matches[1][match_id].games[game_count][0].division_machine_id==null"
-		 ng-click='save_machine(resources.finals_matches[1][match_id],game_count,resources.finals_matches[1][match_id].games[game_count][0].new_division_machine.division_machine_id)'
+		 ng-click='save_machine(resources.finals_matches[1][match_id],game_count,resources.finals_matches[1][match_id].games[game_count][0].new_division_machine.machine_id)'
 		 class='btn info'> Save </button>
 	    </td>
 	  </tr>
