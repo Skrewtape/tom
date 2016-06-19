@@ -1,0 +1,30 @@
+<div ui-content-for="title">
+  <span>Select Players For Finals</span>
+</div>
+<div ui-view="backbutton"></div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+  <div class="scrollable-content big-web-font"  style='padding:10px'>
+    <button       
+       ng-disabled='num_players_selected<24 || num_players_selected > 24'
+       class='btn btn-info btn-xlg'
+       ui-sref='.process({checkedPlayers:resources.ranked_players.ranked_players})'
+       > Generate Finals</button>
+    <br>
+    Num Players Selected : {{num_players_selected}}
+    
+    <table>
+      <tr ng-repeat='player in resources.ranked_players.ranked_players'>
+        <td style='padding-right:10px'>
+          <input
+             ng-change='calc_num_selected()'
+	     style='margin-top:0px;height:40px;width:40px;vertical-align:middle;'
+             type="checkbox" ng-model="player.checked">
+        </td>
+        <td>
+         (#{{player.player_id}}) {{resources.players.players[player.player_id].first_name}} {{resources.players.players[player.player_id].last_name}} (rank : {{player.rank}})
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

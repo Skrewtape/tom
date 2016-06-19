@@ -9,6 +9,7 @@ from app.routes.util import fetch_entity
 from werkzeug.exceptions import BadRequest
 import time
 from app.routes.v1 import v1_utils
+from flask_restless.helpers import to_dict
 
 api_ver = ''
 
@@ -82,6 +83,17 @@ def get_divisions():
 def get_active_divisions():
     """Get a list of active divisions"""
     return jsonify({d.division_id: d.to_dict_with_machines() for d in
-        Division.query.join(Tournament).filter_by(active=True).all()
+                Division.query.join(Tournament).filter_by(active=True).all()
     })
 
+@App.route(api_ver+'/division/<division_id>/players/ranked')
+@fetch_entity(Division, 'division')
+def get_players_ranked_by_qualifying(division):
+    #FIXME : should not be hardcoded    
+    num_players_to_qualify = 24
+    num_non_qualified_players = 100
+    ranked_players = v1_utils.get_players_ranked_by_qualifying(division.division_id,num_non_qualified_players)    
+    jsonifyd_list = [{'player_id':p.player_id,'checked':True if p.rank <=num_players_to_qualify else False,'rank':p.rank} for p in ranked_players]
+    
+    return jsonify({'ranked_players':jsonifyd_list})
+ 

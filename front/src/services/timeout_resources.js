@@ -108,7 +108,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                       'PUT');
     enableMachineInDivisionResource = generate_resource_definition('/division_machine/:division_machine_id',
                                                                    'PUT');
-    fillFinalsRoundsResource = generate_resource_definition('/finals/:finals_id/fill_rounds',
+    fillFinalsRoundsResource = generate_resource_definition('/finals/:finals_id/checked_player_list/:checked_players/fill_rounds',
                                                             'POST');
     generateFinalsRoundsResource = generate_resource_definition('/finals/:finals_id/generate_rounds',
                                                                 'POST');
@@ -166,6 +166,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                           'GET');
     getPlayerTokensResource = generate_resource_definition('/token/player_id/:player_id',
                                                            'GET');
+    getPlayersRankedByQualifyingResource = generate_resource_definition('/division/:division_id/players/ranked',
+                                                           'GET');    
     getSkuResource = generate_resource_definition('/sale/sku/:sku',
                                                            'GET');    
     getRolesResource = generate_resource_definition('/role',
@@ -251,6 +253,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetPlayer: generic_resource(getPlayerResource,'player','get', false),//killroy
 	GetPlayerActiveEntriesCount: generic_resource(getPlayerActiveEntriesCountResource,'player_active_entries_count','get', false), //killroy
 	GetPlayerActiveEntry: generic_resource(getPlayerActiveEntryResource,'active_entry','get', false),
+        GetPlayersRankedByQualifying: generic_resource(getPlayersRankedByQualifyingResource,'ranked_players','get',false),
 	GetPlayerTeams: generic_resource(getPlayerTeamsResource,'player_teams','get', false), //killroy
 	GetPlayerTokens: generic_resource(getPlayerTokensResource,'player_tokens','get', false),//killroy
 	GetPlayerTeamTokens: generic_resource(getPlayerTeamTokensResource,'player_team_tokens','get',false),

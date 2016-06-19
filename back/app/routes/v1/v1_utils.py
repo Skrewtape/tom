@@ -22,6 +22,18 @@ from functools import wraps
 
 import time
 
+def get_players_ranked_by_qualifying(division_id,num_players,checked_players=None):
+    if checked_players:
+        checked_players = " where player_id in (%s) " % checked_players
+    else:
+        checked_players = ""
+    entry_results = DB.engine.execute("select entry_id, player_id, entry_score_sum, rank() over (order by entry_score_sum desc) as rank from (select entry_id, player_id, sum(entry_score) as entry_score_sum  from (select entry.player_id, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and completed = true and voided = false) as ss %s group by ss.entry_id, player_id order by entry_score_sum desc limit %d) as tt" % (division_id, checked_players,num_players) )    
+    ranked_players = []
+    for player_result in entry_results:
+        ranked_players.append(player_result)
+    return ranked_players
+
+
 def add_division(division_data): #killroy was here
     if 'division_name' not in division_data or 'tournament_id' not in division_data:
         raise BadRequest('Did not specify division_name or tournament_id in post data')
