@@ -5,16 +5,15 @@
 
 <div class="scrollable">
   <div class="scrollable-content big-web-font"  style='padding:10px'>
-  <div class='form-group input-group' style='margin-left:auto;margin-right:auto;margin-top:25px;margin-bottom:25px;width:50%'>        
-    <span style='font-size:20px' class="input-group-addon" id="player-search-name">Search For</span>
-    <input
-     type='text'
-       class='form-control'
-       aria-describedby='player-search-name'
-       name='filter'
-       ng-model='player_filter'
-     />
-  </div>
+    <div class='form-group form-group-xlg input-group input-group-xlg' style='margin-left:auto;margin-right:auto;margin-top:25px;margin-bottom:25px;width:50%'>        
+      <span class="input-group-addon" id="player-search-name">Search For</span>
+      <input
+         type='text'
+         class='form-control'
+         aria-describedby='player-search-name'
+         ng-model='player_filter'
+         />
+    </div>
   <table class='table'>
     <tr>
       <th>Player #</th>
@@ -22,7 +21,7 @@
     </tr>
     <tr ng-repeat="player in resources.players.players|filter:player_filter|orderBy:'first_name'">
       <td>{{player.player_id}}</td>
-      <td>{{player.first_name}} {{player.last_name}} <i class="fa fa-pencil-square-o" aria-hidden="true"></i> <i class="fa fa-money" aria-hidden="true"></i></td>
+      <td><a ui-sref='app.playerselect_player_info.player_info({playerId:player.player_id})'>{{player.first_name}} {{player.last_name}}</a></td>
     </tr>
   </table>
     
