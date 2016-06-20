@@ -81,6 +81,24 @@ font-style: italic;
    border-bottom-right-radius: 15px;     
 }
 
+ .form-group-xlg input.form-control-left {
+   border-top-left-radius: 15px;
+   border-bottom-left-radius: 15px;
+   border-top-right-radius: 0px;
+   border-bottom-right-radius: 0px;
+   
+   margin-right:0px;
+}
+
+ .form-group-xlg input.form-control-right {
+   border-top-right-radius: 15px;
+   border-bottom-right-radius: 15px;
+   border-top-left-radius: 0px;
+   border-bottom-left-radius: 0px;
+   margin-left:0px;
+}
+
+
 
  .form-group-xlg select.form-control {
    height: 46px;
@@ -238,6 +256,23 @@ font-style: italic;
  .form-group-xlg input.form-control {
    border-top-right-radius: 25px;
    border-bottom-right-radius: 25px;     
+}
+
+ .form-group-xlg input.form-control-left {
+   border-top-left-radius: 25px;
+   border-bottom-left-radius: 25px;
+   border-top-right-radius: 0px;
+   border-bottom-right-radius: 0px;     
+   margin-right:0px;
+}
+
+ .form-group-xlg input.form-control-right {
+   border-top-right-radius: 25px;
+   border-bottom-right-radius: 25px;
+   border-top-left-radius: 0px;
+   border-bottom-left-radius: 0px;     
+
+   margin-left:0px;        
 }
 
 

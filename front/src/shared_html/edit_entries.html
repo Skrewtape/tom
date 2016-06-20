@@ -1,35 +1,39 @@
-  <div ng-repeat='(entry_id,entry) in entries' class='panel'>
-    <span>
-      <b>ENTRY #{{entry.entry_id}}</b> <span class='badge' style='background:red;font-size:16px;' ng-if='entry.voided'>VOIDED</span>
+<span>
+  <b>ENTRY #{{entry.entry_id}}</b> <span class='badge' style='background:red;font-size:16px;' ng-if='entry.voided'>VOIDED</span>
+</span>
+<div ng-repeat='(entry_id,entry) in entries' class='panel panel-default big-web-font'>
+    <!-- <table class='table' style='width:100%'> -->
+    <!--   <td style='padding:5px;border-style:solid;border-width:0;border-right-width:1px;width:20%' ng-repeat='score in entry.scores'> -->
+    <!--     {{truncateString(resources.machines[score.division_machine_id].name,10)}} -->
+    <!--   </td> -->
+    <!-- </table> -->
+    <div class="panel-heading big-web-font">
+    <span class='big-web-font' ng-repeat="score in entry.scores">
+      <span ng-if='$index!=0'>/</span>
+      {{truncateString(resources.machines[score.division_machine_id].name,10)}}
     </span>
-    <table class='table' style='width:100%'>
-      <td style='padding:5px;border-style:solid;border-width:0;border-right-width:1px;width:20%' ng-repeat='score in entry.scores'>
-	{{truncateString(resources.machines[score.division_machine_id].name,10)}}
-      </td>
-    </table>
+    </div>
+    <div style='margin-top:10px' class='tom_switch_block'>
     <ui-switch ng-change='setEntryVoidStatus(entry.voided,entry)' class='pull-left' ng-model='entry.voided'></ui-switch>
-    <span style='padding-left:10px' class='big-web-font'>Click to
+    <span style='padding-left:10px'>Click to
       <span ng-if='entry.voided == false'>Void</span>
       <span ng-if='entry.voided == true'>UnVoid</span>
     </span>
-    <br>
-    <span ng-if='entry.scores.length == entry.number_of_scores_per_entry'>
+    </div>
+    <div ng-if='entry.scores.length == entry.number_of_scores_per_entry' class='tom_switch_block'>
       <ui-switch ng-change='setEntryCompleteStatus(entry.voided,entry)' class='pull-left' ng-model='entry.completed'></ui-switch>
-      <span style='padding-left:10px' class='big-web-font'>Click to
+      <span style='padding-left:10px' >Click to
 	<span ng-if='entry.completed == false'>Complete</span>
 	<span ng-if='entry.completed == true'>UnComplete</span>          
       </span>
-    </span>       
+    </div>
     <table>
       <tr ng-repeat='score in entry.scores' ng-if='score.removed == undefined'>
         <td>
-          <a ng-click='remove_score(score)'><span class="fa fa-times-circle pull-right" style='color:red'></a>
+          <a ng-click='remove_score(entry, score)'><span class="fa fa-times-circle pull-right big-web-font-icon" style='color:red'></a>
         </td>
-        <td>
-          <input type="text" ng-change='score_and_machine_change(score)' placeholder='{{resources.machines[score.division_machine_id].name}}' ng-model="score.machine" uib-typeahead="machine as machine.name for machine in machines_array | filter:$viewValue | limitTo:8" class="form-control">
-        </td>
-        <td>
-          <input ng-change='score_and_machine_change(score)' type="text" ng-model="score.score" class="form-control">
+        <td style='padding-bottom:5px' class='form-group-xlg'>
+          <input type="text" ng-change='score_and_machine_change(score)' placeholder='{{resources.machines[score.division_machine_id].name}}' ng-model="score.machine" uib-typeahead="machine as machine.name for machine in resources.machines | orderObjectBy:'name'|filter:$viewValue | limitTo:8" class="form-control-left"><input ng-change='score_and_machine_change(score)' type="text" ng-model="score.score" class="form-control-right">
         </td>
         <td>
           <a

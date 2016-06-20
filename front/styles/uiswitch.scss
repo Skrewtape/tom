@@ -1,8 +1,19 @@
-		  .switch.active {
-		    background-color: green;
-		  }
+@media screen and (max-width: 600px) {
 
-		  .switch {
-		  background-color: red;
-		  //margin-left:50px;
-		  }
+.tom_switch_block {
+ margin-bottom:25px;
+}
+}
+@media screen and (min-width: 601px) {
+.tom_switch_block {
+ margin-bottom:5px;
+}
+}
+.switch.active {
+background-color: green;
+}
+
+.switch {
+background-color: red;
+//margin-left:50px;
+}

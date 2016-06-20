@@ -45,18 +45,23 @@ angular.module('tom_services.utils').factory('Utils', function($filter,StatusMod
             }
             return x;
         },
-        remove_score:function(score){ //killroy
+        remove_score:function(entry, score){ //killroy
             StatusModal.loading();
 	    score.removed = true;
 	    score_promise = TimeoutResources.DeleteScore(undefined,{score_id:score.score_id});
 	    score_promise.then(function(data){
 		StatusModal.loaded()
+                entry.scores.splice(entry.scores.indexOf(score),1);
 	    })	                
         },	
 	change_score: function(score){ //killroy            
 	    score.changed = undefined;
-	    score_to_submit = {}
-            score_to_submit.division_machine_id = score.machine.division_machine_id;		
+	    score_to_submit = {}            
+            if(score.machine != undefined){
+                score_to_submit.division_machine_id = score.machine.division_machine_id;
+            } else {
+                score_to_submit.division_machine_id = score.division_machine_id;                
+            }
 	    score_to_submit.score = score.score;
 	    StatusModal.loading()
 	    score_promise = TimeoutResources.ChangeScore(undefined,{score_id:score.score_id},score_to_submit);
