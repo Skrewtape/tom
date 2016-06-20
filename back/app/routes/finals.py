@@ -10,6 +10,7 @@ from werkzeug.exceptions import Conflict
 from flask_restless.helpers import to_dict
 from sqlalchemy.sql import func
 from operator import itemgetter
+from app.routes.v1 import v1_utils
 
 @App.route('/finals/match/match_id/<match_id>', methods=['GET'])
 @fetch_entity(FinalsMatch, 'match')
@@ -127,12 +128,14 @@ def test():
         print "match id is %s and winner_one id is %s " % (match.match_id,winner_one[0])        
     return jsonify({})
 
-def get_players_ranked_by_qualifying(division_id,num_players):
-    entry_results = DB.engine.execute("select entry_id, player_id, entry_score_sum, rank() over (order by entry_score_sum desc) from (select entry_id, player_id, sum(entry_score) as entry_score_sum  from (select entry.player_id, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and completed = true and voided = false) as ss group by ss.entry_id, player_id order by entry_score_sum desc limit %d) as tt" % (division_id,num_players) )    
-    ranked_players = []
-    for player_result in entry_results:
-        ranked_players.append(player_result)
-    return ranked_players
+    
+
+# def get_players_ranked_by_qualifying(division_id,num_players):
+#     entry_results = DB.engine.execute("select entry_id, player_id, entry_score_sum, rank() over (order by entry_score_sum desc) from (select entry_id, player_id, sum(entry_score) as entry_score_sum  from (select entry.player_id, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and completed = true and voided = false) as ss group by ss.entry_id, player_id order by entry_score_sum desc limit %d) as tt" % (division_id,num_players) )    
+#     ranked_players = []
+#     for player_result in entry_results:
+#         ranked_players.append(player_result)
+#     return ranked_players
 
 def generate_ranking_list(playerlist=None,num_players_per_group=4):
     if playerlist is not None and len(playerlist) == 0:
@@ -324,9 +327,9 @@ def generate_finals_rounds(finals):
 
 @Scorekeeper_permission.require(403)
 @login_required
-@App.route('/finals/<finals_id>/fill_rounds', methods=['POST'])
+@App.route('/finals/<finals_id>/checked_player_list/<checked_players>/fill_rounds', methods=['POST'])
 @fetch_entity(Finals, 'finals')
-def fill_finals_rounds(finals):
+def fill_finals_rounds(finals,checked_players):
     division_id = finals.division_id
     last_bye_round = 2
     num_players = 24
@@ -336,10 +339,9 @@ def fill_finals_rounds(finals):
     num_rounds = ((num_players/num_per_group)/2) + num_bye_rounds
     num_byes_per_round = (num_players/3)
     cur_round_matches=[]
-    next_round_matches=[]
-    
-    bye_players = generate_ranking_list(get_players_ranked_by_qualifying(division_id,8)[:8],2)
-    normal_players=generate_ranking_list(get_players_ranked_by_qualifying(division_id,24)[8:24],4)        
+    next_round_matches=[]    
+    bye_players = generate_ranking_list(v1_utils.get_players_ranked_by_qualifying(division_id,8,checked_players=checked_players)[:8],2)
+    normal_players=generate_ranking_list(v1_utils.get_players_ranked_by_qualifying(division_id,24,checked_players=checked_players)[8:24],4)        
     matches_with_byes = FinalsMatch.query.filter_by(round_id=2,finals_id=finals.finals_id).all()        
     for match in matches_with_byes:
         bye_players_pair = bye_players.pop()

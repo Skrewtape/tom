@@ -2,29 +2,38 @@
   <span>Select Players For Finals</span>
 </div>
 <div ui-view="backbutton"></div>
-<div class="scrollable">
-  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
-  <div class="scrollable-content big-web-font"  style='padding:10px'>
-    <button       
-       ng-disabled='num_players_selected<24 || num_players_selected > 24'
-       class='btn btn-info btn-xlg'
-       ui-sref='.process({checkedPlayers:resources.ranked_players.ranked_players})'
-       > Generate Finals</button>
-    <br>
-    Num Players Selected : {{num_players_selected}}
-    
-    <table>
-      <tr ng-repeat='player in resources.ranked_players.ranked_players'>
-        <td style='padding-right:10px'>
-          <input
-             ng-change='calc_num_selected()'
-	     style='margin-top:0px;height:40px;width:40px;vertical-align:middle;'
-             type="checkbox" ng-model="player.checked">
-        </td>
-        <td>
-         (#{{player.player_id}}) {{resources.players.players[player.player_id].first_name}} {{resources.players.players[player.player_id].last_name}} (rank : {{player.rank}})
-        </td>
-      </tr>
-    </table>
+<div class="scrollable big-web-font">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->  
+  <button
+     style='margin-top:25px;margin-bottom:15px'
+     ng-disabled='num_players_selected.count<24 || num_players_selected.count > 24'
+     class='btn btn-info btn-xlg'
+     ui-sref='.process({checkedPlayers:resources.ranked_players.ranked_players})'
+     > Start Finals</button>
+  <br>
+  <span ng-class='num_players_selected.css_class'>Num Players Selected : {{num_players_selected.count}}</span>
+  <br>
+  <br>
+  <div class="scrollable-content"  style='padding:10px'>
+    <div class=' panel panel-default'>
+      <div class='panel-heading'>
+        Division Players (ranked)
+      </div>
+      <div class='panel-body'>
+        <table>
+          <tr ng-repeat='player in resources.ranked_players.ranked_players'>
+            <td style='padding-right:10px'>
+              <input
+                 ng-change='calc_num_selected()'
+	         style='margin-top:0px;height:40px;width:40px;vertical-align:middle;'
+                 type="checkbox" ng-model="player.checked">
+            </td>
+            <td>
+              <span ng-class='player.css_class'>{{resources.players.players[player.player_id].first_name}} {{resources.players.players[player.player_id].last_name}} (rank : {{player.rank}})</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
