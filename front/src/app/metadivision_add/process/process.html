@@ -9,6 +9,16 @@
     Metadivision {{resources.meta_division.name}} has been created
     <br>
     <br>
+    <div class='panel panel-default big-web-font'>
+        <div class="panel-heading big-web-font">
+          {{resources.meta_division.name}} Divisions
+        </div>
+        <ul class="list-group">
+          <li class='list-group-item' ng-repeat="division in resources.meta_division.divisions">
+            {{division.tournament_name}}
+          </li>
+        </ul>        
+    </div>
     <a
        class='btn btn-info btn-xlg'
        ui-sref='app'

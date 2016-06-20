@@ -62,4 +62,4 @@ returns:
         new_metadivision.divisions.append(division)
     DB.session.add(new_metadivision)
     DB.session.commit()
-    return jsonify(new_metadivision.to_dict_simple())
+    return jsonify(new_metadivision.to_dict_with_divisions())

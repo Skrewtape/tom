@@ -7,7 +7,7 @@
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
     <div class="scrollable-content"  style='padding:10px'>
       <div class='form-group form-group-xlg input-group input-group-xlg'>        
-	<span  class="input-group-addon" id="metadivision_name">Metadivision Name</span>
+	<span  class="input-group-addon" id="metadivision_name">Name</span>
 	<input
 	   type='text'
 	   class='form-control'
@@ -15,28 +15,33 @@
 	   ng-model='new_metadivision.metadivision_name'
 	   />
       </div>
-      <div ng-repeat='tournament in resources.tournaments'>
-      <div ng-repeat='division in tournament.divisions'>
-	<table style='margin-top:15px'>
-	  <td>
-	    <input		 
-	       type='checkbox'
-	       name='single_division'
-	       ng-model='new_metadivision.divisions[division.division_id]'
-	       class='big-web-font'
-	       style='margin-left:10px;margin-right:10px;margin-top:0px;height:40px;width:40px;vertical-align:middle;'
-	       />
-	  </td>
-	  <td class='big-web-font'>
-	    {{tournament.name}} <span ng-if='tournament.single_division==false'>, {{division.name}} division</span>
-	  </td>
-	</table>	
+      <div class='panel panel-default big-web-font'>
+        <div class="panel-heading big-web-font">
+          Select Metadivision Divisions
+        </div>
+        <ul class="list-group">
+          <li ng-repeat='division in resources.divisions' class="list-group-item">
+	    <table style='margin-top:15px'>
+	      <td>
+	        <input		 
+	           type='checkbox'
+	           name='single_division'
+	           ng-model='new_metadivision.divisions[division.division_id]'
+	           class='big-web-font'
+	           style='margin-left:10px;margin-right:10px;margin-top:0px;height:40px;width:40px;vertical-align:middle;'
+	           />
+	      </td>
+	      <td class='big-web-font'>
+	        {{division.tournament_name}}
+	      </td>
+	    </table>	
+          </li>
+        </ul>
       </div>
-      </div>
-      <button
-	 ng-disabled='new_metadivision.metadivision_name == undefined'
-	 class='btn btn-info btn-xlg'
-	 ui-sref='.process({newMetadivision:new_metadivision})'
-	 > Create Metadivision</button><br>
+              <button
+	   ng-disabled='new_metadivision.metadivision_name == undefined'
+	   class='btn btn-info btn-xlg'
+	   ui-sref='.process({newMetadivision:new_metadivision})'
+	   > Create Metadivision</button><br>
     </div>
 </div>
