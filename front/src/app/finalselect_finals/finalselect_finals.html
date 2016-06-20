@@ -6,16 +6,16 @@
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
   <div class="scrollable-content"  style='padding:10px'>
-    <div ng-repeat='tournament in resources.tournament'>
-      <div ng-repeat='division in tournament.divisions'>
-	<span ng-if='resources.finals.sorted_by_division_id[division.division_id] != undefined'>
-	  <br>	
-	  <button ui-sref='.matchselect_finals({finalsId:resources.finals.sorted_by_division_id[division.division_id].finals_id})'
-		  class='btn btn-info btn-xlg big-web-font'>
-	    {{tournament.name}} <span ng-if='tournament.single_division==false'>, {{division.name}}</span>
-	  </button>
-	</span>
-      </div>	
+    <div class='panel panel-default big-web-font'>
+      <div class="panel-heading big-web-font">
+        Started Finals
+      </div>
+      <div class="list-group">
+        <a ng-repeat="final in resources.finals.sorted_by_division_id" class="list-group-item" ui-sref='.matchselect_finals({finalsId:final.finals_id})'>
+          {{resources.divisions[final.division_id].tournament_name}}<i class="fa fa-chevron-right pull-right"></i>
+        </a>
+      </div>
     </div>
+    
   </div>
 </div>

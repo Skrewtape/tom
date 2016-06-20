@@ -8,8 +8,9 @@ angular.module('app.finalselect_finals').controller(
 	//}
 	StatusModal.loading()
 	$scope.promise = TimeoutResources.GetFinals();
-	$scope.finals_promise = TimeoutResources.GetTournament($scope.promise);
-	$scope.finals_promise.then(function(data){
+	//$scope.finals_promise = TimeoutResources.GetTournament($scope.promise);
+        $scope.divisions_promise = TimeoutResources.GetAllDivisions($scope.promise);
+	$scope.divisions_promise.then(function(data){
 	    StatusModal.loaded();
 	    $scope.resources = TimeoutResources.GetAllResources();	    
 	})
