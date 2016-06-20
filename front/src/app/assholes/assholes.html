@@ -4,9 +4,9 @@
 <div ui-view="backbutton"></div>
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
-  <div class="scrollable-content"  style='padding:10px'>
-    <table class='table'>
-      <tr><th>Player Name</th><th>Player ID</th><th>Jaggof Count</th></tr>      
+  <div class="scrollable-content big-web-font"  style='padding:10px'>
+    <table class='table' ng-if="resources.assholes.asshole_players.length != 0">
+      <tr><th>Name</th><th>ID</th><th>Jaggof Count</th></tr>      
       <tr ng-repeat='asshole in resources.assholes.asshole_players'>
         <td>{{asshole.first_name}} {{asshole.last_name}}</td><td>{{asshole.player_id}}</td><td>{{asshole.player_is_an_asshole_count}}</td>
       </tr>
