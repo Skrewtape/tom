@@ -4,9 +4,9 @@ angular.module('app.finals_activate').controller(
     function($scope, $state, StatusModal, TimeoutResources) {
 	StatusModal.loading()
 	$scope.finals_state = {}	
-	$scope.promise = TimeoutResources.GetFinals();
-	$scope.finals_promise = TimeoutResources.GetAllTournaments($scope.promise);
-	$scope.finals_promise.then(function(data){
+	$scope.finals_promise = TimeoutResources.GetFinals();
+	$scope.divisions_promise = TimeoutResources.GetAllDivisions($scope.finals_promise);
+	$scope.divisions_promise.then(function(data){
 	    StatusModal.loaded();
 	    $scope.resources = TimeoutResources.GetAllResources();	    
 	})
