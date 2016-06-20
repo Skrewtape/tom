@@ -6,7 +6,7 @@ angular.module('app.finals_activate.playerselect.process').controller(
 	if($scope.checkForBlankParams($state.params.checkedPlayers) == true){
 	    return;
 	}
-	//$scope.player_promise = TimeoutResources.AddPlayer(undefined,{/*get_params*/},{/*post_data*/});
+	$scope.player_promise = TimeoutResources.GetAllPlayers(undefined);
         $scope.number_checked = 0;
         $scope.checked_players = $state.params.checkedPlayers;
         $scope.division_id = $state.params.divisionId;
@@ -20,7 +20,7 @@ angular.module('app.finals_activate.playerselect.process').controller(
             }
         }
 	StatusModal.loading();
-	$scope.add_finals_promise = TimeoutResources.AddFinals(undefined,{division_id:$scope.division_id});
+	$scope.add_finals_promise = TimeoutResources.AddFinals($scope.player_promise,{division_id:$scope.division_id});
 	$scope.add_finals_promise.then(function(data){
 	    finals_id=data.finals_id;
 	    $scope.gen_finals_promise = TimeoutResources.GenerateFinalsRounds($scope.add_finals_promise,{finals_id:finals_id});

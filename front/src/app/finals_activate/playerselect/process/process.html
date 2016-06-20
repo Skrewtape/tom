@@ -1,16 +1,24 @@
 <div ui-content-for="title">
-  <span></span>
+  <span>Finals Created</span>
 </div>
-<div ui-view="backbutton"></div>
+<div ui-view="not_backbutton"></div>
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
-  <div class="scrollable-content big-web-font"  style='padding:10px'>
-    Finals Generated!
+  <div class="scrollable-content"  style='padding:10px'>
+    <div class='panel panel-default big-web-font'>
+      <div class="panel-heading big-web-font">
+        Players Added To Finals
+      </div>
+      <ul class="list-group">
+        <li ng-repeat="player in checked_players" class="list-group-item" ng-if="player.checked == true">
+          (#{{resources.players.players[player.player_id].player_id}}) {{resources.players.players[player.player_id].first_name}} {{resources.players.players[player.player_id].last_name}}
+        </li>
+      </ul>
+    </div>
     <br>
     <button       
        class='btn btn-info btn-xlg'
        ui-sref='app'
        > Return Home</button>
-
   </div>
 </div>
