@@ -14,7 +14,7 @@ class TomIntegrationTestCase(unittest.TestCase):
     def setUp(self):
         init_db()
         init_roles()
-        init_users()
+        create_user('elizabeth','elizabeth',ALL_ROLES)
         self.tom_url_base='http://localhost/dist'
         self.tom_results_url_base='http://192.168.1.178:8000/results'
         self.admin_user = get_default_admin_username_password()
@@ -30,6 +30,7 @@ class TomIntegrationTestCase(unittest.TestCase):
     
     def login_to_TOM(self,user_name,password):
         self.browser.driver.set_window_size(1400,1000)
+        #self.browser.screenshot('/tmp/out.png')
         self.open_menu()
         button = self.browser.find_by_id('sidebar-login-link')        
         button.click()
