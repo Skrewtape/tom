@@ -101,4 +101,4 @@ notes:
     DB.session.add(new_team)
     DB.session.commit()
     
-    return jsonify(new_team.to_dict_simple())    
+    return jsonify(new_team.to_dict_with_players())    

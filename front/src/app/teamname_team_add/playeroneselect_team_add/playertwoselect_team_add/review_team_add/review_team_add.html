@@ -4,17 +4,29 @@
 <div ui-view="backbutton"></div>
 
 <div class="scrollable">
-    <div class="big-web-font scrollable-content"  style='padding:10px'>
-      <i>Proposed team name and members : </i><br>
-      Team Name  : {{team_name}}<br>
-      Player One : {{player_one.first_name}}<br>
-      Player Two : {{player_two.first_name}}<br>
-      <a
-         style='margin-top:15px'
-	 class='btn btn-info btn-xlg'
-	 ui-sref='.process({finalTeamName:team_name})'
-	 ng-disabled='submitPlayerDisabled'
-	 >Save Team</a><br>
+  <div class="big-web-font scrollable-content"  style='padding:10px'>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        Proposed team         
+      </div>
+      <ul class='list-group'>
+        <li class='list-group-item'>
+          Team Name  : {{team_name}}
+        </li>
+        <li class='list-group-item'>
+          Player One : (#{{player_one.player_id}}) {{player_one.first_name}} {{player_one.last_name}}
+        </li>
+        <li class='list-group-item'>
+          Player Two : (#{{player_two.player_id}}) {{player_two.first_name}} {{player_two.last_name}}
+        </li>
+      </ul>
     </div>
+    
+    <a
+    style='margin-top:15px'
+    class='btn btn-info btn-xlg'
+    ui-sref='.process({finalTeamName:team_name})'
+    ng-disabled='submitPlayerDisabled'
+    >Save Team</a><br>
   </div>
 </div>
