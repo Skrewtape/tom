@@ -24,7 +24,7 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
 	}).state(
 	//killroy was here	    
         'app.tournament_add.process', {
-            url: '/process',
+            url: '/process/:useStripe',
             views: {
                 '@': {
                     templateUrl: 'app/tournament_add/process/process.html',

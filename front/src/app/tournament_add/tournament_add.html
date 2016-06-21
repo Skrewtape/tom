@@ -69,7 +69,7 @@
                             (tournament.single_division == true && tournament.scoring_type == "papa" && form_division.number_of_scores_per_entry == undefined ) ||
                             (tournament.single_division == true && resources.tom_config.use_stripe == true && form_division.stripe_sku == undefined )'
 	       class='btn btn-info btn-xlg'
-	       ui-sref='app.tournament_add.process({tournamentInfo:tournament})'
+	       ui-sref='app.tournament_add.process({tournamentInfo:tournament,useStripe:resources.tome_config.use_stripe})'
 	       > Create Tournament</button>
   </div>
 </div>

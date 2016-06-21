@@ -5,11 +5,38 @@
 
 <div class="scrollable">
   <div ui-view='tournament_add_progress'></div>
-  <div class="scrollable-content">
-    <div style='background-color:white' class='big-web-font'>
+  <div class="scrollable-content big-web-font" style='padding:10px'>
       Tournament {{resources.add_tournament_results.name}} has been created!
       <br>
       <br>
+      <div class='panel panel-default'>
+        <div class='panel-heading'>
+          {{resources.add_tournament_result.name}} Summary
+        </div>
+        <ul class='list-group'>
+          <li class='list-group-item'>
+            Scoring Type : {{resources.add_tournament_result.scoring_type}}
+          </li>
+          <li class='list-group-item'>
+            Single Division : {{resources.add_tournament_result.single_division}}
+          </li>
+          <li class='list-group-item'>
+            Team Tournament : {{resources.add_tournament_result.team_tournament}}
+          </li>          
+          <li ng-if='resources.add_tournament_result.single_division == true' class='list-group-item'>
+            Number of scores per entry : {{resources.add_tournament_result.divisions[0].number_of_scores_per_entry}}
+          </li>          
+          <li ng-if='resources.add_tournament_result.single_division == true && use_stripe == true' class='list-group-item'>
+            Stripe SKU : {{resources.add_tournament_result.divisions[0].stripe_sku}}            
+          </li>          
+          <li ng-if='resources.add_tournament_result.single_division == true && use_stripe == false' class='list-group-item'>
+            Local Price : {{resources.add_tournament_result.divisions[0].local_price}}            
+          </li>          
+
+          
+        </ul>
+      </div>
+      
       <a
 	 ng-if='resources.add_tournament_result.single_division != true'
 	 class='btn btn-info btn-xlg'
