@@ -6,9 +6,25 @@
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
   <div class="scrollable-content big-web-font"  style='padding:10px'>
-    {{resources.player.first_name}}    {{resources.player.last_name}}      (#{{resources.player.player_id}}) <span ng-if='team_id != undefined'><br>
-      On team {{resources.player_teams.teams[0].team_name}}</span><br>
-    <span ng-if='resources.player.linked_division != null'> Linked to {{resources.player.linked_division.name}}</span><hr>
+    <div class='panel panel-default'>
+      <div class='panel-heading'>
+        {{resources.player.first_name}}    {{resources.player.last_name}}      (#{{resources.player.player_id}}) 
+      </div>
+      <ul class='list-group'>
+        <li ng-if='team_id != undefined' class='list-group-item'>
+          <i class="fa fa-users" aria-hidden="true"></i> {{resources.player_teams.teams[0].team_name}}
+        </li>
+        <li ng-if='team_id == undefined'  class='list-group-item'>
+          Not On A Team
+        </li>        
+        <li ng-if='resources.player.linked_division != null'  class='list-group-item'>
+          Linked to {{resources.player.linked_division.name}}
+        </li>
+        <li ng-if='resources.player.linked_division == null'  class='list-group-item'>
+          Not Linked To Division
+        </li>
+      </ul>
+    </div>
     <div class='panel panel-default'>
       <div class='panel-heading'>
         <div class='panel-title big-web-font'> Active Tickets: </div>

@@ -6,19 +6,37 @@
 <div class="scrollable">
   <div ui-view='player_add_progress'></div>
   <div class="big-web-font scrollable-content"  style='padding:10px'>
-    The following tickets were added
-    <div  ng-repeat='(metadiv_id,metadiv_count) in added_tokens.metadivisions' ng-if='metadiv_count !=0'>
-      {{resources.metadivisions[metadiv_id].name}} : {{added_tokens.metadivisions[metadiv_id]}}<br>
-    </div>
-    <div  ng-repeat='(div_id,div_count) in added_tokens.divisions' ng-if='div_count != 0'>
-      {{resources.tournaments[resources.divisions[div_id].tournament_id].name}} tournament
-      <span ng-if='resources.tournaments[resources.divisions[div_id].tournament_id].single_division==false'>, {{resources.divisions[div_id].name}} division</span>
-      : {{added_tokens.divisions[div_id]}}<br>
-    </div>
-   <div  ng-repeat='(div_id,team_count) in added_tokens.teams' ng-if='team_count!=0'>
-      {{resources.tournaments[resources.divisions[div_id].tournament_id].name}} tournament
-      : {{added_tokens.teams[div_id]}}<br>
-    </div>    
+   <!--  The following tickets were added -->
+   <!--  <div  ng-repeat='(metadiv_id,metadiv_count) in added_tokens.metadivisions' ng-if='metadiv_count !=0'> -->
+   <!--    {{resources.metadivisions[metadiv_id].name}} : {{added_tokens.metadivisions[metadiv_id]}}<br> -->
+   <!--  </div> -->
+   <!--  <div  ng-repeat='(div_id,div_count) in added_tokens.divisions' ng-if='div_count != 0'> -->
+   <!--    {{resources.tournaments[resources.divisions[div_id].tournament_id].name}} tournament -->
+   <!--    <span ng-if='resources.tournaments[resources.divisions[div_id].tournament_id].single_division==false'>, {{resources.divisions[div_id].name}} division</span> -->
+   <!--    : {{added_tokens.divisions[div_id]}}<br> -->
+   <!--  </div> -->
+   <!-- <div  ng-repeat='(div_id,team_count) in added_tokens.teams' ng-if='team_count!=0'> -->
+   <!--    {{resources.tournaments[resources.divisions[div_id].tournament_id].name}} tournament -->
+   <!--    : {{added_tokens.teams[div_id]}}<br> -->
+   <!--  </div>    -->
+    <div class='panel panel-default big-web-font'>
+      <div class="panel-heading big-web-font">
+        Tickets Added
+      </div>
+      <ul class='list-group'>
+        <li  ng-repeat='(metadiv_id,metadiv_count) in added_tokens.metadivisions' ng-if='metadiv_count !=0' class='list-group-item'>
+          {{resources.metadivisions[metadiv_id].name}} : {{added_tokens.metadivisions[metadiv_id]}}
+        </li>
+        <li  ng-repeat='(div_id,div_count) in added_tokens.divisions' ng-if='div_count != 0' class='list-group-item'>
+          {{resources.divisions[div_id].tournament_name}}
+          : {{added_tokens.divisions[div_id]}}
+        </li>
+        <li  ng-repeat='(div_id,team_count) in added_tokens.teams' ng-if='team_count!=0' class='list-group-item'>
+         {{resources.divisions[div_id].tournament_name}}
+          : {{added_tokens.teams[div_id]}}
+        </li>
+      </ul>
+    </div>   
     <hr>
     You have successfully finished adding a player!<br>   
     <button

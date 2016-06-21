@@ -17,7 +17,9 @@ angular.module('app.playerselect_player_info.player_info').controller(
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    if($scope.resources.player_teams.teams.length>0){
 		$scope.team_id = $scope.resources.player_teams.teams[0].team_id;
-	    }	    
+	    } else {
+                $scope.team_id = undefined;
+            }	    
 	    StatusModal.loaded()
 	})
 	//if($scope.checkForBlankParams($scope.player_info) == true){
