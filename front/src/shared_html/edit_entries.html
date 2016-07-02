@@ -33,7 +33,7 @@
           <a ng-click='remove_score(entry, score)'><span class="fa fa-times-circle pull-right big-web-font-icon" style='color:red'></a>
         </td>
         <td style='padding-bottom:5px' class='form-group-xlg'>
-          <input type="text" ng-change='score_and_machine_change(score)' placeholder='{{resources.machines[score.division_machine_id].name}}' ng-model="score.machine" uib-typeahead="machine as machine.name for machine in resources.machines | orderObjectBy:'name'|filter:$viewValue | limitTo:8" class="form-control-left"><input ng-change='score_and_machine_change(score)' type="text" ng-model="score.score" class="form-control-right">
+          <input type="text" ng-change='score_and_machine_change(score)' placeholder='{{resources.machines[score.division_machine_id].name}}' ng-model="score.machine" uib-typeahead="machine as machine.name for machine in resources.machines | orderObjectBy:'name'|filter:$viewValue | limitTo:8" class="form-control-left"><input ng-change='score_and_machine_change(score)' type="text" ng-model="score.score" class="form-control-right" style='width:35%;'>
         </td>
         <td>
           <a
