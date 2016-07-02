@@ -14,6 +14,8 @@ class Tournament(DB.Model):
     single_division = DB.Column(DB.Boolean)
     divisions = DB.relationship('Division',lazy='joined')
     scoring_type = DB.Column(DB.String(100))
+    start_date = DB.Column(DB.DateTime)
+    end_date = DB.Column(DB.DateTime)
     
     def to_dict_with_divisions(self): #killroy was here
         tournament = to_dict(self)

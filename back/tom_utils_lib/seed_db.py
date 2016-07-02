@@ -7,7 +7,7 @@ import json
 base_dir = os.path.dirname(__file__)
 dir = base_dir+"../"
 sys.path.append(dir)
-
+from datetime import datetime
 from app import DB
 import time
 
@@ -97,6 +97,8 @@ def create_tournament(name, single_division=True, team_tournament=False, scoring
     tournament.single_division = single_division
     tournament.team_tournament = team_tournament
     tournament.scoring_type = scoring_type
+    tournament.start_date = datetime.today()
+    tournament.end_date = datetime.today()    
     DB.session.add(tournament)
     return tournament
 

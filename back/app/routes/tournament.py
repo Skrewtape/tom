@@ -7,9 +7,12 @@ from app.types import Tournament,Division
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity,i_am_a_teapot
 from app.routes import division
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest,Conflict
 from sqlalchemy.exc import IntegrityError
 from app.routes.v1 import v1_utils
+from datetime import datetime
+import time
+
 @App.route('/tournament', methods=['POST']) 
 @login_required
 @Admin_permission.require(403)
@@ -28,10 +31,21 @@ returns:
     tournament_data = json.loads(request.data)
     if 'tournament_name' not in tournament_data:
         raise BadRequest('tournament_name not found in post data')    
+    if 'start_date' not in tournament_data or 'end_date' not in tournament_data:
+        raise BadRequest('date not specified for tournament')
+    start_date_int = int(int(tournament_data['start_date'])/1000)
+    end_date_int = int((tournament_data['end_date'])/1000)    
+    start_date = datetime.fromtimestamp(start_date_int)
+    end_date = datetime.fromtimestamp(end_date_int)
+    if Tournament.query.filter(Tournament.start_date == start_date.date(),Tournament.name == tournament_data['tournament_name']).first():
+        raise Conflict('You are trying to create a duplicate tournament')
     new_tournament = Tournament(
         name = tournament_data['tournament_name'],
-        active = False
+        active = False,
+        start_date = start_date,
+        end_date = end_date
     )
+    
     if 'team_tournament' in tournament_data and tournament_data['team_tournament']:    
         new_tournament.team_tournament = True
     else:

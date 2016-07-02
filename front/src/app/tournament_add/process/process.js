@@ -4,6 +4,10 @@ angular.module('app.tournament_add.process').controller(
     'app.tournament_add.process',
     function($scope, $state, StatusModal, TimeoutResources,$stateParams, $q) {       
         $scope.tournament_info=$state.params.tournamentInfo;
+
+        $scope.tournament_info.start_date = (new Date()).getTime();
+        $scope.tournament_info.end_date = (new Date()).getTime();
+        
         $scope.use_stripe=$state.params.useStripe;        
         //FIXME : it's possible to double submit a tournament by using the browser back button from the add_division page
         
