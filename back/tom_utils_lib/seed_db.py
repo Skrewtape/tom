@@ -10,11 +10,12 @@ sys.path.append(dir)
 from datetime import datetime
 from app import DB
 import time
-
+from sqlalchemy_utils import create_database, database_exists
 import app.types
 
 from re import compile, UNICODE
 import random
+from sqlalchemy_utils import create_database, database_exists
 
 _strip_pattern = compile('[\W_]+', UNICODE)
 
@@ -34,10 +35,19 @@ default_users = [['avi', 'finkel.org', ALL_ROLES],
 def get_default_admin_username_password():
     return {'username':default_users[1][0],'password':default_users[1][0]}
 
-def init_db():
+def init_db():    
+    if not database_exists(os.environ['DATABASE_URL']):
+        create_database(os.environ['DATABASE_URL'])            
     DB.reflect()
     DB.drop_all()
     DB.create_all()
+    init_postgress_stored_procedures()
+    
+def init_postgress_stored_procedures():
+    result = DB.engine.execute("SELECT prosrc FROM pg_proc WHERE proname = 'testing_papa_scoring';")
+    if not result.fetchone():
+        DB.engine.execute("CREATE FUNCTION testing_papa_scoring(rank real) RETURNS real AS $$ BEGIN IF rank = 1 THEN RETURN 100; ELSIF rank = 2 THEN RETURN 90; ELSIF rank = 3 THEN RETURN 85; ELSIF rank < 88 THEN  RETURN 100-rank-12; ELSIF rank >= 88 THEN RETURN 0; END IF; END; $$ LANGUAGE plsgsql;")
+        DB.engine.execute("CREATE FUNCTION finals_papa_scoring(rank real) RETURNS real AS $$  BEGIN IF rank = 1 THEN RETURN 3; ELSIF rank = 2 THEN RETURN 2; ELSIF rank = 3 THEN RETURN 1; ELSIF rank = 4 THEN RETURN 0; END IF; END; $$ LANGUAGE plsgsql;")    
 
 def init_roles():
     for role_name in ALL_ROLES:

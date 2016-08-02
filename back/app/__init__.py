@@ -12,6 +12,7 @@ from flask_principal import Principal, Permission, RoleNeed
 from flask_cors import CORS
 from app import secret_config, tom_config
 from werkzeug.exceptions import default_exceptions, HTTPException
+from sqlalchemy_utils import create_database, database_exists
 
 if secret_config.app_secret_key == "" or (secret_config.stripe_api_key == "" and tom_config.use_stripe is True):    
     raise Exception("You didn't configure your secrets!")
@@ -38,8 +39,15 @@ Login_manager.init_app(App)
 
 Principal(App)
 
+if not database_exists(os.environ['DATABASE_URL']):
+    create_database(os.environ['DATABASE_URL'])        
+
 DB = SQLAlchemy(App)
 
+result = DB.engine.execute("SELECT prosrc FROM pg_proc WHERE proname = 'testing_papa_scoring';")
+if not result.fetchone():
+    DB.engine.execute("CREATE FUNCTION testing_papa_scoring(rank real) RETURNS real AS $$ BEGIN IF rank = 1 THEN RETURN 100; ELSIF rank = 2 THEN RETURN 90; ELSIF rank = 3 THEN RETURN 85; ELSIF rank < 88 THEN  RETURN 100-rank-12; ELSIF rank >= 88 THEN RETURN 0; END IF; END; $$ LANGUAGE plpgsql;")
+    DB.engine.execute("CREATE FUNCTION finals_papa_scoring(rank real) RETURNS real AS $$  BEGIN IF rank = 1 THEN RETURN 3; ELSIF rank = 2 THEN RETURN 2; ELSIF rank = 3 THEN RETURN 1; ELSIF rank = 4 THEN RETURN 0; END IF; END; $$ LANGUAGE plsgsql;")    
 Void_permission = Permission(RoleNeed('void'))
 Admin_permission = Permission(RoleNeed('admin'))
 Desk_permission = Permission(RoleNeed('desk'))
