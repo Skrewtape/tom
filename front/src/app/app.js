@@ -39,7 +39,7 @@ app = angular.module(
             'app.assholes',
             'app.edit_all_entries',
             'app.player_purchasetickets',
-            /*REPLACEMECHILD*/
+            'app.test',/*REPLACEMECHILD*/
 	]
 );
 
