@@ -13,7 +13,7 @@ import random
 import argparse
 
 parser = argparse.ArgumentParser(description='Initialize a TOM db with some test data.')
-parser.add_argument('--numplayers', type=int, default=5, 
+parser.add_argument('--numplayers', type=int, default=1, 
                     help='number of players to initialize db with (default: 5)')
 parser.add_argument('--numentries', default=1, type=int,
                     help='number of full tickets to create per player(default:1)')
