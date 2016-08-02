@@ -14,10 +14,10 @@ class TomIntegrationTestCase(unittest.TestCase):
     def setUp(self):
         init_db()
         init_roles()
-        create_user('elizabeth','elizabeth',ALL_ROLES)
+        self.admin_user = get_default_admin_username_password()        
+        create_user(self.admin_user['username'],self.admin_user['password'],ALL_ROLES)
         self.tom_url_base='http://localhost/dist'
-        self.tom_results_url_base='http://192.168.1.178:8000/results'
-        self.admin_user = get_default_admin_username_password()
+        self.tom_results_url_base='http://192.168.1.178:8000/results'        
         self.browser = Browser('phantomjs')
         
     def find_element_by_partial_text(browser,element_type,partial_text):
@@ -36,9 +36,9 @@ class TomIntegrationTestCase(unittest.TestCase):
         button.click()
         time.sleep(1)
         input_username = self.browser.find_by_name('username')                
-        input_username.fill('elizabeth')        
+        input_username.fill(user_name)        
         input_password = self.browser.find_by_name('password')                
-        input_password.fill('elizabeth')                
+        input_password.fill(password)                
         button = self.browser.find_by_id('login_button')                
         button.click()
         time.sleep(2)
