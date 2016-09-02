@@ -1,0 +1,7 @@
+<select name="division_select_{{division.division_id}}" ng-model="added_tokens_divisions[division.division_id]" ng-change="calculate_total_cost()">
+  <option ng-repeat="i in makeArray(max_unstarted_tickets - getDivisionTokens(division.division_id) - getActiveEntryCount(division.division_id)) track by $index"
+          value="{{$index}}">{{$index}}</option>
+</select>
+<label for="division_select_{{division.division_id}}"> {{division.tournament_name}} </label>
+  
+

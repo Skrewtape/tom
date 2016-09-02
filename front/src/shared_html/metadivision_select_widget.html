@@ -1,0 +1,6 @@
+<select name="metadivision_select_{{division.division_id}}" ng-model="added_tokens_metadivisions[division.division_id]"  ng-change="calculate_total_cost()">
+  <option ng-repeat="i in makeArray(max_unstarted_tickets - getDivisionTokens(division.division_id,division.metadivision_id) - getActiveEntryCount(division.division_id)) track by $index"
+          value="{{$index}}"
+     >{{$index}}</option>  
+</select>
+    <label for="metadivision_select_{{division.division_id}}"> {{get_metadivision_for_division(resources['metadivisions'],division['division_id']).name}} </label>

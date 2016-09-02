@@ -1,0 +1,29 @@
+<div ui-content-for="title">
+  <span></span>
+</div>
+<div ui-view="backbutton"></div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+  <div class="scrollable-content big-web-font"  style='padding:10px'>
+    <div ng-if="resources.player.division_machine != undefined">
+      Confirm That you want to remove : <br>
+      Player Name : {{resources.player.first_name}} {{resources.player.last_name}}<br>
+      Player Id : ({{resources.player.player_id}}) <br>
+      Machine Name : {{resources.player.division_machine.name}}.<br> <br>
+
+      <a       
+       class='btn btn-info btn-xlg'
+       ui-sref='.process({playerId:player_id})'
+       >Remove Player</a><br>    
+      
+    </div>
+    <div ng-if="resources.player.division_machine == undefined">
+      Player is not currently playing on a machine.<br>
+      <a       
+       class='btn btn-info btn-xlg'
+       ui-sref='.^'
+       >Select Player</a><br>      
+    </div>
+
+  </div>
+</div>
