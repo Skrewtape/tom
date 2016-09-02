@@ -11,7 +11,7 @@
         Available Divisions
       </div>
       <div class="list-group">
-        <a ng-repeat="division in resources.divisions" class="list-group-item" ng-if='resources.finals.sorted_by_division_id[division.division_id] == undefined' ui-sref='app.finals_activate.playerselect({divisionId:division.division_id})'>          
+        <a ng-repeat="division in resources.divisions" class="list-group-item" ng-if='!check_division_finals_exists(division.division_id)' ui-sref='app.finals_activate.playerselect({divisionId:division.division_id,finalsPlayerSelectionType:division.finals_player_selection_type,finalsNumberQualifiers:division.finals_num_qualifiers,finalsNumPlayersPerGroup:division.finals_num_players_per_group,finalsNumGamesPerMatch:division.finals_num_games_per_match})'>          
           {{division.tournament_name}}<i class="fa fa-chevron-right pull-right"></i>
         </a>
       </div>

@@ -18,7 +18,7 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	   }
        }).state('app.finals_activate.playerselect', 
         { 
- 	 url: '/playerselect/:divisionId',
+ 	 url: '/playerselect/:divisionId/:finalsPlayerSelectionType/:finalsNumberQualifiers/:finalsNumPlayersPerGroup/:finalsNumGamesPerMatch',
  	 views: {
  	     '@': {
  	       templateUrl: 'app/finals_activate/playerselect/playerselect.html',

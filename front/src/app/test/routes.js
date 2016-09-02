@@ -13,7 +13,10 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                templateUrl: 'shared_html/backbutton.html'
              },
              'not_backbutton@app.test':{
-               templateUrl: 'shared_html/not_backbutton.html'
+                 templateUrl: 'shared_html/not_backbutton.html'
+             },
+             'repeater@app.test':{
+               templateUrl: 'shared_html/repeater.html'
              }
  	   }
        })//REPLACE_ME

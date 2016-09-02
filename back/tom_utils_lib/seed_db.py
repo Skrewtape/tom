@@ -112,7 +112,7 @@ def create_tournament(name, single_division=True, team_tournament=False, scoring
     DB.session.add(tournament)
     return tournament
 
-def create_division(name,number_of_scores_per_entry=5,stripe_sku=None,local_price=None):
+def create_division(name,number_of_scores_per_entry=5,stripe_sku=None,local_price=None,finals_player_selection_type="papa",finals_num_qualifiers=24,finals_num_players_per_group=4,finals_num_games_per_match=3):
     global divisions
     division = app.types.Division(name=name)
     division.number_of_scores_per_entry=number_of_scores_per_entry
@@ -121,6 +121,10 @@ def create_division(name,number_of_scores_per_entry=5,stripe_sku=None,local_pric
         division.stripe_sku = stripe_sku
     if local_price:
         division.local_price=local_price
+    division.finals_player_selection_type = finals_player_selection_type
+    division.finals_num_qualifiers = finals_num_qualifiers
+    division.finals_num_players_per_group = finals_num_players_per_group
+    division.finals_num_games_per_match = finals_num_games_per_match
     DB.session.add(division)
     return division
 

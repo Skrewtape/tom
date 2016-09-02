@@ -10,13 +10,14 @@ from app.routes import entry
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
 from flask_login import current_user
+from flask_restless.helpers import to_dict
 
 def get_existing_token_info(player_id=None,team_id=None,div_id=None,metadiv_id=None):
     query = None
     if div_id:
-        query =  Token.query.filter_by(division_id=div_id)
+        query =  Token.query.filter_by(division_id=div_id,paid_for=True)
     if metadiv_id:
-        query = Token.query.filter_by(metadivision_id=metadiv_id)
+        query = Token.query.filter_by(metadivision_id=metadiv_id,paid_for=True)
     if player_id:
         query = query.filter_by(player_id=player_id)
     if team_id:
@@ -49,8 +50,9 @@ def check_player_valid_for_add_token_request(tokens_data):
     if Player.query.filter_by(player_id=tokens_data['player_id']) is None:        
         raise BadRequest('Bad player_id specified')
     
-def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None,team_id=None):
+def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None,team_id=None, paid_for=1):
     tokens = []
+    json_tokens = []
     for token_num in range(0,int(num_tokens)):
         new_token = Token()
         if player_id:
@@ -60,9 +62,11 @@ def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None
         if div_id:
             new_token.division_id = div_id
         if metadiv_id:
-            new_token.metadivision_id = metadiv_id            
+            new_token.metadivision_id = metadiv_id
+        new_token.paid_for = 1 is paid_for
         DB.session.add(new_token)
-        tokens.append(new_token)
+        DB.session.commit()
+        tokens.append(to_dict(new_token))
     return tokens
 
 @App.route('/token/teams/<player_id>', methods=['GET'])
@@ -82,7 +86,7 @@ returns:
     team = Team.query.filter(Team.players.any(Player.player_id.__eq__(player.player_id))).first()    
     if team is None:
         return jsonify(token_dict)    
-    tokens = Token.query.filter_by(team_id=team.team_id).all()
+    tokens = Token.query.filter_by(team_id=team.team_id,paid_for=True).all()
     
     #FIXME : need only active divisions
     divisions = Division.query.all()
@@ -106,7 +110,7 @@ returns:
     dict of all player tokens
     dict key is "divisions" and "metadivisions".  values are dicts - the key is a division_id/metadivision_id, value is number of tokens for player in that division/metadivision or 0 if none 
     """    
-    tokens = Token.query.filter_by(player_id=player.player_id).all()
+    tokens = Token.query.filter_by(player_id=player.player_id, paid_for=True).all()
     token_dict = {'divisions':{},'metadivisions':{}}
     #FIXME : need only active divisions
     divisions = Division.query.all()
@@ -124,9 +128,20 @@ returns:
             token_dict['metadivisions'][token.metadivision_id]=token_dict['metadivisions'][token.metadivision_id] + 1      
     return jsonify(token_dict)
 
-@App.route('/token', methods=['POST'])
+@App.route('/token/confirm_paid_for', methods=['PUT'])
 @login_required
-def add_token():
+def confirm_tokens():
+    tokens_data = json.loads(request.data)['total_tokens']
+    for token in tokens_data:
+        token = Token.query.filter_by(token_id=token['token_id'],paid_for=False).first()
+        if token:
+            token.paid_for=True
+            DB.session.commit()
+    return jsonify({})
+
+@App.route('/token/paid_for/<int:paid_for>', methods=['POST'])
+@login_required
+def add_token(paid_for):
     """
 description: Add a token for a player or team
 post data: 
@@ -140,11 +155,11 @@ url params:
 returns:
     empty dict
     """
-    
+    total_tokens=[]
     tokens_data = json.loads(request.data)
     check_player_valid_for_add_token_request(tokens_data)    
     player_id = tokens_data['player_id']
-    player = Player.query.filter_by(player_id=player_id).first()    
+    player = Player.query.filter_by(player_id=player_id).first()
     if tokens_data.has_key('team_id'):
         team_id = tokens_data['team_id']
         team = Team.query.filter_by(team_id=team_id).first()
@@ -157,8 +172,8 @@ returns:
         num_tokens = tokens_data['divisions'][div_id]
         check_add_token_for_max_tokens(num_tokens,div_id=div_id,player_id=player_id)
         if num_tokens > 0:
-            tokens = create_division_tokens(num_tokens,div_id=div_id,player_id=player_id)
-
+            tokens = create_division_tokens(num_tokens,div_id=div_id,player_id=player_id, paid_for=paid_for)
+            total_tokens = total_tokens + tokens
     for div_id in tokens_data['teams']:
         division=Division.query.filter_by(division_id=div_id).first()
         if division is None:
@@ -166,8 +181,8 @@ returns:
         num_tokens = tokens_data['teams'][div_id]
         if num_tokens > 0 and team_id:
             check_add_token_for_max_tokens(num_tokens,div_id=div_id,team_id=team_id)
-            tokens = create_division_tokens(num_tokens,div_id=div_id,team_id=team_id)
-
+            tokens = create_division_tokens(num_tokens,div_id=div_id,team_id=team_id,paid_for=paid_for)
+            total_tokens = total_tokens + tokens
     for metadiv_id in tokens_data['metadivisions']:
         if Metadivision.query.filter_by(metadivision_id=metadiv_id) is None:
             raise BadRequest('Bad metadivision specified for token create')
@@ -177,9 +192,9 @@ returns:
             raise BadRequest('No active divisions in metadivision')                    
         check_add_token_for_max_tokens(num_tokens,div_id=division.division_id,metadiv_id=metadiv_id,player_id=player_id)
         if num_tokens > 0:
-            tokens = create_division_tokens(num_tokens,metadiv_id=metadiv_id,player_id=player_id)
-    
+            tokens = create_division_tokens(num_tokens,metadiv_id=metadiv_id,player_id=player_id, paid_for=paid_for)
+            total_tokens = total_tokens + tokens
     DB.session.commit()
     
          
-    return jsonify({})
+    return jsonify({'total_tokens':total_tokens})

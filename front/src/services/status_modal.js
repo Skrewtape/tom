@@ -10,7 +10,8 @@ angular.module('tom_services.status_modal')
 		  var errorModalInstance = undefined;
 		  var timeoutPromise = undefined;
 		  var debug_msg = 'shit';
-		  
+		  var status_modal_scope;
+                  
 		  close_status_modal = function(){
 		      if(statusModalInstance!=undefined){
                           statusModalInstance.close();
@@ -87,7 +88,10 @@ angular.module('tom_services.status_modal')
                           //openedClass: 'modal_decorations',                
                           keyboard: false,
 			  controller: function($scope){
-			      $scope.debug_msg = debug_msg;
+                              status_modal_scope = $scope;
+                              $scope.debug_msg = debug_msg;
+                              $scope.displayRunningStatusUpdate = false;
+                              $scope.running_status_msg = " Loading ";                              
 			      $scope.display_debug_msg = function(){
 				  $scope.displayDebugMsg = true;
 			      }
@@ -145,6 +149,10 @@ angular.module('tom_services.status_modal')
 		      addDebugMsg: function(new_msg){
 			  debug_msg=debug_msg+' -- '+new_msg;
 		      },
+		      changeRunningStatusMsg: function(new_msg){
+                          status_modal_scope.displayRunningStatusUpdate = true;
+			  status_modal_scope.running_status_msg = new_msg;
+		      },                      
 	              loading: function(start_state) {
 			  debug_msg=start_state;
 			  launch_status_modal()

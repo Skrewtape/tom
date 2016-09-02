@@ -34,7 +34,7 @@ def shared_check_team_can_start_new_entry(team,division):
         active_entries = shared_get_query_for_active_entries(team_id=team.team_id,div_id=division.division_id).all()            
     if len(active_entries) != 0:
         return False
-    available_tokens = Token.query.filter_by(team_id=team.team_id,division_id=division.division_id).all()
+    available_tokens = Token.query.filter_by(paid_for=True,team_id=team.team_id,division_id=division.division_id).all()
     if len(available_tokens) == 0:
         return False
     return True
@@ -56,12 +56,12 @@ def shared_check_player_can_start_new_entry(player,division):
     if len(active_entries) != 0:
         return False
     if division.metadivision_id:
-        available_tokens = Token.query.filter_by(player_id=player.player_id,metadivision_id=division.metadivision_id).all()
+        available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,metadivision_id=division.metadivision_id).all()
     else:
         if division.tournament.team_tournament:
-            available_tokens = Token.query.filter_by(team_id=team_id,division_id=division.division_id).all()
+            available_tokens = Token.query.filter_by(paid_for=True,team_id=team_id,division_id=division.division_id).all()
         else:
-            available_tokens = Token.query.filter_by(player_id=player.player_id,division_id=division.division_id).all()
+            available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=division.division_id).all()
     if len(available_tokens) == 0:
         return False
     return True
@@ -71,12 +71,12 @@ def shared_create_active_entry(division,player=None,team=None):
         raise Conflict('tournament closed')
     teams = []
     if division.metadivision_id:        
-        token_query = Token.query.filter_by(player_id=player.player_id,metadivision_id=division.metadivision_id)               
+        token_query = Token.query.filter_by(player_id=player.player_id,metadivision_id=division.metadivision_id,paid_for=True)               
     else:
         if division.tournament.team_tournament is False:        
-            token_query = Token.query.filter_by(player_id=player.player_id,division_id=division.division_id)
+            token_query = Token.query.filter_by(player_id=player.player_id,division_id=division.division_id,paid_for=True)
         else:
-            token_query = Token.query.filter_by(team_id=team.team_id,division_id=division.division_id)            
+            token_query = Token.query.filter_by(team_id=team.team_id,division_id=division.division_id, paid_for=True)            
     if len(token_query.all()) == 0:
         raise Conflict('No tokens are available')        
 

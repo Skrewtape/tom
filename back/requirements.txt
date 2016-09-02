@@ -6,7 +6,7 @@ Flask-Restless==0.17.0
 Flask-SQLAlchemy==2.0
 Jinja2==2.7.3
 MarkupSafe==0.23
-SQLAlchemy==1.0.5
+SQLAlchemy==1.0.14
 sqlalchemy-utils==0.32.7
 Werkzeug==0.10.4
 argparse==1.2.1

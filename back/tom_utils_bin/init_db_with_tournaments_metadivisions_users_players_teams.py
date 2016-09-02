@@ -30,14 +30,14 @@ def init_tournaments():
     herb = create_tournament('herb',scoring_type='herb')
     
     split_flipper = create_tournament('split flipper',team_tournament=True)    
-    classics_all_1 = create_division('all')
+    classics_all_1 = create_division('all',finals_num_games_per_match=1)
     classics_all_1.stripe_sku = "sku_8beHMnaBSdH4NA"
     classics_all_2 = create_division('all')
     classics_all_2.stripe_sku = "sku_8beHMnaBSdH4NA"    
     classics_all_3 = create_division('all')
     classics_all_3.stripe_sku = "sku_8beHMnaBSdH4NA"
-    herb_all = create_division('herb_all', number_of_scores_per_entry=1 )
-    herb_all.stripe_sku = "sku_8beHMnaBSdH4NA"    
+    herb_all = create_division('herb_all', number_of_scores_per_entry=1, finals_player_selection_type="ppo",finals_num_players_per_group=2,finals_num_games_per_match=1)
+    herb_all.stripe_sku = "sku_8zGvY92kgyMlx1"    
     split_flipper_all = create_division('splitflipper_all',1)
     split_flipper_all.stripe_sku = "sku_8cVf2tetzJ4f8D"
     main_a = create_division('A')
@@ -79,7 +79,7 @@ def init_players(division, num_players):
         print " adding player %d " % play_num
         DB.session.add(player)        
         DB.session.commit()
-        player.gen_pin()
+        #player.gen_pin()
         DB.session.commit()        
         print " player %d is done \n" % play_num
 
@@ -88,7 +88,7 @@ def init_player_entries(num_entries, division,player=None,team=None):
         create_entry_and_add_scores(division,player=player,team=team)
     DB.session.commit()            
 
-def init_player_herb_entries(num_entries, division,player=None,team=None, division_machine_id=None):
+def init_player_herb_entries(num_entries, division,player=None,team=None, division_machine_id=None):    
     for i in range(num_entries):        
         create_herb_entry(division,player=player,team=team,division_machine_id=division_machine_id)
     DB.session.commit()            

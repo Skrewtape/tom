@@ -26,17 +26,17 @@ def get_valid_sku(sku):
     
 @App.route('/sale/sku', methods=['GET'])
 def get_sku_prices():
-    stripe.api_key = secret_config.stripe_api_key
-    #divisions = Division.query.all()
+    dict_sku_prices={}
+    dict_div_to_sku={}
+    stripe.api_key = secret_config.stripe_api_key    
     divisions = Division.query.all()
-    product_list = stripe.Product.list()
-    items = product_list['data']
-    dict_sku_prices={}    
-    dict_div_to_sku={}    
     if tom_config.use_stripe is False:
         for division in divisions:
             dict_div_to_sku[division.division_id]=division.local_price
         return jsonify(dict_div_to_sku)    
+    
+    product_list = stripe.Product.list()
+    items = product_list['data']        
     
     for item in items:        
         dict_sku_prices[item['skus']['data'][0]['id']]=item['skus']['data'][0]['price']/100    
@@ -45,7 +45,7 @@ def get_sku_prices():
     return jsonify(dict_div_to_sku)
     
 @App.route('/sale', methods=['POST'])
-def start_sale():    
+def start_sale():
     token = json.loads(request.data)['stripeToken']
     added_tokens = json.loads(request.data)['addedTokens']
     email = json.loads(request.data)['email']    
@@ -57,6 +57,13 @@ def start_sale():
     for division_id,num_tokens in added_tokens['divisions'].iteritems():        
         if int(num_tokens) > 0:
             stripe_items.append({"quantity":int(num_tokens),"type":"sku","parent":division_skus[int(division_id)]})
+    for division_id,num_tokens in added_tokens['metadivisions'].iteritems():        
+        if int(num_tokens) > 0:
+            stripe_items.append({"quantity":int(num_tokens),"type":"sku","parent":division_skus[int(division_id)]})            
+    for division_id,num_tokens in added_tokens['teams'].iteritems():        
+        if int(num_tokens) > 0:
+            stripe_items.append({"quantity":int(num_tokens),"type":"sku","parent":division_skus[int(division_id)]})            
+    
     try:
         order = stripe.Order.create(
             currency="usd",
@@ -68,7 +75,6 @@ def start_sale():
         )
         return jsonify({"result":"success"})
     except stripe.error.CardError as e:
-        # The card has been declined
-        print "UH OH"
+        # The card has been declined        
         return jsonify({"result":"FAILURE"})        
         

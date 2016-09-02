@@ -130,15 +130,5 @@ def register():
         abort(422)
         pass
 
-@App.route('/user/player/current/extratoken', methods=['GET'])
-def get_current_player():
-    """Get information about the current logged in player"""
-    # pylint: disable=unexpected-keyword-arg, no-value-for-parameter
-    # pylint doesn't understand the argument name magic that happens with @fetch_entity    
-    if hasattr(current_user,'player_id'):        
-        return jsonify(Player.query.filter_by(player_id=current_user.player_id).first().to_dict_with_team())
-        #return get_user(user_id=current_user.user_id)        
-    else:
-        return jsonify({})
 
     

@@ -27,26 +27,25 @@
       </table>
       <div class='form-group form-group-xlg input-group input-group-xlg'>
         <span  class="input-group-addon" id="score">Score</span>
-        <div ng-click='fuckIos()' id='fakescoreinput' class='big-web-font fake-input'>          
-	  <center>{{formatted_score.score}}</center>
-        </div>
-      </div>
+        <!-- <div ng-click='fuckIos()' id='fakescoreinput' class='big-web-font fake-input'>           -->
+	<!--   <center>{{formatted_score.score}}</center> -->
+        <!-- </div> -->
       <input
-	 focus-if
-         type='number'
-	 style='position:absolute;top:-100px;left:-100px;width:50px'
-         class='form-control big-web-font'
-         aria-describedby='new_score'
+         type='tel'
+         class='fake-input big-web-font'
+         aria-describedby='score'
          name='new_score'
          ng-model='new_score'
 	 ng-change='onScoreChange()'
          id='realscoreinput'
-         />
+         />        
+      </div>
+
       <button
 	 class='btn btn-info btn-xlg big-web-font'
 	 style='width:75%;margin:auto;margin-bottom:15px;margin-top:15px'
 	 ui-sref='.confirm({score:new_score,entryId:resources.active_entry.entry.entry_id})'
-	 ng-disabled='disabledScoreKeeping'
+	 ng-disabled='new_score == undefined || new_score == ""'
 	 >Next</button>      
       <br>
       <button

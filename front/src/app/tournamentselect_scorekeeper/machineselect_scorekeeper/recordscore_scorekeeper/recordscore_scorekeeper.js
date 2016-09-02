@@ -17,12 +17,13 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 
         
 	$scope.onScoreChange = function(){
-	    $scope.formatted_score.score = $filter('number')($scope.new_score);
-	    if($scope.new_score > 0){
-		$scope.disabledScoreKeeping = false;
-	    } else {
-		$scope.disabledScoreKeeping = true;
-	    }
+	    // $scope.formatted_score.score = $filter('number')($scope.new_score);
+	    // if($scope.new_score > 0){
+	    //     $scope.disabledScoreKeeping = false;
+	    // } else {
+	    //     $scope.disabledScoreKeeping = true;
+	    // }
+            $scope.new_score = $scope.new_score.replace(/\,/g,'').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 	};
 	
 	//SIGH : loading modal causes problem with input field focus

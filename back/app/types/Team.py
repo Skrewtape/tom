@@ -26,6 +26,16 @@ class Team(DB.Model):
         for player in self.players:
             team['players'].append(to_dict(player))
         return team
+
+    def to_dict_with_players_divisionmachine(self):
+        team = to_dict(self)
+        team['players']=[]
+        for player in self.players:
+            team['players'].append(to_dict(player))
+        if self.division_machine:
+            team['division_machine'] = self.division_machine.to_dict_simple()
+        return team
+    
     
     def to_dict_simple(self):
         return to_dict(self)

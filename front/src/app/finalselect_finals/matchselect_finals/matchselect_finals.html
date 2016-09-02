@@ -5,38 +5,57 @@
 
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
-  <div class="scrollable-content"  style='padding:10px'>
-      <div ui-state="activeTab" default="1">
+  <div class="scrollable-content big-web-font"  style='padding:10px'>
+    <div ui-state="activeTab" class='med-web-font'  default="tab_to_activate">
+      <span style='float:left;margin-right:5px;padding-top:10px'>Round</span>
 	<ul class="nav nav-tabs">	  
-	  <li ui-class="{'active': activeTab == {{round}}}" ng-repeat="(round,finals_match) in resources.finals_matches">
-	    <a ui-set="{'activeTab': {{round}}}">Round {{round}}</a>
+	  <li ui-class="{'active': activeTab == {{$index+1}}}" ng-repeat="match_tab in resources.finals_matches.rounds">
+	    <a ui-set="{'activeTab': {{$index+1}}}">{{$index+1}}</a>
 	  </li>
 	  
 	</ul>
 	
-	<div ui-if="activeTab == {{round}}" ng-repeat="(round,finals_matches) in resources.finals_matches">
-	  <h3 class="page-header">Round {{round}}</h3>
+	<div ui-if="activeTab == {{$index+1}}" ng-repeat="round in resources.finals_matches.rounds">
+	  <h3 class="page-header">Round {{$index+1}}</h3>
 	  <p>
-	    <div ng-repeat="(match_id,finals_match) in finals_matches">	      
+            <span ng-if="is_round_ready_to_be_finished(round)">
+              <button
+	         ng-click='complete_finals_round($index+1)'
+	         class='btn info'> Complete Round
+              </button>
+
+            </span>
+	    <div ng-repeat="match in round">	      
 	      <!--	      <table ng-repeat='game_count in [0,1,2]' class='table' style='width:50%'>
 			      <tr><td class='info'>Machine</td><td class='info'>{{game.division_machine_id}}</td><td class='info'></td></tr>
 			      <tr ng-repeat='game in finals_match.games[game_count]'>			
 				<td>{{game.finals_player_id}}</td><td>{{game.score}}</td>
 			      </tr>
 	      </table>-->
-	      <a ng-click='open_match(finals_match)'>
-		<table class='table' style='width:50%'>
-		  <tr><td class='info'>Match&nbsp;ID</td><td class='info'>{{finals_match.match_id}}</td><td class='info'></td></tr>
-		  <tr ng-repeat='(finals_player_id,finals_player) in finals_match.finals_players'>			
-		    <td>{{finals_player.finals_seed}}</td>		    
-		    <td ng-if="finals_player.player_name != null">
-		      {{finals_player.player_name}} {{finals_player.finals_player_id}}		      
+              
+	      <a ng-click='open_match(match)'>
+		<table class='table'>
+		  <tr><td class='info'>Match&nbsp;ID</td>
+                    <td class='info'>{{match.finals_match_ex_id}}</td>
+                    <td class='info'></td>
+                    <td class='info'><span>{{match.match_state}}</span></td>
+                    </tr>
+		  <tr ng-repeat='slot in match.slots'>			
+		    <td>{{slot.finals_player_ex.seed}} {{match.bye[$index].seed}}</td>		    
+		    <td ng-if="slot.finals_player_ex_id != null">
+		      {{slot.finals_player_ex.player_name}} (#{{slot.finals_player_ex.player_id}})		      
 		    </td>
-		    <td ng-if="finals_player.player_name == null">
-		      <i>Pending Match</i>
+		    <td ng-if="slot.finals_player_ex_id == null">
+                      <span ng-if="match.bye!=undefined && match.bye[$index]!=undefined">
+                        {{match.bye[$index].player_name}}
+                      </span>
+                      <span ng-if="match.bye[$index]==undefined">
+		        <i>Pending Match</i>
+                      </span>
 		    </td>
                     <td>
-                      {{finals_player.status}}
+                      <span ng-if="slot.final_rank != undefined">{{slot.final_rank}}</span>
+                      <span ng-if="slot.final_rank == undefined">{{slot.result}}</span>
                     </td>
 <!-- 		    <td ng-if='finals_player.games_played<3'> -->
 <!-- 		        {{finals_player.games_played}} Games Finished -->

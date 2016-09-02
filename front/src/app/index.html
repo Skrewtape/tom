@@ -5,9 +5,15 @@
 	        <title>Tournament Operations Manager | {{ Page.title() }}</title>
 
 		<link rel="stylesheet" href="css/_bower.css">
-                <script src="https://checkout.stripe.com/checkout.js"></script>		
-		<script type="text/javascript" src="app.js"></script>
-                <link rel="stylesheet" href="/styles/loaders.css/loaders.css"/>
+                <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.12/angular.min.js"></script>-->
+                <script type="text/javascript" src="js/my_stuff_min.js"></script>
+                <script src="https://checkout.stripe.com/checkout.js"></script>
+                <!--<script type="text/javascript" src="angular-resource.min.js"></script>                
+                    <script type="text/javascript" src="underscore-min.js"></script>           -->     
+                <!--<script type="text/javascript" src="ui-bootstrap-tpls.min.js"></script>-->
+                <!--<script type="text/javascript" src="angular-ui-router.min.js"></script>-->                
+                
+
                 <link rel="stylesheet" href="screen.css">		
 
                 <style>
@@ -77,7 +83,9 @@
 	      <a  class=" list-group-item" ui-sref='app.tournamentselect_scorekeeper'>Qualifying
 		<i class="fa fa-chevron-right pull-right"></i></a>
 	      <a  class=" list-group-item" ui-sref='app.finalselect_finals'>Finals
-		<i class="fa fa-chevron-right pull-right"></i></a>	      
+		<i class="fa fa-chevron-right pull-right"></i></a>
+	      <a  class=" list-group-item" ui-sref='app.remove_player'>Remove Player
+		<i class="fa fa-chevron-right pull-right"></i></a>	                    
 	    </span>
 	    <span ng-if='Page.has_role("admin")'>
 	      <div class="list-group-item sidebarheader">Admin</div>

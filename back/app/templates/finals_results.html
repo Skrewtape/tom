@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+{% block content %}
+<table class='table'>
+  <div class='big-web-font'>
+    <center>
+      {{sidebar_info['divisions'][division_id].name}}
+    </center>
+  </div>
+  <th>Rank</th><th>Name</th><th>Score</th><th class='mobile_only'>Top&nbsp;3&nbsp;Games</th>
+  {% for entry in division_entrys %}
+  <tr>
+    <td>{{ entry.entry_rank if tournament.scoring_type == 'papa' else entry.rank}}</td><td>
+      {% if tournament.team_tournament == False %}
+      <a href='/results/player/{{entry.player_id}}'>{{"%s %s" % (players[entry.player_id].first_name,players[entry.player_id].last_name)}}</a>
+      {% elif tournament.team_tournament == True %}
+      <a href='/results/team/{{entry.team_id}}'>{{"Team %s" % (sidebar_info['teams'][entry.team_id].team_name)}}</a>
+      {% endif %}
+    </td><td>{{entry.entry_score_sum if tournament.scoring_type == 'papa' else entry.score}}</td>
+    <td class='mobile_only'>
+      {% for score in entry.scores[0:3] %}
+
+      #{{score.machine_rank if tournament.scoring_type == 'papa' else score.paparank}} on <a href='/results/division_machine/{{score.division_machine_id}}'>{{score.name if tournament.scoring_type == 'papa' else score.machine_name}}</a> <b>/</b>
+      {% endfor %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>	  
+{% endblock %}
+

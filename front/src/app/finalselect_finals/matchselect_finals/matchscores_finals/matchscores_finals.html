@@ -5,43 +5,78 @@
 
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
-  <div class="scrollable-content"  style='padding:10px'>
+  <div id="myScrollableContent" class="scrollable-content"  style='padding:10px'>
     <div>
-      <div ng-repeat='game_count in [0,1,2]' class='table' style='width:75%'>
+      <div ng-repeat="slot in resources.finals_match.slots">
+        {{slot.finals_player_ex.player_name}} : {{calculate_player_total_points_in_match(resources.finals_match,slot.finals_player_ex.finals_player_ex_id)}}
+      </div>
+      <br>
+      <div ng-repeat='finals_match_result_ex in resources.finals_match.results|orderBy:"game_number"' class='table'>
 	<table class='table'>
 	  <tr><td class='info'>Machine</td><td class='info'>
-	      <span ng-if='resources.finals_matches[1][match_id].games[game_count][0].division_machine_id!=null'>{{resources.division_machines[resources.finals_matches[1][match_id].games[game_count][0].division_machine_id].name}}</span>
-	      <span ng-if='resources.finals_matches[1][match_id].games[game_count][0].division_machine_id==null'>
-                <input type="text" ng-change='score_and_machine_change(score)'  ng-model="resources.finals_matches[1][match_id].games[game_count][0].new_division_machine" uib-typeahead="machine as machine.name for machine in resources.machines | orderObjectBy:'machine_id':true | filter:$viewValue | limitTo:8" class="form-control">
-	      </span>
+                <input type="text" ng-change='finals_match_result_ex.dirty=true'  ng-model="finals_match_result_ex.finals_machine" uib-typeahead="machine as machine.name for machine in resources.machines | orderObjectBy:'name':true | filter:$viewValue | limitTo:8" class="form-control" placeholder={{finals_match_result_ex.machine.name}}>
+
 	    </td>
 	    <td class='info'>
 	      <button
-		 ng-if="resources.finals_matches[1][match_id].games[game_count][0].division_machine_id==null"
-		 ng-click='save_machine(resources.finals_matches[1][match_id],game_count,resources.finals_matches[1][match_id].games[game_count][0].new_division_machine.machine_id)'
-		 class='btn info'> Save </button>
+                 ng-disabled='!finals_match_result_ex.dirty || match_finished()'
+	         ng-click='save_machine(finals_match_result_ex)'
+	         class='btn info'> Save Machine</button>
 	    </td>
+
 	  </tr>
-	  <tr ng-repeat='score in resources.finals_matches[1][match_id].games[game_count]|orderBy:"-score"'>			
+	  <tr ng-repeat='score in finals_match_result_ex.scores|orderBy:"order"'>
+            <td>
+              <select ng-model="score.finals_player_ex_id"
+                      ng-change="score.dirty=true"
+                      ng-options="finals_match_slot_ex.finals_player_ex_id as finals_match_slot_ex.finals_player_ex.player_name 
+                                  disable when (mark_taken_player_as_disabled(finals_match_result_ex.scores,finals_match_slot_ex.finals_player_ex_id,score)) 
+                                  for finals_match_slot_ex in resources.finals_match.slots">
+                <option> </option>
+
+            </select>
+            </td>
+            <td>
+              {{score.rank}}
+            </td>
+            <td>
+	      <!--<input type="text" ng-model="score.score" class="form-control" ng-change='score.dirty=true' ng-disabled='!score.finals_player_ex_id || !finals_match_result_ex.finals_machine_id || match_finished() || finals_match_result_ex.result_state=="finished"'/>-->
+	      <input type="tel" ng-model="score.score" 	 ng-change='onScoreChange(score)' class="form-control" ng-change='score.dirty=true' ng-disabled='!score.finals_player_ex_id || !finals_match_result_ex.finals_machine_id || match_finished() || finals_match_result_ex.result_state=="finished"'/>              
+            </td>
 	    <td>
-	      {{resources.finals_matches[1][match_id].finals_players[score.finals_player_id].player_name}}
-	    </td>
-	    <td ng-if='score.score == null'>
-	      <input type="text" ng-change="format_number(score)" ng-model="score.new_score" class="form-control" />
-	    </td>
-	    <td ng-if='score.score != null'>	      
-	      {{score.score|number}} ({{4-$index}} Points) <!--{{resources.finals_matches[1][match_id].finals_players[score.finals_player_id].status}})-->
-	    </td>
-	    <td>
-	      <button ng-if="score.score == null"
-		 ng-click='save_score(score,resources.finals_matches[1][match_id].games[game_count])'
-		 class='btn info'>
-		Save
-	      </button>
+              <button
+                 ng-disabled='!score.dirty'
+	         ng-click='save_result_score(finals_match_result_ex,score)'
+	         class='btn info'> Save Score</button>
+
+	      <!--{{score.score|number}} ({{4-$index}} Points) <!--{{resources.finals_matches[1][match_id].finals_players[score.finals_player_id].status}})-->
 	    </td>
 	  </tr>
 	</table>
+        <span ng-if="finals_match_result_ex.result_state=='scores_recorded'">
+          <button
+	     ng-click='save_result_finished(finals_match_result_ex)'
+	     class='btn info'> Save Game</button>
+        </span>
       </div>
+
+      <span  ng-if="match_has_tiebreakers()">
+        <table class='table'>
+	  <tr><td class='info'>Tie Breaker</td></tr>
+          <tr ng-repeat="slot in resources.finals_match.slots">
+            <td ng-if="slot.tie_breaker == true">
+              <input
+	         style='margin-top:0px;height:40px;width:40px;vertical-align:middle;'
+                 type="checkbox" ng-model="slot.tie_breaker_result" />
+              {{slot.finals_player_ex.player_name}}          
+            </td>
+          </tr>
+        </table>
+        <button
+	   ng-click='save_tiebreaker()'
+	   class='btn info'> Save Tiebreaker
+        </button>
+      </span>
     </div>
   </div>
 </div>

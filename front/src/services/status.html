@@ -3,13 +3,14 @@
 	<span ng-bind='modal.message'></span>-->
 	<span ng-bind='modal.message'></span>
 	<i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
-	<span class="sr-only">Loading...</span>
+        <br>
 	<span ng-if='displayDebugMsg == true'>Debug Msg : {{debug_msg}}</span>
+	<span ng-if='displayRunningStatusUpdate == true'>Status : {{running_status_msg}}</span>
 	<br>
 	<br>
-	<a
-	   ng-click='displayDebugMsg=!displayDebugMsg'
-	   >Show Debug Msg</a>
+	<!-- <a -->
+	<!--    ng-click='displayDebugMsg=!displayDebugMsg' -->
+	<!--    >Show Debug Msg</a> -->
 </div>
 <!--<div class="modal-footer">
 	<button type="button" class="btn btn-modal" ng-click="$close()" ng-disabled="!modal.message">OK</button>

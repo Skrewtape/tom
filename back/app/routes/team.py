@@ -31,7 +31,7 @@ returns:
 @App.route('/team/<team_id>', methods=['GET'])
 @fetch_entity(Team, 'team')
 def get_team(team):
-    return jsonify(team.to_dict_with_players())
+    return jsonify(team.to_dict_with_players_divisionmachine())
 
 @App.route('/team/<team_id>/division/<division_id>/entry/active', methods=['GET'])
 @fetch_entity(Team, 'team')

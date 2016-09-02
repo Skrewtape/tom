@@ -3,16 +3,18 @@ angular.module('app.playerselect_player_info.player_info').controller(
     'app.playerselect_player_info.player_info',
     function($scope, $state, StatusModal, TimeoutResources) {
 	$scope.player_id=$state.params.playerId;
-	StatusModal.loading();
-        $scope.divisions_promise = TimeoutResources.GetActiveDivisions();
+        StatusModal.loading();
+	$scope.player_pin_promise = TimeoutResources.GetPlayerPin($scope.player_tokens_promise,{player_id:$scope.player_id});        
+        $scope.divisions_promise = TimeoutResources.GetActiveDivisions($scope.player_pin_promise);
 	$scope.metadivisions_promise = TimeoutResources.GetAllMetadivisions($scope.divisions_promise);
 	$scope.tournaments_promise = TimeoutResources.GetActiveTournaments($scope.metadivisions_promise)
 	$scope.player_teams_promise = TimeoutResources.GetPlayerTeams($scope.tournaments_promise,{player_id:$scope.player_id})	
-	$scope.player_promise = TimeoutResources.GetPlayer($scope.player_teams_promise, {player_id:$scope.player_id})
+        $scope.player_promise = TimeoutResources.GetPlayer($scope.player_teams_promise, {player_id:$scope.player_id})
 	$scope.player_active_entries_count_promise = TimeoutResources.GetPlayerActiveEntriesCount($scope.player_promise,{player_id:$scope.player_id})
 	$scope.player_tokens_promise = TimeoutResources.GetPlayerTokens($scope.player_active_entries_count_promise,{player_id:$scope.player_id});
-	$scope.player_team_tokens_promise = TimeoutResources.GetPlayerTeamTokens($scope.player_tokens_promise,{player_id:$scope.player_id});	
-
+        $scope.player_team_tokens_promise = TimeoutResources.GetPlayerTeamTokens($scope.player_tokens_promise,{player_id:$scope.player_id});
+        
+        
 	$scope.player_team_tokens_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    if($scope.resources.player_teams.teams.length>0){

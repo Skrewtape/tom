@@ -9,7 +9,56 @@ module.exports = function(grunt) {
         return;
     }
   grunt.initConfig({
-	shell: {
+      uglify: {          
+          options: {
+              //mangle: {
+              //    except: ['angular', 'Backbone']
+              //},
+              mangle:false,
+              //mangleProperties: true,
+              //exceptionsFiles: [ 'myExceptionsFile.json' ],              
+              //reserveDOMCache: true,
+              nameCache: '/tmp/grunt-uglify-cache.json'
+          },
+          my_stuff: {
+              // files: {
+              //     '/var/www/html/dist/js/my_stuff.min.js': [admin_dest+'js/my_stuff.js']
+              // }
+              
+              files: [
+                  {
+                      '/var/www/html/dist/js/app.min.js': [admin_dest+'js/app.js']
+                  },
+                  {
+                      '/var/www/html/dist/js/_bower.min.js': [admin_dest+'js/_bower.js']
+                  },
+                  {'/var/www/html/dist/js/app_html_templates.min.js':[admin_dest+'app_html_templates.js']},                  
+
+                  {                  
+                  expand: true,
+                  cwd: 'src/app',
+                  src: '**/*.js',
+                  dest: admin_dest+'js_min/app'
+                  
+              },
+                      {
+                          expand: true,
+                          cwd: 'src/services',
+                          src: '**/*.js',
+                          dest: admin_dest+'js_min/services'
+                          //'/var/www/html/dist/js/my_stuff.min.js': [admin_dest+'js/my_stuff.js']
+                      },
+                      {
+                          expand: true,
+                          cwd: 'src/directives',
+                          src: '**/*.js',
+                          dest: admin_dest+'js_min/directives'
+                          //'/var/www/html/dist/js/my_stuff.min.js': [admin_dest+'js/my_stuff.js']
+                      }
+              ]
+          }
+      },
+      shell: {
 	    makeRevHistory: {
 		command: ["git log --pretty=format:'%H<msgst>%b<msge>' | fgrep -v '<msgst><msge>' | fgrep '<msgst>' | cut -b1-40 | git log --stdin --no-walk > "+admin_dest+"rev.txt",
 			  "echo '<pre>' > "+admin_dest+"rev.html",
@@ -61,7 +110,7 @@ module.exports = function(grunt) {
         },
         replace: {
             admin: {
-                src: [admin_dest+'app.js', admin_dest+'**/*html'],
+                src: [admin_dest+'js/my_stuff_min.js', admin_dest+'**/*html'],
                 overwrite: true,
                 replacements: [
                     {
@@ -110,17 +159,18 @@ module.exports = function(grunt) {
             admin: {
                 options: {
                     browserifyOptions: {
-                        debug: true,
+                        //debug: true,
                     },
                     transform: ['browserify-ngannotate'],
                 },
                 src: 'src/app/app.js',
-                dest: admin_dest+'app.js',
+                //src: admin_dest+'js/app.orig.min.js',
+                dest: admin_dest+'js/app.js',
             },
             player: {
                 options: {
                     browserifyOptions: {
-                        debug: true,
+                        //debug: true,
                     },
                     transform: ['browserify-ngannotate'],
                 },
@@ -140,15 +190,68 @@ module.exports = function(grunt) {
 		dest: admin_dest+'app_html_templates.js'
 	    }
 	},
-	concat: {
-	    admin: {
-		src: [ admin_dest+'app.js','src/services/**.js','src/directives/**.js','src/app/routes.js',admin_dest+'app_html_templates.js',admin_dest+'service_html_templates.js','src/app/**/*.js','!src/app/app.js',admin_dest+'js/_bower.js' ],
-		dest: admin_dest+'app.js' 
-	    },
-	    player: {
-		src: [ player_dest+'app.js','src/services/**.js','src/directives/**.js','src/app/routes.js',player_dest+'app_html_templates.js',player_dest+'service_html_templates.js','src/app/**/*.js','!src/app/app.js',player_dest+'js/_bower.js' ],
-		dest: player_dest+'app.js' 
-	    }            
+      concat: {
+          my_stuff: {
+              src: 
+                  [
+                      admin_dest+'js/app.js'
+                      //,admin_dest+'js_min/**/*.js'
+                      ,'src/app/**/*.js'
+                      ,'!'+admin_dest+'js_min/app/app.js'                      
+                      ,'!src/app/app.js'
+                      ,'src/services/**.js'
+                      ,'src/directives/**.js'
+                      ,'src/app/routes.js'
+                      ,admin_dest+'app_html_templates.js'
+                      ,admin_dest+'service_html_templates.js'                      
+
+                  ]
+              ,
+              dest: admin_dest+'js/my_stuff.js'
+          },
+          my_min_stuff: {
+              src: 
+                  [
+                      //admin_dest+'js/app.js',
+                      admin_dest+'js/app.min.js',
+                      //admin_dest+'js_min/**/*.js',
+                      admin_dest+'js_min/app/**/*.js',                      
+                      admin_dest+'js_min/services/**/*.js',
+                      //admin_dest+'js_min/app/routes.js',                      
+                      //admin_dest+'js_min/app/login/login.js',
+                      admin_dest+'js_min/directives/**/*.js',
+                      '!'+admin_dest+'js_min/app/app.js',                      
+                      '!src/app/app.js',
+                      admin_dest+'js/app_html_templates.min.js',                      
+                      admin_dest+'js/_bower.min.js'
+                  ]
+              ,
+              dest: admin_dest+'js/my_stuff_min.js'
+          },
+          my_controllers: {                     
+              src: [ 'src/app/**/*.js'
+                     ,'!src/app/app.js'],
+              
+              dest: admin_dest+'js/my_controllers.js'
+          },
+	  admin: {
+	      src: [ //admin_dest+'js/my_stuff.js'
+                  //admin_dest+'js/app.js'
+                  //'src/services/**.js'
+                  //'src/directives/**.js'
+                  'src/app/routes.js'
+                  //,admin_dest+'app_html_templates.js'
+                  //,admin_dest+'service_html_templates.js'
+                  //,'src/app/**/*.js'                  
+                  //'!src/app/app.js'
+                  //admin_dest+'js/_bower.js'
+              ],
+	      dest: admin_dest+'app.js' 
+	  },
+	  player: {
+	      src: [ player_dest+'js/app.js','src/services/**.js','src/directives/**.js','src/app/routes.js',player_dest+'app_html_templates.js',player_dest+'service_html_templates.js','src/app/**/*.js','!src/app/app.js',player_dest+'js/_bower.js' ],
+	      dest: player_dest+'app.js' 
+	  }            
 	},
         prettify: {
             main: {
@@ -181,8 +284,9 @@ module.exports = function(grunt) {
 		}
 	    }            
 	}
-    });
-    grunt.loadNpmTasks('grunt-contrib-copy');
+  });
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-copy');    
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -196,10 +300,14 @@ module.exports = function(grunt) {
     grunt.registerTask('admin_build', [
 	'clean:admin',
         'compass:admin',
-	'bower_concat:admin',
+	'bower_concat:admin',        
         'browserify:admin',
 	'ngtemplates:TOMApp',
-	'concat:admin',
+        'uglify:my_stuff',
+        'concat:my_stuff',
+        'concat:my_min_stuff',
+        'concat:admin',
+        'replace:admin',                
         'copy:admin',        
 	'shell:makeRevHistory'
     ]);
@@ -216,7 +324,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('default', [
         'admin_build',
-        'replace:admin',
         'player_build',
         'replace:player'
     ]);

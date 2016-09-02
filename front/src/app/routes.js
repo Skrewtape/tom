@@ -1,4 +1,7 @@
-angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
+angular.module('TOMApp').config(['$stateProvider', '$urlRouterProvider',function(    
+    $stateProvider,
+    $urlRouterProvider
+) {
     $urlRouterProvider.otherwise('/app');
     
     $stateProvider.state(
@@ -9,12 +12,12 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                     templateUrl: 'app/home.html',
                     controller: 'IndexController',
                 },
-		'not_backbutton@app':{
-		templateUrl: 'shared_html/not_backbutton.html'
-		}
+        	'not_backbutton@app':{
+        	templateUrl: 'shared_html/not_backbutton.html'
+        	}
 
             }
-	}).state(            
+        }).state(            
             'app.login', {
             url: '/login',
             views: {
@@ -22,14 +25,14 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                     templateUrl: 'app/login/login.html',
                     controller: 'app.login',
                 },
-		'backbutton@app.login':{
-		templateUrl: 'shared_html/backbutton.html'
-		},
-		'not_backbutton@app.login':{
-		templateUrl: 'shared_html/not_backbutton.html'
-		}
+        	'backbutton@app.login':{
+        	templateUrl: 'shared_html/backbutton.html'
+        	},
+        	'not_backbutton@app.login':{
+        	templateUrl: 'shared_html/not_backbutton.html'
+        	}
             }
-	}).state(            
+        }).state(            
             'app.playerlogin', {
             url: '/playerlogin',
             views: {
@@ -37,15 +40,15 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                     templateUrl: 'app/login/player_login.html',
                     controller: 'app.login',
                 },
-		'backbutton@app.login':{
-		templateUrl: 'shared_html/backbutton.html'
-		},
-		'not_backbutton@app.login':{
-		templateUrl: 'shared_html/not_backbutton.html'
-		}
+        	'backbutton@app.login':{
+        	templateUrl: 'shared_html/backbutton.html'
+        	},
+        	'not_backbutton@app.login':{
+        	templateUrl: 'shared_html/not_backbutton.html'
+        	}
             }
-	}).state(
-	    //FIXME : move this to the login dir
+        }).state(
+            //FIXME : move this to the login dir
             'app.about', {
             url: '/about',
             views: {
@@ -53,5 +56,5 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
                     templateUrl: 'rev.html',
                 }
             }
-	})
-});
+        })
+}]);

@@ -2,51 +2,54 @@
 //angular = require('./lib/angular-index.js');
 
 //poop
-_ = require('underscore');
+_ = require('underscore/underscore-min.js');
+//_ = require('underscore');
 angular = require('angular');
-require('jquery-browserify');
+//require('jquery-browserify');
 require('angular-ui-bootstrap');
-require('angular-ui-router');
-require('bootstrap-sass/assets/javascripts/bootstrap');
-require('angular-fcsa-number');
-require('angular-resource');
-require('ng-focus-if');
+require('angular-ui-router/release/angular-ui-router.min.js');
+//require('angular-ui-router');
+//require('bootstrap-sass/assets/javascripts/bootstrap');
+//require('angular-fcsa-number');
+require('angular-resource/angular-resource.min.js');
+//require('angular-resource');
+//require('ng-focus-if');
 app = angular.module(
 	'TOMApp',
 	[
-	    'ui.bootstrap',
-	    'ui.router',
-	    'mobile-angular-ui',
-	    'tom_services',
-	    'tom_directives',
-	    'app.login',
-	    'focus-if',
-	    'app.tournament_add',
-	    'app.tournamentselect_machine_add',
-	    'app.player_add',
-	    'fcsa-number',
-	    'app.tournament_activate',
-	    'app.playerselect_ticket_purchase',
-	    'app.teamname_team_add',
-	    'app.playerlist',
-	    'app.playerselect_player_edit',
-	    'app.metadivision_add',
-	    'app.user_add',
-	    'app.playerselect_player_info',
-	    'app.tournamentselect_scorekeeper',
-            'app.finalselect_finals',
-            'app.finals_activate',
-            'app.assholes',
-            'app.edit_all_entries',
-            'app.player_purchasetickets',
-            'app.test',/*REPLACEMECHILD*/
+ 	    'ui.bootstrap',
+ 	    'ui.router',
+ 	    'mobile-angular-ui',
+ 	    'tom_services',
+ 	    'tom_directives',
+ 	    'app.login',
+// //	    'focus-if',
+ 	    'app.tournament_add',
+ 	    'app.tournamentselect_machine_add',
+ 	    'app.player_add',
+// //	    'fcsa-number',
+ 	    'app.tournament_activate',
+ 	    'app.playerselect_ticket_purchase',
+ 	    'app.teamname_team_add',
+ 	    'app.playerlist',
+ 	    'app.playerselect_player_edit',
+ 	    'app.metadivision_add',
+ 	    'app.user_add',
+ 	    'app.playerselect_player_info',
+ 	    'app.tournamentselect_scorekeeper',
+             'app.finalselect_finals',
+             'app.finals_activate',
+             'app.assholes',
+             'app.edit_all_entries',
+             'app.player_purchasetickets',
+             'app.test','app.remove_player',/*REPLACEMECHILD*/
 	]
 );
 
 app.controller(
     'IndexController',    
     function($scope, $location, $http, 
-             $state, $injector, $uibModal, Page, StatusModal) {
+             $state, Page, StatusModal) {
 	$scope.Page = Page;
 
         //FIXME : wipeStateParamToPreventRepost is a hack, and should be handled at the
@@ -84,7 +87,7 @@ app.controller(
 app.controller(
     'PlayerController',    
     function($scope, $location, $http, 
-             $state, $injector, $uibModal, Page, StatusModal) {
+             $state, $injector, Page, StatusModal) {
 	$scope.Page = Page;
 
         //FIXME : wipeStateParamToPreventRepost is a hack, and should be handled at the
@@ -110,7 +113,7 @@ app.controller(
 
 	//FIXME : change this to use $resource
 	if(Page.logged_in_player().first_name == undefined){
-            $http.get('[APIHOST]/session/player/current',{timeout:5000}).success(function (data) {
+            $http.get('[APIHOST]/player/current',{timeout:5000}).success(function (data) {
 		Page.set_logged_in_player(data);			
             });
 	}
@@ -155,7 +158,7 @@ app.config(function($httpProvider) {
 //     };
 // });
 // Close all modals when changing routes
-app.run(function($rootScope, $uibModalStack) {
+app.run(function($rootScope) {
     $rootScope.$on('$routeChangeSuccess', function(){
 	$rootScope.broadcast('$stateChangeStart');
     });
@@ -175,6 +178,18 @@ app.run(function($rootScope, $uibModalStack) {
     // 		       $rootScope.displayBackButton.status = true;
     // 		       $rootScope.state_name = toState.name;
     // 		   });
+});
+
+app.filter('range', function() {
+  return function(input, total) {
+    total = parseInt(total);
+
+    for (var i=0; i<total; i++) {
+      input.push(i);
+    }
+
+    return input;
+  };
 });
 
 app.filter('orderObjectBy', function() {

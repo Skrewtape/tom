@@ -1,6 +1,7 @@
 """Model object for a player"""
 
 from app import DB
+from app import secret_config
 from flask_restless.helpers import to_dict
 from app.types import util, Team
 import random
@@ -23,7 +24,7 @@ class Player(DB.Model):
     search_name = DB.Column(DB.String(1000))
     email = DB.Column(DB.String(120))
     active = DB.Column(DB.Boolean, default=True)
-    pin=DB.Column(DB.Integer,autoincrement=True)
+    pin = DB.Column(DB.Integer, DB.Sequence(name='player_pin_seq',start=secret_config.player_pin_start,increment=secret_config.player_pin_increment))
     @DB.validates('email')
     def validate_email_wrapper(self,key,address):
         return util.validate_email(key,address)

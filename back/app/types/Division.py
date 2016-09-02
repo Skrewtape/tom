@@ -21,6 +21,10 @@ class Division(DB.Model):
     number_of_scores_per_entry = DB.Column(DB.Integer)
     stripe_sku = DB.Column(DB.String(100))
     local_price = DB.Column(DB.Integer)
+    finals_player_selection_type = DB.Column(DB.String(100))
+    finals_num_qualifiers = DB.Column(DB.Integer)
+    finals_num_players_per_group = DB.Column(DB.Integer)
+    finals_num_games_per_match = DB.Column(DB.Integer)
     tournament_id = DB.Column(DB.Integer, DB.ForeignKey(
         'tournament.tournament_id'
     ))

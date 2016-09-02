@@ -1,14 +1,15 @@
 import json
 from sqlalchemy import null
 from flask import jsonify, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app import App
 from app.types import Player, Division, Entry, Score, Tournament, Team
 from app import App, Admin_permission, Desk_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank
 from werkzeug.exceptions import Conflict
 from flask_restless.helpers import to_dict
-    
+
+
 @App.route('/player', methods=['GET'])
 def get_players():
     """Get a list of players"""
@@ -34,6 +35,26 @@ def get_latest_players(num_players):
         p.to_dict_simple() for p in
         Player.query.order_by(Player.player_id.desc()).limit(int(num_players))
     ])
+
+@App.route('/player/pin/<player_id>', methods=['GET'])
+@login_required
+@Desk_permission.require(403)
+@fetch_entity(Player, 'player')
+def get_player_pin(player):
+    return jsonify({'pin':player.pin})
+
+@App.route('/player/current', methods=['GET'])
+def get_current_player():
+    """Get information about the current logged in player"""
+    # pylint: disable=unexpected-keyword-arg, no-value-for-parameter
+    # pylint doesn't understand the argument name magic that happens with @fetch_entity    
+    
+    if hasattr(current_user,'player_id'):
+        player_dict = Player.query.filter_by(player_id=current_user.player_id).first().to_dict_simple()
+        return jsonify(player_dict)
+    #return get_user(user_id=current_user.user_id)
+    else:
+        return jsonify({})
 
 
 @App.route('/player', methods=['POST'])
@@ -68,10 +89,10 @@ returns:
             raise BadRequest('Bad division specified')            
         new_player.linked_division.append(division)
     DB.session.add(new_player)
-    DB.session.commit()    
-    new_player.gen_pin()
-    DB.session.commit()
-    return jsonify(new_player.to_dict_simple())
+    DB.session.commit()        
+    new_player_dict = new_player.to_dict_simple()
+    new_player_dict['pin']=new_player.pin
+    return jsonify(new_player_dict)
 
 def linked_divisions_to_dict(linked_divisions):
     if len(linked_divisions) == 0:

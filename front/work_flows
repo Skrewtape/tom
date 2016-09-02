@@ -1,76 +1,87 @@
-1) Review all workflows and make changes as appropriate
-2) Review all workflows
-2a) remove unused code ( and mark code for fixme/refactor )
-2b) add comments
-3) Provide documents for folks to contribute
-* home
+#PPO features
+* need to handle "return to top of finals - need to maintain tab"
+* need to maintain finals order on match list page
+* finals need display(for players) vs editing(scorekeepers) view - by wed
+* need team to work in finals - by fri
 
-* Add tournament
-** single div
 
-** team div
+* need to "auto-complete" entries based on tournament type - by tue
+** need to add field to tournament (i.e. ppo or papa style qualifying)
+* add ability to set number of qualifying spots per division (or tournament?)  
+* need indicator of tiebreakers needed on player select page for finals
+* replace makearray with new range filter
+* change edit scores in admin to use commas
 
-* Activate/deactivate tournament
+# current work
+# check for dups
 
-* Add divisions to tournament
+#Bugs
+* results index gets sad if there is a division with no machines in it
 
-* Remove divisions from tournament(?)
+#"Broken"/Missing existing functionality
+* finals need to handle team divisions
 
-* Add machines to division
-** multi division
-** single division
-** team division
+#Fix existing Features
+* Need ability to mark player as incorrect (i.e. player needs to be removed due to machine breaking?)
+** fix frontend
+** fix backend
+* finish fixing ui tweaks
+* Need a "save/confirm/delete" button for X'ing out scores?
+* limit number of multidivision tournaments to 1 (in ui)
+* make sure "division" isn't in division name, "tournament" not in tournament name
+* add entry rank to player results
 
-* Remove machines from division
-** multi
-** single
-** team
+#Tests (manual)
+* run through every path as single player
+* as team
+* as herb (single division)
+* as herb (multiple division)
+* reload on each page (that isn't a process page)
 
-*Create metadivision
+#New Features
+* add new service for setting/getting the backend ip
+** all refrences to APIHOST should be replaced by this call
+* need to be able to have "player 100" every year at papa
+** Guyh - this will require a complete re-enginering of anything that uses the player id
+** Current best bet - player id is a pk with "meta-tournament" (i.e. papa16 vs papa15)
+** Everything that uses a playerid needs to be changed to use this
+** Admin functionality will either need to have a metatournament chosen, or admin func will need to offer options after player choice
+* add "start/end" date for tournaments to add tournaments page
+* figure out where we need to use the following : all_divisions, all_tournaments, all_active_divisions, all_divisions_for_given_date_range VS active_X
+* need a mobile only purchase tickets screen
+* need to add unique pin per player
+* need to display player unique pin during player creation?  or maybe it has to be emailed?  
+* need a "add email address" page for players
+* Remove a machine and re-add (note : is this a valid scenario? do we actually want a "disable machine while being repaired" option?)
+* Remove divisions/disable from tournament(?) - not currently an option
+* Remove team/disable - not available
+* Remove metadivisions/disable - not available
+* need summary results page ( i.e. no network connection, everyone crowded around a monitor )
+* need ability to change finals score/follow dougs suggestions for finals score entry
 
-*Add Player
-** edit division link
-** ifpa rating
-** add tickets
+#Refactor
+* refactor routes to v1
+* Suck out any hardcoded css into scss files
+* Make pages phone-mobile friendly
+** shorten longer input field names
+* need to cleanup record score ui ( need to figure out how to fit all those buttons AND see your previous scores )
 
-*Create team
-** add players to team
 
-*Edit team
+#CHECK FOR DUPLICATES
+* add tokens
+* add team
+* add player
+* add user
+* generate finals
+* add scores
+* declare asshole
 
-*Add tickets
-** all types of tourneys
-
-*Scorekeeping
-** add person to machine
-*** machine already occupied
-*** player has no tickets
-*** player has already played machine on current ticket
-** record score in each type of tourney
-** complete ticket in each type of tourney
-** cancel complete
-** void ticket from "score record" and "score complete" pages
-
-* Edit player link division
-
-* Edit player entries
-
-* Edit last x entries for a given division
-
-* player is a jagoff
-
+#Documenting and Refactoring
 * add user
 ** roles
+* View results - refactor(killroy) and document
+* comment entry.py functions
 
-* View results
 
 
-Jake notes on ticket purchase page:
 
-X left VS X already purchased
-
-Show player existing info seperately/top of page
-
-shopping cart
-
-different sized text for buttons vs reading

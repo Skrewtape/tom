@@ -171,7 +171,7 @@ returns:
 @Scorekeeper_permission.require(403)
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
-@fetch_entity(Player, 'player')
+@fetch_entity(Team, 'team')
 def clear_machine_team(divisionmachine, team): #killroy
     """
 description: Mark a division_machine as not being played (by clearing the team_id from the division_machine)
@@ -187,7 +187,7 @@ returns:
         raise Conflict('Team %s is not playing machine %s !' % (team.team_name,divisionmachine.machine.name))                
     if team.division_machine.division_machine_id != divisionmachine.division_machine_id:
         raise Conflict('Team %s is not playing machine %s !' % (team.team_name,divisionmachine.machine.name))
-    divisionmachine.player_id = None
+    divisionmachine.team_id = None
     DB.session.commit()
     
     return jsonify({})

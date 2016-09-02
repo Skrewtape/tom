@@ -16,3 +16,10 @@ from app.types.Finals import Finals
 from app.types.Finals import FinalsMatch
 from app.types.Finals import FinalsPlayer
 from app.types.Finals import FinalsScore
+from app.types.FinalsEx import FinalsEx
+from app.types.FinalsEx import FinalsMatchSlotEx
+from app.types.FinalsEx import FinalsPlayerEx
+from app.types.FinalsEx import FinalsMatchEx
+from app.types.FinalsEx import FinalsMatchResultEx
+from app.types.FinalsEx import FinalsMatchResultScoreEx
+

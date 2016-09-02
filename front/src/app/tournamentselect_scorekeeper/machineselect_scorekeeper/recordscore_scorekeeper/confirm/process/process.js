@@ -20,6 +20,7 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	//        http connection times out.  Need to figure out a way to deal with this.
         console.log($scope.entry_id+ ' is entry id');
         $scope.tournament_promise = TimeoutResources.GetTournament(undefined,{tournament_id:$scope.tournament_id});
+        $scope.final_score = $scope.final_score.replace(/,/g, '');
 	if($scope.team_tournament == "false"){
 	    
 	    $scope.player_promise = TimeoutResources.GetPlayer($scope.tournament_promise,{player_id:$scope.player_id});	    	    

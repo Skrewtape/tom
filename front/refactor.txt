@@ -1,0 +1,185 @@
+Types of tournaments - qualifying
+* herb
+* papa
+* match play (pinburgh)
+
+Types of tournaments - finals
+* papa
+* ppo
+
+Objects
+* MetaTournament
+** list of tournaments
+
+Player
+** metatournament
+** papa-style id
+** pin
+** email
+
+* Tournament
+** scoring type (herb, papa)
+** finals type (papa (x number of players), other) 
+** start/end date
+** metatournament
+** single or multiple division tournament
+** team tournament
+** active
+** list of divisions
+
+* MetaDivision
+** list of divisions
+
+* Division
+** number of scores per entry (when creating entry)
+** stripe sku
+** type of pricing (remote or local)
+** local price
+** remote SKU
+** remote pricing type ( Stripe, etc )
+
+* Division Machine
+** original machine
+** in use
+** team id playing this machine
+** player id playing this machine
+** removed
+
+* Machine
+
+* Token
+** team id
+** player id
+** division id
+** metadivision id
+
+* Entry
+** division_id
+** completed
+** voided
+** number_of_scores_per_entry
+** active (needed now that we have tokens?)
+** list of scores
+** player id
+** team id
+
+* QualifyingScore
+** score
+** division machine
+
+* Team
+** list of players
+
+* Finals
+** type
+** number of players in each match
+** number of games in each "match"
+
+* Finals Round
+** Round number
+
+* Finals Match
+** Round number
+** List of finals
+** FinalsMachine
+
+* Finals Player
+** Seed
+** player_id
+
+* Finals Slot
+** finals players
+** Finals match
+
+* FinalsMatchResult
+** Finals Match
+** GameNumber
+** Finals Machine
+** List of FinalsMatchResultsScore
+
+* FinalsMatchResultScore
+** Finals player
+** play order
+** score
+
+* Finals machine
+** link to machine
+
+
+
+Global Functionality
+* EVERYTHING needs to know the metatournament
+** if not metatournament selected, needs to be selected
+** can be done with ui-router - check on each state transition  
+
+Functionality
+* create meta-tournament
+** need service for setting/getting metatournament
+** need angular workflow for creating metatournament
+** need angular workflow for selecting metatournament
+** need hooks for checking selected metatournament on state change - if not set, send to select meta-tournament state
+* select meta-tournament
+** get list of meta-tournaments
+** set meta-tournament (as ajax request, not as state change)
+
+* create tournament
+** need to specify type (herb,papa)
+** need to specify finals type
+*** a/b split based on performance
+*** papa style
+** single division or multiple division
+** team or single 
+** # of spots in finals (optional)
+** # of people in each group in finals (optional)
+
+* edit tournament
+** # of spots in finals
+** # of people in each group in finals
+
+* create divisions
+** tournament
+** scores per ticket
+** price per ticket (optional)
+** stripe SKU (optional)
+** scores per ticket
+
+* edit division
+** stripe SKU
+** price per ticket
+** scores per ticket
+
+* add division machines to division
+
+* "remove" division machine from division
+
+* create players/link players to division
+* create users
+* edit players
+* edit entries
+* get player info
+* buy tickets
+* record scores qualifying/finals
+* start finals
+* activate finals
+* add team
+* change division machines
+* results
+
+#ScratchPad
+
+## Finals - don't allow selection of future round
+* check to see if previous round is "done"
+## Finals - display
+* index
+** need to add finals to sidebar template
+** need to add finals to get_sidebar_info()
+
+* 2 new routes
+** match select : /finals/<finals_id>
+** match details : /finals_match/<finals_match_id>
+** pass selected final into render
+* copy html from match select to template
+* edit to remove edit boxes and code
+* copy html from match details to template
+* edit to remove edit boxes and code
+

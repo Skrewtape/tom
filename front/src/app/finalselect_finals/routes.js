@@ -18,7 +18,7 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	   }
        }).state('app.finalselect_finals.matchselect_finals', 
         { 
- 	 url: '/matchselect_finals/:finalsId',
+ 	 url: '/matchselect_finals/:finalsExId',
  	 views: {
  	     '@': {
  	       templateUrl: 'app/finalselect_finals/matchselect_finals/matchselect_finals.html',
@@ -30,10 +30,13 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
 		'not_backbutton@app.finalselect_finals.matchselect_finals':{
 		templateUrl: 'shared_html/not_backbutton.html'
 		}
- 	   }
+ 	 },            
+            params: {
+		tab_to_activate:{}
+            }
        }).state('app.finalselect_finals.matchselect_finals.matchscores_finals', 
         { 
- 	 url: '/matchscores_finals/:matchId',
+ 	 url: '/matchscores_finals/:finalsMatchExId',
  	 views: {
  	     '@': {
  	       templateUrl: 'app/finalselect_finals/matchselect_finals/matchscores_finals/matchscores_finals.html',
@@ -45,7 +48,10 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
 		'not_backbutton@app.finalselect_finals.matchselect_finals.matchscores_finals':{
 		templateUrl: 'shared_html/not_backbutton.html'
 		}
- 	   }
+ 	 },
+            params: {
+		round:{}
+            }
        })//REPLACE_ME
 
 

@@ -6,12 +6,12 @@
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->  
   <button
      style='margin-top:25px;margin-bottom:15px'
-     ng-disabled='num_players_selected.count<24 || num_players_selected.count > 24'
+     ng-disabled='(resources.ranked_players.ranked_players | filter:{checked: true }).length > num_qualifiers'
      class='btn btn-info btn-xlg'
      ui-sref='.process({checkedPlayers:resources.ranked_players.ranked_players})'
      > Start Finals</button>
   <br>
-  <span ng-class='num_players_selected.css_class'>Num Players Selected : {{num_players_selected.count}}</span>
+  <span ng-class='num_players_selected.css_class'>Num Players Selected : {{(resources.ranked_players.ranked_players | filter:{checked: true }).length}}</span>
   <br>
   <br>
   <div class="scrollable-content"  style='padding:10px'>
@@ -29,7 +29,14 @@
                  type="checkbox" ng-model="player.checked">
             </td>
             <td>
-              <span ng-class='player.css_class'>{{resources.players.players[player.player_id].first_name}} {{resources.players.players[player.player_id].last_name}} (rank : {{player.rank}})</span>
+              rank : <input
+                        style='width:50px'
+                        type="number" ng-model="player.rank">
+              <span ng-class="{red: check_too_many_checked_players(player),orange: check_too_many_ties(player)}">
+                <!--(data | filter:{checked: true }).length -->
+                {{resources.players.players[player.player_id].first_name}} {{resources.players.players[player.player_id].last_name}}
+              </span>
+              <hr ng-if="abdivision($index)">
             </td>
           </tr>
         </table>

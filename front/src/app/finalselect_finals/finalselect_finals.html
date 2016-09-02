@@ -11,8 +11,8 @@
         Started Finals
       </div>
       <div class="list-group">
-        <a ng-repeat="final in resources.finals.sorted_by_division_id" class="list-group-item" ui-sref='.matchselect_finals({finalsId:final.finals_id})'>
-          {{resources.divisions[final.division_id].tournament_name}}<i class="fa fa-chevron-right pull-right"></i>
+        <a ng-repeat="final in resources.finals" class="list-group-item" ui-sref='.matchselect_finals({finalsExId:final.finals_ex_id})'>
+          {{final.tournament_name}}<i class="fa fa-chevron-right pull-right"></i>
         </a>
       </div>
     </div>
