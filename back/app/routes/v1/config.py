@@ -17,7 +17,6 @@ api_ver=''
 
 @App.route(api_ver + '/config/tom', methods=['GET'])
 @login_required
-@Admin_permission.require(403)
 def get_tom_config_params():
     """Get details on how tom is configured"""
     config = {}
