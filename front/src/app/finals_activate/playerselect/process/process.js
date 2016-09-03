@@ -38,8 +38,8 @@ angular.module('app.finals_activate.playerselect.process').controller(
 	    finals_ex_id=data.finals_ex_id;
 	    $scope.gen_finals_promise = TimeoutResources.GenerateFinalsRounds($scope.add_finals_promise,{finals_id:finals_ex_id});
             if($scope.tournament_style == "ppo"){
-                $scope.checked_players_b = $scope.checked_players.slice(24,$scope.checked_players.length);
-                $scope.checked_players = $scope.checked_players.slice(0,24);
+                $scope.checked_players_b = $scope.checked_players.slice($scope.num_qualifiers,$scope.checked_players.length);
+                $scope.checked_players = $scope.checked_players.slice(0,$scope.num_qualifiers);
             }            
 	    $scope.fill_finals_promise = TimeoutResources.FillFinalsRounds($scope.gen_finals_promise,{finals_ex_id:finals_ex_id},{checked_players:$scope.checked_players});
 	    $scope.get_finals_promise = TimeoutResources.GetFinals($scope.fill_finals_promise);		
