@@ -14,6 +14,14 @@ angular.module('tom_directives.link_division').controller(
 	    StatusModal.loaded();
             console.log('hi there');
 	    $scope.resources = TimeoutResources.GetAllResources();
+            $scope.multi_division_available = false;
+            
+            for(t_idx in $scope.resources.tournaments){
+                t = $scope.resources.tournaments[t_idx];
+                if(t.single_division == false){
+                    $scope.multi_division_available = true;
+                }
+            }
 	    if($scope.resources.player.linked_division==null){
 		return;
 	    }

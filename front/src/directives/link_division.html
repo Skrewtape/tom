@@ -29,9 +29,16 @@
       </form>
       <br>
       <button
+         ng-if='multi_division_available == true'
          ng-disabled='linked_division.value == undefined'
 	 class='btn btn-info btn-xlg'
 	 ui-sref='.process({playerId:resources.player.player_id,divisionId:linked_division.value})'
 	 >Save Player Division</button>
+      <button
+         ng-if='multi_division_available == false' 
+	 class='btn btn-info btn-xlg'
+	 ui-sref='.process.ticket_purchase'
+	 >Purchase Tickets</button>
+      
       <br>
 
