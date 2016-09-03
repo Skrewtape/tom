@@ -78,7 +78,6 @@ angular.module('app.player_purchasetickets').controller(
         }
         
         $scope.player_id = $state.params.playerId;
-        $scope.max_unstarted_tickets = 5;
         $scope.get_metadivision_for_division = Utils.get_metadivision_for_division;
         $scope.getMetadivisionTokens = function(div_id) {
             return $scope.resources['player_tokens']['metadivisions'][div_id]            
@@ -111,7 +110,8 @@ angular.module('app.player_purchasetickets').controller(
 	//if($scope.checkForBlankParams($scope.player_info) == true){
 	//    return;
 	//}
-	$scope.division_cost_promise = TimeoutResources.GetDivTicketCostFromStripe();
+        $scope.tom_config_promise = TimeoutResources.GetTomConfig();
+	$scope.division_cost_promise = TimeoutResources.GetDivTicketCostFromStripe($scope.tom_config_promise);
         $scope.player_active_entries_count_promise = TimeoutResources.GetPlayerActiveEntriesCount($scope.division_cost_promise,{player_id:$scope.player_id});
 	$scope.player_teams_promise = TimeoutResources.GetPlayerTeams($scope.metadivisions_promise,{player_id:$scope.player_id});	                
 	$scope.player_tokens_promise = TimeoutResources.GetPlayerTokens($scope.tournaments_promise,{player_id:$scope.player_id});
@@ -122,6 +122,7 @@ angular.module('app.player_purchasetickets').controller(
         
         $scope.tournaments_promise.then(function(data){            
             $scope.resources = TimeoutResources.GetAllResources();
+            $scope.max_unstarted_tickets = $scope.resources.tom_config.max_unstarted_tokens;
             StatusModal.loaded();            
             console.log($scope.resources);
         });
