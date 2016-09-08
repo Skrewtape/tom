@@ -13,17 +13,20 @@ from flask_cors import CORS
 from app import secret_config, tom_config
 from werkzeug.exceptions import default_exceptions, HTTPException
 from sqlalchemy_utils import create_database, database_exists
+from flask.ext.cache import Cache
 
 if secret_config.app_secret_key == "" or (secret_config.stripe_api_key == "" and tom_config.use_stripe is True):    
     raise Exception("You didn't configure your secrets!")
 
 
 App = Flask(__name__)
+cache = Cache(App,config={'CACHE_TYPE': 'simple'})
+
 App.secret_key = secret_config.app_secret_key
 
 App.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 App.config['SQLALCHEMY_POOL_SIZE']=20
-App.config['SQLALCHEMY_POOL_TIMEOUT']=5
+App.config['SQLALCHEMY_POOL_TIMEOUT']=0
 if 'DYNO' not in os.environ:
     App.config['DEBUG'] = True
 
