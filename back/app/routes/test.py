@@ -1,9 +1,10 @@
 import json
-from sqlalchemy import null, func, text
+from operator import itemgetter
+from sqlalchemy import null, func, text, and_
 from flask import jsonify, request, abort
 from flask_login import login_required
-from app import App
-from app.types import Score, Player, Division, Entry, User
+from app import App, cache
+from app.types import Score, Player, Division, Entry, User, Tournament
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
 from sqlalchemy.sql import select
@@ -12,6 +13,12 @@ from sqlalchemy.sql import functions
 #from sqlalchemy import within_group
 from sqlalchemy.orm import join
 from sqlalchemy.sql.expression import desc
+import calendar
+import time
+from flask import render_template
+from ranking import Ranking
+
+memoize_delay=5
 
 @App.route('/test_results_rank/division/<division_id>', methods=['GET'])
 def get_division_reuslts(division_id):
@@ -82,79 +89,275 @@ def is_power_of_2(number):
     number = int(number)
     return number != 0 and number & (number - 1) == 0
 
-@App.route('/test_herb_player_rankings_for_division/<division_id>/<num_players>/<type>', methods=['GET'])
-def test_get_players_ranked_by_qualifying_herb(division_id,num_players,type):
-    if type == "papa":
-        s = select([
-            Score,
-            Entry.division_id,
-            Score.score_id,
-            Score.entry_id,
-            func.testing_papa_scoring(func.rank().over(order_by=Score.score,partition_by=Score.division_machine_id)).label('realrank')
-        ]).select_from(join(Score, Entry)).where(text("entry.division_id = "+str(division_id)+" and entry.completed = true and entry.voided = false")).alias('fake')
-        what = func.sum(s.c.realrank).label('suming')
-        new_s = select([
-            Entry.entry_id,        
-            func.sum(s.c.realrank).label('suming')
-        ]).select_from(join(Entry,s)).group_by(Entry.entry_id).order_by(desc(what)).limit(num_players)
-
-        results = DB.engine.execute(new_s)
-        for result in results:
-            print "entry_id : %s, sum : %s "% (result.entry_id, result.suming)
-        return jsonify({})
-    
-    # s = select([
-    #     Score.score_id,
-    #     func.testing_papa_scoring(func.rank().over(order_by=Score.score,partition_by=Entry.player_id)).label('realrank')                
-    # ]).select_from(join(Score,Entry)).where(text("realrank = 0"))
-
-    s = select([
-        Score.score,
-        Score.score_id,
-        Entry.player_id,
-        Score.division_machine_id,
-        func.rank().over(order_by=text("score.score desc"),partition_by=(Entry.player_id,Score.division_machine_id)).label('realrank')                
-    ]).select_from(join(Score,Entry)).alias('poop')
-
-    new_s = select([
-        s.c.score,
-        s.c.realrank,
-        s.c.score_id,
-        s.c.player_id,
-        s.c.division_machine_id,
-    ]).select_from(s).where(s.c.realrank == 1).order_by(desc(s.c.realrank)).alias('poop2')
-
-    really_new_s = select([
-        new_s.c.score,
-        new_s.c.score_id,        
-        new_s.c.player_id,
-        new_s.c.division_machine_id,        
-        func.testing_papa_scoring(func.rank().over(text("poop2.division_machine_id order by poop2.score desc"))).label('realrank')
-    ]).select_from(Score).where(text("score.score_id=poop2.score_id"))
-    print really_new_s
-    results = DB.engine.execute(really_new_s)
-    for result in results:
-        print "score id : %s, realrank :  %s, player_id :  %s, score :  %s, machine : %s"% (result.score_id, result.realrank,result.player_id, result.score, result.division_machine_id)
-    # if checked_players:
-    #     checked_players = " where player_id in (%s) " % checked_players
-    # else:
-    #     checked_players = ""
-    # entry_results = DB.engine.execute("select player_id, entry_score_sum, rank() over (order by entry_score_sum desc) as rank from (select  player_id, sum(entry_score) as entry_score_sum  from (select entry.player_id,  testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and completed = true and voided = false) as ss %s group by player_id order by entry_score_sum desc limit %d) as tt" % (division_id, checked_players,num_players) )
-    # unranked_players = []
-    # unranked_player_tracker = {}
-    # #ranked_list =  list(Ranking(entry_result,key=lambda e: int(e.),reverse=True))    
-    # for player_result in entry_results:
-    #     #print "%s %s %s" %(player_result.player_id,player_result.entry_score_sum,player_result.entry_id) 
-    #     if player_result.player_id not in unranked_player_tracker:
-    #         unranked_player_tracker[player_result.player_id]=player_result
-    #     else:
-    #         if unranked_player_tracker[player_result.player_id].entry_score_sum <= player_result.entry_score_sum:
-    #             unranked_player_tracker[player_result.player_id]=player_result
-    #             #ranked_players.append(player_result)
-    # for key,value in unranked_player_tracker.iteritems():
-    #     unranked_players.append(value)
-    # sorted_players = sorted(unranked_players, key=itemgetter('rank'))
-    # ranked_players =  list(Ranking(sorted_players,key=lambda e: e.rank,reverse=True))                    
-    
-    # return ranked_players
+@App.route('/test_overhead', methods=['GET'])
+def test_overhead():
+    divisions = Division.query.all()
     return jsonify({})
+
+@cache.memoize(memoize_delay)
+def get_herb_scores(division_id):
+    first_query_sum_func = func.rank().over(order_by=desc(text("score.score")),
+                                            partition_by=(Score.division_machine_id))
+    first_query = select([
+        Score,
+        Entry,
+        func.testing_papa_scoring(first_query_sum_func).label('scorepoints')                
+    ]).select_from(join(Score,Entry)).where(Entry.division_id == division_id).alias('first_query')
+
+    scores_results = DB.engine.execute(first_query)
+    scores = {}
+    for result in scores_results:        
+        if result.player_id not in scores:
+            scores[result.player_id]=[]
+        scores[result.player_id].append(result)                
+    return scores
+    
+#def get_papa_scores(s):
+@cache.memoize(memoize_delay)
+def get_papa_players_ex(division_id):
+    where_string = "entry.division_id = " +str(division_id)+ "and entry.completed = true and entry.voided = false"
+    papa_scoring_func = func.testing_papa_scoring(func.rank().over(order_by=desc(Score.score),
+                                                                   partition_by=Score.division_machine_id)).label('scorepoints')    
+    first_query = select([                
+        Entry,
+        Score,
+        func.rank().over(order_by=desc(Score.score),
+                         partition_by=Score.division_machine_id).label('scorerank'),
+        papa_scoring_func
+    ],use_labels=True).select_from(join(Score, Entry)).where(text(where_string)).order_by(desc(text("scorepoints"))).alias('first_query')
+        
+    
+    second_query_sum_func = func.sum(first_query.c.scorepoints)
+    second_query_rank_func = func.rank().over(order_by=desc(second_query_sum_func)).label('scorepointsrank')    
+    
+    second_query = select([
+        Entry.entry_id,        
+        second_query_sum_func.label('scorepointssum'),
+        second_query_rank_func,        
+        ]).select_from(join(Entry,first_query,onclause=text("entry.entry_id = first_query.score_entry_id"))).group_by(Entry.entry_id).order_by(desc(second_query_sum_func)).alias("second_query")
+        
+    division = Division.query.filter_by(division_id=division_id).first()    
+        
+    query_three_where_string = "Score.entry_id = Entry.entry_id and Entry.entry_id = second_query.entry_id" 
+        
+    query_three = select([                
+        Score,
+        Entry,
+        second_query.c.scorepointssum,
+        second_query.c.scorepointsrank        
+    ],use_labels=True).select_from(second_query).where(text(query_three_where_string)).order_by(desc(Entry.division_id),desc(second_query.c.scorepointssum))
+    
+    results = []
+    for result in DB.engine.execute(query_three):        
+        results.append(result)            
+    return results
+
+def get_papa_players(division_id,player_id):    
+    where_string = "entry.division_id = " +str(division_id)+ "and entry.completed = true and entry.voided = false"
+
+    papa_scoring_func = func.testing_papa_scoring(func.rank().over(order_by=desc(Score.score),
+                                                                   partition_by=Score.division_machine_id)).label('scorepoints')    
+    first_query = select([                
+        Entry,
+        Score,
+        func.rank().over(order_by=desc(Score.score),
+                         partition_by=Score.division_machine_id).label('scorerank'),
+        papa_scoring_func
+    ],use_labels=True).select_from(join(Score, Entry)).where(text(where_string)).order_by(desc(text("scorepoints"))).alias('first_query')
+        
+    
+    second_query_sum_func = func.sum(first_query.c.scorepoints)
+    second_query_rank_func = func.rank().over(order_by=desc(second_query_sum_func)).label('scorepointsrank')
+    player_string = "first_query.entry_player_id = %s" % player_id
+    
+    second_query = select([
+        Entry.entry_id,        
+        second_query_sum_func.label('scorepointssum'),
+        second_query_rank_func,        
+        ]).select_from(join(Entry,first_query,onclause=text("entry.entry_id = first_query.score_entry_id"))).group_by(Entry.entry_id).order_by(desc(second_query_sum_func)).alias("second_query")
+        
+    division = Division.query.filter_by(division_id=division_id).first()
+    player = Player.query.filter_by(player_id=player_id).first()    
+        
+    if division.tournament.team_tournament and player.team:        
+        #query_three_where_string = "Score.entry_id = Entry.entry_id and Entry.entry_id = second_query.entry_id and Entry.team_id = %s" % player.team[0].team_id
+        query_three_where_string = "Score.entry_id = Entry.entry_id and Entry.entry_id = second_query.entry_id" 
+    else:
+        #query_three_where_string = "Score.entry_id = Entry.entry_id and Entry.entry_id = second_query.entry_id and Entry.player_id = %s" % player_id
+        query_three_where_string = "Score.entry_id = Entry.entry_id and Entry.entry_id = second_query.entry_id"
+        
+    query_three = select([                
+        Score,
+        Entry,
+        second_query.c.scorepointssum,
+        second_query.c.scorepointsrank        
+    ],use_labels=True).select_from(second_query).where(text(query_three_where_string)).order_by(desc(Entry.division_id),desc(second_query.c.scorepointssum))
+    
+    local_entries = {}    
+        
+    #for result in DB.engine.execute(query_three):
+    for result in get_papa_players_ex(division_id):
+        if result.entry_entry_id not in local_entries and result.entry_player_id == int(player_id):
+            local_entries[result.entry_entry_id]={'entry':None,'scores':[]}            
+            local_entries[result.entry_entry_id]['entry']=result    
+        #local_entries[result.entry_entry_id]['scores'].append(result)
+    ##for result in DB.engine.execute(first_query_a):        
+    ##    local_entries[result.entry_entry_id]['scores'].append(result)
+    scores = get_papa_scores_ex(division_id)
+    for score_id,score in scores.items():
+        if score.entry_player_id == int(player_id):
+            local_entries[score.entry_entry_id]['scores'].append(score)
+    local_entries_list = [v for k,v in local_entries.items() ]
+    return local_entries_list
+
+@cache.memoize(memoize_delay)
+def get_papa_scores_ex(division_id):
+    where_string = "entry.division_id = " +str(division_id)+ "and entry.completed = true and entry.voided = false"
+
+    papa_scoring_func = func.testing_papa_scoring(func.rank().over(order_by=desc(Score.score),
+                                                                   partition_by=Score.division_machine_id)).label('scorepoints')    
+    first_query = select([                
+        Entry,
+        Score,
+        func.rank().over(order_by=desc(Score.score),
+                         partition_by=Score.division_machine_id).label('scorerank'),
+        papa_scoring_func
+    ],use_labels=True).select_from(join(Score, Entry)).where(text(where_string)).order_by(desc(text("scorepoints"))).alias('first_query')
+        
+
+    # first_query_a = select([
+    #     first_query
+    # ]).select_from(first_query).where(text("entry_player_id=%s" % player_id)).alias('first_query_a')
+
+    scores = {}
+    for result in DB.engine.execute(first_query):                
+        scores[result.score_score_id]=result        
+    return scores
+
+@cache.memoize(memoize_delay)
+def get_papa_scores(division_id):
+    where_string = "entry.division_id = " +str(division_id)+ "and entry.completed = true and entry.voided = false"
+
+    papa_scoring_func = func.testing_papa_scoring(func.rank().over(order_by=desc(Score.score),
+                                                                   partition_by=Score.division_machine_id)).label('scorepoints')    
+    first_query = select([                
+        Entry,
+        Score,
+        papa_scoring_func
+    ],use_labels=True).select_from(join(Score, Entry)).where(text(where_string)).order_by(desc(text("scorepoints"))).alias('first_query')
+ 
+    second_query_sum_func = func.sum(first_query.c.scorepoints).label('scorepointssum')
+    second_query_rank_func = func.rank().over(order_by=desc(second_query_sum_func)).label('ranking')    
+    
+    second_query = select([
+        Entry.entry_id,        
+        second_query_sum_func,
+        second_query_rank_func
+    ]).select_from(join(Entry,first_query,onclause=text("entry.entry_id = first_query.score_entry_id"))).group_by(Entry.entry_id).order_by(desc(second_query_sum_func)).alias("second_query")
+      
+    rank_results = DB.engine.execute(second_query)
+    score_results = DB.engine.execute(first_query)
+    
+    scores={}
+    ranks={}
+    for result in rank_results:        
+        ranks[result.entry_id]=result            
+    for result in score_results:        
+        scores[result.score_score_id]=result                
+    return scores,ranks
+
+@cache.memoize(memoize_delay)
+def get_herb_players(player_id, division_id):
+    first_query_rank_func = func.rank().over(order_by=text("score.score desc"),
+                                             partition_by=(Score.division_machine_id))
+    first_query_points_func = func.testing_papa_scoring(first_query_rank_func)    
+    first_query = select([
+        Score,            
+        Entry,        
+        first_query_points_func.label('single_players_score_on_machine')
+    ],use_labels=True).select_from(join(Score,Entry)).where(Entry.division_id == division_id).alias('first_query')    
+
+    second_query = select([
+        first_query,                
+        func.rank().over(order_by=desc(first_query.c.single_players_score_on_machine),
+                         partition_by=(first_query.c.entry_player_id,
+                                       first_query.c.score_division_machine_id)
+        ).label('single_players_rank_on_machine'),                
+    ]).select_from(first_query).alias('second_query')    
+    
+    third_query = select([
+        second_query
+    ]).select_from(second_query).where(second_query.c.single_players_rank_on_machine == 1).alias('third_query')
+        
+    third_query_a = select([
+        third_query,
+        func.rank().over(order_by=desc(third_query.c.score_score),
+                                                   partition_by=(third_query.c.score_division_machine_id)).label('filter_rank'),                
+        func.testing_papa_scoring(func.rank().over(order_by=desc(third_query.c.score_score),
+                                  partition_by=(third_query.c.score_division_machine_id))).label('filter_score')        
+    ]).select_from(third_query).order_by(text("third_query.score_score desc")).alias('third_query_a')
+
+    # third_query_a = select([
+    #     third_query,
+    #     func.rank().over(order_by=third_query.c.score_score,
+    #                      partition_by=(third_query.c.score_division_machine_id,
+    #                                    third_query.c.entry_player_id)).label('filter_rank')
+    # ]).select_from(third_query).alias('third_query_a')
+        
+    #fourth_query = select([
+    #    third_query        
+    #]).select_from(third_query).where(text("third_query.entry_player_id=%s" % player_id)).order_by(desc(third_query.c.single_players_rank_on_machine)).limit(3).alias('fourth_query')
+       
+    # fifth_query_sum_func = func.sum(fourth_query.c.single_players_score_on_machine).label('total_points')
+    # fifth_query = select([        
+    #     fourth_query.c.entry_player_id.label("entry_player_id"),
+    #     fifth_query_sum_func
+    #     #func.rank().over(order_by=desc(fifth_query_sum_func)).label('final_rank')
+    # ],use_labels=True).select_from(Score).where(text("score_id=fourth_query.score_score_id")).group_by(fourth_query.c.entry_player_id)    
+
+    results = DB.engine.execute(third_query_a)
+    scores_and_ranks = {}
+    for result in results:
+        if result.entry_player_id not in scores_and_ranks:
+            scores_and_ranks[result.entry_player_id]={'entry':{'total_points':0,'player_id':result.entry_player_id},'scores':[]}
+        if len(scores_and_ranks[result.entry_player_id]['scores']) < 3:
+            scores_and_ranks[result.entry_player_id]['entry']['total_points']=scores_and_ranks[result.entry_player_id]['entry']['total_points']+result.filter_score
+            scores_and_ranks[result.entry_player_id]['scores'].append(result)
+    sorted_list =  sorted(scores_and_ranks.items(), key= lambda e: e[1]['entry']['total_points'])
+    sorted_list = [e[1] for e in sorted_list]    
+    ranked_list =  list(Ranking(sorted_list,key=lambda pp: pp['entry']['total_points'],reverse=True))
+    ranked_list = [e for e in ranked_list if e[1]['entry']['player_id'] == int(player_id)]
+    return ranked_list
+    #return []
+
+    
+@App.route('/player_entries/<player_id>', methods=['GET'])
+def get_players_entries(player_id):
+    divisions = Division.query.join(Tournament).filter_by(active=True).all()
+    num_players = 150
+    entries = {}
+    herb_entries = {}
+    ranks_results = {}    
+    for division in divisions:        
+        division_id = division.division_id
+        division_type = division.tournament.scoring_type        
+        if division_type == "papa":
+            entries[division.division_id]=[]
+        else:
+            herb_entries[division.division_id] = []                            
+        
+        if division_type == "herb":            
+            herb_entries[division_id] = herb_entries[division_id] + get_herb_players(player_id,division_id)        
+            pass
+        if division_type == "papa":            
+            entries[division_id] = entries[division_id] + get_papa_players(division_id, player_id)             
+            #scores_results,local_ranks_results = get_papa_scores(division_id)
+            #ranks_results.update(local_ranks_results)
+            #for score_id,score in scores_results.iteritems():
+            #    if score.score_entry_id in local_entries[division_id]:
+            #        local_entries[division_id][score.score_entry_id]['scores'].append(score)
+            #entries.update(local_entries)            
+    
+    return render_template('test_rendering.html', entries=entries, herb_entries=herb_entries, player_id=int(player_id))
+
+

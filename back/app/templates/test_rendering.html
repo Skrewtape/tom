@@ -1,0 +1,60 @@
+{% for division_id, herb_entry in herb_entries.items() %}
+ <hr style='width:50%;float:left'><br>
+ {{division_id}} <br>
+ <hr style='width:50%;float:left'><br>
+ {% for entry in herb_entry %}
+  Rank of best three entries : {{entry[0]}}<br>
+  Player Id : {{entry[1]['entry']['player_id']}}<br>
+  Total Points : {{entry[1]['entry']['total_points']}}<br>
+  {% for score in entry[1]['scores'] %}
+   <hr style='width:25%;float:left'><br>
+   Score : {{score.score_score}}<br>
+   Points  : {{score.filter_score}}<br>
+   Rank : {{score.filter_rank}}<br>
+  {% endfor %}
+ {% endfor %}
+{% endfor %}
+
+{% for division_id, papa_entries in entries.items() %}
+ <hr style='width:50%;float:left'><br>
+ {{division_id}} <br>
+ <hr style='width:50%;float:left'><br>
+ {% for entry in papa_entries %}
+ <i>{{entry['entry'].entry_entry_id}}</i> -- {{entry['entry'].second_query_scorepointssum}} -- {{entry['entry'].second_query_scorepointsrank}}<br>
+  {% for score in entry['scores'] %}
+ -- Score {{score.score_score}}<br>
+ -- Score_ID {{score.score_score_id}}<br>
+ -- Machine_ID {{score.score_division_machine_id}}<br>
+ -- points {{score.scorepoints}}<br>
+ -- rank {{score.scorerank}}<br>
+ 
+  {% endfor %}
+ {% endfor %}
+{% endfor %}
+
+   
+{#
+{% for division_id,entries in test_entries.items() %}
+ Division {{division_id}}<br>
+  {% for entry_id, combined_entry_scores in entries.items() %}
+   entry id  : {{entry_id}}<br>
+   {% if entry_id in ranks %}
+    {% if division_id != 4 %}    
+     total_points : {{ranks[entry_id].scorepointssum}}
+     rank : {{ranks[entry_id].ranking}} <br>
+    {% endif %}
+    {% if division_id == 4 %}    
+     total_points : {{combined_entry_scores['entry'].total_points}}<br>
+     rank : {{combined_entry_scores['entry'].final_rank}} <br>
+    {% endif %}
+   {% endif %}
+   scores : <br>  
+   {% if division_id != 4 %}
+    {% for score in combined_entry_scores['scores'] %}
+     &nbsp;&nbsp;&nbsp;&nbsp; {{score.score_score}} , {{score.scorepoints}} <br>
+    {% endfor %}
+   {% endif %}
+  {% endfor %}
+<hr>
+{% endfor %}
+#}
