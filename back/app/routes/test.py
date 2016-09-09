@@ -94,7 +94,7 @@ def test_overhead():
     divisions = Division.query.all()
     return jsonify({})
 
-@cache.memoize(memoize_delay)
+
 def get_herb_scores(division_id):
     first_query_sum_func = func.rank().over(order_by=desc(text("score.score")),
                                             partition_by=(Score.division_machine_id))
@@ -113,8 +113,9 @@ def get_herb_scores(division_id):
     return scores
     
 #def get_papa_scores(s):
-@cache.memoize(memoize_delay)
-def get_papa_players_ex(division_id):
+
+def get_papa_players_ex(division_id, player_id):
+#def get_papa_players_ex(division_id):
     where_string = "entry.division_id = " +str(division_id)+ "and entry.completed = true and entry.voided = false"
     papa_scoring_func = func.testing_papa_scoring(func.rank().over(order_by=desc(Score.score),
                                                                    partition_by=Score.division_machine_id)).label('scorepoints')    
@@ -134,11 +135,12 @@ def get_papa_players_ex(division_id):
         Entry.entry_id,        
         second_query_sum_func.label('scorepointssum'),
         second_query_rank_func,        
-        ]).select_from(join(Entry,first_query,onclause=text("entry.entry_id = first_query.score_entry_id"))).group_by(Entry.entry_id).order_by(desc(second_query_sum_func)).alias("second_query")
-        
+    ]).select_from(join(Entry,first_query,onclause=text("entry.entry_id = first_query.score_entry_id"))).group_by(Entry.entry_id).order_by(desc(second_query_sum_func)).alias("second_query")
+    #]).select_from(join(Entry,first_query,onclause=text("entry.entry_id = first_query.score_entry_id"))).where(text("Entry.player_id = %s" % player_id)).group_by(Entry.entry_id).order_by(desc(second_query_sum_func)).alias("second_query")        
     division = Division.query.filter_by(division_id=division_id).first()    
         
-    query_three_where_string = "Score.entry_id = Entry.entry_id and Entry.entry_id = second_query.entry_id" 
+    #query_three_where_string = "Score.entry_id = Entry.entry_id and Entry.entry_id = second_query.entry_id"
+    query_three_where_string = "Score.entry_id = Entry.entry_id and Entry.entry_id = second_query.entry_id and Entry.player_id = %s" % player_id 
         
     query_three = select([                
         Score,
@@ -148,7 +150,8 @@ def get_papa_players_ex(division_id):
     ],use_labels=True).select_from(second_query).where(text(query_three_where_string)).order_by(desc(Entry.division_id),desc(second_query.c.scorepointssum))
     
     results = []
-    for result in DB.engine.execute(query_three):        
+    for result in DB.engine.execute(query_three):
+    #for result in DB.engine.execute(second_query):            
         results.append(result)            
     return results
 
@@ -196,22 +199,30 @@ def get_papa_players(division_id,player_id):
     local_entries = {}    
         
     #for result in DB.engine.execute(query_three):
-    for result in get_papa_players_ex(division_id):
+    for result in get_papa_players_ex(division_id, player_id):
+    #for result in get_papa_players_ex(division_id):    
         if result.entry_entry_id not in local_entries and result.entry_player_id == int(player_id):
+        #if result.entry_id not in local_entries:
             local_entries[result.entry_entry_id]={'entry':None,'scores':[]}            
-            local_entries[result.entry_entry_id]['entry']=result    
+            local_entries[result.entry_entry_id]['entry']=result
+            #local_entries[result.entry_id]={'entry':None,'scores':[]}            
+            #local_entries[result.entry_id]['entry']=result    
+            
         #local_entries[result.entry_entry_id]['scores'].append(result)
     ##for result in DB.engine.execute(first_query_a):        
     ##    local_entries[result.entry_entry_id]['scores'].append(result)
-    scores = get_papa_scores_ex(division_id)
+    scores = {}
+    scores = get_papa_scores_ex(division_id, player_id)
+    #scores = get_papa_scores_ex(division_id)
     for score_id,score in scores.items():
         if score.entry_player_id == int(player_id):
             local_entries[score.entry_entry_id]['scores'].append(score)
     local_entries_list = [v for k,v in local_entries.items() ]
     return local_entries_list
 
-@cache.memoize(memoize_delay)
-def get_papa_scores_ex(division_id):
+
+def get_papa_scores_ex(division_id, player_id):
+#def get_papa_scores_ex(division_id):
     where_string = "entry.division_id = " +str(division_id)+ "and entry.completed = true and entry.voided = false"
 
     papa_scoring_func = func.testing_papa_scoring(func.rank().over(order_by=desc(Score.score),
@@ -225,16 +236,16 @@ def get_papa_scores_ex(division_id):
     ],use_labels=True).select_from(join(Score, Entry)).where(text(where_string)).order_by(desc(text("scorepoints"))).alias('first_query')
         
 
-    # first_query_a = select([
-    #     first_query
-    # ]).select_from(first_query).where(text("entry_player_id=%s" % player_id)).alias('first_query_a')
+    first_query_a = select([
+        first_query
+    ]).select_from(first_query).where(text("entry_player_id=%s" % player_id)).alias('first_query_a')
 
-    scores = {}
-    for result in DB.engine.execute(first_query):                
+    scores = {}            
+    for result in DB.engine.execute(first_query_a):                
         scores[result.score_score_id]=result        
     return scores
 
-@cache.memoize(memoize_delay)
+
 def get_papa_scores(division_id):
     where_string = "entry.division_id = " +str(division_id)+ "and entry.completed = true and entry.voided = false"
 
@@ -266,7 +277,7 @@ def get_papa_scores(division_id):
         scores[result.score_score_id]=result                
     return scores,ranks
 
-@cache.memoize(memoize_delay)
+
 def get_herb_players(player_id, division_id):
     first_query_rank_func = func.rank().over(order_by=text("score.score desc"),
                                              partition_by=(Score.division_machine_id))
@@ -351,6 +362,7 @@ def get_players_entries(player_id):
             pass
         if division_type == "papa":            
             entries[division_id] = entries[division_id] + get_papa_players(division_id, player_id)             
+            #pass
             #scores_results,local_ranks_results = get_papa_scores(division_id)
             #ranks_results.update(local_ranks_results)
             #for score_id,score in scores_results.iteritems():
