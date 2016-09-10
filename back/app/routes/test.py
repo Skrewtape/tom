@@ -264,6 +264,7 @@ def get_herb_players(player_id, division_id):
     #return []
 
     
+    
 @App.route('/player_entries/<player_id>', methods=['GET'])
 def get_players_entries(player_id):
     divisions = Division.query.join(Tournament).filter_by(active=True).all()
@@ -294,9 +295,63 @@ def get_players_entries(player_id):
     
     return render_template('test_rendering.html', entries=entries, herb_entries=herb_entries, player_id=int(player_id))
 
+
+def get_herb_players_ex(player_id):
+    divisions = Division.query.join(Tournament).filter_by(scoring_type="herb").all()
+    herb_divisions = ",".join([str(d.division_id) for d in divisions])
+    first_query_rank_func = func.rank().over(order_by=text("score.score desc"),
+                                             partition_by=(Entry.division_id,Score.division_machine_id))
+    first_query_points_func = func.testing_papa_scoring(first_query_rank_func)    
+    first_query = select([
+        Score,            
+        Entry,        
+        first_query_rank_func.label('scorerank'),
+        first_query_points_func.label('scorepoints')
+    ],use_labels=True).select_from(join(Score,Entry)).where(text("entry.division_id in (%s)" % herb_divisions)).alias('first_query')    
+
+    second_query = select([
+        first_query,                
+        func.rank().over(order_by=desc(first_query.c.scorepoints),
+                         partition_by=(first_query.c.entry_player_id,
+                                       first_query.c.score_division_machine_id)
+        ).label('single_players_rank_on_machine'),                
+    ]).select_from(first_query).alias('second_query')    
+    
+    third_query = select([
+        second_query
+    ]).select_from(second_query).where(second_query.c.single_players_rank_on_machine == 1).alias('third_query')
+        
+    third_query_a = select([
+        third_query,
+        func.rank().over(order_by=desc(third_query.c.score_score),
+                         partition_by=(third_query.c.score_division_machine_id)).label('filter_rank'),                
+        func.testing_papa_scoring(func.rank().over(order_by=desc(third_query.c.score_score),
+                                  partition_by=(third_query.c.score_division_machine_id))).label('filter_score')        
+    ]).select_from(third_query).order_by(text("third_query.score_score desc")).alias('third_query_a')
+
+    results = DB.engine.execute(third_query_a)
+    scores_and_ranks = {}
+    for result in results:
+        if result.entry_player_id not in scores_and_ranks:
+            scores_and_ranks[result.entry_player_id]={'entry':{'total_points':0,'player_id':result.entry_player_id},'scores':[],'all_scores':[]}
+        if len(scores_and_ranks[result.entry_player_id]['scores']) < 3:
+            scores_and_ranks[result.entry_player_id]['entry']['total_points']=scores_and_ranks[result.entry_player_id]['entry']['total_points']+result.filter_score
+            scores_and_ranks[result.entry_player_id]['scores'].append(result)
+        scores_and_ranks[result.entry_player_id]['all_scores'].append(result)
+    # sorted_list =  sorted(scores_and_ranks.items(), key= lambda e: e[1]['entry']['total_points'])
+    # sorted_list = [e[1] for e in sorted_list]    
+    # ranked_list =  list(Ranking(sorted_list,key=lambda pp: pp['entry']['total_points'],reverse=True))
+    # ranked_list = [e for e in ranked_list if e[1]['entry']['player_id'] == int(player_id)]
+    return scores_and_ranks
+    #return []
+
+    
 @App.route('/player_entries_ex/<player_id>', methods=['GET'])
 def get_players_entries_ex(player_id):
-    where_string = "entry.completed = true and entry.voided = false"
+    divisions = Division.query.join(Tournament).filter_by(scoring_type="papa").all()
+    papa_divisions = ",".join([str(d.division_id) for d in divisions])
+
+    where_string = "entry.completed = true and entry.voided = false and entry.division_id in (%s)" % papa_divisions
     papa_scoring_func = func.testing_papa_scoring(func.rank().over(order_by=desc(Score.score),
                                                                    partition_by=(Entry.division_id,Score.division_machine_id))).label('scorepoints')    
     first_query = select([                
@@ -326,7 +381,7 @@ def get_players_entries_ex(player_id):
         second_query.c.scorepointssum,
         second_query.c.scorepointsrank        
     ],use_labels=True).select_from(second_query).where(text(query_three_where_string)).order_by(desc(Entry.division_id),desc(second_query.c.scorepointssum))
-    divisions = Division.query.all()    
+    #divisions = Division.query.all()    
     division_results = {}
     for division in divisions:
         division_results[division.division_id]={}
@@ -337,6 +392,7 @@ def get_players_entries_ex(player_id):
     for division in divisions:
         sorted_list =  sorted(division_results[division.division_id].items(), key= lambda e: e[1]['entry'].second_query_scorepointssum,reverse=True)
         division_results[division.division_id]=[e[1] for e in sorted_list]
-    return render_template('test_rendering_ex.html', return_results=division_results)
+    herb_results = get_herb_players_ex(player_id)        
+    return render_template('test_rendering_ex.html', return_results=division_results, herb_results=herb_results, player_id=int(player_id))
     
 

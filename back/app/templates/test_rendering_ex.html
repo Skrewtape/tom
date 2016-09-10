@@ -1,3 +1,13 @@
+
+{{herb_results[player_id]['entry']}}
+{% for score in herb_results[player_id]['all_scores'] %}
+<br>Score : {{score.score_score}}<br>
+Score id : {{score.score_score_id}}<br>
+Score points : {{score.filter_score}}<br>
+Score rank : {{score.filter_rank}}<br>
+
+{% endfor %}
+
 {% for division_id,entries in return_results.items() %}
  <hr>
  <u>{{division_id}}</u><br>
