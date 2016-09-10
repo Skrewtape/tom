@@ -1,0 +1,32 @@
+{% for division_id,entries in return_results.items() %}
+ <hr>
+ <u>{{division_id}}</u><br>
+ {% for entry in entries %}
+ Entry Id : {{entry['entry']['entry_entry_id']}}
+ Entry Score : {{entry['entry']['second_query_scorepointssum']}}
+ Entry Rank : {{entry['entry']['second_query_scorepointsrank']}}
+
+ <br>
+ {% endfor %}
+{% endfor %}
+{#
+{% for division_id,entries in return_results.items() %}
+<hr>
+DIVISION ID {{division_id}}<br>
+{% for entry in entries %}
+  Entry id {{entry[1]['entry_id']}}<br>
+  Entry score {{entry[1]['entry_score']}}<br>
+  Entry rank {{entry[0]+1}}<br>
+  {% for score in entry['scores']%}
+  <hr style='float:left;width:50%'><br>
+  Player id {{score.entry_player_id}}<br>
+  Score id {{score.score_score_id}}<br>
+  Division {{score.entry_division_id}}<br>
+  division machine {{score.score_division_machine_id}}<br>
+  Rank  {{score.scorerank}}<br>
+  Points {{score.scorepoints}}<br>
+  Score {{score.score_score}}<br>
+  {% endfor %}
+ {% endfor %}
+{% endfor %}
+#}
