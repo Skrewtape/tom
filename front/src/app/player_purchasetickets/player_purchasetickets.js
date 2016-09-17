@@ -85,7 +85,7 @@ angular.module('app.player_purchasetickets').controller(
         $scope.getDivisionTokens = function(div_id,metadiv_id) {
             if(metadiv_id != undefined && $scope.resources['player_tokens']['metadivisions'][metadiv_id] > 0){
                 
-                return $scope.resources['player_tokens']['metadivisions'][div_id]
+                return $scope.resources['player_tokens']['metadivisions'][metadiv_id]
                 
             }
             if($scope.resources['player_team_tokens']['teams'][div_id] > 0){
