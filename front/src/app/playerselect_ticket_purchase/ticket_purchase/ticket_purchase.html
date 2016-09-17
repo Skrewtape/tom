@@ -1,14 +1,38 @@
 <div ui-content-for="title">
-  <span>Select Tickets To Purchase</span>
+  <span>Purchase Tickets</span>
 </div>
 <div ui-view="backbutton"></div>
+
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
-  <div class="scrollable-content"  style='padding:10px'>
-    <div style='background-color:white' class='big-web-font'>
-      Purchase tickets for {{resources['player'].first_name}} {{resources['player'].last_name}}.
-      <hr>
-      <purchase-tickets></purchase-tickets>
+  <div class="scrollable-content big-web-font"  style='padding:10px'>    
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title big-web-font">Select Tickets</h3>
+      </div>
+        <ul class='list-group'  ng-repeat='tournament in resources.tournaments'>
+          <span ng-repeat='division in tournament.divisions'>
+            <li class='list-group-item' ui-view="metadivision_select_widget" ng-if='is_metadivision(tournament,division)'></li>
+            <li class='list-group-item' ui-view="division_select_widget" ng-if='is_division(tournament,division)'></li>
+            <li class='list-group-item' ui-view="team_select_widget" ng-if='is_team_division(tournament,division)'></li>
+          </span>
+        </ul>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title big-web-font">Summary</h3>
+      </div>
+        <ul class='list-group'  ng-repeat='tournament in resources.tournaments'>
+          <span ng-repeat='division in tournament.divisions'>
+            <li class='list-group-item' ng-if='is_metadivision(tournament,division)'><b>{{division.tournament_name}}</b> : {{added_tokens_metadivisions[division.division_id] || 0}}</li>
+            <li class='list-group-item' ng-if='is_division(tournament,division)'><b>{{division.tournament_name}}</b> : {{added_tokens_divisions[division.division_id] || 0}}</li>
+            <li class='list-group-item' ng-if='is_team_division(tournament,division)'><b>{{division.tournament_name}}</b> : {{added_tokens_teams[division.division_id] || 0}}</li>
+          </span>
+        </ul>
+    </div>
+    Total Cost : ${{total_cost}}
+    <br>
+    <br>
       <button
          class='btn btn-info btn-xlg'
          ui-sref='.process({addedTokens:added_tokens})'
