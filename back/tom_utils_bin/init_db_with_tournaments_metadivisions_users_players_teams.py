@@ -71,6 +71,7 @@ def init_tournaments():
     split_flipper.divisions.append(split_flipper_all)
     DB.session.commit()
 
+
 def init_players(division, num_players):        
     for play_num in range(0,num_players):
         first_name = first_names[random.randrange(0,len(first_names))]
@@ -86,12 +87,12 @@ def init_players(division, num_players):
 def init_player_entries(num_entries, division,player=None,team=None):
     for i in range(num_entries):        
         create_entry_and_add_scores(division,player=player,team=team)
-    DB.session.commit()            
+    DB.session.commit()         
 
 def init_player_herb_entries(num_entries, division,player=None,team=None, division_machine_id=None):    
     for i in range(num_entries):        
         create_herb_entry(division,player=player,team=team,division_machine_id=division_machine_id)
-    DB.session.commit()            
+    DB.session.commit()
 
     
         
@@ -113,12 +114,13 @@ players=app.types.Player.query.order_by(app.types.Player.player_id).all()
 player_entry_divisions=single_divisions
 player_entry_divisions.append(linked_division)
 for player in players:
-    print " creating entry for player %d" % player.player_id    
+    print " creating entry for player %d" % player.player_id
     for division in player_entry_divisions:
         init_player_entries(args.numentries,division,player=player)
         
 for player in players:
     for herb_machine in herb_machines:
+        print " creating herb entry for player %d" % player.player_id        
         init_player_herb_entries(args.numentries,herb_division,player=player,division_machine_id=herb_machine.division_machine_id)
 
 teams = app.types.Team.query.all()

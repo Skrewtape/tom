@@ -167,19 +167,15 @@ Functionality
 
 #ScratchPad
 
-## Finals - don't allow selection of future round
-* check to see if previous round is "done"
-## Finals - display
-* index
-** need to add finals to sidebar template
-** need to add finals to get_sidebar_info()
-
-* 2 new routes
-** match select : /finals/<finals_id>
-** match details : /finals_match/<finals_match_id>
-** pass selected final into render
-* copy html from match select to template
-* edit to remove edit boxes and code
-* copy html from match details to template
-* edit to remove edit boxes and code
-
+* head to head finals
+# create matches
+## start at first round
+### if bye_matches is > 0 , create list of lists i.e. [match_id,None]
+### if bye_matches is 0, create list of lists i.e. [match_one_id,match_two_id]
+## on next round, assign children
+### if the round has bye players, need to match bye players to appropriate children
+# fill matches
+## for each match in the round to fill
+### look to children matches
+### if only one child, get winner of child and create player group with bye and winner 
+### if two children, get winners of children and create group

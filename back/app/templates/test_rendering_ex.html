@@ -1,12 +1,14 @@
+{% if herb_results %}
 
 {{herb_results[player_id]['entry']}}
-{% for score in herb_results[player_id]['all_scores'] %}
+
+{% for score in herb_results[player_id]['scores'] %}
 <br>Score : {{score.score_score}}<br>
 Score id : {{score.score_score_id}}<br>
 Score points : {{score.filter_score}}<br>
 Score rank : {{score.filter_rank}}<br>
-
 {% endfor %}
+{% endif %}
 
 {% for division_id,entries in return_results.items() %}
  <hr>
@@ -15,7 +17,7 @@ Score rank : {{score.filter_rank}}<br>
  Entry Id : {{entry['entry']['entry_entry_id']}}
  Entry Score : {{entry['entry']['second_query_scorepointssum']}}
  Entry Rank : {{entry['entry']['second_query_scorepointsrank']}}
-
+ 
  <br>
  {% endfor %}
 {% endfor %}

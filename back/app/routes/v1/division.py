@@ -102,12 +102,12 @@ def get_players_ranked_by_qualifying(division):
 @fetch_entity(Division, 'division')
 def get_players_ranked_by_qualifying_herb(division):
     #FIXME : should not be hardcoded    
+    print "in herb"
     num_players_to_qualify = 24
     num_non_qualified_players = 100
     ranked_players = v1_utils.get_players_ranked_by_qualifying_herb(division.division_id,num_non_qualified_players)    
     #jsonifyd_list = [{'player_id':p.player_id,'checked':True if p.rank <=num_players_to_qualify else False,'rank':p.rank} for p in ranked_players]
-
-    jsonifyd_list = [{'player_id':p[1].player_id,'rank':p[0]+1} for p in ranked_players]
     
+    jsonifyd_list = [{'player_id':p[1]['player_id'],'rank':p[0]+1} for p in ranked_players]    
     return jsonify({'ranked_players':jsonifyd_list})
 

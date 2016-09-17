@@ -1,0 +1,7 @@
+{% for scores_and_entry in entries %}
+{{scores_and_entry[1]['entry']['player_id']}} - {{scores_and_entry[1]['entry']['total_points']}} - {{scores_and_entry[0]}}<br>
+{% for score in scores_and_entry[1]['scores'] %}
+ {{score.items()}} <br>
+{% endfor %}
+<hr>
+{% endfor %}

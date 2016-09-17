@@ -17,7 +17,7 @@ def get_players():
         #p.to_dict_simple() for p in
         p.to_dict_with_team() for p in
         Player.query.order_by(Player.first_name.asc(), Player.last_name.asc()).all()
-    ])
+    ],players_dict={p.player_id:p.to_dict_with_team() for p in Player.query.all()})
 
 @App.route('/player/asshole', methods=['GET'])
 def get_asshole_players():

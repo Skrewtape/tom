@@ -54,7 +54,8 @@ class FinalsMatchEx(DB.Model):
     ))
 
     finals_match_slot_ex = DB.relationship('FinalsMatchSlotEx')
-    
+    child_match_id_one = DB.Column(DB.Integer)
+    child_match_id_two = DB.Column(DB.Integer)
     bye_players = DB.relationship(
         'FinalsPlayerEx',
         secondary=FinalsMatch_FinalsPlayer_mapping

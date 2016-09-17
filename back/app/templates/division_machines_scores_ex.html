@@ -1,0 +1,34 @@
+{% extends "index_ex.html" %}
+{% block content %}
+  <center>
+    <select id="machine_nav" onchange='machine_change()'>
+      <option value="-1">Select Machine</option>    
+      {% for machine_id,machine in division_machines.items() %}
+        {% if machine_id != division_machine.division_machine_id %}
+          <option value="{{machine_id}}">{{machine.name}}</option>
+        {% endif %}
+      {% endfor %}
+
+    </select>
+    </center>
+<div class="panel panel-default" style='width:97%;margin:auto'>
+  <div class="panel-heading">  Entries for {{division_machine.machine.name}}</div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Rank</th><th>Player Name</th><th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for score in machine_scores %}
+    <tr>
+      <td>{{score.scorerank}}</td>
+      <td>{{score.player_first_name}} {{score.player_last_name}}</td>
+      <td>{{('{0:,}'.format(score.score_score))|safe}}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+  </table>
+</div>  
+
+{% endblock %}

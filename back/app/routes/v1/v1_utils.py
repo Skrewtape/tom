@@ -15,7 +15,7 @@ from app import App, DB, Admin_permission
 from app.types import User, Role, Player, Division, Tournament
 
 from app.routes.util import fetch_entity
-
+from app.routes import test
 from sqlalchemy.exc import ArgumentError,InvalidRequestError,IntegrityError
 from werkzeug.exceptions import Conflict, BadRequest
 from functools import wraps
@@ -37,27 +37,28 @@ def get_players_ranked_by_qualifying(division_id,num_players,checked_players=Non
 
 
 def get_players_ranked_by_qualifying_herb(division_id,num_players,checked_players=None):
-    if checked_players:
-        checked_players = " where player_id in (%s) " % checked_players
-    else:
-        checked_players = ""
-    entry_results = DB.engine.execute("select player_id, entry_score_sum, rank() over (order by entry_score_sum desc) as rank from (select  player_id, sum(entry_score) as entry_score_sum  from (select entry.player_id,  testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and completed = true and voided = false) as ss %s group by player_id order by entry_score_sum desc limit %d) as tt" % (division_id, checked_players,num_players) )
-    unranked_players = []
-    unranked_player_tracker = {}
-    #ranked_list =  list(Ranking(entry_result,key=lambda e: int(e.),reverse=True))    
-    for player_result in entry_results:
-        #print "%s %s %s" %(player_result.player_id,player_result.entry_score_sum,player_result.entry_id) 
-        if player_result.player_id not in unranked_player_tracker:
-            unranked_player_tracker[player_result.player_id]=player_result
-        else:
-            if unranked_player_tracker[player_result.player_id].entry_score_sum <= player_result.entry_score_sum:
-                unranked_player_tracker[player_result.player_id]=player_result
-                #ranked_players.append(player_result)
-    for key,value in unranked_player_tracker.iteritems():
-        unranked_players.append(value)
-    sorted_players = sorted(unranked_players, key=itemgetter('rank'))
-    ranked_players =  list(Ranking(sorted_players,key=lambda e: e.rank,reverse=True))                    
-    
+    # if checked_players:
+    #     checked_players = " where player_id in (%s) " % checked_players
+    # else:
+    #     checked_players = ""
+    # entry_results = DB.engine.execute("select player_id, entry_score_sum, rank() over (order by entry_score_sum desc) as rank from (select  player_id, sum(entry_score) as entry_score_sum  from (select entry.player_id,  testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and completed = true and voided = false) as ss %s group by player_id order by entry_score_sum desc limit %d) as tt" % (division_id, checked_players,num_players) )
+    # unranked_players = []
+    # unranked_player_tracker = {}
+    # #ranked_list =  list(Ranking(entry_result,key=lambda e: int(e.),reverse=True))    
+    # for player_result in entry_results:
+    #     #print "%s %s %s" %(player_result.player_id,player_result.entry_score_sum,player_result.entry_id) 
+    #     if player_result.player_id not in unranked_player_tracker:
+    #         unranked_player_tracker[player_result.player_id]=player_result
+    #     else:
+    #         if unranked_player_tracker[player_result.player_id].entry_score_sum <= player_result.entry_score_sum:
+    #             unranked_player_tracker[player_result.player_id]=player_result
+    #             #ranked_players.append(player_result)
+    # for key,value in unranked_player_tracker.iteritems():
+    #     unranked_players.append(value)
+    # sorted_players = sorted(unranked_players, key=itemgetter('rank'))
+    # ranked_players =  list(Ranking(sorted_players,key=lambda e: e.rank,reverse=True))                    
+    herb_player_points,herb_results = test.get_herb_division_results_ex(division_id=int(division_id))            
+    ranked_players = list(Ranking(herb_player_points[int(division_id)],key=lambda e: e['total_points']))
     return ranked_players
 
 

@@ -1,0 +1,37 @@
+<head>
+  <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-ui" />
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script>
+    function machine_change() {
+      window.location = "/division_machine_entries_ex/"+document.getElementById("machine_nav").value
+    }
+    function division_change() {
+      window.location = "/division_entries_ex/"+document.getElementById("division_nav").value
+    }    
+  </script>
+  <style>
+    @media screen and (max-width: 480px) {
+     .mobile_hide {
+      display:none
+     }
+    }
+
+  </style>
+  
+</head>
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">TOM</a>
+        <a class="navbar-brand" href="#"><small>Tourneys</small></a>
+        <a class="navbar-brand" href="#"><small>Games</small></a>
+        <a class="navbar-brand" href="#"><small>Players</small></a>
+      </div>
+    </div>
+  </nav>
+  {% block content %}
+  {% endblock %}
+</body>

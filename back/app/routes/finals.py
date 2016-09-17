@@ -628,7 +628,7 @@ def calculate_round_final_rankings(finals_ex, round):
             #    starting_rank = finals_ex.num_players
             #else:                
             slots = FinalsMatchSlotEx.query.filter_by(result="Advance").join(FinalsMatchEx).filter_by(finals_ex_id = finals_ex.finals_ex_id).filter(FinalsMatchEx.round_number < round).all()
-            print "total number of previous players : %d " % sum((1 for slot_count in slots))
+            
             if round == 1:
                 starting_rank = finals_ex.num_players
             else:
@@ -638,7 +638,7 @@ def calculate_round_final_rankings(finals_ex, round):
             # round 3 - total qualifiers 
             #this should be num_players in the first round
             # in all subsequent rounds it should be the num_players - players in all previous rounds (i.e. round 2 is 24 - 8)
-            print "starting rank and ranked_item - %d %d " % (starting_rank,ranked_item[0])
+            
             slot.final_rank = starting_rank - (ranked_item[0])
     DB.session.commit()
     return ranked_list
@@ -748,8 +748,8 @@ def set_finals_match_result_score_ex(finals_match_result_score_ex):
     DB.session.commit()
     return jsonify(finals_match_result_score_ex.to_dict_simple())
 
-@Scorekeeper_permission.require(403)
-@login_required
+#@Scorekeeper_permission.require(403)
+#@login_required
 @App.route('/finals_ex/division/<division_id>/num_players/<num_players>/num_players_per_group/<num_players_per_group>/num_games_per_match/<num_games_per_match>/description/<description>', methods=['POST'])
 @fetch_entity(Division, 'division')
 def create_finals_ex(division,num_players,num_players_per_group,num_games_per_match,description):
@@ -768,8 +768,39 @@ def create_finals_ex(division,num_players,num_players_per_group,num_games_per_ma
     DB.session.commit()
     return jsonify(to_dict(new_finals_ex))
 
+def create_match_2_player_groups(round,finals_ex_id):
+    
+    round_matches = FinalsMatchEx.query.filter_by(round_number=round,finals_ex_id=finals_ex_id).all()
+    children_groups = []
+    for match in round_matches:
+        print "==new match=="
+        child_match_one = FinalsMatchEx.query.filter_by(finals_match_ex_id=match.child_match_id_one).first()
+        print "child one id is %s " % child_match_one.finals_match_ex_id
+        child_match_two = None
+        children_players = []
+        for slot in child_match_one.finals_match_slot_ex:
+            print "slot result is %s for slot_id %s" % (slot.result,slot.finals_match_slot_ex_id)
+            if slot.result == "Advance":
+                print "advancing player found"
+                children_players.append(slot.finals_player_ex)
+        if match.child_match_id_two is not None:
+            child_match_two = FinalsMatchEx.query.filter_by(finals_match_ex_id=match.child_match_id_two).first()
+
+        if child_match_two is not None:            
+            for slot in child_match_two.finals_match_slot_ex:
+                if slot.result == "Advance":
+                    children_players.append(slot.finals_player_ex)
+        else:
+            for bye_player in match.bye_players:                
+                print "adding bye player in match %s" % match.finals_match_ex_id
+                children_players.append(bye_player)
+        print children_players
+        print "above is id %s " % match.finals_match_ex_id
+        children_groups.append(children_players)
+    return children_groups
+
 def create_match_player_groups(match_player_rankings, players_per_group):
-    print "players per group - %s" %(players_per_group)
+    
     groups = []
     length = len(match_player_rankings)
     num_groups = length / players_per_group
@@ -810,13 +841,16 @@ def fill_round_ex(finals_ex_id,round_number):
     for match in this_round_matches:
         for slot in match.finals_match_slot_ex:
             if slot.result == "Advance":
-                next_round_player_list.append(slot.finals_player_ex)    
-    checked_player_groups = create_match_player_groups(sorted(next_round_player_list,key=lambda p: p.seed),num_players_per_group)    
+                next_round_player_list.append(slot.finals_player_ex)
+    checked_player_groups = None
+    if finals_ex.num_players_per_group == 4:
+        checked_player_groups = create_match_player_groups(sorted(next_round_player_list,key=lambda p: p.seed),num_players_per_group)
+    else:
+        checked_player_groups = create_match_2_player_groups(round_number,finals_ex_id)    
     for match in next_round_matches:
-        #print match.finals_match_ex_id
+        
         player_group = checked_player_groups.pop()        
-        for slot in match.finals_match_slot_ex:            
-            #print "in slot"
+        for slot in match.finals_match_slot_ex:                                    
             player = player_group.pop()
             #print player.finals_player_ex_id
             slot.finals_player_ex_id = player.finals_player_ex_id
@@ -844,6 +878,7 @@ def fill_init_rounds_ex(finals_ex_id):
 
     checked_player_group_index = 0
     for match in round_one_matches:
+        
         match_slots = FinalsMatchSlotEx.query.filter_by(finals_match_ex_id=match.finals_match_ex_id).all()
         match_slot_id = 0
         checked_player_group = checked_player_groups[checked_player_group_index]
@@ -895,9 +930,32 @@ def generate_rounds_ex(finals_ex_id):
         bye_matches = 1
     else:
         bye_matches = 0
-    while round < max_round:
+    childrens_list = [None]*max_round
+    while round < max_round:        
+        childrens_list[round]=[]
         for match_num in range(0,num_matches):
             generate_match_ex(round,finals_ex_id,num_players_per_group,num_games_per_match)
+        ###        
+        if round-1 >= 1:            
+            finals_matches_in_round = FinalsMatchEx.query.filter_by(round_number=round,finals_ex_id=finals_ex_id).all()        
+            for match in finals_matches_in_round:
+                children = childrens_list[round-1].pop()
+                match.child_match_id_one=children[0].finals_match_ex_id
+                if children[1] is not None:
+                    match.child_match_id_two=children[1].finals_match_ex_id
+                DB.session.commit()
+        finals_matches_in_round = FinalsMatchEx.query.filter_by(round_number=round,finals_ex_id=finals_ex_id).all()        
+        if bye_matches > 0:
+            for finals_match in finals_matches_in_round:                
+                childrens_list[round].append([finals_match,None])
+        else:
+            matches = [m for m in finals_matches_in_round]
+            match_index = 0
+            while match_index < len(matches):                
+                childrens_list[round].append([matches[match_index],matches[match_index+1]])                
+                match_index = match_index + 2                
+                pass            
+        ###
         if bye_matches > 0:
             bye_matches = bye_matches - 1
         else:
@@ -906,6 +964,8 @@ def generate_rounds_ex(finals_ex_id):
         if num_matches <= 1:
             generate_match_ex(round,finals_ex_id,num_players_per_group,num_games_per_match)                
             break
+        
+
     finals_ex.rounds = round
     DB.session.commit()
     return jsonify({'powers':powers})

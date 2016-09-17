@@ -1,16 +1,26 @@
 #PPO features
-* need to handle "return to top of finals - need to maintain tab"
-* need to maintain finals order on match list page
-* finals need display(for players) vs editing(scorekeepers) view - by wed
-* need team to work in finals - by fri
 
+* finsh results and display - add "select division/machine/player page"
+** add "/" route to point to index page for results
+* replace current purchase tickets for admin - this afternoon
+* comp tickets - this afternoon
+** add new field to tokens
+** add new field to entries
+* undo player gives back token - this evening 
+** pass division_id and token type (metadivision or division) to process page
+* need to pull out "secret" key for stripe.js in player purchase - tomorrow morning
+* player info in player login pages - tomorrow aftnernoon
+* finals need display(for players) vs editing(scorekeepers) view - tomorrow evening
+* ui changes
+* add "edit abbreviation" for machines
 
-* need to "auto-complete" entries based on tournament type - by tue
-** need to add field to tournament (i.e. ppo or papa style qualifying)
+* need to maintain finals order on match list page 
 * add ability to set number of qualifying spots per division (or tournament?)  
 * need indicator of tiebreakers needed on player select page for finals
 * replace makearray with new range filter
 * change edit scores in admin to use commas
+* need team to work in finals
+* results need to handle "null" situations better
 
 # current work
 # check for dups

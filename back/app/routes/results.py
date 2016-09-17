@@ -196,6 +196,7 @@ def results_player(player_id):
     for division in divisions:
         division_id = division.division_id
         return_entry_results[division_id],return_inprogress_entry_results[division_id] = get_entries_from_entry_results(division_id,player_id=player_id)
+        print return_entry_results[division_id]
         team_tournament = Tournament.query.filter_by(tournament_id=division.tournament_id).first().team_tournament
         if team_id and team_tournament:
             return_entry_results[division_id],return_inprogress_entry_results[division_id] = get_entries_from_entry_results(division_id,team_id=team_id)

@@ -34,12 +34,14 @@
                         type="number" ng-model="player.rank">
               <span ng-class="{red: check_too_many_checked_players(player),orange: check_too_many_ties(player)}">
                 <!--(data | filter:{checked: true }).length -->
-                {{resources.players.players[player.player_id].first_name}} {{resources.players.players[player.player_id].last_name}}
+                {{resources.players.players_dict[player.player_id].first_name}} {{resources.players.players_dict[player.player_id].last_name}}
               </span>
               <hr ng-if="abdivision($index)">
             </td>
           </tr>
         </table>
+        <br>        <br>        <br>        <br>        <br>        <br>        <br>        <br>        <br>
+        
       </div>
     </div>
   </div>

@@ -73,7 +73,8 @@ def init_ipdb_machines():
     for machine in machine_list:
         new_machine = app.types.Machine(
             name=machine['machine_name'],
-            search_name=_strip_pattern.sub("", machine['machine_name'].lower())
+            search_name=_strip_pattern.sub("", machine['machine_name'].lower()),
+            abbreviation=machine['machine_name'][:3]
         )
         DB.session.add(new_machine)
         DB.session.commit()        
