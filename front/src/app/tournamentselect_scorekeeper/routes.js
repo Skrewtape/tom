@@ -159,7 +159,7 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
  	 }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process', 
         { 
- 	 url: '/process',
+ 	 url: '/process/:playerId',
  	 views: {
  	     '@': {
  	       templateUrl: 'app/tournamentselect_scorekeeper/machineselect_scorekeeper/playerselect_scorekeeper/process/process.html',
@@ -173,7 +173,8 @@ angular.module('TOMApp').config(function($stateProvider, $urlRouterProvider) {
 		}
  	 },
 	    params: {
-		playerId:{},
+		//playerId:{},
+                process_submit:{},
 		team:{}
 	    }
        }).state('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playerselect_scorekeeper.process.undo', 
