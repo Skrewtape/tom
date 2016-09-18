@@ -88,7 +88,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                            'POST');
     addPlayerResource = generate_resource_definition('/player',
                                                      'POST');
-    addScoreResource = generate_resource_definition('/entry/:entry_id/divisionmachine/:division_machine_id/new_score/:new_score',
+    addScoreResource = generate_resource_definition('/entry_newscore/divisionmachine/:division_machine_id/new_score/:new_score',
                                                     'POST');
     addTeamResource = generate_resource_definition('/team',
                                                    'POST');

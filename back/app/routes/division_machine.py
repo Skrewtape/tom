@@ -84,12 +84,12 @@ returns:
     if player_entry is None:        
         if route_entry.shared_check_player_can_start_new_entry(player,divisionmachine.division) is False:                        
             raise i_am_a_teapot('Player does not have any entries',"^")
-        route_entry.shared_create_active_entry(divisionmachine.division,player=player)
+        #route_entry.shared_create_active_entry(divisionmachine.division,player=player)
     player_entry = route_entry.shared_get_query_for_active_entries(player_id=player.player_id,div_id=divisionmachine.division_id).first()
-            
-    already_played_count = len([score for score in player_entry.scores if score.division_machine_id == divisionmachine.division_machine_id])
-    if already_played_count > 0:
-        raise i_am_a_teapot('Can not play the same game twice in one ticket',"^")
+    if player_entry:
+        already_played_count = len([score for score in player_entry.scores if score.division_machine_id == divisionmachine.division_machine_id])
+        if already_played_count > 0:
+            raise i_am_a_teapot('Can not play the same game twice in one ticket',"^")
     divisionmachine.player_id = player.player_id
     DB.session.commit()
     return jsonify(divisionmachine.to_dict_simple())

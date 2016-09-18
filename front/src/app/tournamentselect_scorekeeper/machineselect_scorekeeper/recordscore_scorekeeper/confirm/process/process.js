@@ -25,7 +25,7 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	    
 	    $scope.player_promise = TimeoutResources.GetPlayer($scope.tournament_promise,{player_id:$scope.player_id});	    	    
 	    $scope.score_promise = TimeoutResources.AddScore($scope.entry_promise,
-							     {entry_id: $scope.entry_id,
+							     {
 							      division_machine_id:$scope.division_machine_id,
 							      new_score:$scope.final_score});
 	} else {
@@ -35,9 +35,9 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 							      division_machine_id:$scope.division_machine_id,
 							      new_score:$scope.final_score});
 	}
-	$scope.entry_promise = TimeoutResources.GetEntry($scope.score_promise,{entry_id:$scope.entry_id});            
+
         
-	$scope.entry_promise.then(function(data){
+	$scope.score_promise.then(function(data){            
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    // if($scope.team_tournament == "true"){                
 	    //     $scope.entry_id = $scope.resources.team_active_entry.entry.entry_id;

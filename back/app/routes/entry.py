@@ -210,62 +210,71 @@ def edit_score(score): #killroy
     DB.session.commit()
     return jsonify(score.to_dict_simple())
 
-def add_score(entry,division_machine,new_score_value): #killroy   
-    if entry.player is None and entry.team is None:
-        raise BadRequest("Entry does not have a team or player assigned.  This should not happen.")
+def add_score(division_machine,new_score_value): #killroy   
+    #if entry.player is None and entry.team is None:
+    #    raise BadRequest("Entry does not have a team or player assigned.  This should not happen.")
+
+    if division_machine.player_id is None:
+        raise BadRequest("No one is playing this machine")        
+
+    player_entry = shared_get_query_for_active_entries(player_id=division_machine.player_id,div_id=division_machine.division_id).first()
+    
     if division_machine.removed is True:
         raise BadRequest("DivisionMachine has been removed from division.  This should not happen.")        
     
-    if entry.player:
-        if entry.player.division_machine is None:
-            raise Conflict('Tried to add score for player who is not started on a machine!')
+    # if entry.player:
+    #     if entry.player.division_machine is None:
+    #         raise Conflict('Tried to add score for player who is not started on a machine!')
 
-        if entry.player.division_machine.division_machine_id != division_machine.division_machine_id:
-            raise Conflict('Player is started on a different machine!')
+    #     if entry.player.division_machine.division_machine_id != division_machine.division_machine_id:
+    #         raise Conflict('Player is started on a different machine!')
 
-        if entry.player.active is False:
-            raise Conflict('Player is no longer active.  Please see the front desk')
+    #     if entry.player.active is False:
+    #         raise Conflict('Player is no longer active.  Please see the front desk')
 
-    if entry.team:
-        if entry.team.division_machine is None:
-            raise Conflict('Tried to add score for team who is not started on a machine!')
+    # if entry.team:
+    #     if entry.team.division_machine is None:
+    #         raise Conflict('Tried to add score for team who is not started on a machine!')
 
-        if entry.team.division_machine.division_machine_id != division_machine.division_machine_id:
-            raise Conflict('Team is started on a different machine!')
+    #     if entry.team.division_machine.division_machine_id != division_machine.division_machine_id:
+    #         raise Conflict('Team is started on a different machine!')
         
+    if player_entry:
+        if len(player_entry.scores) >= player_entry.number_of_scores_per_entry:
+            raise Conflict('Entry already has enough scores')
 
-    if len(entry.scores) >= entry.number_of_scores_per_entry:
-        raise Conflict('Entry already has enough scores')
+        if any(score.division_machine_id ==  division_machine.division_machine_id for score in player_entry.scores):
+            raise Conflict('Can not play the same game twice in one ticket')
 
-    if any(score.division_machine_id ==  division_machine.division_machine_id for score in entry.scores):
-        raise Conflict('Can not play the same game twice in one ticket')
-
-    division = Division.query.filter_by(division_id=entry.division_id).first()    
-    if division_machine not in division.machines:
-        raise Conflict('machine is not in division')            
+        division = Division.query.filter_by(division_id=player_entry.division_id).first()    
+        if division_machine not in division.machines:
+            raise Conflict('machine is not in division')            
 
     new_score = Score(
         score = new_score_value,
         division_machine_id = division_machine.division_machine_id
     )
-    entry.scores.append(new_score)
+    if player_entry is None: 
+        player = Player.query.filter_by(player_id=division_machine.player_id).first()       
+        shared_create_active_entry(division_machine.division,player=player)    
+    player_entry = shared_get_query_for_active_entries(player_id=division_machine.player_id,div_id=division_machine.division_id).first()    
+    player_entry.scores.append(new_score)
     division_machine.player_id = None
     division_machine.team_id = None
-    if len(entry.scores) >= entry.number_of_scores_per_entry:
+    if len(player_entry.scores) >= player_entry.number_of_scores_per_entry:
         entry.active=False
-        tournament = Tournament.query.join(Division).filter_by(division_id=entry.division_id).first()
+        tournament = Tournament.query.join(Division).filter_by(division_id=player_entry.division_id).first()
         if tournament.scoring_type=='herb':
-            entry.completed = True
+            player_entry.completed = True
     DB.session.commit()
-    return jsonify(entry.to_dict_with_scores())
+    return jsonify(player_entry.to_dict_with_scores())
 
 
-@App.route('/entry/<entry_id>/divisionmachine/<divisionmachine_id>/new_score/<new_score_value>', methods=['POST'])
+@App.route('/entry_newscore/divisionmachine/<divisionmachine_id>/new_score/<new_score_value>', methods=['POST'])
 @login_required
 @Scorekeeper_permission.require(403)
-@fetch_entity(Entry, 'entry')
 @fetch_entity(DivisionMachine, 'divisionmachine')
-def add_score_with_decorator(entry,divisionmachine,new_score_value):
+def add_score_with_decorator(divisionmachine,new_score_value):
     """
 description: Add a score to a entry
 post data: 
@@ -277,7 +286,7 @@ url params:
 returns:
     dict of updated entry
     """
-    return add_score(entry,divisionmachine,new_score_value)
+    return add_score(divisionmachine,new_score_value)
 
 @App.route('/entry/<entry_id>', methods=['GET'])
 @fetch_entity(Entry, 'entry')
