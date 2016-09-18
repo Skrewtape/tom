@@ -1,0 +1,11 @@
+{% extends "index_ex.html" %}
+{% block content %}
+<center>
+  <h1>Players</h1>
+  <br>  
+  {% for player in players %}
+   <h3><a href="/player_entries_ex/{{player.player_id}}">{{player.first_name}} {{player.last_name}}</a></h3>
+  {% endfor %}
+</center>
+
+{% endblock %}

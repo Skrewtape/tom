@@ -500,7 +500,15 @@ def get_divisions():
 
 def get_machines(division_id):
     return {d.division_machine_id:d.to_dict_simple() for d in DivisionMachine.query.filter_by(division_id=division_id).all()}
-    
+
+def get_all_machines_dict():        
+    division_machines = {}
+    for d in Division.query.all():
+        division_machines[d.division_id]=[]
+    for dm in DivisionMachine.query.all():
+        division_machines[dm.division_id].append(dm.to_dict_simple())
+    return division_machines
+
 
 @App.route('/player_entries_ex/<player_id>', methods=['GET'])
 def get_players_entries_ex(player_id):
@@ -515,6 +523,24 @@ def get_players_entries_ex(player_id):
                           sorted_division_entry_ids=sorted_division_entry_ids, divisions=get_divisions(),
                           top_x_herb_entries=top_x_herb_entries, herb_player_points=herb_player_points)
     
+
+@App.route('/', methods=['GET'])
+def get_index_ex():
+    return render_template('toc.html')
+
+@App.route('/divisions', methods=['GET'])
+def get_divisions_ex():    
+    return render_template('divisions.html',divisions=get_divisions())
+
+@App.route('/division_machines', methods=['GET'])
+def get_division_machines_ex():        
+    return render_template('division_machines.html',division_machines=get_all_machines_dict(),
+                           divisions=get_divisions())
+
+@App.route('/players', methods=['GET'])
+def get_players_ex():
+    players = Player.query.order_by(Player.first_name).all()
+    return render_template('players.html',players=players)
 
 
 

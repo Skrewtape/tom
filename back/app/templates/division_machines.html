@@ -1,0 +1,14 @@
+{% extends "index_ex.html" %}
+{% block content %}
+<center>
+  <h1>Machines</h1>
+  <br>  
+  {% for division_id,division in divisions.items() %}
+    <h2>{{division['tournament_name']}}</h2>
+    {% for division_machine in division_machines[division_id] %}
+      <a href="/division_machine_entries_ex/{{division_machine['division_machine_id']}}">{{division_machine['name']}}</a><br>
+    {% endfor %}
+{% endfor %}
+</center>
+
+{% endblock %}
