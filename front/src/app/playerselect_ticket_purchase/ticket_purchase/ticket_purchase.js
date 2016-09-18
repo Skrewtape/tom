@@ -7,7 +7,8 @@ angular.module('app.playerselect_ticket_purchase.ticket_purchase').controller(
         $scope.added_tokens_teams = {};        
         $scope.total_cost = 0;
 	$scope.player_id=$state.params.playerId;
-        $scope.added_tokens = {'divisions':$scope.added_tokens_divisions,'metadivisions':$scope.added_tokens_metadivisions,'teams':$scope.added_tokens_teams,'player_id':$scope.player_id}        
+        $scope.added_tokens = {'divisions':$scope.added_tokens_divisions,'metadivisions':$scope.added_tokens_metadivisions,'teams':$scope.added_tokens_teams,'player_id':$scope.player_id}
+        $scope.added_tokens.comped = false;
         // $scope.is_metadivision = function(tournament,division){
         //     return tournament.single_division == true  || division.division_id == $scope.resources.player.linked_division.division_id;
         // }
@@ -122,6 +123,12 @@ angular.module('app.playerselect_ticket_purchase.ticket_purchase').controller(
         $scope.tournaments_promise.then(function(data){            
             $scope.resources = TimeoutResources.GetAllResources();
             $scope.max_unstarted_tickets = $scope.resources.tom_config.max_unstarted_tokens;
+            if($scope.resources.player.team != undefined){
+                $scope.added_tokens['team_id']=$scope.resources.player.team.team_id;
+            } else {
+                $scope.added_tokens['team_id'] = undefined;
+            }
+            
             StatusModal.loaded();            
             console.log($scope.resources);
         });        

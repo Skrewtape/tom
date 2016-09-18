@@ -22,4 +22,4 @@ from app.types.FinalsEx import FinalsPlayerEx
 from app.types.FinalsEx import FinalsMatchEx
 from app.types.FinalsEx import FinalsMatchResultEx
 from app.types.FinalsEx import FinalsMatchResultScoreEx
-
+from app.types.CompTokens import CompToken

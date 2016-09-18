@@ -30,7 +30,16 @@
           </span>
         </ul>
     </div>
-    Total Cost : ${{total_cost}}
+    <table>
+      <td>
+       <input type="checkbox" style='margin-top:0px;height:40px;width:40px;vertical-align:middle;' ng-model="added_tokens.comped">
+      </td>
+      <td>
+       Are these comped tickets? 
+      </td>
+    </table>
+    <br>
+    Total Cost : <span ng-if='added_tokens.comped == false'>${{total_cost}}</span> <span ng-if='added_tokens.comped == true'> COMPED </span>
     <br>
     <br>
       <button

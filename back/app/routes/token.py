@@ -3,7 +3,7 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Entry, Score, Player, Division, Machine, Token, Team, Metadivision, Tournament
+from app.types import Entry, Score, Player, Division, Machine, Token, Team, Metadivision, Tournament,CompToken
 from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank, get_division_from_metadivision
 from app.routes import entry
@@ -50,11 +50,11 @@ def check_player_valid_for_add_token_request(tokens_data):
     if Player.query.filter_by(player_id=tokens_data['player_id']) is None:        
         raise BadRequest('Bad player_id specified')
     
-def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None,team_id=None, paid_for=1):
+def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None,team_id=None, paid_for=1, comped=False):
     tokens = []
     json_tokens = []
     for token_num in range(0,int(num_tokens)):
-        new_token = Token()
+        new_token = Token()    
         if player_id:
             new_token.player_id=player_id                    
         if team_id:
@@ -63,8 +63,15 @@ def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None
             new_token.division_id = div_id
         if metadiv_id:
             new_token.metadivision_id = metadiv_id
-        new_token.paid_for = 1 is paid_for
-        DB.session.add(new_token)
+        new_token.paid_for = True if paid_for == 1 else False
+        DB.session.add(new_token)        
+        if comped:            
+            new_comped_token = CompToken()
+            if div_id:
+                new_comped_token.division_id=div_id
+            if metadiv_id:
+                new_comped_token.metadivision_id=metadiv_id
+            DB.session.add(new_comped_token)
         DB.session.commit()
         tokens.append(to_dict(new_token))
     return tokens
@@ -159,7 +166,8 @@ returns:
     tokens_data = json.loads(request.data)
     check_player_valid_for_add_token_request(tokens_data)    
     player_id = tokens_data['player_id']
-    player = Player.query.filter_by(player_id=player_id).first()
+    comped = tokens_data['comped']
+    player = Player.query.filter_by(player_id=player_id).first()        
     if tokens_data.has_key('team_id'):
         team_id = tokens_data['team_id']
         team = Team.query.filter_by(team_id=team_id).first()
@@ -172,7 +180,7 @@ returns:
         num_tokens = tokens_data['divisions'][div_id]
         check_add_token_for_max_tokens(num_tokens,div_id=div_id,player_id=player_id)
         if num_tokens > 0:
-            tokens = create_division_tokens(num_tokens,div_id=div_id,player_id=player_id, paid_for=paid_for)
+            tokens = create_division_tokens(num_tokens,div_id=div_id,player_id=player_id, paid_for=paid_for,comped=comped)
             total_tokens = total_tokens + tokens
     for div_id in tokens_data['teams']:
         division=Division.query.filter_by(division_id=div_id).first()
@@ -181,7 +189,7 @@ returns:
         num_tokens = tokens_data['teams'][div_id]
         if num_tokens > 0 and team_id:
             check_add_token_for_max_tokens(num_tokens,div_id=div_id,team_id=team_id)
-            tokens = create_division_tokens(num_tokens,div_id=div_id,team_id=team_id,paid_for=paid_for)
+            tokens = create_division_tokens(num_tokens,div_id=div_id,team_id=team_id,paid_for=paid_for,comped=comped)
             total_tokens = total_tokens + tokens
     for metadiv_id in tokens_data['metadivisions']:
         if Metadivision.query.filter_by(metadivision_id=metadiv_id) is None:
@@ -192,7 +200,7 @@ returns:
             raise BadRequest('No active divisions in metadivision')                    
         check_add_token_for_max_tokens(num_tokens,div_id=division.division_id,metadiv_id=metadiv_id,player_id=player_id)
         if num_tokens > 0:
-            tokens = create_division_tokens(num_tokens,metadiv_id=metadiv_id,player_id=player_id, paid_for=paid_for)
+            tokens = create_division_tokens(num_tokens,metadiv_id=metadiv_id,player_id=player_id, paid_for=paid_for,comped=comped)
             total_tokens = total_tokens + tokens
     DB.session.commit()
     
