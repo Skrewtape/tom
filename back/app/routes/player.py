@@ -337,12 +337,15 @@ returns:
     #divisions = Division.query.all()
     entries_grouped_dict = {}
     entry_id=None
+    matched_entry = None
     for entry in entries:
         if entry.division_id == division.division_id:
             matched_entry = entry
     #for entry in team_entries:
     #    if entry.division_id == division.division_id:
     #        matched_entry = entry
+    if matched_entry:        
+        return jsonify({'entry':matched_entry.to_dict_with_scores()})
+    else:
+        return jsonify({'entry':{}})
         
-    return jsonify({'entry':matched_entry.to_dict_with_scores()})
-
