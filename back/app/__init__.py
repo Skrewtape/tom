@@ -14,6 +14,7 @@ from app import secret_config, tom_config
 from werkzeug.exceptions import default_exceptions, HTTPException
 from sqlalchemy_utils import create_database, database_exists
 from flask.ext.cache import Cache
+import logging
 
 if secret_config.app_secret_key == "" or (secret_config.stripe_api_key == "" and tom_config.use_stripe is True):    
     raise Exception("You didn't configure your secrets!")
@@ -21,6 +22,12 @@ if secret_config.app_secret_key == "" or (secret_config.stripe_api_key == "" and
 
 App = Flask(__name__)
 cache = Cache(App,config={'CACHE_TYPE': 'simple'})
+
+
+from logging.handlers import RotatingFileHandler
+file_handler = RotatingFileHandler('/tmp/out.log',maxBytes=5000000,backupCount=25)
+file_handler.setLevel(logging.INFO)
+App.logger.addHandler(file_handler)
 
 App.secret_key = secret_config.app_secret_key
 
