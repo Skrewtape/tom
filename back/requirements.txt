@@ -26,3 +26,4 @@ splinter==0.7.3
 ranking==0.3.1
 futures==3.0.5
 flask-cache==0.13.1
+iso8601==0.1.11

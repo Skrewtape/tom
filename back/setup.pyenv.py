@@ -12,3 +12,9 @@ subprocess.call([
     '-r',
     'requirements.txt'
 ])
+subprocess.call([
+    'pip',
+    'install',
+    '-e',
+    'git+http://github.com/russ-/pychallonge#egg=pychallonge'
+])

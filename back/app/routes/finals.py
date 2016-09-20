@@ -13,6 +13,8 @@ from sqlalchemy.sql import func
 from operator import itemgetter
 from app.routes.v1 import v1_utils
 from ranking import Ranking
+import challonge
+from app import secret_config, tom_config
 
 # @App.route('/finals/match/match_id/<match_id>', methods=['GET'])
 # @fetch_entity(FinalsMatch, 'match')
@@ -860,13 +862,24 @@ def fill_round_ex(finals_ex_id,round_number):
         DB.session.commit()                
     return jsonify({})
 
+
+def create_and_fill_challonge(tournament_name):
+    checked_player_list = [p for p in json.loads(request.data)['checked_players'] if "checked" in p and p['checked']]
+    challonge.set_credentials(secret_config.challonge_user_name, secret_config.challonge_api_key)    
+    tournament_created = challonge.tournaments.create(tournament_name,tournament_name.replace(" ",""))
+    for player_dict in checked_player_list:
+        #print "%s %s" % (player['player_id'],player['rank'])
+        player = Player.query.filter_by(player_id=int(player_dict['player_id'])).first()
+        player_created = challonge.participants.create(tournament_created['id'],"%s %s" % (player.first_name,player.last_name),seed=int(player_dict['rank']))
+    challonge.tournaments.start(tournament_created['id'])
+    
 @App.route('/finals_ex/rounds/fill_init/finals_ex/<finals_ex_id>', methods=['POST'])
 def fill_init_rounds_ex(finals_ex_id):        
-    finals_ex = FinalsEx.query.filter_by(finals_ex_id=finals_ex_id).first()
-    
-    checked_player_list = [p for p in json.loads(request.data)['checked_players'] if "checked" in p and p['checked']]
+    finals_ex = FinalsEx.query.filter_by(finals_ex_id=finals_ex_id).first()    
     num_players = finals_ex.num_players
     num_players_per_group = finals_ex.num_players_per_group
+    if num_players_per_group == 2:
+        create_and_fill_challonge()
     powers = get_power_of_2_and_byes(num_players)
     num_bye_players = powers[1]
     if num_bye_players > 0:
