@@ -232,8 +232,13 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                          'POST');    
     toggleTournamentActiveResource = generate_resource_definition('/tournament/:tournament_id/:action',                                                              
                                                                   'PUT');        
+    // voidEntryResource = generate_resource_definition('/entry/:entry_id/void',
+    //                                                  'PUT');
     voidEntryResource = generate_resource_definition('/entry/:entry_id/void',
-                                                     'PUT');
+                                                      'PUT');
+    voidEntryBeforeCreateResource = generate_resource_definition('/void/division_machine_id/:division_machine_id',
+                                                      'PUT');
+    
     voidEntryToggleResource = generate_resource_definition('/entry/:entry_id/void/:void_state',
                                                            'PUT');
     
@@ -321,6 +326,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
         ToggleTournamentActive: generic_resource(toggleTournamentActiveResource,'toggled_tournament','post', false), //killroy was here
 	VoidEntryToggle: generic_resource(voidEntryToggleResource,'entry','post', false), //killroy
 	VoidEntry: generic_resource(voidEntryResource,'entry','post', false),
+	VoidEntryBeforeCreate: generic_resource(voidEntryBeforeCreateResource,'entry','post', false),
 	Login: generic_resource(loginResource,'logged_in_user','post', false),
 	LoginPlayer: generic_resource(loginPlayerResource,'logged_in_player','post', false),
 	FlushResourceCache:flush_resource_cache

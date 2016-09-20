@@ -151,6 +151,30 @@ returns:
     
     return jsonify(entry.to_dict_simple())
 
+@App.route('/void/division_machine_id/<division_machine_id>', methods=['PUT'])
+@login_required
+@Void_permission.require(403)
+@fetch_entity(DivisionMachine, 'division_machine')
+def void_entry_before_create(division_machine):
+    print "hi there"
+    player_entry = shared_get_query_for_active_entries(player_id=division_machine.player_id,div_id=division_machine.division_id).first()
+    if player_entry:
+        raise Conflict("Found an entry - bailing!")        
+    entry = shared_create_active_entry(division_machine.division,player=division_machine.player)
+    entry.voided = True
+    entry.active = False
+    entry.completed = True
+    division_machine.player_id = None
+    DB.session.commit()
+    new_audit_log_entry = AuditLogEntry(type="void_entry_before_create",
+                                        timestamp=time.time(),
+                                        player_id=entry.player_id,
+                                        entry_id=entry.entry_id)
+    DB.session.add(new_audit_log_entry)
+    DB.session.commit()        
+    
+    return jsonify(entry.to_dict_simple())
+    
 
 @App.route('/entry/<entry_id>/complete/<complete_state>', methods=['PUT'])
 @login_required
