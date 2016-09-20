@@ -3,7 +3,7 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Entry, Score, Player, Division, Machine, Token, Team, Metadivision, Tournament,CompToken
+from app.types import Entry, Score, Player, Division, Machine, Token, Team, Metadivision, Tournament,CompToken, AuditLogEntry
 from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank, get_division_from_metadivision
 from app.routes import entry
@@ -11,6 +11,7 @@ from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
 from flask_login import current_user
 from flask_restless.helpers import to_dict
+import time
 
 def get_existing_token_info(player_id=None,team_id=None,div_id=None,metadiv_id=None):
     query = None
@@ -54,6 +55,7 @@ def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None
     tokens = []
     json_tokens = []
     for token_num in range(0,int(num_tokens)):
+        #token_log = {'type':'token_create','timestamp':time.time(),'player_id':player_id,'team_id':team_id,'metadiv_id':metadiv_id,'div_id':div_id,'paid_for':paid_for,'comped':comped}                                                
         new_token = Token()    
         if player_id:
             new_token.player_id=player_id                    
@@ -73,6 +75,19 @@ def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None
                 new_comped_token.metadivision_id=metadiv_id
             DB.session.add(new_comped_token)
         DB.session.commit()
+        #token_log['token_id']=new_token.token_id
+        #App.logger.info(json.dumps(token_log)+",")
+        new_audit_log_entry = AuditLogEntry(type="token create",
+                                            timestamp=time.time(),                                            
+                                            player_id=player_id,
+                                            division_id=div_id,
+                                            metadivision_id=metadiv_id,                                            
+                                            paid_for=paid_for,
+                                            comped=comped,
+                                            token_id=new_token.token_id)
+        DB.session.add(new_audit_log_entry)
+        DB.session.commit()        
+        
         tokens.append(to_dict(new_token))
     return tokens
 
@@ -144,6 +159,14 @@ def confirm_tokens():
         if token:
             token.paid_for=True
             DB.session.commit()
+            #token_log = {'type':'credit_card_purchase_confirmed','timestamp':time.time(),'token_id':token.token_id}            
+            #App.logger.info(json.dumps(token_log)+",")
+            new_audit_log_entry = AuditLogEntry(type="credit_card_purchase_confirmed",
+                                                timestamp=time.time(),                                            
+                                                token_id=new_token.token_id)
+        DB.session.add(new_audit_log_entry)
+        DB.session.commit()        
+            
     return jsonify({})
 
 @App.route('/token/paid_for/<int:paid_for>', methods=['POST'])

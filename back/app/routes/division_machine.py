@@ -4,13 +4,14 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Machine, Player, Entry, Score, Division, DivisionMachine, Team
+from app.types import Machine, Player, Entry, Score, Division, DivisionMachine, Team, Token, AuditLogEntry
 from app import App, Admin_permission, Scorekeeper_permission, DB
 from app.routes.util import fetch_entity, i_am_a_teapot
 from app.routes import entry as route_entry
 from app.routes import team as route_team
 from werkzeug.exceptions import Conflict,ImATeapot
 from app import tom_config
+import time
 
 @App.route('/machine/active', methods=['GET'])
 def get_active_machines():
@@ -91,7 +92,21 @@ returns:
         if already_played_count > 0:
             raise i_am_a_teapot('Can not play the same game twice in one ticket',"^")
     divisionmachine.player_id = player.player_id
+    DB.session.commit()    
+    available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=divisionmachine.division_id).all()
+    new_audit_log_entry = AuditLogEntry(type="start_game",
+                                        timestamp=time.time(),
+                                        player_id=player.player_id,
+                                        division_id=divisionmachine.division_id,
+                                        division_machine_id=divisionmachine.division_machine_id)
+    if player_entry:
+        new_audit_log_entry.entry_id = player_entry.entry_id
+    if len(available_tokens) > 0:
+         new_audit_log_entry.available_tokens = len(available_tokens)       
+    DB.session.add(new_audit_log_entry)
     DB.session.commit()
+    
+    
     return jsonify(divisionmachine.to_dict_simple())
 
 @App.route('/divisionmachine/<divisionmachine_id>/entry/<entry_id>/asshole', methods=['PUT'])
@@ -164,7 +179,12 @@ returns:
         raise Conflict('Player %s is not playing machine %s !' % (player.player_id,divisionmachine.machine.name))
     divisionmachine.player_id = None
     DB.session.commit()
-    
+    new_audit_log_entry = AuditLogEntry(type="undo_remove_player",
+                                        timestamp=time.time(),
+                                        player_id=player.player_id,                                                                                
+                                        division_machine_id=divisionmachine.division_machine_id)
+    DB.session.add(new_audit_log_entry)
+    DB.session.commit()            
     return jsonify({})
 
 @App.route('/divisionmachine/<divisionmachine_id>/team/<team_id>/clear', methods=['PUT'])

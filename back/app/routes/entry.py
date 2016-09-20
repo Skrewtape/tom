@@ -3,12 +3,13 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import Entry, Score, Player, Division, Machine, DivisionMachine, Token, Team, Tournament
+from app.types import Entry, Score, Player, Division, Machine, DivisionMachine, Token, Team, Tournament,AuditLogEntry
 from app import App, Admin_permission, Scorekeeper_permission, Void_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank, get_division_from_metadivision
 from app.routes import team as route_team
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
+import time
 
 def shared_get_query_for_active_entries(player_id=None,team_id=None,div_id=None,metadiv_id=None): #killroy
     if metadiv_id is None and div_id is None:
@@ -104,7 +105,7 @@ def shared_create_active_entry(division,player=None,team=None):
     token_id = token_query.first().token_id
     Token.query.filter_by(token_id=token_id).delete()
     DB.session.commit()
-
+    return new_entry
 
 @App.route('/new_entry/division/<division_id>/player/<player_id>', methods=['GET'])
 @fetch_entity(Division, 'division')
@@ -141,6 +142,13 @@ returns:
         if team.division_machine:
             team.division_machine.team_id = None
     DB.session.commit()
+    new_audit_log_entry = AuditLogEntry(type="void_entry",
+                                        timestamp=time.time(),
+                                        player_id=entry.player_id,
+                                        entry_id=entry.entry_id)
+    DB.session.add(new_audit_log_entry)
+    DB.session.commit()        
+    
     return jsonify(entry.to_dict_simple())
 
 
@@ -214,6 +222,7 @@ def add_score(division_machine,new_score_value): #killroy
     #if entry.player is None and entry.team is None:
     #    raise BadRequest("Entry does not have a team or player assigned.  This should not happen.")
 
+    
     if division_machine.player_id is None:
         raise BadRequest("No one is playing this machine")        
 
@@ -250,23 +259,50 @@ def add_score(division_machine,new_score_value): #killroy
         if division_machine not in division.machines:
             raise Conflict('machine is not in division')            
 
+
     new_score = Score(
         score = new_score_value,
         division_machine_id = division_machine.division_machine_id
     )
     if player_entry is None: 
         player = Player.query.filter_by(player_id=division_machine.player_id).first()       
-        shared_create_active_entry(division_machine.division,player=player)    
+        player_entry = shared_create_active_entry(division_machine.division,player=player)
+        available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=division_machine.division_id).all()        
+        #start_entry_log = {'type':'start_entry','timestamp':time.time(),'player_entry':player_entry.entry_id,'player_id':division_machine.player_id,'div_id':division_machine.division_id,'division_machine':division_machine.division_machine_id}
+        #if len(available_tokens) > 0:
+            #start_entry_log['tokens_left']=len(available_tokens)
+        #App.logger.info(json.dumps(start_entry_log)+",")
+        new_audit_log_entry = AuditLogEntry(type="start_entry",
+                                        timestamp=time.time(),
+                                        player_id=division_machine.player_id,
+                                        entry_id=player_entry.entry_id,
+                                        division_id=division_machine.division_id,
+                                        division_machine_id=division_machine.division_machine_id)
+        DB.session.add(new_audit_log_entry)
+        DB.session.commit()        
     player_entry = shared_get_query_for_active_entries(player_id=division_machine.player_id,div_id=division_machine.division_id).first()    
-    player_entry.scores.append(new_score)
+    player_entry.scores.append(new_score)    
     division_machine.player_id = None
     division_machine.team_id = None
     if len(player_entry.scores) >= player_entry.number_of_scores_per_entry:
         entry.active=False
         tournament = Tournament.query.join(Division).filter_by(division_id=player_entry.division_id).first()
         if tournament.scoring_type=='herb':
-            player_entry.completed = True
-    DB.session.commit()
+            player_entry.completed = True            
+    DB.session.commit()    
+    #record_score_log = {'type':'record_score','timestamp':time.time(),'player_entry':player_entry.entry_id,'score_id':new_score.score_id,'player_id':player_entry.player_id,'div_id':division_machine.division_id,'division_machine':division_machine.division_machine_id,'score':new_score.score}
+    #App.logger.info(json.dumps(record_score_log)+",")       
+    new_audit_log_entry = AuditLogEntry(type="record_score",
+                                        timestamp=time.time(),
+                                        entry_id=player_entry.entry_id,
+                                        player_id=player_entry.player_id,
+                                        division_id=division_machine.division_id,
+                                        division_machine_id=division_machine.division_machine_id,
+                                        score_id=new_score.score_id,
+                                        score=new_score.score)
+    DB.session.add(new_audit_log_entry)
+    DB.session.commit()        
+
     return jsonify(player_entry.to_dict_with_scores())
 
 

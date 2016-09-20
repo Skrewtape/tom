@@ -72,7 +72,7 @@ def start_sale():
         )
         order_response=order.pay(
             source=token 
-        )
+        )        
         return jsonify({"result":"success"})
     except stripe.error.CardError as e:
         # The card has been declined        
