@@ -1,0 +1,47 @@
+{% extends "index_ex.html" %}
+{% block content %}
+
+<table class='table'>
+  <tr>
+    <th>Action</th><th>division</th><th>remaining tokens</th><th>Machine</th><td>score</td>
+  </tr>
+{% for audit_log_entry in audit_log_entries %}  
+  {% if audit_log_entry['type'] == "token create" %}
+    <tr>
+      <td>Token Created!</td><td>{{audit_log_entry['division']['tournament_name']}}</td><td>{{audit_log_entry['available_tokens']}}</td><td></td><td></td>
+    </tr>
+    {% endif %}
+  {% if audit_log_entry['type'] == "start_game" %}
+    <tr>
+      <td>Game Started</td><td>{{audit_log_entry['division']['tournament_name']}}</td><td>{{audit_log_entry['available_tokens']}}</td><td>{{audit_log_entry['division_machine']['name']}}</td><td></td>
+    </tr>
+    {% endif %}
+  {% if audit_log_entry['type'] == "record_score" %}
+    <tr>
+      <td>Score Recorded</td><td>{{audit_log_entry['division']['tournament_name']}}</td><td>{{audit_log_entry['available_tokens']}}</td><td>{{audit_log_entry['division_machine']['name']}}</td><td>{{audit_log_entry['score']}}</td>
+    </tr>
+    {% endif %}
+  {% if audit_log_entry['type'] == "start_entry" %}
+    <tr>
+      <td>Entry Actually Created In DB</td><td>{{audit_log_entry['division']['tournament_name']}}</td><td>{{audit_log_entry['available_tokens']}}</td><td>{{audit_log_entry['division_machine']['name']}}</td><td></td>
+    </tr>
+    {% endif %}
+  {% if audit_log_entry['type'] == "void_entry" %}
+    <tr>
+      <td>Entry Voided After First Score Recorded</td><td>{{audit_log_entry['division']['tournament_name']}}</td><td>{{audit_log_entry['available_tokens']}}</td><td></td><td></td>
+    </tr>
+  {% endif %}
+  {% if audit_log_entry['type'] == "void_entry_before_create" %}
+    <tr>
+      <td>Entry Voided Before First Score Recorded</td><td>{{audit_log_entry['division']['tournament_name']}}</td><td>{{audit_log_entry['available_tokens']}}</td><td></td><td></td>
+    </tr>
+  {% endif %}
+  {% if audit_log_entry['type'] == "undo_remove_player" %}
+    <tr>
+      <td>Player removed/player was added but then immediately removed</td><td></td><td>{{audit_log_entry['available_tokens']}}</td><td>{{audit_log_entry['division_machine']['name']}}</td><td></td>
+    </tr>
+  {% endif %}        
+{% endfor %}
+</table>
+
+{% endblock %}
