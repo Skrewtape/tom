@@ -189,8 +189,8 @@ def create_entry_and_add_scores(division,active=False,num=5,void=False, team=Non
     entry = create_entry(division,False,True,False,5)        
     
     for entry_num in range(num):                
-        #random_int = randint(0,100000000) - randint(0,510252)        
-        random_int=5
+        random_int = randint(0,100000000) - randint(0,510252)        
+        #random_int=5
         score = app.types.Score(division_machine_id=division.machines[entry_num].division_machine_id,score=random_int)
         DB.session.add(score)
         entry.scores.append(score)
@@ -210,8 +210,8 @@ def create_entry_and_add_scores(division,active=False,num=5,void=False, team=Non
 def create_herb_entry(division,active=False,void=False,team=None,player=None,division_machine_id=None):
     entry = create_entry(division,False,True,False,1)        
         
-    #random_int = randint(0,100000000) - randint(0,510252)
-    random_int = 5
+    random_int = randint(0,100000000) - randint(0,510252)
+    #random_int = 5
     score = app.types.Score(division_machine_id=division_machine_id,score=random_int)
     DB.session.add(score)
     entry.scores.append(score)
