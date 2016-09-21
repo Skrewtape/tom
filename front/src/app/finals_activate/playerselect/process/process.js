@@ -38,7 +38,7 @@ angular.module('app.finals_activate.playerselect.process').controller(
 	$scope.add_finals_promise = TimeoutResources.AddFinals($scope.player_promise,{division_id:$scope.division_id,num_players:$scope.num_qualifiers,num_players_per_group:$scope.num_players_per_group,num_games_per_match:$scope.num_games_per_match,description:$scope.description});
 	$scope.add_finals_promise.then(function(data){
 	    finals_ex_id=data.finals_ex_id;
-	    $scope.gen_finals_promise = TimeoutResources.GenerateFinalsRounds($scope.add_finals_promise,{finals_id:finals_ex_id});
+	    $scope.gen_finals_promise = TimeoutResources.GenerateFinalsRounds(undefined,{finals_id:finals_ex_id});
             if($scope.tournament_style == "ppo"){
                 $scope.checked_players_b = $scope.checked_players.slice($scope.num_qualifiers_a,$scope.checked_players.length);
                 $scope.checked_players = $scope.checked_players.slice(0,$scope.num_qualifiers_a);
@@ -57,10 +57,10 @@ angular.module('app.finals_activate.playerselect.process').controller(
         } else {            
             return;
         }
-	$scope.add_finals_b_promise = TimeoutResources.AddFinals($scope.player_promise,{division_id:$scope.division_id,num_players:$scope.num_qualifiers,num_players_per_group:$scope.num_players_per_group,num_games_per_match:$scope.num_games_per_match,description:$scope.description});
+	$scope.add_finals_b_promise = TimeoutResources.AddFinals($scope.add_finals_promise,{division_id:$scope.division_id,num_players:$scope.num_qualifiers,num_players_per_group:$scope.num_players_per_group,num_games_per_match:$scope.num_games_per_match,description:$scope.description});
         $scope.add_finals_b_promise.then(function(data){
 	    finals_ex_id=data.finals_ex_id;
-	    $scope.gen_finals_promise = TimeoutResources.GenerateFinalsRounds($scope.add_finals_promise,{finals_id:finals_ex_id});
+	    $scope.gen_finals_promise = TimeoutResources.GenerateFinalsRounds(undefined,{finals_id:finals_ex_id});
 	    $scope.fill_finals_promise = TimeoutResources.FillFinalsRounds($scope.gen_finals_promise,{finals_ex_id:finals_ex_id},{checked_players:$scope.checked_players_b});
 	    $scope.get_finals_promise = TimeoutResources.GetFinals($scope.fill_finals_promise);		
 	    $scope.get_finals_promise.then(function(data){

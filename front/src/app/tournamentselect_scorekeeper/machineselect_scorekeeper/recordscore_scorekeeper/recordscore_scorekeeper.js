@@ -9,7 +9,7 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	$scope.formatted_score = {};
 	$scope.disabledScoreKeeping = true;
 	$scope.team_tournament = $state.params.teamTournament;
-
+        $scope.tournament_type = $state.params.tournamentType;
 	$scope.fuckIos = function(){
 	    var input = window.document.querySelector("#realscoreinput");
 	    input.focus();
@@ -28,7 +28,12 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	
 	//SIGH : loading modal causes problem with input field focus
 	//StatusModal.loading();
-	$scope.machines_promise = TimeoutResources.GetActiveMachines();
+        if($scope.tournament_type == "herb"){
+            $scope.herb_best_scores_promise = TimeoutResources.GetHerbBestScores(undefined,{division_id:$scope.division_id,player_id:$scope.player_id});
+	    $scope.machines_promise = TimeoutResources.GetActiveMachines($scope.herb_best_scores_promise);            
+        } else{
+	    $scope.machines_promise = TimeoutResources.GetActiveMachines();
+        }
 	$scope.division_machine_promise = TimeoutResources.GetDivisionMachine($scope.machines_promise,{division_machine_id:$scope.division_machine_id});        
 	if($scope.team_tournament == "false"){
 	    $scope.player_promise = TimeoutResources.GetPlayer($scope.division_machine_promise,{player_id:$scope.player_id});	    
@@ -44,6 +49,7 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	
 	$scope.entry_promise.then(function(data){
 	    //StatusModal.loaded()
+            
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    console.log($scope.resources);
 	    //FIXME : shouldn't have seperate resources.player_active_entry and resources.team_active_entry

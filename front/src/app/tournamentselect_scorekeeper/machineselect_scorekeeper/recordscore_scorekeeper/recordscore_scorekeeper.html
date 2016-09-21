@@ -72,6 +72,8 @@
       <!-- <div ng-repeat='score in resources.team_active_entry.entry.scores' ng-if='resources.team_active_entry.entry.scores != undefined && resources.team_active_entry.entry.division_id == division_id'> -->
       <!--   {{resources.machines[score.division_machine_id].name}} : {{score.score}}<br> -->
       <!-- </div> -->
-      
+      <div ng-if="tournament_type == 'herb'" ng-repeat="score in resources.best_herb_results.results">
+      {{score.machine_name}} : {{score.score}} (#{{score.rank}})<br>
+    </div>      
     </div>
 </div>

@@ -158,6 +158,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                                  'GET');
     getEntryResource = generate_resource_definition('/entry/:entry_id',
                                                     'GET');
+    getHerbBestScoresResource = generate_resource_definition('/herb_best_scores/division_id/:division_id/player_id/:player_id',
+                                                    'GET');    
     getAllFinalsResource = generate_resource_definition('/finals_ex',
                                                         'GET');
     getFinalsResource = generate_resource_definition('/finals_ex/:finals_ex_id',
@@ -292,7 +294,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetFinals: generic_resource(getFinalsResource,'final','get', false),        
 	GetFinalsMatches: generic_resource(getFinalsMatchesResource,'finals_matches','get', false),
 	GetFinalsMatch: generic_resource(getFinalsMatchResource,'finals_match','get', false),
-	GetFinalsMatchSlots: generic_resource(getFinalsMatchSlotsResource,'finals_match_slots','get', false),        
+	GetFinalsMatchSlots: generic_resource(getFinalsMatchSlotsResource,'finals_match_slots','get', false),
+        GetHerbBestScores: generic_resource(getHerbBestScoresResource,'best_herb_results','get',false),        
 	GetIfpaPlayer: generic_resource(getIfpaPlayerResource,'ifpa_player','get',false), //killroy
 	GetPlayer: generic_resource(getPlayerResource,'player','get', false),//killroy
 	GetPlayerActiveEntriesCount: generic_resource(getPlayerActiveEntriesCountResource,'player_active_entries_count','get', false), //killroy

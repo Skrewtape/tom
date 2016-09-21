@@ -4,7 +4,7 @@ from sqlalchemy import null, func, text, and_
 from flask import jsonify, request, abort
 from flask_login import login_required
 from app import App, cache
-from app.types import Score, Player, Division, Entry, User, Tournament, DivisionMachine, Machine, AuditLogEntry
+from app.types import Score, Player, Division, Entry, User, Tournament, DivisionMachine, Machine, AuditLogEntry, Metadivision
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
 from sqlalchemy.sql import select
@@ -482,6 +482,17 @@ def get_division_entries_ex(division_id):
                            sorted_division_entry_ids=sorted_division_entry_ids, divisions=get_divisions(),
                            top_x_herb_entries=top_x_herb_entries, player_scores_ranks=player_scores_ranks)
     
+@App.route('/herb_best_scores/division_id/<division_id>/player_id/<player_id>')
+@fetch_entity(Division,'division')
+@fetch_entity(Player, 'player')
+def get_herb_best_scores_for_player_in_division(division,player):
+    player_scores_ranks,herb_results = get_herb_division_results_ex(division_id=division.division_id,player_id=player.player_id)    
+    scores_to_return = []
+    if len(player_scores_ranks[division.division_id]) == 0:
+        return jsonify({'results':None})
+    for score in player_scores_ranks[division.division_id][player.player_id]['scores']:
+        scores_to_return.append({'machine_name':score.machine_name,'score':score.score_score,'rank':score.filter_rank})             
+    return jsonify({'results':scores_to_return})
 
 @App.route('/division_machine_entries_ex/<division_machine_id>', methods=['GET'])
 def get_division_machine_entries_ex(division_machine_id):
@@ -560,6 +571,8 @@ def get_player_audit_log(player):
             entry['division_machine']=DivisionMachine.query.filter_by(division_machine_id=entry['division_machine_id']).first().to_dict_simple()        
         if entry['entry_id']:
             entry['division']=Entry.query.filter_by(entry_id=entry['entry_id']).first().division.to_dict_simple()
+        if entry['metadivision_id']:
+            entry['metadivision']=Metadivision.query.filter_by(metadivision_id=entry['metadivision_id']).first().to_dict_simple()
             
         
     
