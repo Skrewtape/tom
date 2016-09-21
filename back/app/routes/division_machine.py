@@ -98,11 +98,10 @@ returns:
                                         timestamp=time.time(),
                                         player_id=player.player_id,
                                         division_id=divisionmachine.division_id,
-                                        division_machine_id=divisionmachine.division_machine_id)
+                                        division_machine_id=divisionmachine.division_machine_id,
+                                        available_tokens=len(available_tokens))
     if player_entry:
-        new_audit_log_entry.entry_id = player_entry.entry_id
-    if len(available_tokens) > 0:
-         new_audit_log_entry.available_tokens = len(available_tokens)       
+        new_audit_log_entry.entry_id = player_entry.entry_id        
     DB.session.add(new_audit_log_entry)
     DB.session.commit()
     
@@ -179,10 +178,13 @@ returns:
         raise Conflict('Player %s is not playing machine %s !' % (player.player_id,divisionmachine.machine.name))
     divisionmachine.player_id = None
     DB.session.commit()
+    available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=divisionmachine.division_id).all()        
+
     new_audit_log_entry = AuditLogEntry(type="undo_remove_player",
                                         timestamp=time.time(),
                                         player_id=player.player_id,                                                                                
-                                        division_machine_id=divisionmachine.division_machine_id)
+                                        division_machine_id=divisionmachine.division_machine_id,
+                                        available_tokens=len(available_tokens))
     DB.session.add(new_audit_log_entry)
     DB.session.commit()            
     return jsonify({})

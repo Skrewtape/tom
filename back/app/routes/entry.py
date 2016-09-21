@@ -142,10 +142,12 @@ returns:
         if team.division_machine:
             team.division_machine.team_id = None
     DB.session.commit()
+    available_tokens = Token.query.filter_by(paid_for=True,player_id=entry.player_id,division_id=entry.division_id).all()        
     new_audit_log_entry = AuditLogEntry(type="void_entry",
                                         timestamp=time.time(),
                                         player_id=entry.player_id,
-                                        entry_id=entry.entry_id)
+                                        entry_id=entry.entry_id,
+                                        available_tokens=len(available_tokens))
     DB.session.add(new_audit_log_entry)
     DB.session.commit()        
     
@@ -166,10 +168,12 @@ def void_entry_before_create(division_machine):
     entry.completed = True
     division_machine.player_id = None
     DB.session.commit()
+    available_tokens = Token.query.filter_by(paid_for=True,player_id=entry.player_id,division_id=entry.division_id).all()            
     new_audit_log_entry = AuditLogEntry(type="void_entry_before_create",
                                         timestamp=time.time(),
                                         player_id=entry.player_id,
-                                        entry_id=entry.entry_id)
+                                        entry_id=entry.entry_id,
+                                        available_tokens=len(available_tokens))
     DB.session.add(new_audit_log_entry)
     DB.session.commit()        
     
@@ -292,16 +296,13 @@ def add_score(division_machine,new_score_value): #killroy
         player = Player.query.filter_by(player_id=division_machine.player_id).first()       
         player_entry = shared_create_active_entry(division_machine.division,player=player)
         available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=division_machine.division_id).all()        
-        #start_entry_log = {'type':'start_entry','timestamp':time.time(),'player_entry':player_entry.entry_id,'player_id':division_machine.player_id,'div_id':division_machine.division_id,'division_machine':division_machine.division_machine_id}
-        #if len(available_tokens) > 0:
-            #start_entry_log['tokens_left']=len(available_tokens)
-        #App.logger.info(json.dumps(start_entry_log)+",")
         new_audit_log_entry = AuditLogEntry(type="start_entry",
                                         timestamp=time.time(),
                                         player_id=division_machine.player_id,
                                         entry_id=player_entry.entry_id,
                                         division_id=division_machine.division_id,
-                                        division_machine_id=division_machine.division_machine_id)
+                                        division_machine_id=division_machine.division_machine_id,
+                                        available_tokens=len(available_tokens))
         DB.session.add(new_audit_log_entry)
         DB.session.commit()        
     player_entry = shared_get_query_for_active_entries(player_id=division_machine.player_id,div_id=division_machine.division_id).first()    
@@ -313,9 +314,8 @@ def add_score(division_machine,new_score_value): #killroy
         tournament = Tournament.query.join(Division).filter_by(division_id=player_entry.division_id).first()
         if tournament.scoring_type=='herb':
             player_entry.completed = True            
-    DB.session.commit()    
-    #record_score_log = {'type':'record_score','timestamp':time.time(),'player_entry':player_entry.entry_id,'score_id':new_score.score_id,'player_id':player_entry.player_id,'div_id':division_machine.division_id,'division_machine':division_machine.division_machine_id,'score':new_score.score}
-    #App.logger.info(json.dumps(record_score_log)+",")       
+    DB.session.commit()
+    available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=division_machine.division_id).all()            
     new_audit_log_entry = AuditLogEntry(type="record_score",
                                         timestamp=time.time(),
                                         entry_id=player_entry.entry_id,
@@ -323,7 +323,8 @@ def add_score(division_machine,new_score_value): #killroy
                                         division_id=division_machine.division_id,
                                         division_machine_id=division_machine.division_machine_id,
                                         score_id=new_score.score_id,
-                                        score=new_score.score)
+                                        score=new_score.score,
+                                        available_tokens=len(available_tokens))
     DB.session.add(new_audit_log_entry)
     DB.session.commit()        
 

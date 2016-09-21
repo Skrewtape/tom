@@ -77,6 +77,7 @@ def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None
         DB.session.commit()
         #token_log['token_id']=new_token.token_id
         #App.logger.info(json.dumps(token_log)+",")
+        available_tokens = Token.query.filter_by(paid_for=True,player_id=player_id,division_id=div_id).all()                
         new_audit_log_entry = AuditLogEntry(type="token create",
                                             timestamp=time.time(),                                            
                                             player_id=player_id,
@@ -84,6 +85,7 @@ def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None
                                             metadivision_id=metadiv_id,                                            
                                             paid_for=paid_for,
                                             comped=comped,
+                                            available_tokens=len(available_tokens),
                                             token_id=new_token.token_id)
         DB.session.add(new_audit_log_entry)
         DB.session.commit()        
