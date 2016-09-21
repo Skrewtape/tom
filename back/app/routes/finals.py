@@ -863,8 +863,8 @@ def fill_round_ex(finals_ex_id,round_number):
     return jsonify({})
 
 
-def create_and_fill_challonge(tournament_name):
-    checked_player_list = [p for p in json.loads(request.data)['checked_players'] if "checked" in p and p['checked']]
+def create_and_fill_challonge(tournament_name,checked_player_list):
+    #checked_player_list = [p for p in json.loads(request.data)['checked_players'] if "checked" in p and p['checked']]
     challonge.set_credentials(secret_config.challonge_user_name, secret_config.challonge_api_key)    
     tournament_created = challonge.tournaments.create(tournament_name,tournament_name.replace(" ",""))
     for player_dict in checked_player_list:
@@ -875,11 +875,12 @@ def create_and_fill_challonge(tournament_name):
     
 @App.route('/finals_ex/rounds/fill_init/finals_ex/<finals_ex_id>', methods=['POST'])
 def fill_init_rounds_ex(finals_ex_id):        
+    checked_player_list = [p for p in json.loads(request.data)['checked_players'] if "checked" in p and p['checked']]
     finals_ex = FinalsEx.query.filter_by(finals_ex_id=finals_ex_id).first()    
     num_players = finals_ex.num_players
     num_players_per_group = finals_ex.num_players_per_group
-    if num_players_per_group == 2:
-        create_and_fill_challonge()
+    #if num_players_per_group == 2:
+    #    create_and_fill_challonge()
     powers = get_power_of_2_and_byes(num_players)
     num_bye_players = powers[1]
     if num_bye_players > 0:
@@ -931,7 +932,15 @@ def fill_init_rounds_ex(finals_ex_id):
 def generate_rounds_ex(finals_ex_id):
     finals_ex = FinalsEx.query.filter_by(finals_ex_id = finals_ex_id).first()
     num_players_per_group = int(finals_ex.num_players_per_group)
-    num_players = int(finals_ex.num_players)
+    #num_players = int(finals_ex.num_players)
+    if finals_ex.division.finals_player_selection_type == "ppo":
+        if finals_ex.description == "A":
+            num_players = int(finals_ex.division.finals_num_qualifiers_ppo_a)
+        else:
+            num_players = int(finals_ex.division.finals_num_qualifiers_ppo_b)
+            
+    if finals_ex.division.finals_player_selection_type == "papa":    
+        num_players = int(finals_ex.division.finals_num_qualifiers)
     num_games_per_match = finals_ex.num_games_per_match
     powers = get_power_of_2_and_byes(num_players)
     if num_players_per_group == 4:

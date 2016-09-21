@@ -11,7 +11,8 @@
      ui-sref='.process({checkedPlayers:resources.ranked_players.ranked_players})'
      > Start Finals</button>
   <br>
-  <span ng-class='num_players_selected.css_class'>Num Players Selected : {{(resources.ranked_players.ranked_players | filter:{checked: true }).length}}</span>
+  <span ng-class='{red: (resources.ranked_players.ranked_players | filter:{checked: true }).length > num_qualifiers}'>Num Players Selected : {{(resources.ranked_players.ranked_players | filter:{checked: true }).length}}</span>
+
   <br>
   <br>
   <div class="scrollable-content"  style='padding:10px'>

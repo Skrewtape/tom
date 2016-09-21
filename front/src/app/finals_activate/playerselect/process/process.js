@@ -13,6 +13,8 @@ angular.module('app.finals_activate.playerselect.process').controller(
         $scope.number_checked = 0;
         $scope.checked_players = $state.params.checkedPlayers;
         $scope.division_id = $state.params.divisionId;
+        $scope.num_qualifiers_a = parseInt($state.params.finalsNumberQualifiersA);
+        $scope.num_qualifiers_b = parseInt($state.params.finalsNumberQualifiersB);
 
 	if($scope.checkForBlankParams($state.params.checkedPlayers) == true){
 	    return;
@@ -38,8 +40,8 @@ angular.module('app.finals_activate.playerselect.process').controller(
 	    finals_ex_id=data.finals_ex_id;
 	    $scope.gen_finals_promise = TimeoutResources.GenerateFinalsRounds($scope.add_finals_promise,{finals_id:finals_ex_id});
             if($scope.tournament_style == "ppo"){
-                $scope.checked_players_b = $scope.checked_players.slice($scope.num_qualifiers,$scope.checked_players.length);
-                $scope.checked_players = $scope.checked_players.slice(0,$scope.num_qualifiers);
+                $scope.checked_players_b = $scope.checked_players.slice($scope.num_qualifiers_a,$scope.checked_players.length);
+                $scope.checked_players = $scope.checked_players.slice(0,$scope.num_qualifiers_a);
             }            
 	    $scope.fill_finals_promise = TimeoutResources.FillFinalsRounds($scope.gen_finals_promise,{finals_ex_id:finals_ex_id},{checked_players:$scope.checked_players});
 	    $scope.get_finals_promise = TimeoutResources.GetFinals($scope.fill_finals_promise);		

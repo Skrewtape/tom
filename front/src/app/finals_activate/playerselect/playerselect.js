@@ -4,10 +4,12 @@ angular.module('app.finals_activate.playerselect').controller(
     function($scope, $state, StatusModal, TimeoutResources) {
         $scope.division_id=$state.params.divisionId;        
         $scope.num_qualifiers = parseInt($state.params.finalsNumberQualifiers);
+        $scope.num_qualifiers_a = parseInt($state.params.finalsNumberQualifiersA);
+        $scope.num_qualifiers_b = parseInt($state.params.finalsNumberQualifiersB);
         $scope.tournament_style = $state.params.finalsPlayerSelectionType;
 
         if($scope.tournament_style == "ppo"){
-            $scope.num_qualifiers = $scope.num_qualifiers * 2;
+            $scope.num_qualifiers = $scope.num_qualifiers_a + $scope.num_qualifiers_b;
         }                        
         
         $scope.num_byes = 8;
@@ -20,6 +22,7 @@ angular.module('app.finals_activate.playerselect').controller(
             //return player.checked == true && player.rank == $scope.num_qualifiers;
         };
         
+        //$scope.num_players_selected = {};
         $scope.num_players_selected = 0;
         $scope.get_players_promise = TimeoutResources.GetAllPlayers();        
         if($scope.tournament_style != "ppo"){
@@ -35,15 +38,22 @@ angular.module('app.finals_activate.playerselect').controller(
             for(idx in $scope.resources.ranked_players.ranked_players){
                 local_count = local_count+1;                    
                 $scope.resources.ranked_players.ranked_players[idx].actual_order = local_count;
-                if(idx < $scope.num_qualifiers){
-                    console.log(idx);
+                if(idx < $scope.num_qualifiers){                    
                     $scope.resources.ranked_players.ranked_players[idx].checked = true;
-                } else {
-                    console.log(idx+ " " + $scope.num_qualifiers);                    
-                }                                
+                }                
             }       
+            for(idx in $scope.resources.ranked_players.ranked_players){
+                if(idx >= $scope.num_qualifiers && $scope.resources.ranked_players.ranked_players[idx].rank == $scope.num_qualifiers+1){
+                    break;
+                }
+                if(idx >= $scope.num_qualifiers && $scope.resources.ranked_players.ranked_players[idx].rank != $scope.num_qualifiers+1+idx-$scope.num_qualifiers){
+                    $scope.resources.ranked_players.ranked_players[idx].checked = true;                    
+                }                                
+            }
+
+                
             
-        });
+            });
         $scope.abdivision = function(index){
             local_count = 0;
             for(idx in $scope.resources.ranked_players.ranked_players){                
@@ -52,13 +62,16 @@ angular.module('app.finals_activate.playerselect').controller(
                 }                 
             }
             if($scope.tournament_style == "ppo"){
-                if(local_count==$scope.num_qualifiers/2 && $scope.resources.ranked_players.ranked_players[index].checked == true){
+                if(local_count==$scope.num_qualifiers_a && $scope.resources.ranked_players.ranked_players[index].checked == true){
                     return true;
                 }                             
             }
-            if(local_count == $scope.num_qualifiers && $scope.resources.ranked_players.ranked_players[index].checked == true){
-                return true;
+            if($scope.tournament_style == "ppo"){
+                if(local_count == $scope.num_qualifiers_b + $scope.num_qualifiers_a && $scope.resources.ranked_players.ranked_players[index].checked == true){
+                    return true;
+                }                
             }                        
+                
         };
         
         $scope.calc_num_selected = function(player){

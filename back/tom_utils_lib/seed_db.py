@@ -122,6 +122,10 @@ def create_division(name,number_of_scores_per_entry=5,stripe_sku=None,local_pric
         division.stripe_sku = stripe_sku
     if local_price:
         division.local_price=local_price
+    if finals_player_selection_type == "ppo":
+        division.finals_num_qualifiers_ppo_a=finals_num_qualifiers
+        division.finals_num_qualifiers_ppo_b=16
+        
     division.finals_player_selection_type = finals_player_selection_type
     division.finals_num_qualifiers = finals_num_qualifiers
     division.finals_num_players_per_group = finals_num_players_per_group
@@ -185,7 +189,8 @@ def create_entry_and_add_scores(division,active=False,num=5,void=False, team=Non
     entry = create_entry(division,False,True,False,5)        
     
     for entry_num in range(num):                
-        random_int = randint(0,100000000) - randint(0,510252)        
+        #random_int = randint(0,100000000) - randint(0,510252)        
+        random_int=5
         score = app.types.Score(division_machine_id=division.machines[entry_num].division_machine_id,score=random_int)
         DB.session.add(score)
         entry.scores.append(score)
@@ -205,7 +210,8 @@ def create_entry_and_add_scores(division,active=False,num=5,void=False, team=Non
 def create_herb_entry(division,active=False,void=False,team=None,player=None,division_machine_id=None):
     entry = create_entry(division,False,True,False,1)        
         
-    random_int = randint(0,100000000) - randint(0,510252)        
+    #random_int = randint(0,100000000) - randint(0,510252)
+    random_int = 5
     score = app.types.Score(division_machine_id=division_machine_id,score=random_int)
     DB.session.add(score)
     entry.scores.append(score)

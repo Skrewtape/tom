@@ -4,7 +4,7 @@ from sqlalchemy import null, func, text, and_
 from flask import jsonify, request, abort
 from flask_login import login_required
 from app import App, cache
-from app.types import Score, Player, Division, Entry, User, Tournament, DivisionMachine, Machine
+from app.types import Score, Player, Division, Entry, User, Tournament, DivisionMachine, Machine, AuditLogEntry
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
 from sqlalchemy.sql import select
@@ -17,6 +17,8 @@ import calendar
 import time
 from flask import render_template
 from ranking import Ranking
+import challonge
+import random
 
 memoize_delay=5
 top_x_herb_entries = 3
@@ -542,5 +544,24 @@ def get_players_ex():
     players = Player.query.order_by(Player.first_name).all()
     return render_template('players.html',players=players)
 
-
-
+@App.route('/audit_log/<player_id>', methods=['GET'])
+@fetch_entity(Player, 'player')
+def get_player_audit_log(player):
+    audit_log = AuditLogEntry.query.filter_by(player_id=player.player_id).order_by(AuditLogEntry.timestamp).all()
+    
+    if not audit_log:
+        return jsonify({})
+    audit_log_entries = [a.to_dict_simple() for a in audit_log]
+    
+    for entry in audit_log_entries:
+        if entry['division_id']:
+            entry['division']=Division.query.filter_by(division_id=entry['division_id']).first().to_dict_simple()
+        if entry['division_machine_id']:
+            entry['division_machine']=DivisionMachine.query.filter_by(division_machine_id=entry['division_machine_id']).first().to_dict_simple()        
+        if entry['entry_id']:
+            entry['division']=Entry.query.filter_by(entry_id=entry['entry_id']).first().division.to_dict_simple()
+            
+        
+    
+    return render_template('audit_log.html',audit_log_entries=audit_log_entries)
+            
