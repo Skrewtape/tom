@@ -43,7 +43,9 @@ angular.module('app.finals_activate.playerselect').controller(
                 }                
             }       
             for(idx in $scope.resources.ranked_players.ranked_players){
-                if(idx >= $scope.num_qualifiers && $scope.resources.ranked_players.ranked_players[idx].rank == $scope.num_qualifiers+1){
+                console.log('checking idx '+idx+' and found the following values : '+$scope.num_qualifiers+' '+$scope.resources.ranked_players.ranked_players[idx].rank+" "+(idx+1));
+                
+                if(idx >= $scope.num_qualifiers && parseInt($scope.resources.ranked_players.ranked_players[idx].rank) == parseInt(idx)+1){
                     break;
                 }
                 if(idx >= $scope.num_qualifiers && $scope.resources.ranked_players.ranked_players[idx].rank != $scope.num_qualifiers+1+idx-$scope.num_qualifiers){
@@ -70,7 +72,12 @@ angular.module('app.finals_activate.playerselect').controller(
                 if(local_count == $scope.num_qualifiers_b + $scope.num_qualifiers_a && $scope.resources.ranked_players.ranked_players[index].checked == true){
                     return true;
                 }                
-            }                        
+            }
+            if($scope.tournament_style == "papa"){
+                if(local_count == $scope.num_qualifiers_b + $scope.num_qualifiers_a && $scope.resources.ranked_players.ranked_players[index].checked == true){
+                    return true;
+                }                
+            }                                    
                 
         };
         
