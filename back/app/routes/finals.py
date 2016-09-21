@@ -877,15 +877,21 @@ def create_and_fill_challonge(tournament_name,checked_player_list):
 def fill_init_rounds_ex(finals_ex_id):        
     checked_player_list = [p for p in json.loads(request.data)['checked_players'] if "checked" in p and p['checked']]
     finals_ex = FinalsEx.query.filter_by(finals_ex_id=finals_ex_id).first()    
-    num_players = finals_ex.num_players
+    if finals_ex.division.finals_player_selection_type == "papa":
+        num_players = finals_ex.num_players
+    if finals_ex.division.finals_player_selection_type == "ppo" and finals_ex.description == "A":
+        num_players = finals_ex.division.finals_num_qualifiers_ppo_a
+    if finals_ex.division.finals_player_selection_type == "ppo" and finals_ex.description == "B":
+        num_players = finals_ex.division.finals_num_qualifiers_ppo_b
+    
     num_players_per_group = finals_ex.num_players_per_group
     #if num_players_per_group == 2:
     #    create_and_fill_challonge()
     powers = get_power_of_2_and_byes(num_players)
-    num_bye_players = powers[1]
+    num_bye_players = powers[1]    
     if num_bye_players > 0:
-        checked_player_groups = create_match_player_groups(checked_player_list[8:],num_players_per_group)
-    else:
+        checked_player_groups = create_match_player_groups(checked_player_list[8:],num_players_per_group)        
+    else:        
         checked_player_groups = create_match_player_groups(checked_player_list,num_players_per_group)
     round_one_matches = FinalsMatchEx.query.filter_by(finals_ex_id=finals_ex_id,round_number = 1)
     round_two_matches = FinalsMatchEx.query.filter_by(finals_ex_id=finals_ex_id,round_number = 2)
@@ -895,6 +901,7 @@ def fill_init_rounds_ex(finals_ex_id):
         
         match_slots = FinalsMatchSlotEx.query.filter_by(finals_match_ex_id=match.finals_match_ex_id).all()
         match_slot_id = 0
+        print "%s %s is checked_player_group_index"% (finals_ex_id,checked_player_group_index)
         checked_player_group = checked_player_groups[checked_player_group_index]
         for player_number in range(0,finals_ex.num_players_per_group):            
             checked_player = checked_player_group[player_number]
