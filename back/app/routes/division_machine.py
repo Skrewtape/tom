@@ -92,8 +92,13 @@ returns:
         if already_played_count > 0:
             raise i_am_a_teapot('Can not play the same game twice in one ticket',"^")
     divisionmachine.player_id = player.player_id
-    DB.session.commit()    
-    available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=divisionmachine.division_id).all()
+    DB.session.commit()
+    metadivision = Division.query.filter_by(division_id=divisionmachine.division_id).first().metadivision
+    if metadivision:
+        available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,metadivision_id=metadivision.metadivision_id).all()
+    else:
+        available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=divisionmachine.division_id).all()
+        
     new_audit_log_entry = AuditLogEntry(type="start_game",
                                         timestamp=time.time(),
                                         player_id=player.player_id,
