@@ -310,12 +310,12 @@ def add_score(division_machine,new_score_value): #killroy
     division_machine.player_id = None
     division_machine.team_id = None
     if len(player_entry.scores) >= player_entry.number_of_scores_per_entry:
-        entry.active=False
+        player_entry.active=False
         tournament = Tournament.query.join(Division).filter_by(division_id=player_entry.division_id).first()
         if tournament.scoring_type=='herb':
             player_entry.completed = True            
     DB.session.commit()
-    available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=division_machine.division_id).all()            
+    available_tokens = Token.query.filter_by(paid_for=True,player_id=player_entry.player_id,division_id=division_machine.division_id).all()            
     new_audit_log_entry = AuditLogEntry(type="record_score",
                                         timestamp=time.time(),
                                         entry_id=player_entry.entry_id,
