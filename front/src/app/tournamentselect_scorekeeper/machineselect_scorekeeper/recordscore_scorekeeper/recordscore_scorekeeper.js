@@ -10,6 +10,7 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	$scope.disabledScoreKeeping = true;
 	$scope.team_tournament = $state.params.teamTournament;
         $scope.tournament_type = $state.params.tournamentType;
+        $scope.void_button_class="lightred";
 	$scope.fuckIos = function(){
 	    var input = window.document.querySelector("#realscoreinput");
 	    input.focus();
@@ -46,6 +47,16 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 								       {team_id:$scope.team_id,
 									division_id:$scope.division_id});
 	}
+
+        $scope.two_step_void = function(){
+            if($scope.void_button_class == "red"){
+                $state.go(".void",{entryId:$scope.resources.active_entry.entry.entry_id});
+            }            
+            if($scope.void_button_class == "lightred"){
+                $scope.void_button_class="red";
+            }
+        }
+
 	
 	$scope.entry_promise.then(function(data){
 	    //StatusModal.loaded()

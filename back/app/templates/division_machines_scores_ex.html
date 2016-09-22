@@ -2,7 +2,7 @@
 {% block content %}
   <center>
     <select id="machine_nav" onchange='machine_change()'>
-      <option value="-1">Select Machine</option>    
+      <option value="-1">Switch to Machine...</option>    
       {% for machine_id,machine in division_machines.items() %}
         {% if machine_id != division_machine.division_machine_id %}
           <option value="{{machine_id}}">{{machine.name}}</option>
@@ -10,9 +10,16 @@
       {% endfor %}
 
     </select>
-    </center>
+  </center>
+  <br>
 <div class="panel panel-default" style='width:97%;margin:auto'>
-  <div class="panel-heading">  Entries for {{division_machine.machine.name}}</div>
+  <div class="panel-heading">
+    <center>
+      <h1 class='panel-title'>
+        Entries for {{division_machine.machine.name}}
+      </h1>
+    </center>
+  </div>
   <table class="table">
     <thead>
       <tr>
@@ -23,7 +30,7 @@
     {% for score in machine_scores %}
     <tr>
       <td>{{score.scorerank}}</td>
-      <td>{{score.player_first_name}} {{score.player_last_name}}</td>
+      <td><a href='/player_entries_ex/{{score.player_player_id}}'>{{score.player_first_name}} {{score.player_last_name}}</a></td>
       <td>{{('{0:,}'.format(score.score_score))|safe}}</td>
     </tr>
   {% endfor %}

@@ -5,6 +5,8 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playe
 	$scope.player_id=$state.params.playerId;
         $scope.process_submit=$state.params.process_submit;
 	$scope.team=$state.params.team;
+        $scope.undo_button_class = "lightred";
+        
 	//$scope.division_id = $state.params.divisionId;
 	$scope.division_machine_id = $state.params.divisionMachineId;        
 	$scope.team_tournament = $state.params.teamTournament;
@@ -28,5 +30,14 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playe
 	    $scope.resources = TimeoutResources.GetAllResources();	    
 	    StatusModal.loaded();
 	});
+        $scope.two_step_undo = function(){
+            if($scope.undo_button_class == "red"){                
+                $state.go(".undo",{undoPlayerId:$scope.resources.player.player_id});
+            }            
+            if($scope.undo_button_class == "lightred"){
+                $scope.undo_button_class="red";
+            }
+        }
+
     }
 );

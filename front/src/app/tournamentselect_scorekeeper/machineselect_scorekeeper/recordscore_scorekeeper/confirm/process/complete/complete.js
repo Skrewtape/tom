@@ -6,6 +6,7 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
         $scope.team_tournament = $state.params.teamTournament;
         $scope.player_id = $state.params.playerId;
 	$scope.team_id = $state.params.teamId;
+        $scope.void_button_class = "lightred";
         
 	StatusModal.loading();
         if($scope.team_tournament == "false"){
@@ -25,6 +26,16 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.recor
 	//if($scope.checkForBlankParams($scope.player_info) == true){
 	//    return;
 	//}
-	//$scope.player = TimeoutResources.addPlayerResource().addPlayer(submit_data);	    
+	//$scope.player = TimeoutResources.addPlayerResource().addPlayer(submit_data);
+        $scope.two_step_void = function(){
+            if($scope.void_button_class == "red"){
+                $state.go(".void",{entryId:$scope.resources.active_entry.entry.entry_id});
+            }            
+            if($scope.void_button_class == "lightred"){
+                $scope.void_button_class="red";
+            }
         }
+        
+    }
+    
 );

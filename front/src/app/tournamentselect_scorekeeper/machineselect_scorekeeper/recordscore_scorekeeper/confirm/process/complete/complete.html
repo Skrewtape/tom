@@ -16,10 +16,14 @@
        >Submit Ticket</button><br>
       <button
 	 ng-if='team_tournament == "false"'
-	 class='btn btn-danger btn-xlg big-web-font'
+	 class='btn btn-xlg big-web-font'
 	 style='margin-top:15px;margin-bottom:15px'
-	 ng-click='launchVoidModal(resources,"player")'
-	 >Void</button>
+         ng-class='void_button_class'
+         ng-click='two_step_void()'
+	 >
+        <span ng-if="void_button_class=='lightred'">Void</span>
+        <span ng-if="void_button_class=='red'">Click To Confirm Void</span>
+      </button>
       <button
 	 ng-if='team_tournament == "true"'
 	 class='btn btn-danger btn-xlg big-web-font'

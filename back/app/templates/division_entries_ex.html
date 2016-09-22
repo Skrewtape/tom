@@ -3,7 +3,7 @@
 
 <center>
   <select id="division_nav" onchange='division_change()'>
-    <option value="-1">Select Tournament</option>    
+    <option value="-1">Switch to Tournament...</option>    
     {% for local_division_id,division in divisions.items() %}
       {% if local_division_id != division_id %}
         <option value="{{local_division_id}}">{{division.tournament_name}}</option>
@@ -11,9 +11,9 @@
     {% endfor %}    
   </select>
 </center>
-
+<br>
 <div class="panel panel-default" style='width:97%;margin:auto'>
-  <div class="panel-heading">Entries for {{divisions[division_id]['tournament_name']}}</div>
+  <div class="panel-heading"><center><h1 class='panel-title'>Entries for {{divisions[division_id]['tournament_name']}}</h1></center></div>
     <table class="table">
       <thead>
         <tr>
@@ -25,10 +25,11 @@
         {% for player_info in player_scores_ranks[division_id]%}
           <tr>
             <td><small>{{player_info['rank']+1}}</small></td>
-            <td><small>{{player_info['scores'][0]['player_first_name']}} {{player_info['scores'][0]['player_last_name']}}</small></td>
+            <td><small><a href="/player_entries_ex/{{player_info['scores'][0]['player_player_id']}}">{{player_info['scores'][0]['player_first_name']}} {{player_info['scores'][0]['player_last_name']}}</a></small></td>
             <td><small>
                 {% for score in player_info['scores'] %}
-                  {{score['machine_abbreviation']}}/
+                <a href="/division_machine_entries_ex/{{score['score_division_machine_id']}}">{{score['machine_abbreviation']}}</a>
+                {% if not loop.last %}/{% endif %}
                 {% endfor %}
               </small>
             </td>
@@ -40,13 +41,13 @@
           <tr>
           <td><small>{{division_results[division_id][entry_id]['entry']['second_query_scorepointsrank']}}</small></td>
           <td>
-            <small>{{division_results[division_id][entry_id]['entry']['first_query_player_first_name']}} {{division_results[division_id][entry_id]['entry']['first_query_player_last_name']}}</small>
+            <small><a href="/player_entries_ex/{{division_results[division_id][entry_id]['entry']['first_query_player_player_id']}}">{{division_results[division_id][entry_id]['entry']['first_query_player_first_name']}} {{division_results[division_id][entry_id]['entry']['first_query_player_last_name']}}</a></small>
           </td>
           <td>
             <small>
-              {{ division_results[division_id][entry_id]['scores'][0]['first_query_machine_abbreviation'] }} / 
-              {{ division_results[division_id][entry_id]['scores'][1]['first_query_machine_abbreviation'] }} / 
-              {{ division_results[division_id][entry_id]['scores'][2]['first_query_machine_abbreviation'] }}
+              <a href='/division_machine_entries_ex/{{division_results[division_id][entry_id]['scores'][0]['score_division_machine_id']}}'>{{ division_results[division_id][entry_id]['scores'][0]['first_query_machine_abbreviation'] }}</a> / 
+              <a href='/division_machine_entries_ex/{{division_results[division_id][entry_id]['scores'][0]['score_division_machine_id']}}'>{{ division_results[division_id][entry_id]['scores'][1]['first_query_machine_abbreviation'] }}</a> / 
+              <a href='/division_machine_entries_ex/{{division_results[division_id][entry_id]['scores'][0]['score_division_machine_id']}}'>{{ division_results[division_id][entry_id]['scores'][2]['first_query_machine_abbreviation'] }}</a>
             </small>
           </td>
           </tr>

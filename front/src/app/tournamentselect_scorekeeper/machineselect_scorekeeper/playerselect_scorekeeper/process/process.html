@@ -23,9 +23,12 @@
     <br>
     <br>
     <button
-       class='btn btn-info btn-xlg'
-       ui-sref='.undo({undoPlayerId:resources.player.player_id})'
-       > Undo player select
+       class='btn btn-xlg'
+       ng-class='undo_button_class'
+       ng-click='two_step_undo()'
+       >
+        <span ng-if="undo_button_class=='lightred'">Undo player select</span>
+        <span ng-if="undo_button_class=='red'">Click To Confirm Undo</span>
     </button>
     
     <br>
