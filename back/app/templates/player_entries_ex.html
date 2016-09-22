@@ -1,6 +1,52 @@
 {% extends "index_ex.html" %}
 {% block content %}
 <center><h2>  {{player.first_name}} {{player.last_name}} Entries </h2></center> <br>
+<table class="table table-condensed">
+  {% if token_counts or metadiv_token_counts %}
+    <tr><th colspan=3><center>Unplayed Tickets</center></th></tr>
+    {% for token_count in token_counts %}
+      <tr><td align="right">{{divisions[token_count.division_id]['tournament_name']}} : </td><td>{{token_count.token_total}}</td>
+          <td style='width:33%'></td>
+      </tr>
+      {% endfor %}
+      {% for token_count in metadiv_token_counts %}
+        <tr><td align="right">{{metadivisions[token_count.metadivision_id]['name']}} : </td><td>{{token_count.token_total}}</td>
+          <td style='width:33%'></td>
+        </tr>
+    {% endfor %}      
+  {% endif %}
+</table> 
+{% for division_id in divisions %}
+  {% if in_progress_results[division_id]|length > 0%}  
+    <div class="panel panel-default" style='width:97%;margin:auto'>
+      <div class="panel-heading"><center><h1 class='panel-title'>In progress {{divisions[division_id]['tournament_name']}} entry</center></h1></div>
+        <center>
+          <br><b>
+            Entry ID : # {{in_progress_results[division_id]['entry']['entry_entry_id']}}, Rank : {{in_progress_results[division_id]['entry']['second_query_scorepointsrank']}}
+          </b>
+          <hr style='width:50%'>
+        </center>
+        <table class='table'>
+          <tr>
+            <th> Rank </th>
+            <th> Machine</th>
+            <th> Score </th>
+            <th> Points </th>
+            </tr>
+        {% for score in in_progress_results[division_id]['scores'] %}
+          <tr>
+            <td> {{score['first_query_scorerank']}}</td>
+            <td> <a href="/division_machine_entries_ex/{{score['score_division_machine_id']}}">{{score['first_query_machine_abbreviation']}}</a> </td>
+            <td> {{score['score_score']}} </td>
+            <td> {{score['first_query_scorepoints']}}</td>
+          </tr>          
+        {% endfor %}
+        <td></td><td></td><td></td><td>{{in_progress_results[division_id]['entry']['second_query_scorepointssum']}}</td>
+        </table>              
+    </div>
+  {% endif %}
+{% endfor %}
+
   {% for division_id in divisions %}
     {% if herb_player_points[division_id]|length > 0%}
       <div class="panel panel-default" style='width:97%;margin:auto'>

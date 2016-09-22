@@ -4,7 +4,7 @@ from sqlalchemy import null, func, text, and_
 from flask import jsonify, request, abort
 from flask_login import login_required
 from app import App, cache
-from app.types import Score, Player, Division, Entry, User, Tournament, DivisionMachine, Machine, AuditLogEntry, Metadivision
+from app.types import Score, Player, Division, Entry, User, Tournament, DivisionMachine, Machine, AuditLogEntry, Metadivision, Token
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
 from sqlalchemy.sql import select
@@ -447,7 +447,7 @@ def get_division_results_ex(division_id=None,player_id=None):
         division_query = Division.query.join(Tournament).filter_by(scoring_type="papa")        
     divisions = division_query.all()
     if len(divisions) is 0:
-        return None,None    
+        return None,None,None    
     
     #divisions = Division.query.join(Tournament).filter_by(scoring_type="papa").all()    
     first_query = get_first_query(divisions, division_id=division_id)    
@@ -458,23 +458,28 @@ def get_division_results_ex(division_id=None,player_id=None):
     #divisions = Division.query.all()    
     sorted_list_entry_ids = {}
     division_results = {}
+    in_progress_results = {}
     for division in divisions:
         sorted_list_entry_ids[division.division_id] = [] 
-        division_results[division.division_id]={}    
+        division_results[division.division_id]={}
     for result in DB.engine.execute(query_three):
         if result.entry_entry_id not in division_results[result.entry_division_id]:
             division_results[result.entry_division_id][result.entry_entry_id]={'entry':result,'scores':[]}
             sorted_list_entry_ids[result.entry_division_id].append(result.entry_entry_id)            
         division_results[result.entry_division_id][result.entry_entry_id]['scores'].append(result)
-        
+        if result.entry_completed is not True:
+            if result.entry_division_id not in in_progress_results:
+                in_progress_results[result.entry_division_id]={'entry':result,'scores':[]}
+            in_progress_results[result.entry_division_id]['scores'].append(result)
+                
     #for division in divisions:        
     #    sorted_list =  sorted(division_results[division.division_id].items(), key= lambda e: e[1]['entry'].second_query_scorepointssum,reverse=True)
     #    division_results[division.division_id]=[e[1] for e in sorted_list]
-    return sorted_list_entry_ids,division_results
+    return sorted_list_entry_ids,division_results,in_progress_results
 
 @App.route('/division_entries_ex/<division_id>', methods=['GET'])
 def get_division_entries_ex(division_id):
-    sorted_division_entry_ids,division_results = get_division_results_ex(division_id=division_id)
+    sorted_division_entry_ids,division_results,in_progress_results = get_division_results_ex(division_id=division_id)
     player_scores_ranks,herb_results = get_herb_division_results_ex(division_id=division_id)
     #herb_results = get_herb_players_ex(player_id)        
     return render_template('division_entries_ex.html', division_results=division_results,
@@ -511,6 +516,10 @@ def get_divisions():
     #return Tournament.query.all()    
     return {d.division_id:d.to_dict_simple() for d in Division.query.all()}
 
+def get_metadivisions():
+    #return Tournament.query.all()    
+    return {d.metadivision_id:d.to_dict_simple() for d in Metadivision.query.all()}
+
 def get_machines(division_id):
     return {d.division_machine_id:d.to_dict_simple() for d in DivisionMachine.query.filter_by(division_id=division_id).all()}
 
@@ -527,14 +536,29 @@ def get_all_machines_dict():
 def get_players_entries_ex(player_id):
     player = Player.query.filter_by(player_id=player_id).first()
     
-    sorted_division_entry_ids, division_results = get_division_results_ex(player_id=player_id)    
-    herb_player_points,herb_results = get_herb_division_results_ex(player_id=player_id)            
+    sorted_division_entry_ids, division_results,in_progress_results = get_division_results_ex(player_id=player_id)    
+    herb_player_points,herb_results = get_herb_division_results_ex(player_id=player_id)    
+
+    query = select([                
+        Token.division_id,
+        func.sum(Token.token_id).label('token_total')        
+    ]).select_from(Token).where(text("player_id=%s" % player_id)).group_by(Token.division_id)    
+    token_counts = [t for t in DB.engine.execute(query) if t.token_total > 0 and t.division_id is not None]
+
+    metadiv_query = select([                
+        Token.metadivision_id,
+        func.sum(Token.token_id).label('token_total')        
+    ]).select_from(Token).where(text("player_id=%s" % player_id)).group_by(Token.metadivision_id)    
+    metadiv_token_counts = [t for t in DB.engine.execute(metadiv_query) if t.token_total > 0 and t.metadivision_id is not None]
+    
     #sorted_division_entry_ids = {}
     #division_results = {}
     return render_template('player_entries_ex.html', division_results=division_results,
-                          herb_results=herb_results, player=player,
-                          sorted_division_entry_ids=sorted_division_entry_ids, divisions=get_divisions(),
-                          top_x_herb_entries=top_x_herb_entries, herb_player_points=herb_player_points)
+                           herb_results=herb_results, player=player,
+                           sorted_division_entry_ids=sorted_division_entry_ids, divisions=get_divisions(),
+                           top_x_herb_entries=top_x_herb_entries, herb_player_points=herb_player_points,
+                           in_progress_results=in_progress_results, token_counts=token_counts,
+                           metadiv_token_counts=metadiv_token_counts, metadivisions=get_metadivisions())
     
 
 @App.route('/', methods=['GET'])
