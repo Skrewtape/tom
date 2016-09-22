@@ -5,10 +5,12 @@
 
 <div class="scrollable">
   <div class="big-web-font scrollable-content"  style='padding:10px'>
-    <div ng-repeat='score in resources.entry.scores'>
-      {{resources.machines[score.division_machine_id].name}} : {{score.score}}<br>
-    </div>
-    <br>
+    <table class='table'>
+      <tr><th colspan=2>Scores On Ticket</th></tr>
+      <tr  ng-repeat='score in resources.entry.scores'>
+        <td>{{resources.machines[score.division_machine_id].name}}</td><td align=left>{{score.score}}</td>
+      </tr>
+    </table>
     <button
        style='margin-top:15px;margin-bottom:15px;'       
        class='btn btn-info btn-xlg big-web-font'

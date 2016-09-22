@@ -7,7 +7,7 @@
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
   <div class="scrollable-content big-web-font"  style='padding:10px'>
     <span ng-if='team_tournament=="false"'>
-      {{resources.player.first_name}} {{resources.player.last_name}}     
+      <b>#{{resources.player.player_id}} {{resources.player.first_name}} {{resources.player.last_name}}</b>     
     </span>
     <span ng-if='team_tournament=="true"'>
       Team {{resources.player.team.team_name}} 
