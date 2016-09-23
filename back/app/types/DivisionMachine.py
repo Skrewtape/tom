@@ -43,6 +43,7 @@ class DivisionMachine(DB.Model):
     def to_dict_simple(self):
         division_machine = to_dict(self)
         division_machine['name'] = self.machine.name
+        division_machine['abbreviation'] = self.machine.abbreviation        
         return division_machine
 
     def to_dict_with_player(self):

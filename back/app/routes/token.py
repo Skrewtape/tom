@@ -12,7 +12,7 @@ from werkzeug.exceptions import Conflict, BadRequest
 from flask_login import current_user
 from flask_restless.helpers import to_dict
 import time
-
+from app.routes.v1 import v1_utils
 def get_existing_token_info(player_id=None,team_id=None,div_id=None,metadiv_id=None):
     query = None
     if div_id:
@@ -77,18 +77,26 @@ def create_division_tokens(num_tokens,div_id=None,metadiv_id=None,player_id=None
         DB.session.commit()
         #token_log['token_id']=new_token.token_id
         #App.logger.info(json.dumps(token_log)+",")
-        available_tokens = Token.query.filter_by(paid_for=True,player_id=player_id,division_id=div_id).all()                
-        new_audit_log_entry = AuditLogEntry(type="token create",
-                                            timestamp=time.time(),                                            
-                                            player_id=player_id,
-                                            division_id=div_id,
-                                            metadivision_id=metadiv_id,                                            
-                                            paid_for=paid_for,
-                                            comped=comped,
-                                            available_tokens=len(available_tokens),
-                                            token_id=new_token.token_id)
-        DB.session.add(new_audit_log_entry)
-        DB.session.commit()        
+        v1_utils.add_audit_log_entry(
+            "Create Token",            
+            player_id,
+            division_id=div_id,
+            metadivision_id=metadiv_id,                                            
+            paid_for=paid_for,
+            comped=comped,            
+            token_id=new_token.token_id            
+        )
+        # new_audit_log_entry = AuditLogEntry(type="token create",
+        #                                     timestamp=time.time(),                                            
+        #                                     player_id=player_id,
+        #                                     division_id=div_id,
+        #                                     metadivision_id=metadiv_id,                                            
+        #                                     paid_for=paid_for,
+        #                                     comped=comped,
+        #                                     available_tokens=len(available_tokens),
+        #                                     token_id=new_token.token_id)
+        #DB.session.add(new_audit_log_entry)
+        #DB.session.commit()        
         
         tokens.append(to_dict(new_token))
     return tokens
@@ -163,9 +171,12 @@ def confirm_tokens():
             DB.session.commit()
             #token_log = {'type':'credit_card_purchase_confirmed','timestamp':time.time(),'token_id':token.token_id}            
             #App.logger.info(json.dumps(token_log)+",")
-            new_audit_log_entry = AuditLogEntry(type="credit_card_purchase_confirmed",
-                                                timestamp=time.time(),                                            
-                                                token_id=new_token.token_id)
+            v1_utils.add_audit_log_entry(
+                "Credit Card Purchase Confirmed",
+                token.player_id,
+                division_id=token.division_id,
+                token_id=token.token_id
+            )
         DB.session.add(new_audit_log_entry)
         DB.session.commit()        
             

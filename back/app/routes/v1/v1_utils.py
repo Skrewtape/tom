@@ -12,7 +12,7 @@ from werkzeug.exceptions import Conflict,Unauthorized
 
 from app import App, DB, Admin_permission
 
-from app.types import User, Role, Player, Division, Tournament
+from app.types import User, Role, Player, Division, Tournament, AuditLogEntry, Token
 
 from app.routes.util import fetch_entity
 from app.routes import test
@@ -62,7 +62,47 @@ def get_players_ranked_by_qualifying_herb(division_id,num_players,checked_player
     return ranked_players
 
 
-
+def add_audit_log_entry(type,player_id,**kwargs):
+    new_audit_log_entry = AuditLogEntry(
+        type=type,
+        timestamp=time.time(),
+        player_id=player_id)
+    if "entry_id" in kwargs:
+        new_audit_log_entry.entry_id=kwargs['entry_id']
+    if "division_id" in kwargs:
+        new_audit_log_entry.division_id=kwargs['division_id']
+    if "metadivision_id" in kwargs:
+        new_audit_log_entry.metadivision_id=kwargs['metadivision_id']        
+    if "division_machine_id" in kwargs:
+        new_audit_log_entry.division_machine_id=kwargs['division_machine_id']
+    if "available_tokens" in kwargs:
+        new_audit_log_entry.available_tokens=kwargs['available_tokens']
+    if "token_id" in kwargs:
+        new_audit_log_entry.token_id=kwargs['token_id']
+    if "score_id" in kwargs:
+        new_audit_log_entry.score_id=kwargs['score_id']                
+    if "score" in kwargs:
+        new_audit_log_entry.score=kwargs['score']                
+    if "comped" in kwargs:
+        new_audit_log_entry.comped=kwargs['comped']                        
+    if "division_id" in kwargs and kwargs['division_id']:
+        metadivision = Division.query.filter_by(division_id=int(kwargs['division_id'])).first().metadivision
+        if metadivision:
+            available_tokens = len(Token.query.filter_by(paid_for=True,player_id=player_id,metadivision_id=metadivision.metadivision_id).all())
+            new_audit_log_entry.available_tokens = available_tokens
+            new_audit_log_entry.metadivision_id = metadivision.metadivision_id
+        else:
+            available_tokens = len(Token.query.filter_by(paid_for=True,player_id=player_id,division_id=kwargs['division_id']).all())
+            new_audit_log_entry.available_tokens = available_tokens
+    if "metadivision_id" in kwargs and kwargs['metadivision_id']:
+        available_tokens = len(Token.query.filter_by(paid_for=True,player_id=player_id,metadivision_id=kwargs['metadivision_id']).all())
+        new_audit_log_entry.available_tokens = available_tokens
+        
+    DB.session.add(new_audit_log_entry)
+    DB.session.commit()
+    #available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=division_machine.division_id).all()        
+    
+        
 def add_division(division_data): #killroy was here
     if 'division_name' not in division_data or 'tournament_id' not in division_data:
         raise BadRequest('Did not specify division_name or tournament_id in post data')

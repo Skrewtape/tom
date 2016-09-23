@@ -12,6 +12,7 @@ from app.routes import team as route_team
 from werkzeug.exceptions import Conflict,ImATeapot
 from app import tom_config
 import time
+from app.routes.v1 import v1_utils
 
 @App.route('/machine/active', methods=['GET'])
 def get_active_machines():
@@ -60,6 +61,15 @@ returns:
     return jsonify(divisionmachine.to_dict_simple())
 
 
+@App.route('/divisionmachine_edit/<divisionmachine_id>', methods=['PUT'])
+@fetch_entity(DivisionMachine, 'divisionmachine')
+def edit_division_machine(divisionmachine):
+    machine_data = json.loads(request.data)
+    divisionmachine.machine.abbreviation=machine_data['abbreviation']
+    DB.session.commit()
+    return jsonify(divisionmachine.to_dict_simple())
+    
+
 @App.route('/divisionmachine/<divisionmachine_id>/player/<player_id>', methods=['PUT'])
 @Scorekeeper_permission.require(403)
 @login_required
@@ -94,21 +104,27 @@ returns:
     divisionmachine.player_id = player.player_id
     DB.session.commit()
     metadivision = Division.query.filter_by(division_id=divisionmachine.division_id).first().metadivision
-    if metadivision:
-        available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,metadivision_id=metadivision.metadivision_id).all()
-    else:
-        available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=divisionmachine.division_id).all()
+    #if metadivision:
+    #    available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,metadivision_id=metadivision.metadivision_id).all()
+    #else:
+    #    available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=divisionmachine.division_id).all()
         
-    new_audit_log_entry = AuditLogEntry(type="start_game",
-                                        timestamp=time.time(),
-                                        player_id=player.player_id,
-                                        division_id=divisionmachine.division_id,
-                                        division_machine_id=divisionmachine.division_machine_id,
-                                        available_tokens=len(available_tokens))
-    if player_entry:
-        new_audit_log_entry.entry_id = player_entry.entry_id        
-    DB.session.add(new_audit_log_entry)
-    DB.session.commit()
+    v1_utils.add_audit_log_entry(
+        "Starting Game",        
+        player_id=player.player_id,
+        division_id=divisionmachine.division_id,
+        division_machine_id=divisionmachine.division_machine_id        
+    )
+    # new_audit_log_entry = AuditLogEntry(type="start_game",
+    #                                     timestamp=time.time(),
+    #                                     player_id=player.player_id,
+    #                                     division_id=divisionmachine.division_id,
+    #                                     division_machine_id=divisionmachine.division_machine_id,
+    #                                     available_tokens=len(available_tokens))
+    # if player_entry:
+    #     new_audit_log_entry.entry_id = player_entry.entry_id        
+    # DB.session.add(new_audit_log_entry)
+    # DB.session.commit()
     
     
     return jsonify(divisionmachine.to_dict_simple())
@@ -183,15 +199,21 @@ returns:
         raise Conflict('Player %s is not playing machine %s !' % (player.player_id,divisionmachine.machine.name))
     divisionmachine.player_id = None
     DB.session.commit()
-    available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=divisionmachine.division_id).all()        
+    #available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=divisionmachine.division_id).all()        
 
-    new_audit_log_entry = AuditLogEntry(type="undo_remove_player",
-                                        timestamp=time.time(),
-                                        player_id=player.player_id,                                                                                
-                                        division_machine_id=divisionmachine.division_machine_id,
-                                        available_tokens=len(available_tokens))
-    DB.session.add(new_audit_log_entry)
-    DB.session.commit()            
+    v1_utils.add_audit_log_entry(
+        "Remove Player/Undo Game Start",        
+        player_id=player.player_id,                                                                                
+        division_machine_id=divisionmachine.division_machine_id,
+        division_id=divisionmachine.division_id
+    )
+    # new_audit_log_entry = AuditLogEntry(type="undo_remove_player",
+    #                                     timestamp=time.time(),
+    #                                     player_id=player.player_id,                                                                                
+    #                                     division_machine_id=divisionmachine.division_machine_id,
+    #                                     available_tokens=len(available_tokens))
+    #DB.session.add(new_audit_log_entry)
+    #DB.session.commit()            
     return jsonify({})
 
 @App.route('/divisionmachine/<divisionmachine_id>/team/<team_id>/clear', methods=['PUT'])

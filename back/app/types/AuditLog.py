@@ -6,7 +6,7 @@ from flask_restless.helpers import to_dict
 
 class AuditLogEntry(DB.Model):
     audit_log_entry_id = DB.Column(DB.Integer, primary_key=True)
-    type = DB.Column(DB.String(25))
+    type = DB.Column(DB.String(125))
     timestamp = DB.Column(DB.Integer)
     player_id = DB.Column(DB.Integer)
     division_id = DB.Column(DB.Integer)

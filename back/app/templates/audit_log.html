@@ -3,8 +3,42 @@
 
 <table class='table'>
   <tr>
-    <th>Action</th><th>division</th><th>remaining tokens for division</th><th>Machine</th><td>score</td>
+    <th>Action</th><th>Division</th><th>Metadivision</th><th>Remaining tokens for division</th><th>Machine</th><td>score</td>
   </tr>
+  {% for audit_log_entry in audit_log_entries %}
+    <tr>
+      <td>
+        {{audit_log_entry['type']}}
+      </td>
+      <td>
+        {% if audit_log_entry.division %}        
+          {{audit_log_entry['division']['tournament_name']}}
+        {% endif %}
+      </td>
+      <td>
+        {% if audit_log_entry.metadivision %}
+          {{audit_log_entry['metadivision']['name']}}
+        {% endif %}
+      </td>
+      <td>
+        {{audit_log_entry['available_tokens']}}
+      </td>
+      <td>
+        {% if audit_log_entry.division_machine %}        
+          {{audit_log_entry['division_machine']['name']}}
+        {% endif %}
+      </td>
+      <td>
+        {% if audit_log_entry.score %}      
+          {{audit_log_entry['score']}}
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
+{% endblock %}
+
+{#
 {% for audit_log_entry in audit_log_entries %}  
   {% if audit_log_entry['type'] == "token create" %}
     <tr>
@@ -51,3 +85,4 @@
 </table>
 
 {% endblock %}
+#}

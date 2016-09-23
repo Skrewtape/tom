@@ -10,6 +10,7 @@ from app.routes import team as route_team
 from app import tom_config
 from werkzeug.exceptions import Conflict, BadRequest
 import time
+from app.routes.v1 import v1_utils
 
 def shared_get_query_for_active_entries(player_id=None,team_id=None,div_id=None,metadiv_id=None): #killroy
     if metadiv_id is None and div_id is None:
@@ -142,14 +143,20 @@ returns:
         if team.division_machine:
             team.division_machine.team_id = None
     DB.session.commit()
-    available_tokens = Token.query.filter_by(paid_for=True,player_id=entry.player_id,division_id=entry.division_id).all()        
-    new_audit_log_entry = AuditLogEntry(type="void_entry",
-                                        timestamp=time.time(),
-                                        player_id=entry.player_id,
-                                        entry_id=entry.entry_id,
-                                        available_tokens=len(available_tokens))
-    DB.session.add(new_audit_log_entry)
-    DB.session.commit()        
+    #available_tokens = Token.query.filter_by(paid_for=True,player_id=entry.player_id,division_id=entry.division_id).all()        
+    v1_utils.add_audit_log_entry(
+        "Void Entry",                       
+        entry.player_id,
+        division_id=entry.division_id,
+        entry_id=entry.entry_id        
+    )
+    # new_audit_log_entry = AuditLogEntry(type="void_entry",
+    #                                     timestamp=time.time(),
+    #                                     player_id=entry.player_id,
+    #                                     entry_id=entry.entry_id,
+    #                                     available_tokens=len(available_tokens))
+    # DB.session.add(new_audit_log_entry)
+    # DB.session.commit()        
     
     return jsonify(entry.to_dict_simple())
 
@@ -168,14 +175,20 @@ def void_entry_before_create(division_machine):
     entry.completed = True
     division_machine.player_id = None
     DB.session.commit()
-    available_tokens = Token.query.filter_by(paid_for=True,player_id=entry.player_id,division_id=entry.division_id).all()            
-    new_audit_log_entry = AuditLogEntry(type="void_entry_before_create",
-                                        timestamp=time.time(),
-                                        player_id=entry.player_id,
-                                        entry_id=entry.entry_id,
-                                        available_tokens=len(available_tokens))
-    DB.session.add(new_audit_log_entry)
-    DB.session.commit()        
+    #available_tokens = Token.query.filter_by(paid_for=True,player_id=entry.player_id,division_id=entry.division_id).all()            
+    v1_utils.add_audit_log_entry(
+        "Void Entry Before First Score Recorded",        
+        entry.player_id,
+        entry_id=entry.entry_id,
+        division_id=entry.division_id
+    )
+    # new_audit_log_entry = AuditLogEntry(type="void_entry_before_create",
+    #                                     timestamp=time.time(),
+    #                                     player_id=entry.player_id,
+    #                                     entry_id=entry.entry_id,
+    #                                     available_tokens=len(available_tokens))
+    #DB.session.add(new_audit_log_entry)
+    #DB.session.commit()        
     
     return jsonify(entry.to_dict_simple())
     
@@ -295,16 +308,20 @@ def add_score(division_machine,new_score_value): #killroy
     if player_entry is None: 
         player = Player.query.filter_by(player_id=division_machine.player_id).first()       
         player_entry = shared_create_active_entry(division_machine.division,player=player)
-        available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=division_machine.division_id).all()        
-        new_audit_log_entry = AuditLogEntry(type="start_entry",
-                                        timestamp=time.time(),
-                                        player_id=division_machine.player_id,
-                                        entry_id=player_entry.entry_id,
-                                        division_id=division_machine.division_id,
-                                        division_machine_id=division_machine.division_machine_id,
-                                        available_tokens=len(available_tokens))
-        DB.session.add(new_audit_log_entry)
-        DB.session.commit()        
+        v1_utils.add_audit_log_entry("Creating Entry",
+                                     division_machine.player_id,                                     
+                                     entry_id=player_entry.entry_id,
+                                     division_id=division_machine.division_id,
+                                     division_machine_id=division_machine.division_machine_id)
+        # new_audit_log_entry = AuditLogEntry(type="start_entry",
+        #                                 timestamp=time.time(),
+        #                                 player_id=division_machine.player_id,
+        #                                 entry_id=player_entry.entry_id,
+        #                                 division_id=division_machine.division_id,
+        #                                 division_machine_id=division_machine.division_machine_id,
+        #                                 available_tokens=len(available_tokens))
+        #DB.session.add(new_audit_log_entry)
+        #DB.session.commit()        
     player_entry = shared_get_query_for_active_entries(player_id=division_machine.player_id,div_id=division_machine.division_id).first()    
     player_entry.scores.append(new_score)    
     division_machine.player_id = None
@@ -315,18 +332,27 @@ def add_score(division_machine,new_score_value): #killroy
         if tournament.scoring_type=='herb':
             player_entry.completed = True            
     DB.session.commit()
-    available_tokens = Token.query.filter_by(paid_for=True,player_id=player_entry.player_id,division_id=division_machine.division_id).all()            
-    new_audit_log_entry = AuditLogEntry(type="record_score",
-                                        timestamp=time.time(),
-                                        entry_id=player_entry.entry_id,
-                                        player_id=player_entry.player_id,
-                                        division_id=division_machine.division_id,
-                                        division_machine_id=division_machine.division_machine_id,
-                                        score_id=new_score.score_id,
-                                        score=new_score.score,
-                                        available_tokens=len(available_tokens))
-    DB.session.add(new_audit_log_entry)
-    DB.session.commit()        
+    #available_tokens = Token.query.filter_by(paid_for=True,player_id=player_entry.player_id,division_id=division_machine.division_id).all()            
+    v1_utils.add_audit_log_entry(
+        "Recording Score",
+        player_entry.player_id,
+        entry_id=player_entry.entry_id,        
+        division_id=division_machine.division_id,
+        division_machine_id=division_machine.division_machine_id,
+        score_id=new_score.score_id,
+        score=new_score.score        
+    )
+    # new_audit_log_entry = AuditLogEntry(type="record_score",
+    #                                     timestamp=time.time(),
+    #                                     entry_id=player_entry.entry_id,
+    #                                     player_id=player_entry.player_id,
+    #                                     division_id=division_machine.division_id,
+    #                                     division_machine_id=division_machine.division_machine_id,
+    #                                     score_id=new_score.score_id,
+    #                                     score=new_score.score,
+    #                                     available_tokens=len(available_tokens))
+    # DB.session.add(new_audit_log_entry)
+    # DB.session.commit()        
 
     return jsonify(player_entry.to_dict_with_scores())
 

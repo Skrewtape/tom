@@ -494,9 +494,10 @@ def get_herb_best_scores_for_player_in_division(division,player):
     player_scores_ranks,herb_results = get_herb_division_results_ex(division_id=division.division_id,player_id=player.player_id)    
     scores_to_return = []
     if len(player_scores_ranks[division.division_id]) == 0:
-        return jsonify({'results':None})
-    for score in player_scores_ranks[division.division_id][player.player_id]['scores']:
-        scores_to_return.append({'machine_name':score.machine_name,'score':score.score_score,'rank':score.filter_rank})             
+        return jsonify({'results':None})    
+    for scores in player_scores_ranks[division.division_id]:
+        for score in scores['scores']:
+            scores_to_return.append({'machine_name':score.machine_name,'score':score.score_score,'rank':score.filter_rank})             
     return jsonify({'results':scores_to_return})
 
 @App.route('/division_machine_entries_ex/<division_machine_id>', methods=['GET'])
