@@ -25,6 +25,8 @@ class Division(DB.Model):
     finals_num_qualifiers = DB.Column(DB.Integer)
     finals_num_qualifiers_ppo_a = DB.Column(DB.Integer)
     finals_num_qualifiers_ppo_b = DB.Column(DB.Integer)
+    finals_challonge_name_ppo_a = DB.Column(DB.String(100))
+    finals_challonge_name_ppo_b = DB.Column(DB.String(100))        
     finals_num_players_per_group = DB.Column(DB.Integer)
     finals_num_games_per_match = DB.Column(DB.Integer)
     tournament_id = DB.Column(DB.Integer, DB.ForeignKey(

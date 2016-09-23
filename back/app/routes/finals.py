@@ -886,7 +886,8 @@ def fill_init_rounds_ex(finals_ex_id):
     
     num_players_per_group = finals_ex.num_players_per_group
     #if num_players_per_group == 2:
-    #    create_and_fill_challonge()
+    #    create_and_fill_challonge(finals_ex.division.finals_challonge_name_ppo_a,checked_player_list)
+    #    create_and_fill_challonge(finals_ex.division.finals_challonge_name_ppo_b,checked_player_list)
     powers = get_power_of_2_and_byes(num_players)
     num_bye_players = powers[1]    
     if num_bye_players > 0:

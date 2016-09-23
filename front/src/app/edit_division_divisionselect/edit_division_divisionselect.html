@@ -1,0 +1,18 @@
+<div ui-content-for="title">
+  <span></span>
+</div>
+<div ui-view="backbutton"></div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+    <div class="scrollable-content"  style='padding:10px'>
+      <div ng-repeat="division in resources.divisions">
+        <button
+           class='btn btn-info'
+           ui-sref='.edit_division({division_id:division.division_id})'
+           >        
+          {{division.tournament_name}}
+        </button>
+        <br><br>
+      </div>
+  </div>
+</div>

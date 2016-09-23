@@ -38,20 +38,27 @@ returns:
 @fetch_entity(Division, 'division')
 def edit_division(division):
     division_data = json.loads(request.data)    
-    if finals_player_selection_type in division_data:
-        division.finals_player_selection_type = division_data['finals_player_select_type']
-    if finals_num_qualifiers in division_data:
+    if "finals_player_selection_type" in division_data:
+        division.finals_player_selection_type = division_data['finals_player_selection_type']
+    if "finals_num_qualifiers" in division_data:
         division.finals_num_qualifiers = division_data['finals_num_qualifiers']
-    if finals_num_qualifiers_ppo_a in division_data:
+    if "finals_num_qualifiers_ppo_a" in division_data:
         division.finals_num_qualifiers_ppo_a = division_data['finals_num_qualifiers_ppo_a']
-    if finals_num_qualifiers_ppo_b in division_data:
+    if "finals_num_qualifiers_ppo_b" in division_data:
         division.finals_num_qualifiers_ppo_b = division_data['finals_num_qualifiers_ppo_b']
-    if finals_num_players_per_group in division_data:
+    if "finals_num_players_per_group" in division_data:
         division.finals_num_players_per_group = division_data['finals_num_players_per_group']
-    if finals_num_games_per_match in division_data:
+    if "finals_num_games_per_match" in division_data:
         division.finals_num_games_per_match = division_data['finals_num_games_per_match']
- 
-    return v1_utils.add_division(division_data) 
+    if "finals_challonge_name_ppo_a" in division_data:
+        division.finals_challonge_name_ppo_a = division_data['finals_challonge_name_ppo_a']
+    if "finals_challonge_name_ppo_b" in division_data:
+        division.finals_challonge_name_ppo_b = division_data['finals_challonge_name_ppo_b']
+         
+
+    DB.session.commit()
+    return jsonify({})
+    #return v1_utils.add_division(division_data) 
 
 
 @App.route(api_ver+'/division/ready_for_finals', methods=['GET']) #killroy was here

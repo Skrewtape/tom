@@ -1,0 +1,40 @@
+<div ui-content-for="title">
+  <span></span>
+</div>
+<div ui-view="backbutton"></div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+    <div class="scrollable-content big-web-font"  style='padding:10px'>
+      Division Name : {{resources.division.tournament_name}}<br><br>
+      Finals player selection type :
+      <select name="mySelect" id="mySelect"
+              ng-model="resources.division.finals_player_selection_type">
+        <option value="ppo">ppo</option>
+        <option value="papa">papa</option>        
+      </select>
+      <span ng-if='resources.division.finals_player_selection_type == "papa"'>
+        <br><br>
+        Number of Qualifiers : <input type='text' ng-model='resources.division.finals_num_qualifiers'></input>
+      </span>
+      <br><br>
+      Number of players per finals group : <input type='text' ng-model='resources.division.finals_num_players_per_group'></input>
+      <span ng-if='resources.division.finals_player_selection_type == "ppo"'>
+        <br><br>
+        Number of Qualifiers For A : <input type='text' ng-model='resources.division.finals_num_qualifiers_ppo_a'></input><br><br>
+        Number of Qualifiers For B : <input type='text' ng-model='resources.division.finals_num_qualifiers_ppo_b'></input>
+        <span ng-if="resources.division.finals_num_players_per_group == 2">
+          <br><br>
+          Challonge tournament name For A : <input type='text' ng-model='resources.division.finals_challonge_name_ppo_a'></input><br><br>
+          Challonge tournament name For B : <input type='text' ng-model='resources.division.finals_challonge_name_ppo_b'></input>
+        </span>        
+      </span>
+      <br><br>
+      Number of games per finals match : <input type='text' ng-model='resources.division.finals_num_games_per_match'></input>
+      <br><br>
+      
+      <button
+         ng-click='save_division()'
+         >Save</button>
+      
+  </div>
+</div>
