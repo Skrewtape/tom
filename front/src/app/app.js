@@ -42,7 +42,7 @@ app = angular.module(
              'app.assholes',
              'app.edit_all_entries',
              'app.player_purchasetickets',
-             'app.test','app.remove_player',/*REPLACEMECHILD*/
+             'app.test','app.remove_player','app.machine_edit',/*REPLACEMECHILD*/
 	]
 );
 

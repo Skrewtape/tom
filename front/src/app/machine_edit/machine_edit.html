@@ -1,0 +1,14 @@
+<div ui-content-for="title">
+  <span></span>
+</div>
+<div ui-view="backbutton"></div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+  <div class="scrollable-content"  style='padding:10px'>
+    <table class='table'>
+    <tr ng-repeat="division_machine in resources.division_machines">
+
+      <td>{{division_machine.name}}</td><td align="left"><input ng-model='division_machine.abbreviation' type="text">&nbsp;<button class='btn btn-info' ng-click='submit_abbreviation(division_machine)'> Save Abbreviation</button></td>
+    </tr>
+  </div>
+</div>

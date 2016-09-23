@@ -233,7 +233,9 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
     swipeTicketsResource = generate_resource_definition('/sale',
                                                          'POST');    
     toggleTournamentActiveResource = generate_resource_definition('/tournament/:tournament_id/:action',                                                              
-                                                                  'PUT');        
+                                                                  'PUT');
+    updateDivisionMachineResource = generate_resource_definition('/divisionmachine_edit/:division_machine_id',                                                              
+                                                                  'PUT');    
     // voidEntryResource = generate_resource_definition('/entry/:entry_id/void',
     //                                                  'PUT');
     voidEntryResource = generate_resource_definition('/entry/:entry_id/void',
@@ -327,6 +329,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
         //SetMatchScore: generic_resource(setMatchScoreResource,'match_score','post', false),
         SwipeTickets: generic_resource(swipeTicketsResource,'purchase_result','post', false),
         ToggleTournamentActive: generic_resource(toggleTournamentActiveResource,'toggled_tournament','post', false), //killroy was here
+	UpdateDivisionMachine: generic_resource(updateDivisionMachineResource,'division_machine','post', false), //killroy
 	VoidEntryToggle: generic_resource(voidEntryToggleResource,'entry','post', false), //killroy
 	VoidEntry: generic_resource(voidEntryResource,'entry','post', false),
 	VoidEntryBeforeCreate: generic_resource(voidEntryBeforeCreateResource,'entry','post', false),
