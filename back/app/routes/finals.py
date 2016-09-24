@@ -867,10 +867,14 @@ def create_and_fill_challonge(tournament_name,checked_player_list):
     #checked_player_list = [p for p in json.loads(request.data)['checked_players'] if "checked" in p and p['checked']]
     challonge.set_credentials(secret_config.challonge_user_name, secret_config.challonge_api_key)    
     tournament_created = challonge.tournaments.create(tournament_name,tournament_name.replace(" ",""))
+    seed = 1
     for player_dict in checked_player_list:
         #print "%s %s" % (player['player_id'],player['rank'])
         player = Player.query.filter_by(player_id=int(player_dict['player_id'])).first()
-        player_created = challonge.participants.create(tournament_created['id'],"%s %s" % (player.first_name,player.last_name),seed=int(player_dict['rank']))
+        #player_created = challonge.participants.create(tournament_created['id'],"%s %s" % (player.first_name,player.last_name),seed=int(player_dict['rank']))
+        player_created = challonge.participants.create(tournament_created['id'],"%s %s" % (player.first_name,player.last_name),seed=seed)
+        seed = seed + 1 
+    print "starting challonge id %s " % tournament_created['id']
     challonge.tournaments.start(tournament_created['id'])
     
 @App.route('/finals_ex/rounds/fill_init/finals_ex/<finals_ex_id>', methods=['POST'])
@@ -885,9 +889,13 @@ def fill_init_rounds_ex(finals_ex_id):
         num_players = finals_ex.division.finals_num_qualifiers_ppo_b
     
     num_players_per_group = finals_ex.num_players_per_group
-    #if num_players_per_group == 2:
-    #    create_and_fill_challonge(finals_ex.division.finals_challonge_name_ppo_a,checked_player_list)
-    #    create_and_fill_challonge(finals_ex.division.finals_challonge_name_ppo_b,checked_player_list)
+    if num_players_per_group == 2:
+        if finals_ex.description == "A":
+            challonge_name = finals_ex.division.finals_challonge_name_ppo_a
+        else:
+            challonge_name = finals_ex.division.finals_challonge_name_ppo_b            
+        create_and_fill_challonge(challonge_name,checked_player_list)
+        #create_and_fill_challonge(finals_ex.division.finals_challonge_name_ppo_b,checked_player_list[finals_ex.division.finals_num_qualifiers_ppo_a:finals_ex.division.finals_num_qualifiers_ppo_b])
     powers = get_power_of_2_and_byes(num_players)
     num_bye_players = powers[1]    
     if num_bye_players > 0:
