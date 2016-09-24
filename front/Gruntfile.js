@@ -40,21 +40,21 @@ module.exports = function(grunt) {
                   src: '**/*.js',
                   dest: admin_dest+'js_min/app'
                   
-              },
-                      {
-                          expand: true,
-                          cwd: 'src/services',
-                          src: '**/*.js',
-                          dest: admin_dest+'js_min/services'
-                          //'/var/www/html/dist/js/my_stuff.min.js': [admin_dest+'js/my_stuff.js']
-                      },
-                      {
-                          expand: true,
-                          cwd: 'src/directives',
-                          src: '**/*.js',
-                          dest: admin_dest+'js_min/directives'
-                          //'/var/www/html/dist/js/my_stuff.min.js': [admin_dest+'js/my_stuff.js']
-                      }
+                  },
+                  {
+                      expand: true,
+                      cwd: 'src/services',
+                      src: '**/*.js',
+                      dest: admin_dest+'js_min/services'
+                      //'/var/www/html/dist/js/my_stuff.min.js': [admin_dest+'js/my_stuff.js']
+                  },
+                  {
+                      expand: true,
+                      cwd: 'src/directives',
+                      src: '**/*.js',
+                      dest: admin_dest+'js_min/directives'
+                      //'/var/www/html/dist/js/my_stuff.min.js': [admin_dest+'js/my_stuff.js']
+                  }
               ]
           }
       },
@@ -88,11 +88,10 @@ module.exports = function(grunt) {
                 ]
             },
             player: {
-                files : [
-                    { expand: true, cwd: 'src/app/', src: 'player.html', dest: player_dest },
+                files : [                    
                     { expand: true, cwd: 'img/', src: '**', dest: player_dest+'img/' },
-                    { expand: true, cwd: admin_dest, src: 'app_html_templates.js', dest: player_dest },
-                    
+                    { expand: true, cwd: admin_dest, src: '**', dest: player_dest },
+                    { expand: true, cwd: 'src/app/', src: 'player.html', dest: player_dest },                    
                     {
                         expand: true,
                         cwd: 'node_modules/bootstrap-sass/assets/fonts/bootstrap/',
@@ -120,7 +119,7 @@ module.exports = function(grunt) {
                 ],
             },
             player: {
-                src: [player_dest+'app.js', player_dest+'**/*html'],
+                src: [player_dest+'js/my_stuff_min.js', player_dest+'**/*html'],
                 overwrite: true,
                 replacements: [
                     {
@@ -307,24 +306,25 @@ module.exports = function(grunt) {
         'concat:my_stuff',
         'concat:my_min_stuff',
         'concat:admin',
-        'replace:admin',                
+        //'replace:admin',                
         'copy:admin',        
 	'shell:makeRevHistory'
     ]);
     grunt.registerTask('player_build', [
 	'clean:player',
-        'compass:player',
-	'bower_concat:player',
-        'browserify:player',
+        //'compass:player',
+	//'bower_concat:player',
+        //'browserify:player',
         //	'ngtemplates:PlayerApp',
         'copy:player',        
-	'concat:player',
-	'shell:makeRevHistory'
+	//'concat:player',
+	//'shell:makeRevHistory'
     ]);    
 
     grunt.registerTask('default', [
         'admin_build',
         'player_build',
+        'replace:admin',
         'replace:player'
     ]);
 };
