@@ -1,0 +1,21 @@
+<div ui-content-for="title">
+  <span>Queue For Machine</span>
+</div>
+<div ui-view="backbutton"></div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+    <div class="big-web-font scrollable-content"  style='padding:10px'>
+      <div class="panel panel-default" style='width:97%;margin:auto'>
+        <div class="panel-heading"><center><h1 class='panel-title'>Queue for {{resources.division_machines[division_machine_id].name}} entry</center></h1></div>
+        <table class='table' ng-if="resources.division_queue[division_machine_id].length > 0 ">
+          <tr  ng-repeat="queue_item in resources.division_queue[division_machine_id]">
+            <td>{{$index+1}} {{queue_item.first_name}} {{queue_item.last_name}}</td>      
+        </table>
+
+        <div ng-if="resources.division_queue[division_machine_id].length == 0" >
+          No one is queued on this machine
+        </div>
+
+      </div>
+  </div>
+</div>

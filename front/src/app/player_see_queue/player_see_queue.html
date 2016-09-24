@@ -1,0 +1,12 @@
+<div ui-content-for="title">
+  <span>Select Division Queues</span>
+</div>
+<div ui-view="backbutton"></div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+  <div class="scrollable-content big-web-font"  style='padding:10px'>
+    <div ng-repeat="division in resources.divisions">
+      <button class='btn btn-info btn-xlg' ui-sref='.division_machines({divisionId:division.division_id})'>{{division.tournament_name}}</button>
+    </div>
+  </div>
+</div>

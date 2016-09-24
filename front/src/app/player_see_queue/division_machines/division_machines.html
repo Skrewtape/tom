@@ -1,0 +1,14 @@
+<div ui-content-for="title">
+  <span>View Machine Queue</span>
+</div>
+<div ui-view="backbutton"></div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+  <div class="scrollable-content"  style='padding:10px'>
+      <div ng-repeat='machine in resources.division.machines'>
+        <button ui-sref=".queue({divisionMachineId:machine.division_machine_id})" style='width:75%' class='btn btn-info btn-xlg'>
+          {{machine.name}} ({{resources.division_queue[machine.division_machine_id].length}})
+        </button>
+      </div>
+  </div>
+</div>
