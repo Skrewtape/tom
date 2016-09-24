@@ -42,7 +42,7 @@ app = angular.module(
              'app.assholes',
              'app.edit_all_entries',
              'app.player_purchasetickets',
-             'app.test','app.remove_player','app.machine_edit','app.edit_division_divisionselect',/*REPLACEMECHILD*/
+             'app.test','app.remove_player','app.machine_edit','app.edit_division_divisionselect','app.player_add_queue','app.player_view_queues','app.player_select_queues','app.player_remove_queue',/*REPLACEMECHILD*/
 	]
 );
 

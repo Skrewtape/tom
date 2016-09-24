@@ -4,7 +4,10 @@ angular.module('app.tournamentselect_scorekeeper.machineselect_scorekeeper.playe
     function($scope, $state, StatusModal, TimeoutResources) {
 	//FIXME : need to refactor the whole tree underneath so that it uses this the state param team_id
 	$scope.division_machine_id = $state.params.divisionMachineId
-	$scope.division_machine_promise = TimeoutResources.GetDivisionMachine(undefined,{division_machine_id:$scope.division_machine_id})
+	$scope.division_id = $state.params.divisionId        
+        //$scope.queue={11:[{first_name:'aiton',last_name:'goldman',player_id:'1'}]};
+        $scope.queue_promise = TimeoutResources.GetDivisionQueue(undefined,{division_id:$scope.division_id});        
+	$scope.division_machine_promise = TimeoutResources.GetDivisionMachine($scope.queue_promise,{division_machine_id:$scope.division_machine_id})
 	$scope.division_machine_promise.then(function(data){
 	    $scope.resources = TimeoutResources.GetAllResources();
 	})

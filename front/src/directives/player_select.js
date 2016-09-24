@@ -4,22 +4,58 @@ angular.module('tom_directives.player_select').controller(
     'player_select',function($scope, $state, StatusModal, TimeoutResources, $filter){
 	$scope.popovertemplate='myPopoverTemplate.html';
 	$scope.submitPlayerDisabled=true;
+        $scope.division_id = $state.params.divisionId;
+        $scope.division_machine_id = $state.params.divisionMachineId;
 	$scope.team_tournament=$state.params.teamTournament;
-	StatusModal.loading();
+        $scope.player = {player_id:''};
+        //$scope.queue={12:[],11:[{first_name:'aiton',last_name:'goldman',player_id:'1'}]};
+
+	StatusModal.loading();        
 	//TimeoutResources.FlushResourceCache("player");
 	//TimeoutResources.FlushResourceCache("players");	
-	$scope.all_players_promise = TimeoutResources.GetAllPlayers();
-	$scope.all_players_promise.then(function(data){
+	$scope.all_players_promise = TimeoutResources.GetAllPlayers($scope.queue_promise);
+	$scope.all_players_promise.then(function(data){            
 	    $scope.resources = TimeoutResources.GetAllResources();
 	    $scope.resources.players = $scope.resources.players.players;
-	    StatusModal.loaded();
-	})
-	$scope.player = {player_id:''};
+            console.log($scope.division_machine_id);
+            if($scope.division_machine_id == undefined){
+            	StatusModal.loaded();
+                return;
+            }
+            //get queue
+            if($scope.division_id != undefined){
+                $scope.queue_promise = TimeoutResources.GetDivisionQueue(undefined,{division_id:$scope.division_id});
+                $scope.queue_promise.then(function(data){
+                    if($scope.resources.division_queue[$scope.division_machine_id].length > 0){
+                        $scope.player.player_id = parseInt($scope.resources.division_queue[$scope.division_machine_id][0].player_id);
+                        $scope.onChange();                        
+                    }
+                    StatusModal.loaded();
+                });
+            }            
+	});
+        $scope.getNextPlayerOnQueue = function(){
+            if ($scope.resources.division_queue[$scope.division_machine_id].length > 0){
+                StatusModal.loading();
+                TimeoutResources.RemovePlayerQueue(undefined,{player_id:$scope.player.player_id}).then(function(data){
+                    $scope.resources.division_queue[$scope.division_machine_id].shift();
+                    if($scope.resources.division_queue[$scope.division_machine_id].length > 0 ){
+                        $scope.player.player_id = parseInt($scope.resources.division_queue[$scope.division_machine_id][0].player_id);
+                        $scope.onChange();
+                    } else {
+                        $scope.player.player_id = undefined;
+                        $scope.popoverIsOpen = false;
+                    }                    
+                    StatusModal.loaded();
+                });
+            } 
+        };
+        
 	$scope.fuckIos = function(){
 	    var input = document.querySelector("#poop");
 	    input.focus();
 	}
-	$scope.onChange = function(){
+	$scope.onChange = function(){            
 	    $scope.player_is_asshole=false;	    
             $scope.selected_players = $filter('filter')($scope.resources.players,$scope.player.player_id,true)
 	    //$scope.selected_players = $filter('orderBy')($scope.selected_players_list,'player_id');

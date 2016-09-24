@@ -24,3 +24,4 @@ from app.types.FinalsEx import FinalsMatchResultEx
 from app.types.FinalsEx import FinalsMatchResultScoreEx
 from app.types.CompTokens import CompToken
 from app.types.AuditLog import AuditLogEntry
+from app.types.Queue import Queue

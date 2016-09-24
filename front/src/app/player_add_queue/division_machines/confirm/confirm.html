@@ -1,0 +1,17 @@
+<div ui-content-for="title">
+  <span>Confirm Joining Queue</span>
+</div>
+<div ui-view="backbutton"></div>
+<div class="scrollable">
+  <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
+    <div class="scrollable-content big-web-font"  style='padding:10px'>
+      Confirm that you want to be added onto the queue for {{resources.division_machine.name}}.      
+      <div ng-if="resources.player_queue.player_id != undefined">
+        You will be removed from the queue for {{resources.division_machines[resources.player_queue.division_machine_id].name}}.
+      </div>
+      <br>
+      <br>
+      <button ui-sref=".process({dummy:{dummy_data:'dummy_data'}})" class='btn btn-info btn-xlg'>Join Queue</button>
+    </div>
+
+</div>

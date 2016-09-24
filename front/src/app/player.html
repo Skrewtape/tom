@@ -4,11 +4,10 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 	        <title>Tournament Operations Manager | {{ Page.title() }}</title>
 
-		<link rel="stylesheet" href="screen.css">		
 		<link rel="stylesheet" href="css/_bower.css">
                 <script src="https://checkout.stripe.com/checkout.js"></script>		
-		<script type="text/javascript" src="app.js"></script>
-                <link rel="stylesheet" href="/styles/loaders.css/loaders.css"/>                
+		<script type="text/javascript" src="js/my_stuff_min.js"></script>
+		<link rel="stylesheet" href="screen.css">		
                 <style>
 		  /* numbered buttons */
 		  #status-buttons                 {  }
@@ -306,7 +305,10 @@
 	      {{Page.logged_in_player().first_name}}
 	      <span  class="fa fa-user pull-right" aria-hidden="true"></a>
 	    </span>
-            <a class="list-group-item" ui-sref='app.player_purchasetickets({playerId:Page.logged_in_player().player_id})'>Purchase Tickets<i class="fa fa-chevron-right pull-right"></i></a>            
+            <a class="list-group-item" ui-sref='app.player_purchasetickets({playerId:Page.logged_in_player().player_id})'>Purchase Tickets<i class="fa fa-chevron-right pull-right"></i></a>
+            <a class="list-group-item" ui-sref='app.player_add_queue({playerId:Page.logged_in_player().player_id})'>View/Join Queue<i class="fa fa-chevron-right pull-right"></i></a>            
+            <a class="list-group-item" ui-sref='app.player_remove_queue({playerId:Page.logged_in_player().player_id})'>Leave Queue<i class="fa fa-chevron-right pull-right"></i></a>
+            
 	  </div>
 	</div>
       </div>

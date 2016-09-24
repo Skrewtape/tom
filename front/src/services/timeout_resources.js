@@ -88,6 +88,9 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                            'POST');
     addPlayerResource = generate_resource_definition('/player',
                                                      'POST');
+    addPlayerQueueResource = generate_resource_definition('/queue/player_id/:player_id/division_machine_id/:division_machine_id',
+                                                            'POST');
+
     addScoreResource = generate_resource_definition('/entry_newscore/divisionmachine/:division_machine_id/new_score/:new_score',
                                                     'POST');
     addTeamResource = generate_resource_definition('/team',
@@ -156,6 +159,11 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                               'GET');
     getDivisionsForFinalsResource = generate_resource_definition('/division/ready_for_finals',
                                                                  'GET');
+    getDivisionQueueResource = generate_resource_definition('/queue/division/:division_id',
+                                                            'GET');
+    getPlayerQueueResource = generate_resource_definition('/queue/player_id/:player_id',
+                                                            'GET');
+    
     getEntryResource = generate_resource_definition('/entry/:entry_id',
                                                     'GET');
     getHerbBestScoresResource = generate_resource_definition('/herb_best_scores/division_id/:division_id/player_id/:player_id',
@@ -210,10 +218,14 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                        'PUT');
     playerIsAssholeResource = generate_resource_definition('/divisionmachine/:division_machine_id/entry/:entry_id/asshole',
                                                            'PUT');
+    
     removeMachineFromDivisionResource = generate_resource_definition('/division_machine/:division_machine_id',
                                                                      'DELETE');
     resolveTieBreakerResource = generate_resource_definition('/finals_match_tiebreaker/finals_match_ex_id/:finals_match_ex_id',
                                                                     'PUT');    
+    removePlayerQueueResource = generate_resource_definition('/queue/player_id/:player_id',
+                                                            'DELETE');
+
     setDivisionMachinePlayerResource = generate_resource_definition('/divisionmachine/:division_machine_id/player/:player_id',
                                                                     'PUT');
     setDivisionMachineTeamResource = generate_resource_definition('/divisionmachine/:division_machine_id/team/:team_id',
@@ -258,6 +270,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	AddMetadivision: generic_resource(addMetadivisionResource,'meta_division','post', false), //killroy
 	AddMachineToDivision: generic_resource(addMachineToDivisionResource,'added_machine','post',false), //killroy
 	AddPlayer: generic_resource(addPlayerResource,'added_player','post',false), //killroy
+	AddPlayerQueue: generic_resource(addPlayerQueueResource,'empty','post',false), //killroy        
         AddTeam: generic_resource(addTeamResource,'team','post',false), //killroy
 	AddTokens: generic_resource(addTokensResource,'add_tokens_result','post', false),//killroy
 	AddConditionalTokens: generic_resource(addConditionalTokensResource,'add_tokens_result','post', false),//killroy
@@ -294,6 +307,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
         GetDivTicketCostFromStripe: generic_resource(getDivTicketCostFromStripeResource,'divisions_costs','get', false),
 	GetDivisionsForFinals: generic_resource(getDivisionsForFinalsResource,'divisions_ready_for_finals','get', false),
 	GetDivisionMachine: generic_resource(getDivisionMachineResource,'division_machine','get',false), //killroy
+	GetDivisionQueue: generic_resource(getDivisionQueueResource,'division_queue','get',false), //killroy
+	GetPlayerQueue: generic_resource(getPlayerQueueResource,'player_queue','get',false), //killroy
 	GetEntry: generic_resource(getEntryResource,'entry','get',false),
 	GetAllFinals: generic_resource(getAllFinalsResource,'finals','get', false),
 	GetFinals: generic_resource(getFinalsResource,'final','get', false),        
@@ -318,6 +333,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	GetTeamActiveEntry: generic_resource(getTeamActiveEntryResource,'active_entry','get', false),
 	GetTournament: generic_resource(getTournamentResource,'tournament','get',false), //killroy was here
 	PlayerIsAsshole: generic_resource(playerIsAssholeResource,'empty','post', false), //killroy
+        RemovePlayerQueue: generic_resource(removePlayerQueueResource,'empty','get', false),//enable        
         RemoveMachineFromDivision: generic_resource(removeMachineFromDivisionResource,'empty','get', false),//enable
         ResolveTieBreaker: generic_resource(resolveTieBreakerResource,'empty','post', false),//        
 	SetDivisionMachinePlayer: generic_resource(setDivisionMachinePlayerResource,'division_machine','post', false), //killroy

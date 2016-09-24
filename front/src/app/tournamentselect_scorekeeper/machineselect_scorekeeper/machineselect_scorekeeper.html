@@ -12,7 +12,13 @@
 	 ng-if='machine.player_id == undefined && machine.team_id == undefined'
 	 class='btn btn-success btn-xlg'
 	 ui-sref='.playerselect_scorekeeper({divisionMachineId:machine.division_machine_id})'
-	 > {{machine.name}}
+	 > {{machine.name}} <img ng-if="resources.division_queue[machine.division_machine_id].length > 0" src='/images/waiting_room.png' width='32'>
+        <div style='font-size:16px'>
+          &nbsp;
+          <span ng-if="resources.division_queue[machine.division_machine_id].length > 0">
+            {{resources.division_queue[machine.division_machine_id][0].first_name}} {{resources.division_queue[machine.division_machine_id][0].last_name}}
+          </span>
+        </div>
       </button>
       <button
          style='width:75%;margin-bottom:15px'         

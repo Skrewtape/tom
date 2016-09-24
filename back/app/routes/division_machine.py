@@ -87,6 +87,9 @@ url params:
 returns:
     dict of updated division_machine
     """
+    if player.queue:
+        DB.session.delete(player.queue)
+        DB.session.commit()        
     if player.division_machine:
         raise i_am_a_teapot('Player already is playing the machine %s !' % player.division_machine.machine.name,"^")    
     if divisionmachine.player_id or divisionmachine.team_id:
@@ -108,7 +111,6 @@ returns:
     #    available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,metadivision_id=metadivision.metadivision_id).all()
     #else:
     #    available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=divisionmachine.division_id).all()
-        
     v1_utils.add_audit_log_entry(
         "Starting Game",        
         player_id=player.player_id,

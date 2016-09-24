@@ -15,3 +15,4 @@ import app.routes.results
 import app.routes.static
 import app.routes.finals
 import app.routes.sale
+import app.routes.queue

@@ -1,4 +1,11 @@
 <br>
+<br>
+<div ng-if="resources.division_queue[division_machine_id].length > 0">
+ <button ng-if="resources.division_queue[division_machine_id].length > 1" ng-click="getNextPlayerOnQueue()" class='btn btn-danger btn-xlg'> Next Player In Queue (of {{resources.division_queue[division_machine_id].length}})</button>
+ <button ng-if="resources.division_queue[division_machine_id].length == 1" ng-click="getNextPlayerOnQueue()" class='btn btn-danger btn-xlg'> Remove Player In Queue </button>
+ <br>
+ <br>
+</div>
 <div class='form-group form-group-xlg input-group input-group-xlg'>        
   <span class="input-group-addon" id="player-num">Player #</span>
   <input

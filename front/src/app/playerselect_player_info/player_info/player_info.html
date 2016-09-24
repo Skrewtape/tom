@@ -26,6 +26,9 @@
         <li class='list-group-item'>
           Player Pin : {{resources.player_pin.pin}}
         </li>
+        <li ng-if="resources.player.queue!=undefined" class='list-group-item'>
+          Queued on : {{resources.player.queue.machine.name}}
+        </li>        
       </ul>
     </div>
     <div class='panel panel-default'>

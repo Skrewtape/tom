@@ -41,6 +41,8 @@ class Player(DB.Model):
     
     division_machine = DB.relationship('DivisionMachine', uselist=False)
 
+    queue = DB.relationship('Queue', uselist=False)
+
     def verify_password(self, pin):        
         #return sha512_crypt.verify(password, self.password_crypt)
         if int(pin) == self.pin:
@@ -76,11 +78,15 @@ class Player(DB.Model):
         player_dict['pin']=None
         if self.team:
             player_dict['team'] = self.team[0].to_dict_simple()
+        if self.queue:
+            player_dict['queue']=self.queue.to_dict_simple()            
         return player_dict
     
     def to_dict_simple(self):
         player_dict = to_dict(self)
-        player_dict['pin']=None        
+        player_dict['pin']=None
+        if self.queue:
+            player_dict['queue']=self.queue.to_dict_simple()
         return player_dict
 
     
