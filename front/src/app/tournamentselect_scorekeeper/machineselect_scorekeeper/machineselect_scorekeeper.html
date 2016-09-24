@@ -25,7 +25,10 @@
 	 ng-if='machine.player_id != undefined || machine.team_id != undefined'
 	 class='btn btn-warning btn-xlg'
 	 ui-sref='.recordscore_scorekeeper({divisionMachineId:machine.division_machine_id,playerId:machine.player_id,teamId:machine.team_id})'
-	 > {{machine.name}}	
+	 > {{machine.name}}
+        <div style='font-size:16px'>
+          &nbsp;
+        </div>
       </button>
     </div>
   </div>
