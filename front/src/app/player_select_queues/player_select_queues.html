@@ -12,11 +12,15 @@
 	 class='btn btn-info btn-xlg'
 	 ui-sref='app.player_add_queue({playerId:select_player.player_id})'
 	 ng-disabled='submitPlayerDisabled'
-	 >Add To/View A Queue</button><br><br>
+	 >Add To A Queue</button><br><br>
       <button       
 	 class='btn btn-info btn-xlg'
 	 ui-sref='app.player_remove_queue({playerId:select_player.player_id})'
 	 ng-disabled='submitPlayerDisabled'
-	 >Remove Player From Queue</button><br>
+	 >Remove Player From Queue</button><br><br>
+      <button       
+	 class='btn btn-info btn-xlg'
+	 ui-sref='app.player_see_queue()'
+	 >View Queues</button><br>      
   </div>
 </div>
