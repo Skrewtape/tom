@@ -41,11 +41,11 @@
             </td>
             <td>
 	      <!--<input type="text" ng-model="score.score" class="form-control" ng-change='score.dirty=true' ng-disabled='!score.finals_player_ex_id || !finals_match_result_ex.finals_machine_id || match_finished() || finals_match_result_ex.result_state=="finished"'/>-->
-	      <input type="tel" ng-model="score.score" 	 ng-change='onScoreChange(score)' class="form-control" ng-change='score.dirty=true' ng-disabled='!score.finals_player_ex_id || !finals_match_result_ex.finals_machine_id || match_finished() || finals_match_result_ex.result_state=="finished"'/>              
+	      <input type="tel" ng-model="score.score" 	 ng-change='onScoreChange(score)' class="form-control" ng-disabled='!score.finals_player_ex_id || !finals_match_result_ex.finals_machine_id || match_finished() || finals_match_result_ex.result_state=="finished"'/>              
             </td>
 	    <td>
               <button
-                 ng-disabled='!score.dirty'
+                 ng-disabled='score.dirty!=true'
 	         ng-click='save_result_score(finals_match_result_ex,score)'
 	         class='btn info'> Save Score</button>
 

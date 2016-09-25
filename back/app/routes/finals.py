@@ -500,10 +500,10 @@ def set_finals_match_result_ex(finals_match_result_ex):
     result_data = json.loads(request.data)
     if 'finals_machine' in result_data:
         finals_match_result_ex.finals_machine_id = result_data['finals_machine']['machine_id']        
-    for submitted_score in result_data['scores']:        
+    for submitted_score in result_data['scores']:
         score=FinalsMatchResultScoreEx.query.filter_by(finals_match_result_score_ex_id=submitted_score['finals_match_result_score_ex_id']).first()        
-        if submitted_score['score'] is not null:
-            score.score = submitted_score['score']
+        if submitted_score['score'] is not None:            
+            score.score = submitted_score['score'].replace(",","")
         if submitted_score['finals_player_ex_id']:
             score.finals_player_ex_id = submitted_score['finals_player_ex_id']
     score_count = (1 for s in result_data['scores'] if s.get('score') is not None)
@@ -741,8 +741,8 @@ def get_finals_match_slots_ex(finals_match_ex):
 @App.route('/finals_match_result_score_ex/finals_match_result_score_ex_id/<finals_match_result_score_ex_id>', methods=['PUT'])
 @fetch_entity(FinalsMatchResultScoreEx,'finals_match_result_score_ex')
 def set_finals_match_result_score_ex(finals_match_result_score_ex):
-    if(json.loads(request.data)['score']):
-        finals_match_result_score_ex.score = json.loads(request.data)['score']
+    if(json.loads(request.data)['score']):        
+        finals_match_result_score_ex.score = json.loads(request.data)['score'].replace(",","")
     if(json.loads(request.data)['finals_player_ex_id']):
         finals_match_result_score_ex.finals_player_ex_id = json.loads(request.data)['finals_player_ex_id']    
     finals_match_result_ex = FinalsMatchResultEx.query.filter_by(finals_match_result_ex_id=finals_match_result_score_ex.finals_match_result_ex_id).first()

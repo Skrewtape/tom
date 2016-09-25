@@ -15,17 +15,25 @@ angular.module('app.finalselect_finals.matchselect_finals.matchscores_finals').c
 	//$scope.finals_matches_promise = TimeoutResources.GetFinalsMatches($scope.machines_promise,{finals_id:$scope.finals_id});
         
 	$scope.onScoreChange = function(score){
+            score.dirty=true;
             score.score = score.score.replace(/\,/g,'').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 	};
 
         
-	$scope.finals_promise.then(function(data){            
-            $scope.resources = TimeoutResources.GetAllResources()
-            
+	$scope.finals_match_promise.then(function(data){            
+            $scope.resources = TimeoutResources.GetAllResources()            
             for(result_idx in $scope.resources.finals_match.results){
                 result = $scope.resources.finals_match.results[result_idx];
                 $scope.set_result_finished(result);
+                for (score_idx in result.scores){
+                    if (result.scores[score_idx].score != null){
+                        result.scores[score_idx].score = String(result.scores[score_idx].score).replace(/\,/g,'').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+                    }
+                }
+                
+                
             }
+            
 	    StatusModal.loaded()	    
 	})
 
