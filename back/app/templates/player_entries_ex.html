@@ -37,7 +37,13 @@
           <tr>
             <td> {{score['first_query_scorerank']}}</td>
             <td> <a href="/division_machine_entries_ex/{{score['score_division_machine_id']}}">{{score['first_query_machine_abbreviation']}}</a> </td>
-            <td> {{score['score_score']}} </td>
+            <td>
+              {% for x in range(0,12 - score['score_score']|string|length) %}
+              {{"&nbsp;"|safe}}
+              {% endfor %}
+
+              {{('{0:,}'.format(score['score_score']))|safe}}
+            </td>
             <td> {{score['first_query_scorepoints']}}</td>
           </tr>          
         {% endfor %}
@@ -67,7 +73,13 @@
           <tr>
             <td> {{score.filter_rank}}</td>
             <td> <a href="/division_machine_entries_ex/{{score.score_division_machine_id}}">{{score.machine_abbreviation}}</a> </td>
-            <td> {{score.score_score}} </td>
+            <td>
+              {% for x in range(0,12 - score.score_score|string|length) %}
+              {{"&nbsp;"|safe}}
+              {% endfor %}
+
+              {{('{0:,}'.format(score.score_score))|safe}}
+            </td>
             <td> {{score.filter_score}} </td>            
           </tr>          
         {% endfor %}
@@ -100,7 +112,13 @@
           <tr>
             <td> {{score['first_query_scorerank']}}</td>
             <td> <a href="/division_machine_entries_ex/{{score['score_division_machine_id']}}">{{score['first_query_machine_abbreviation']}}</a> </td>
-            <td> {{score['score_score']}} </td>
+            <td>
+              {% for x in range(0,12 - score['score_score']|string|length) %}
+              {{"&nbsp;"|safe}}
+              {% endfor %}
+
+              {{('{0:,}'.format(score['score_score']))|safe}}
+            </td>
             <td> {{score['first_query_scorepoints']}}</td>
           </tr>          
         {% endfor %}
@@ -127,7 +145,13 @@
           <tr>
             <td> {{score.filter_rank}}</td>
             <td> <a href="/division_machine_entries_ex/{{score.score_division_machine_id}}">{{score.machine_abbreviation}}</a> </td>
-            <td> {{score.score_score}} </td>
+            <td>
+              {% for x in range(0,12 - score.score_score|string|length) %}
+              {{"&nbsp;"|safe}}
+              {% endfor %}
+
+              {{('{0:,}'.format(score.score_score))|safe}}
+            </td>
             <td> {{score.filter_score}} </td>            
           </tr>          
         </table>
@@ -161,7 +185,13 @@
           <tr>
             <td> {{score['first_query_scorerank']}}</td>
             <td> <a href="/division_machine_entries_ex/{{score.score_division_machine_id}}">{{score['first_query_machine_abbreviation']}}</a> </td>
-            <td> {{score['score_score']}} </td>
+            <td>
+              {% for x in range(0,12 - score['score_score']|string|length) %}
+              {{"&nbsp;"|safe}}
+              {% endfor %}
+
+              {{('{0:,}'.format(score['score_score']))|safe}}
+            </td>
             <td> {{score['first_query_scorepoints']}}</td>
           </tr>          
         {% endfor %}

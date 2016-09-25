@@ -31,7 +31,12 @@
     <tr>
       <td>{{score.scorerank}}</td>
       <td><a href='/player_entries_ex/{{score.player_player_id}}'>{{score.player_first_name}} {{score.player_last_name}}</a></td>
-      <td>{{('{0:,}'.format(score.score_score))|safe}}</td>
+      <td>
+        {% for x in range(0,12 - score.score_score|string|length) %}
+         {{"&nbsp;"|safe}}
+        {% endfor %}
+        {{('{0:,}'.format(score.score_score))}}
+      </td>
     </tr>
   {% endfor %}
   </tbody>
