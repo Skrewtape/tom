@@ -195,18 +195,26 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
           </tr>
     </thead>
     <tbody>
-          
-    <tr ng-repeat="thing in division_one_ranks|limitTo:num_to_scroll" class="repeated-item">
-    <td class='col-md-4' ng-if="tourney_type=='papa'">{{ thing.entry.second_query_scorepointsrank }}</td>
-    <td class='col-md-4' ng-if="tourney_type=='papa'">{{ thing.entry.first_query_player_first_name }} {{ thing.entry.first_query_player_last_name }}</td>    
-    <td class='col-md-1' align='right' ng-if="tourney_type=='papa'">{{ thing.scores[0].first_query_machine_abbreviation }}</td><td class='col-md-1' ng-if="tourney_type=='papa'" align='left'>(#{{thing.scores[0].first_query_scorerank}})</td>
-    <td class='col-md-1' align='right' ng-if="tourney_type=='papa'">{{ thing.scores[1].first_query_machine_abbreviation }}</td><td class='col-md-1' ng-if="tourney_type=='papa'" align='left'>(#{{thing.scores[1].first_query_scorerank}})</td>
-    <td class='col-md-1' align='right' ng-if="tourney_type=='papa'">{{ thing.scores[2].first_query_machine_abbreviation }}</td><td class='col-md-1' ng-if="tourney_type=='papa'" align='left'>(#{{thing.scores[2].first_query_scorerank}})</td>
-    <td ng-if="tourney_type=='herb'">{{ thing.entry.rank }}</td>
-    <td ng-if="tourney_type=='herb'">{{ thing.scores[0].player_first_name }} {{ thing.scores[0].player_last_name }}</td>
-    <td align='right' ng-if="tourney_type=='herb'">{{ thing.scores[0].machine_abbreviation }}</td><td ng-if="tourney_type=='herb'" align='left'>(#{{thing.scores[0].filter_rank}})</td>
-    <td align='right' ng-if="tourney_type=='herb'">{{ thing.scores[1].machine_abbreviation }}</td><td ng-if="tourney_type=='herb'" align='left'>(#{{thing.scores[1].filter_rank}})</td>
-    <td align='right' ng-if="tourney_type=='herb'">{{ thing.scores[2].machine_abbreviation }}</td><td ng-if="tourney_type=='herb'" align='left'>(#{{thing.scores[2].filter_rank}})</td>
+
+      <tr ng-repeat="thing in division_one_ranks|limitTo:num_to_scroll" class="repeated-item">
+      <td align='center' colspan="8" ng-if="thing.divider != undefined">{{thing.divider}}</td>
+
+    <td class='col-md-4' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.entry.second_query_scorepointsrank }}</td>
+    <td class='col-md-4' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.entry.first_query_player_first_name }} {{ thing.entry.first_query_player_last_name }}</td>    
+      <td class='col-md-1' align='right' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.scores[0].first_query_machine_abbreviation }}</td>
+      <td class='col-md-1' ng-if="thing.divider==undefined && tourney_type=='papa'" align='left'>(#{{thing.scores[0].first_query_scorerank}})</td>
+      <td class='col-md-1' align='right' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.scores[1].first_query_machine_abbreviation }}</td>
+      <td class='col-md-1' ng-if="thing.divider==undefined && tourney_type=='papa'" align='left'>(#{{thing.scores[1].first_query_scorerank}})</td>
+      <td class='col-md-1' align='right' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.scores[2].first_query_machine_abbreviation }}</td>
+      <td class='col-md-1' ng-if="thing.divider==undefined && tourney_type=='papa'" align='left'>(#{{thing.scores[2].first_query_scorerank}})</td>
+      <td ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.entry.rank + 1 }}</td>
+      <td ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.scores[0].player_first_name }} {{ thing.scores[0].player_last_name }}</td>
+      <td align='right' ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.scores[0].machine_abbreviation }}</td>
+      <td ng-if="thing.divider==undefined && tourney_type=='herb'" align='left'>(#{{thing.scores[0].filter_rank}})</td>
+      <td align='right' ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.scores[1].machine_abbreviation }}</td>
+      <td ng-if="thing.divider==undefined && tourney_type=='herb'" align='left'>(#{{thing.scores[1].filter_rank}})</td>
+      <td align='right' ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.scores[2].machine_abbreviation }}</td>
+      <td ng-if="thing.divider==undefined && tourney_type=='herb'" align='left'>(#{{thing.scores[2].filter_rank}})</td>
 
         </tr>
         </tbody>

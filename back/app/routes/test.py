@@ -483,10 +483,11 @@ def get_division_entries_ex_json(division_id):
     player_scores_ranks,herb_results = get_herb_division_results_ex(division_id=division_id)
     sorted_division_entry_ids_new = []
     player_scores_ranks_new = []
-    #if division_results:
-    #    sorted_division_entry_ids_new = [{'entry':division_results[int(division_id)][e_id]['entry'],'scores':division_results[int(division_id)][e_id]['scores']} for e_id in sorted_division_entry_ids[int(division_id)]]
         
-        
+    division = Division.query.filter_by(division_id=int(division_id)).first()
+    divider_not_found = True
+    divider_a_not_found = True
+    divider_b_not_found = True
     if division_results :        
         for e_id in sorted_division_entry_ids[int(division_id)]:
             e = division_results[int(division_id)][e_id]
@@ -497,8 +498,18 @@ def get_division_entries_ex_json(division_id):
                 new_scores_dict = {s[0]:s[1] for s in to_dict(s).items()}         
                 new_scores_list.append(new_scores_dict)
                 e['scores']=new_scores_list
-                #new_dict['first_query_tournament_end_date']=None
-                #new_dict['first_query_tournament_start_date']=None
+            if division.finals_player_selection_type == 'papa':                
+                if int(e['entry']['second_query_scorepointsrank']) > division.finals_num_qualifiers and divider_not_found:                    
+                    print "found divider"
+                    divider_not_found = None
+                    sorted_division_entry_ids_new.append({'divider':'FINALS CUTOFF'})
+            if division.finals_player_selection_type == 'ppo':
+                if int(e['entry']['second_query_scorepointsrank']) > division.finals_num_qualifiers_ppo_a and divider_a_not_found:
+                    divider_a_not_found = None
+                    sorted_division_entry_ids_new.append({'divider':'FINALS CUTOFF FOR A'})                    
+                if int(e['entry']['second_query_scorepointsrank']) > division.finals_num_qualifiers_ppo_a + division.finals_num_qualifiers_ppo_b and divider_b_not_found:
+                    divider_b_not_found = None
+                    sorted_division_entry_ids_new.append({'divider':'FINALS CUTOFF FOR B'})                                        
             sorted_division_entry_ids_new.append({'entry':e['entry'],'scores':e['scores'][0:3]})
     if player_scores_ranks:
         for e in player_scores_ranks[int(division_id)]:            
@@ -506,9 +517,18 @@ def get_division_entries_ex_json(division_id):
             new_scores_list = []
             for s in e['scores']:             
                 new_scores_dict = {s[0]:s[1] for s in to_dict(s).items()}         
-                new_scores_list.append(new_scores_dict)                
-                #new_dict['first_query_tournament_end_date']=None
-                #new_dict['first_query_tournament_start_date']=None
+                new_scores_list.append(new_scores_dict)
+            if division.finals_player_selection_type == 'papa':                
+                if int(new_dict['rank'])+1 > division.finals_num_qualifiers and divider_not_found:                                        
+                    divider_not_found = None
+                    player_scores_ranks_new.append({'divider':'FINALS CUTOFF'})
+            if division.finals_player_selection_type == 'ppo':
+                if int(new_dict['rank'])+1 > division.finals_num_qualifiers_ppo_a and divider_a_not_found:
+                    divider_a_not_found = None
+                    player_scores_ranks_new.append({'divider':'FINALS CUTOFF FOR A'})                    
+                if int(new_dict['rank'])+1 > division.finals_num_qualifiers_ppo_a + division.finals_num_qualifiers_ppo_b and divider_b_not_found:
+                    divider_b_not_found = None
+                    player_scores_ranks_new.append({'divider':'FINALS CUTOFF FOR B'})                                                        
             player_scores_ranks_new.append({'entry':new_dict,'scores':new_scores_list})
     return jsonify({'player_scores_ranks':player_scores_ranks_new,'sorted_division_entry_ids':sorted_division_entry_ids_new})
     
