@@ -328,9 +328,9 @@ module.exports = function(grunt) {
     ]);    
 
     grunt.registerTask('default', [
-        ////'admin_build',
+        'admin_build',
         'player_build',
-        ////'replace:admin',
-        ////'replace:player'
+        'replace:admin',
+        'replace:player'
     ]);
 };

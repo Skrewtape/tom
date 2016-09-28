@@ -4,7 +4,10 @@
 <div ui-view="backbutton"></div>
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
-    <div class="big-web-font scrollable-content"  style='padding:10px'>
+  <div class="big-web-font scrollable-content"  style='padding:10px'>
+    <center>
+    <hr style='background-color:red;border-color:red;width:{{countdown}}%'>
+    </center>
       <div class="panel panel-default" style='width:97%;margin:auto'>
         <div class="panel-heading"><center><h1 class='panel-title'>Queue for {{resources.division_machines[division_machine_id].name}} entry</center></h1></div>
         <table class='table' ng-if="resources.division_queue[division_machine_id].length > 0 ">
