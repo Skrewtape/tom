@@ -1,0 +1,196 @@
+    <html ng-app="projector">    
+      <head>
+    <title>Scores! Get your scores here!</title>
+    <style>
+    .active_span {
+        background-color:lightgrey;
+    }
+/*
+  We're using CSS transitions for when
+  the enter and move events are triggered
+  for the element that has the .repeated-item
+  class
+*/
+.repeated-item.ng-enter, .repeated-item.ng-move {
+  transition: all 0.5s linear;
+  opacity: 0;
+}
+
+/*
+ The ng-enter-active and ng-move-active
+ are where the transition destination properties
+ are set so that the animation knows what to
+ animate.
+*/
+.repeated-item.ng-enter.ng-enter-active,
+.repeated-item.ng-move.ng-move-active {
+  opacity: 1;
+}
+
+/*
+  We're using CSS keyframe animations for when
+  the leave event is triggered for the element
+  that has the .repeated-item class
+*/
+.repeated-item.ng-leave {
+  animation: 1s my_animation;
+}
+
+@keyframes my_animation {
+  from { opacity:1;left:0px }
+  to { opacity:0;left:50px }
+}
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-resource.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-animate.js"></script>
+    <script src="/sticky/sticky.min.js"></script>
+    <script>
+      
+var app = angular.module('projector', ['ngResource','ngAnimate','sticky']);
+app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$interval', function projectorController($scope,$resource,$sce,$http,$interval) {
+    $scope.division_machine_scores = $resource('http://localhost:8000/division_machine_entries_ex_json/:divisionMachineId',{divisionMachineId:1});
+
+    $scope.divisions = $resource('http://localhost:8000/division/active');    
+    $scope.divisionId=1; 
+    $scope.countdown=100
+    $scope.division_list = [];
+    $scope.division_machine_list = {};
+
+    $scope.cur_scroll_row = 1;
+    $scope.division_index = 0;
+    $scope.division_machine_index = 0;
+    $scope.num_to_scroll = 15;
+    $scope.tourney_type="papa";
+    $scope.ready_to_scroll = false;
+    $scope.reset_countdown = false;
+    $scope.machine_one_ranks = [];
+    $scope.machine_objects = {};
+    
+    $scope.stop = $interval(function(){
+        if($scope.reset_countdown == true){
+            $scope.reset_countdown=false;
+            $scope.countdown=100;            
+        } else {
+            if($scope.countdown>0){
+                $scope.countdown=$scope.countdown-1;
+            }
+        }
+        
+    },50);
+
+    $scope.stop = $interval(function() {
+        if($scope.ready_to_scroll == false){
+            return;
+        }        
+        if ($scope.num_to_scroll > $scope.machine_one_ranks.length){
+            $scope.ready_to_scroll = false;
+            $scope.division_machine_index = $scope.division_machine_index+1;
+            if($scope.division_machine_index > $scope.division_machine_list[$scope.divisionId].length-1){
+                $scope.division_machine_index=0;
+                $scope.division_index=$scope.division_index+1;
+                if($scope.division_index > $scope.division_list.length-1){
+                    $scope.division_index=0;
+                }
+            }
+            $scope.divisionId=$scope.division_list[$scope.division_index];
+            $scope.divisionMachineId=$scope.division_machine_list[$scope.divisionId][$scope.division_machine_index];
+
+            $scope.division_machine_scores.get({divisionMachineId:$scope.divisionMachineId},function(data){
+                console.log("loading "+$scope.divisionMachineId)
+                console.log(data)
+                $scope.machine_one_ranks = data['machine_scores'];
+                //$scope.machine_one_ranks = data['sorted_division_entry_ids']
+                $scope.ready_to_scroll = true;
+                $scope.tourney_type="papa";
+                //console.log('papa for '+$scope.divisionId)                                    
+                $scope.num_to_scroll = 13;
+                $scope.reset_countdown=true;               
+                })
+        } else {
+            $scope.reset_countdown=true;               
+            $scope.num_to_scroll = $scope.num_to_scroll + 13;
+        }
+        
+        $("html, body").animate({ scrollTop: $(document).height() }, "slow");                  
+    },5000);
+
+    $scope.divisions.get({},function(data){
+        $scope.division_objects = data;        
+        console.log(data);
+        for(i in data){            
+            if(data[i].tournament_name != undefined){
+                $scope.division_list.push(i);
+                $scope.division_machine_list[i]=[];
+                 for(machine_index in data[i].machines){
+                     machine = data[i].machines[machine_index]
+                     $scope.division_machine_list[i].push(machine.machine_id)
+                     $scope.machine_objects[machine.machine_id]=machine;
+                 }
+             }
+        }
+        console.log('logging machine list')
+        console.log($scope.division_machine_list)
+        $scope.divisionId = $scope.division_list[0];
+        $scope.divisionMachineId = $scope.division_machine_list[$scope.divisionId][0]
+    }).$promise.then(function(data){
+        //return $scope.division_scores.get({divisionId:$scope.divisionId},function(data){
+        //$scope.division_one_results = data['division_results'][$scope.divisionId];
+        //$scope.division_one_ranks = data['sorted_division_entry_ids']
+        $scope.ready_to_scroll = true;
+        $scope.num_to_scroll=1;
+    }).$promise  
+    
+    }])
+</script>
+    </head>
+    <body  ng-controller="projectorController">
+    <div  data-sticky style='background-image: url("https://upload.wikimedia.org/wikipedia/commons/e/eb/Blank.jpg");'>    
+    <hr style='background-color:red;border-color:red;width:{{countdown}}%'>
+    <div style='height:150px'>
+    <center>
+    Division :  {{division_objects[divisionId].tournament_name}}<br>    
+    <button ng-class='{btn:true,"btn-info":i==divisionMachineId}' ng-repeat='i in division_machine_list[divisionId]'>    
+    {{machine_objects[i].name|limitTo:12}}
+    </button>    
+    </center>
+    </div>
+    <br>
+    <table style='width:100%;background-color:white;opacity:1'>
+    <td style='width:20%;border-width:0;border-style:solid;border-bottom-width:2px'>
+    Rank
+</td>
+    <td style='width:20%;border-width:0;border-style:solid;border-bottom-width:2px'>
+    Player
+</td>
+    <td style='background-color:grey;width:50%;border-width:0;border-style:solid;border-bottom-width:2px'>
+    <center>Best Score</center>
+</td>
+    </table>
+     
+</div>
+    <table class="table">
+        <thead>
+          <tr>
+            <th style='color:white;opacity:0'>Rank</th>
+            <th style='color:white;opacity:0'>Player</th>
+            <th style='color:white;opacity:0'>Score</th>
+          </tr>
+    </thead>
+    <tbody>
+          
+    <tr ng-repeat="thing in machine_one_ranks|limitTo:num_to_scroll" class="repeated-item">    
+    <td>{{ thing.scorerank}}</td>
+    <td>{{ thing.player_first_name }} {{thing.player_last_name}}</td>
+    <td>{{ thing.score_score }}</td>
+
+        </tr>
+        </tbody>
+    </table>
+    </body>
+    </html>
+    
+

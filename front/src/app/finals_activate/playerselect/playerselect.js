@@ -24,9 +24,11 @@ angular.module('app.finals_activate.playerselect').controller(
         
         //$scope.num_players_selected = {};
         $scope.num_players_selected = 0;
+        StatusModal.loading();
         $scope.get_players_promise = TimeoutResources.GetAllPlayers();        
-        if($scope.tournament_style != "ppo"){
-            $scope.get_players_ranked_promise = TimeoutResources.GetPlayersRankedByQualifying($scope.get_players_promise,{division_id:$scope.division_id});
+        if($scope.tournament_style != "ppo"){            
+            $scope.get_players_ranked_promise = TimeoutResources.GetPlayersRankedByQualifying($scope.get_players_promise,{division_id:$scope.division_id});            
+
         } else {
             $scope.get_players_ranked_promise = TimeoutResources.GetPlayersRankedByQualifyingHerb($scope.get_players_promise,{division_id:$scope.division_id});
         }
@@ -52,7 +54,7 @@ angular.module('app.finals_activate.playerselect').controller(
                     $scope.resources.ranked_players.ranked_players[idx].checked = true;                    
                 }                                
             }
-
+            StatusModal.loaded();
                 
             
             });

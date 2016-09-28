@@ -1,23 +1,32 @@
 #!/usr/bin/perl
 for($y=2016;$y>=2002;$y--){
+#for($y=2016;$y>=2010;$y--){
     for($x=1;$x<=12;$x++){
-        sleep(5);
-	`curl http://www.ipdb.org/changes.pl --data 'gid=&string=&date=$y-$x&finddate.x=5&finddate.y=7' > /tmp/output.temp.$y-$x.html`;
-	open(input1,"output.temp.$y-$x.html");
-	open(output1,">output.temp.$y-$x.non-unicode.html");	
-	while(<input1>){
-	    if($_=~ s/([^[:ascii:]]+)/ /g){
-		print output1 $_;
-	    } else {
-		print output1 $_;
-	    }
-	}
+        
+	#`curl http://www.ipdb.org/changes.pl --data 'gid=&string=&date=$y-$x&finddate.x=5&finddate.y=7' > /tmp/output.temp.$y-$x.html`;
+	#open(input1,"/tmp/output.temp.$y-$x.html");
+	#open(output1,">/tmp/output.temp.$y-$x.non-unicode.html");	
+	#while(<input1>){
+	#    if($_=~ s/([^[:ascii:]]+)/ /g){
+        #        print output1 $_;
+	#    } else {
+        #        print output1 $_;
+	#    }
+	#}
 	
-	close input1;
-	close output1;
+	#close input1;
+	#close output1;
 	
         
-	$results = `grep -oP '(?<=<a).+(?=</a>)' output.temp.$y-$x.non-unicode.html `;                
+	#$results = `grep -oP '(?<=<a).+(?=</a>)' output.temp.$y-$x.non-unicode.html `;                
+        open(input1,"/tmp/output.temp.$y-$x.non-unicode.html");
+        print "opening $y-$x\n";
+        while(<input1>){
+            if($_=~ /.+<a(.+?)<\/a>/g){                
+                $results=$results.$1."\n";
+            }
+        }
+        #$results = `perl -ne 'while(/(?<=<a).+(?=<\\/a>)/g){print "$&\n";}' /tmp/output.temp.$y-$x.non-unicode.html`;        
 	@results = split(/\n/,$results);
 	for($z=0;$z<@results;$z++){
 	    $results[$z]=~ s/ href=\"machine.cgi\?id=(.+?)\" target\=\"gid(.+?)\">(.+)/$3/;	    
@@ -26,21 +35,18 @@ for($y=2016;$y>=2002;$y--){
 	    	$results[$z]=~ s/^(.+?)\<.+$/$1/;
 	    }
 	    $results[$z]=~ s/\'//g;
-	    $results[$z]=~ s/\"//g;
-	    $results_hash{$results[$z]}=$uid;
-	    $results_hash2{$uid}=$results[$z];;
+	    $results[$z]=~ s/\"//g;                        
+            #$results_hash{$results[$z]}=$results_hash{$results[$z]}.",".$uid;
+            $results_hash{$results[$z]}=$uid;
+	    $results_hash2{$uid}=$results[$z];
 	}
 	
     }
 }
 
 $old_x = "FUCK";
-foreach $x(sort(keys(%results_hash))){
-    if($old_x ne $x){
-	$sorted_keys[@sorted_keys]=$x;	
-	$old_x = $x;
-    }
-    
+foreach $x(sort(keys(%results_hash))){    
+    $sorted_keys[@sorted_keys]=$x;	        
 }
 
 print '['."\n";

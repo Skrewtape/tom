@@ -29,9 +29,9 @@ def get_players_ranked_by_qualifying(division_id,num_players,checked_players=Non
         checked_players = " where player_id in (%s) " % checked_players
     else:
         checked_players = ""
-    entry_results = DB.engine.execute("select entry_id, player_id, entry_score_sum, rank() over (order by entry_score_sum desc) as rank from (select entry_id, player_id, sum(entry_score) as entry_score_sum  from (select entry.player_id, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and completed = true and voided = false) as ss %s group by ss.entry_id, player_id order by entry_score_sum desc limit %d) as tt" % (division_id, checked_players,num_players) )    
+    entry_results = DB.engine.execute("select entry_id, player_id,  entry_score_sum, rank() over (order by entry_score_sum desc) as rank from (select entry_id, player_id, sum(entry_score) as entry_score_sum  from (select entry.player_id, score.entry_id, testing_papa_scoring(rank() over (partition by division_machine_id order by score.score desc)) as entry_score from score,entry where score.entry_id = entry.entry_id and division_id = %s and completed = true and voided = false) as ss %s group by ss.entry_id, player_id order by entry_score_sum desc limit %d) as tt" % (division_id, checked_players,num_players) )    
     ranked_players = []
-    for player_result in entry_results:
+    for player_result in entry_results:        
         ranked_players.append(player_result)
     return ranked_players
 

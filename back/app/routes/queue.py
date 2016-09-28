@@ -58,3 +58,17 @@ def queue_get_all_queues_in_division(division):
     for queue in queues:
         return_dict[queue.division_machine_id].append(queue.to_dict_simple())        
     return jsonify(return_dict)
+
+@App.route('/queue', methods=['GET'])
+def queue_get_all_queues():
+    queues = Queue.query.order_by(Queue.queue_id).all()    
+    divisions = [d for d in Division.query.join(Tournament).filter_by(active=True).all()]
+    machines = {m.division_machine_id:m.machine.name for m in DivisionMachine.query.all()}
+    return_dict = {}
+    for d in divisions:
+        return_dict[d.division_id]={}
+        for m in d.machines:
+            return_dict[d.division_id][m.division_machine_id]=[]
+    for q in queues:
+        return_dict[q.division_machine.division_id][q.division_machine_id].append({'player_id':q.player_id,'player_name':q.player.first_name+" "+q.player.last_name})
+    return jsonify({'queues':return_dict,'machines':machines})

@@ -15,12 +15,38 @@ from werkzeug.exceptions import default_exceptions, HTTPException
 from sqlalchemy_utils import create_database, database_exists
 from flask.ext.cache import Cache
 import logging
+from flask.json import JSONEncoder
+import calendar
+from datetime import datetime
+
+class CustomJSONEncoder(JSONEncoder):
+
+    def default(self, obj):
+        try:
+            if isinstance(obj, datetime):
+                if obj.utcoffset() is not None:
+                    obj = obj - obj.utcoffset()
+                millis = int(
+                    calendar.timegm(obj.timetuple()) * 1000 +
+                    obj.microsecond / 1000
+                )
+                return millis
+            iterable = iter(obj)
+        except TypeError:
+            pass
+        else:
+            return list(iterable)
+        return JSONEncoder.default(self, obj)
+
 
 if secret_config.app_secret_key == "" or (secret_config.stripe_api_key == "" and tom_config.use_stripe is True):    
     raise Exception("You didn't configure your secrets!")
 
 
 App = Flask(__name__)
+
+App.json_encoder = CustomJSONEncoder
+
 cache = Cache(App,config={'CACHE_TYPE': 'simple'})
 
 

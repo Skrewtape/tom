@@ -36,6 +36,13 @@
               <span ng-class="{red: check_too_many_checked_players(player),orange: check_too_many_ties(player)}">
                 <!--(data | filter:{checked: true }).length -->
                 {{resources.players.players_dict[player.player_id].first_name}} {{resources.players.players_dict[player.player_id].last_name}}
+                <span ng-if="player.ifpa.count == 1">(IFPA ranking : {{player.ifpa.rank[0]}})</span>
+                <span ng-if="player.ifpa.count > 1">
+                  <span ng-repeat='ifpa_player in player.ifpa.players'>
+                    <br>(IFPA ranking : {{ifpa_player}} {{player.ifpa.rank[$index]}})
+                  </span>
+                </span>
+                
               </span>
               <hr ng-if="abdivision($index)">
             </td>

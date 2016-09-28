@@ -1,0 +1,176 @@
+    <html ng-app="projector">    
+      <head>
+    <title>Scores! Get your scores here!</title>
+    <style>
+    .active_span {
+        background-color:lightgrey;
+    }
+/*
+  We're using CSS transitions for when
+  the enter and move events are triggered
+  for the element that has the .repeated-item
+  class
+*/
+.repeated-item.ng-enter, .repeated-item.ng-move {
+  transition: all 0.5s linear;
+  opacity: 0;
+}
+
+/*
+ The ng-enter-active and ng-move-active
+ are where the transition destination properties
+ are set so that the animation knows what to
+ animate.
+*/
+.repeated-item.ng-enter.ng-enter-active,
+.repeated-item.ng-move.ng-move-active {
+  opacity: 1;
+}
+
+/*
+  We're using CSS keyframe animations for when
+  the leave event is triggered for the element
+  that has the .repeated-item class
+*/
+.repeated-item.ng-leave {
+  animation: 1s my_animation;
+}
+
+@keyframes my_animation {
+  from { opacity:1;left:0px }
+  to { opacity:0;left:50px }
+}
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-resource.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-animate.js"></script>
+    <script src="/sticky/sticky.min.js"></script>
+    <script>
+      
+var app = angular.module('projector', ['ngResource','ngAnimate','sticky']);
+app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$interval','$location', function projectorController($scope,$resource,$sce,$http,$interval,$location) {
+    $scope.queues = $resource('http://localhost:8000/queue');
+    $scope.searchObject = $location.search();
+    if($scope.searchObject.divisionIndex != undefined){
+     $scope.fixedDivisionIndex=$scope.searchObject.divisionIndex;
+    }
+    $scope.divisions = $resource('http://localhost:8000/division/active');    
+    $scope.divisionId=1; 
+    $scope.countdown=100
+    $scope.division_list = [];
+    $scope.division_machine_list = {};
+    $scope.machines = {};
+    $scope.cur_scroll_row = 1;
+    $scope.division_index = 0;
+    $scope.division_machine_index = 0;
+    $scope.num_to_scroll = 15;
+    $scope.tourney_type="papa";
+    $scope.ready_to_scroll = false;
+    $scope.reset_countdown = false;
+    $scope.machine_one_ranks = [];
+    $scope.machine_objects = {};
+    $scope.division_one_queues = []
+
+    $scope.stop = $interval(function(){
+        if($scope.reset_countdown == true){
+            $scope.reset_countdown=false;
+            $scope.countdown=100;            
+        } else {
+            if($scope.countdown>0){
+                $scope.countdown=$scope.countdown-1;
+            }
+        }
+        
+    },50);
+
+    $scope.stop = $interval(function() {
+        if($scope.ready_to_scroll == false){
+            return;
+        }        
+        if ($scope.division_index > $scope.division_list.length-1){
+            $scope.ready_to_scroll = false;
+             $scope.division_index=0;             
+
+            $scope.divisionId=$scope.division_list[$scope.division_index];
+            $scope.queues.get(function(data){
+                $scope.division_one_queues = data['queues'];
+                $scope.machines = data['machines'];
+                console.log('got a new queue');
+                //$scope.machine_one_ranks = data['sorted_division_entry_ids']
+                $scope.ready_to_scroll = true;
+                $scope.reset_countdown=true;               
+                })
+        } else {
+            $scope.reset_countdown=true;               
+            $scope.division_index = $scope.division_index+1;
+            $scope.divisionId=$scope.division_list[$scope.division_index];
+        }
+        
+        $("html, body").animate({ scrollTop: $(document).height() }, "slow");                  
+    },5000);
+
+    $scope.divisions.get({},function(data){
+        $scope.division_objects = data;        
+        for(i in data){            
+            if(data[i].tournament_name != undefined){
+              if($scope.fixedDivisionIndex == undefined){
+               $scope.division_list.push(i);
+              } else {
+               if($scope.fixedDivisionIndex == i){
+                $scope.division_list.push(i);
+               }
+              }
+             }
+}
+console.log($scope.division_list);
+        $scope.divisionId = $scope.division_list[0];
+        $scope.ready_to_scroll = true;
+        $scope.division_index=6;
+    }).$promise  
+    
+    }])
+</script>
+    </head>
+      <body  ng-controller="projectorController">
+    <!-- <table class="table"> -->
+    <!--   <tbody> -->
+    <div ng-repeat="division_id in division_list|limitTo:division_index+1" class="repeated-item row">
+      <center><h1>{{division_objects[division_id].tournament_name}}</h1></center>
+      <div ng-repeat="(machine_id,machine) in division_one_queues[division_id]" class="col-md-4" style='height:150px;margin-bottom:10px'>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">{{machines[machine_id]}}</h3>
+          </div>
+          <div class="panel-body">
+            <div ng-repeat='player in machine|limitTo:3'>
+              {{player.player_id}} {{player.player_name}}
+            </div>
+            <div ng-if="machine.length > 2">
+              ...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <tr ng-repeat="division_id in division_list|limitTo:division_index+1" class="repeated-item">     -->
+    <!--   <td>{{division_id}} -- </td> -->
+    <!--   <td ng-repeat="(machine_id,machine) in division_one_queues[division_id]"> -->
+    <!--     <div class="panel panel-default"> -->
+    <!--       <div class="panel-heading"> -->
+    <!--         <h3 class="panel-title">{{machines[machine_id]}}</h3> -->
+    <!--       </div> -->
+    <!--       <div class="panel-body"> -->
+    <!--         {{machine}} -->
+    <!--       </div> -->
+    <!--     </div> -->
+    <!--   </td> -->
+    <!-- </tr> -->
+    <!-- </tbody> -->
+    <!-- </table> -->
+    </body>
+    </html>
+    
+

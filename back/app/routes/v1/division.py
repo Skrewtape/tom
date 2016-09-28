@@ -3,12 +3,13 @@ from sqlalchemy import null
 from flask import jsonify, request
 from flask_login import login_required
 from app import App
-from app.types import DivisionMachine, Division, Machine, Entry, Tournament, Finals
+from app.types import DivisionMachine, Division, Machine, Entry, Tournament, Finals, Player
 from app import App, Admin_permission, DB
 from app.routes.util import fetch_entity
 from werkzeug.exceptions import BadRequest
 import time
 from app.routes.v1 import v1_utils
+from app.routes.ifpa import get_ifpa_ranking_helper
 from flask_restless.helpers import to_dict
 
 api_ver = ''
@@ -120,11 +121,24 @@ def get_active_divisions():
 def get_players_ranked_by_qualifying(division):
     #FIXME : should not be hardcoded    
     num_players_to_qualify = 24
+    if division.finals_player_selection_type == "papa":
+        max_ifpa_fetches = division.finals_num_qualifiers+5
+    else:
+        max_ifpa_fetches = division.finals_num_qualifiers_ppo_a+division.finals_num_qualifiers_ppo_b+5        
     num_non_qualified_players = 100
     ranked_players = v1_utils.get_players_ranked_by_qualifying(division.division_id,num_non_qualified_players)    
     #jsonifyd_list = [{'player_id':p.player_id,'checked':True if p.rank <=num_players_to_qualify else False,'rank':p.rank} for p in ranked_players]
     jsonifyd_list = [{'player_id':p.player_id,'rank':p.rank} for p in ranked_players]
-    
+    ifpa_count = 1
+    for result in jsonifyd_list:
+        player = Player.query.filter_by(player_id=result['player_id']).first()
+        if ifpa_count < max_ifpa_fetches:
+            ifpa_count = ifpa_count+1
+            time.sleep(.5)
+            ifpa_results = get_ifpa_ranking_helper("%s %s" % (player.first_name,player.last_name))
+            result['ifpa']=ifpa_results
+        else:
+            result['ifpa']={}
     return jsonify({'ranked_players':jsonifyd_list})
 
 @App.route(api_ver+'/division/<division_id>/herb/players/ranked')

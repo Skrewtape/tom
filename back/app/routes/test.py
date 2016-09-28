@@ -423,11 +423,9 @@ def get_third_query(first_query,second_query,player_id=None):
         Entry,
         second_query.c.scorepointssum,
         second_query.c.scorepointsrank,
-#        first_query.c.scorepoints,
-#        first_query.c.scorerank
-        first_query,                
-#    ],use_labels=True).select_from(second_query).where(text(query_three_where_string)).order_by(desc(Entry.division_id),desc(second_query.c.scorepointssum))
-    ],use_labels=True).select_from(second_query).select_from(first_query).where(text(query_three_where_string)).order_by(desc(Entry.division_id),desc(second_query.c.scorepointssum))
+        first_query
+#    ],use_labels=True).select_from(second_query).select_from(first_query).where(text(query_three_where_string)).order_by(desc(Entry.division_id),desc(second_query.c.scorepointssum))
+    ],use_labels=True).select_from(second_query).select_from(first_query).where(text(query_three_where_string)).order_by(desc(Entry.division_id),desc(second_query.c.scorepointssum),desc(first_query.c.scorerank))
 
 #@cache.memoize(memoize_delay)
 def get_division_machine_results_ex(division_machine_id):
@@ -467,6 +465,8 @@ def get_division_results_ex(division_id=None,player_id=None):
             division_results[result.entry_division_id][result.entry_entry_id]={'entry':result,'scores':[]}
             sorted_list_entry_ids[result.entry_division_id].append(result.entry_entry_id)            
         division_results[result.entry_division_id][result.entry_entry_id]['scores'].append(result)
+        #division_results[result.entry_division_id][result.entry_entry_id]['scores'] = sorted(division_results[result.entry_division_id][result.entry_entry_id]['scores'],
+        #                                                                                     key= lambda s: s[1]['first_query_scorerank'])
         if result.entry_completed is not True:
             if result.entry_division_id not in in_progress_results:
                 in_progress_results[result.entry_division_id]={'entry':result,'scores':[]}
@@ -477,15 +477,62 @@ def get_division_results_ex(division_id=None,player_id=None):
     #    division_results[division.division_id]=[e[1] for e in sorted_list]
     return sorted_list_entry_ids,division_results,in_progress_results
 
+@App.route('/division_entries_ex_json/<division_id>', methods=['GET'])
+def get_division_entries_ex_json(division_id):
+    sorted_division_entry_ids,division_results,in_progress_results = get_division_results_ex(division_id=division_id)
+    player_scores_ranks,herb_results = get_herb_division_results_ex(division_id=division_id)
+    sorted_division_entry_ids_new = []
+    player_scores_ranks_new = []
+    #if division_results:
+    #    sorted_division_entry_ids_new = [{'entry':division_results[int(division_id)][e_id]['entry'],'scores':division_results[int(division_id)][e_id]['scores']} for e_id in sorted_division_entry_ids[int(division_id)]]
+        
+        
+    if division_results :        
+        for e_id in sorted_division_entry_ids[int(division_id)]:
+            e = division_results[int(division_id)][e_id]
+            new_dict = {entry[0]:entry[1] for entry in to_dict(e['entry']).items()}
+            e['entry']=new_dict            
+            new_scores_list = []
+            for s in e['scores']:             
+                new_scores_dict = {s[0]:s[1] for s in to_dict(s).items()}         
+                new_scores_list.append(new_scores_dict)
+                e['scores']=new_scores_list
+                #new_dict['first_query_tournament_end_date']=None
+                #new_dict['first_query_tournament_start_date']=None
+            sorted_division_entry_ids_new.append({'entry':e['entry'],'scores':e['scores'][0:3]})
+    if player_scores_ranks:
+        for e in player_scores_ranks[int(division_id)]:            
+            new_dict = {entry[0]:entry[1] for entry in to_dict(e).items()}
+            new_scores_list = []
+            for s in e['scores']:             
+                new_scores_dict = {s[0]:s[1] for s in to_dict(s).items()}         
+                new_scores_list.append(new_scores_dict)                
+                #new_dict['first_query_tournament_end_date']=None
+                #new_dict['first_query_tournament_start_date']=None
+            player_scores_ranks_new.append({'entry':new_dict,'scores':new_scores_list})
+    return jsonify({'player_scores_ranks':player_scores_ranks_new,'sorted_division_entry_ids':sorted_division_entry_ids_new})
+    
+
+
 @App.route('/division_entries_ex/<division_id>', methods=['GET'])
 def get_division_entries_ex(division_id):
     sorted_division_entry_ids,division_results,in_progress_results = get_division_results_ex(division_id=division_id)
     player_scores_ranks,herb_results = get_herb_division_results_ex(division_id=division_id)
-    #herb_results = get_herb_players_ex(player_id)        
+    #herb_results = get_herb_players_ex(player_id)
+    division = Division.query.filter_by(division_id=division_id).first()
+    if division.finals_player_selection_type == 'papa':
+        divider=division.finals_num_qualifiers
+        divider_a=999999
+        divider_b=999999
+    if division.finals_player_selection_type == 'ppo':
+        divider=999999
+        divider_a=division.finals_num_qualifiers_ppo_a
+        divider_b=division.finals_num_qualifiers_ppo_b
     return render_template('division_entries_ex.html', division_results=division_results,
                            herb_results=herb_results, division_id=int(division_id),
                            sorted_division_entry_ids=sorted_division_entry_ids, divisions=get_divisions(),
-                           top_x_herb_entries=top_x_herb_entries, player_scores_ranks=player_scores_ranks)
+                           top_x_herb_entries=top_x_herb_entries, player_scores_ranks=player_scores_ranks,
+                           divider=divider,divider_b=divider_b,divider_a=divider_a)
     
 @App.route('/herb_best_scores/division_id/<division_id>/player_id/<player_id>')
 @fetch_entity(Division,'division')
@@ -506,6 +553,18 @@ def get_division_machine_entries_ex(division_machine_id):
     results = get_division_machine_results_ex(division_machine_id)        
     return render_template('division_machines_scores_ex.html', machine_scores = results,
                            division_machine=division_machine, division_machines=get_machines(division_machine.division_id))     
+
+@App.route('/division_machine_entries_ex_json/<division_machine_id>', methods=['GET'])
+def get_division_machine_entries_json_ex(division_machine_id):
+    division_machine = DivisionMachine.query.filter_by(division_machine_id=division_machine_id).first()
+    results = get_division_machine_results_ex(division_machine_id)        
+    #return render_template('division_machines_scores_ex.html', machine_scores = results,
+    #                       division_machine=division_machine, division_machines=get_machines(division_machine.division_id))
+    new_results = []
+    for result in results:
+        new_result_dict = {m[0]:m[1] for m in to_dict(result).items()}         
+        new_results.append(new_result_dict)
+    return jsonify({'machine_scores':new_results})
 
 #@cache.memoize(60)
 def get_tournaments():

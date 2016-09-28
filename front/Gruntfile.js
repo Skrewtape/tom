@@ -91,7 +91,13 @@ module.exports = function(grunt) {
                 files : [                    
                     { expand: true, cwd: 'img/', src: '**', dest: player_dest+'img/' },
                     { expand: true, cwd: admin_dest, src: '**', dest: player_dest },
-                    { expand: true, cwd: 'src/app/', src: 'player.html', dest: player_dest },                    
+                    { expand: true, cwd: 'src/app/', src: 'player.html', dest: player_dest },
+                    { expand: true, cwd: 'src/app/', src: 'projector.html', dest: player_dest },
+                    { expand: true, cwd: 'src/app/', src: 'projector_frame.html', dest: player_dest },                    
+                    { expand: true, cwd: 'src/app/', src: 'projector_machines.html', dest: player_dest },                    
+                    { expand: true, cwd: 'src/app/', src: 'projector_queue.html', dest: player_dest },                    
+                    { expand: true, cwd: 'src/app/', src: 'projector_queue_static.html', dest: player_dest },
+                    
                     {
                         expand: true,
                         cwd: 'node_modules/bootstrap-sass/assets/fonts/bootstrap/',
@@ -322,9 +328,9 @@ module.exports = function(grunt) {
     ]);    
 
     grunt.registerTask('default', [
-        'admin_build',
+        ////'admin_build',
         'player_build',
-        'replace:admin',
-        'replace:player'
+        ////'replace:admin',
+        ////'replace:player'
     ]);
 };

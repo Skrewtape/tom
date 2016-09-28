@@ -41,7 +41,8 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
 	return resource_results[scope_name].$promise;	
     }
     
-
+    global_timeout = 15000;
+    
     generate_resource_definition = function(url,http_method){
         console.log('generating');
         url_chunks = url.split("/");
@@ -55,7 +56,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
         }
         return $resource('[APIHOST]/'+url,gen_post_args,
                          {                             
-                             'custom_http':{method:http_method, timeout:15000}
+                             'custom_http':{method:http_method, timeout:global_timeout}
                          }
                         );
     };
@@ -196,8 +197,10 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                           'GET');
     getPlayerTokensResource = generate_resource_definition('/token/player_id/:player_id',
                                                            'GET');
+    global_timeout=150000;
     getPlayersRankedByQualifyingResource = generate_resource_definition('/division/:division_id/players/ranked',
                                                                         'GET');
+    global_timeout=15000;
     getPlayersRankedByQualifyingHerbResource = generate_resource_definition('/division/:division_id/herb/players/ranked',
                                                            'GET');        
     getSkuResource = generate_resource_definition('/sale/sku/:sku',

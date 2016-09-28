@@ -1,0 +1,217 @@
+    <html ng-app="projector">    
+      <head>
+    <title>Scores! Get your scores here!</title>
+    <style>
+    .active_span {
+        background-color:lightgrey;
+    }
+/*
+  We're using CSS transitions for when
+  the enter and move events are triggered
+  for the element that has the .repeated-item
+  class
+*/
+.repeated-item.ng-enter, .repeated-item.ng-move {
+  transition: all 0.5s linear;
+  opacity: 0;
+}
+
+/*
+ The ng-enter-active and ng-move-active
+ are where the transition destination properties
+ are set so that the animation knows what to
+ animate.
+*/
+.repeated-item.ng-enter.ng-enter-active,
+.repeated-item.ng-move.ng-move-active {
+  opacity: 1;
+}
+
+/*
+  We're using CSS keyframe animations for when
+  the leave event is triggered for the element
+  that has the .repeated-item class
+*/
+.repeated-item.ng-leave {
+  animation: 1s my_animation;
+}
+
+@keyframes my_animation {
+  from { opacity:1;left:0px }
+  to { opacity:0;left:50px }
+}
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-resource.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-animate.js"></script>
+    <script src="/sticky/sticky.min.js"></script>
+    <script>
+      
+var app = angular.module('projector', ['ngResource','ngAnimate','sticky']);
+app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$interval', function projectorController($scope,$resource,$sce,$http,$interval) {
+    $scope.division_scores = $resource('http://localhost:8000/division_entries_ex_json/:divisionId',{divisionId:1});
+    $scope.divisions = $resource('http://localhost:8000/division/active');    
+    $scope.divisionId=1; 
+    //$http.get('http://localhost:8000/division_entries_ex/'+divisionId).then(function(data){
+    //$scope.division_scores_html = $sce.trustAsHtml(data.data);
+    //})
+    $scope.countdown=100
+    $scope.division_list = [];
+    $scope.cur_scroll_row = 1;
+    $scope.division_index = 0;
+    $scope.num_to_scroll = 15;
+    $scope.tourney_type="papa";
+    $scope.ready_to_scroll = false;
+    $scope.reset_countdown = false;
+    $scope.stop = $interval(function(){
+        if($scope.reset_countdown == true){
+            $scope.reset_countdown=false;
+            $scope.countdown=100;            
+        } else {
+            if($scope.countdown>0){
+                $scope.countdown=$scope.countdown-1;
+            }
+        }
+        
+    },100);
+
+    $scope.stop = $interval(function() {
+        if($scope.ready_to_scroll == false){
+            return;
+        }
+        if ($scope.num_to_scroll > $scope.division_one_ranks.length){
+            $scope.ready_to_scroll = false;
+            $scope.division_index = $scope.division_index+1;
+            if($scope.division_index > $scope.division_list.length-1){
+                $scope.division_index=0;
+            }
+            $scope.divisionId=$scope.division_list[$scope.division_index];
+            $scope.division_scores.get({divisionId:$scope.divisionId},function(data){
+                console.log("loading "+$scope.divisionId)
+                console.log(data)
+                if(data['sorted_division_entry_ids'].length > 0 ){
+                    console.log(data['sorted_division_entry_ids'].length)
+                    $scope.division_one_ranks = data['sorted_division_entry_ids']
+                    $scope.ready_to_scroll = true;
+                    $scope.tourney_type="papa";
+                    console.log('papa for '+$scope.divisionId)                    
+                }
+                if (data.player_scores_ranks.length > 0) {                    
+                    $scope.division_one_ranks = data.player_scores_ranks
+                    console.log($scope.division_one_ranks)
+                    $scope.tourney_type="herb";
+                    console.log('herb for '+$scope.divisionId)                    
+                }
+                if(data['sorted_division_entry_ids'].length == 0 && data.player_scores_ranks.length == 0){                    
+                    console.log('nothing for '+$scope.divisionId)
+                    $scope.division_one_ranks = [];                    
+                }                
+                $scope.ready_to_scroll = true;
+                $scope.num_to_scroll = 15;
+                $scope.reset_countdown=true;               
+
+                })
+        } else {
+        $scope.reset_countdown=true;               
+        $scope.num_to_scroll = $scope.num_to_scroll + 15;
+        }
+        
+        $("html, body").animate({ scrollTop: $(document).height() }, "slow");                  
+    },10000);
+
+    $scope.divisions.get({},function(data){
+        $scope.division_objects = data;
+        for(i in data){            
+             if(data[i].tournament_name != undefined){
+                $scope.division_list.push(i);    
+            }            
+        }
+        $scope.divisionId = $scope.division_list[0];        
+    }).$promise.then(function(data){
+        return $scope.division_scores.get({divisionId:$scope.divisionId},function(data){
+        //$scope.division_one_results = data['division_results'][$scope.divisionId];
+        $scope.division_one_ranks = data['sorted_division_entry_ids']
+        $scope.ready_to_scroll = true;
+        }).$promise  
+    });
+    
+    // $scope.division_scores_promise = $scope.division_promise.then(function(data){
+    //     for(i in data){
+    //         if(data[i].tournament_name != undefined){
+    //             $scope.division_list.push(i);    
+    //         }            
+    //     }
+    //     $scope.divisionId = $scope.division_list[0];
+    //     $scope.division_scores.get({divisionId:$scope.divisionId});        
+    //     //$scope.divisionId = data[0];
+    // });
+
+    // $scope.division_scores_promise.then(function(data){
+    //     $scope.division_scores_promise = $scope.division_scores.get({divisionId:$scope.divisionId});
+    //     console.log(data);
+    //     $scope.division_one_results = data['division_results'][1];
+    //     $scope.division_one_ranks = data['sorted_division_entry_ids'][1];      
+    //     $scope.ready_to_scroll = true;
+    // });            
+    }])
+</script>
+    </head>
+    <body  ng-controller="projectorController">
+    <div  data-sticky style='background-color:white;opacity:1'>
+    <hr style='background-color:red;border-color:red;width:{{countdown}}%'>
+    <center>
+    <span  style='padding:2px; border-width:0px;border-left-width:2px;border-style:solid' ng-class='{active_span:i==divisionId}' ng-repeat='i in division_list'>    
+    {{division_objects[i].tournament_name}}
+</span>
+    
+    <span style='padding:2px;border-width:0px;border-left-width:2px;border-style:solid;'>
+    
+    </span>
+    </center>
+    <br>
+    <table style='width:100%;background-color:white;opacity:1'>
+    <td style='width:20%;border-width:0;border-style:solid;border-bottom-width:2px'>
+    Rank
+</td>
+    <td style='width:20%;border-width:0;border-style:solid;border-bottom-width:2px'>
+    Player
+</td>
+    <td style='background-color:grey;width:50%;border-width:0;border-style:solid;border-bottom-width:2px'>
+    <center>Best Three Scores</center>
+</td>
+    </table>
+     
+    </div>
+    
+    <table class="table">
+        <thead>
+          <tr>
+            <th style='color:white;opacity:0'>Rank</th>
+            <th style='color:white;opacity:0'>Player</th>
+            <th colspan=6 style='color:white;opacity:0'>Best 3 Scores</th>
+          </tr>
+    </thead>
+    <tbody>
+          
+    <tr ng-repeat="thing in division_one_ranks|limitTo:num_to_scroll" class="repeated-item">
+    <td class='col-md-4' ng-if="tourney_type=='papa'">{{ thing.entry.second_query_scorepointsrank }}</td>
+    <td class='col-md-4' ng-if="tourney_type=='papa'">{{ thing.entry.first_query_player_first_name }} {{ thing.entry.first_query_player_last_name }}</td>    
+    <td class='col-md-1' align='right' ng-if="tourney_type=='papa'">{{ thing.scores[0].first_query_machine_abbreviation }}</td><td class='col-md-1' ng-if="tourney_type=='papa'" align='left'>(#{{thing.scores[0].first_query_scorerank}})</td>
+    <td class='col-md-1' align='right' ng-if="tourney_type=='papa'">{{ thing.scores[1].first_query_machine_abbreviation }}</td><td class='col-md-1' ng-if="tourney_type=='papa'" align='left'>(#{{thing.scores[1].first_query_scorerank}})</td>
+    <td class='col-md-1' align='right' ng-if="tourney_type=='papa'">{{ thing.scores[2].first_query_machine_abbreviation }}</td><td class='col-md-1' ng-if="tourney_type=='papa'" align='left'>(#{{thing.scores[2].first_query_scorerank}})</td>
+    <td ng-if="tourney_type=='herb'">{{ thing.entry.rank }}</td>
+    <td ng-if="tourney_type=='herb'">{{ thing.scores[0].player_first_name }} {{ thing.scores[0].player_last_name }}</td>
+    <td align='right' ng-if="tourney_type=='herb'">{{ thing.scores[0].machine_abbreviation }}</td><td ng-if="tourney_type=='herb'" align='left'>(#{{thing.scores[0].filter_rank}})</td>
+    <td align='right' ng-if="tourney_type=='herb'">{{ thing.scores[1].machine_abbreviation }}</td><td ng-if="tourney_type=='herb'" align='left'>(#{{thing.scores[1].filter_rank}})</td>
+    <td align='right' ng-if="tourney_type=='herb'">{{ thing.scores[2].machine_abbreviation }}</td><td ng-if="tourney_type=='herb'" align='left'>(#{{thing.scores[2].filter_rank}})</td>
+
+        </tr>
+        </tbody>
+    </table>
+    </body>
+    </html>
+    
+
