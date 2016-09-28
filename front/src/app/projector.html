@@ -120,7 +120,7 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
         }
         
         $("html, body").animate({ scrollTop: $(document).height() }, "slow");                  
-    },10000);
+    },1000);
 
     $scope.divisions.get({},function(data){
         $scope.division_objects = data;
@@ -163,13 +163,9 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
     <div  data-sticky style='background-color:white;opacity:1'>
     <hr style='background-color:red;border-color:red;width:{{countdown}}%'>
     <center>
-    <span  style='padding:2px; border-width:0px;border-left-width:2px;border-style:solid' ng-class='{active_span:i==divisionId}' ng-repeat='i in division_list'>    
-    {{division_objects[i].tournament_name}}
-</span>
-    
-    <span style='padding:2px;border-width:0px;border-left-width:2px;border-style:solid;'>
-    
-    </span>
+    <button style='font-size:24px; margin:5px' ng-class='{"btn":true, "btn-info":i==divisionId}' ng-repeat='i in division_list'>    
+      {{division_objects[i].tournament_name}}
+    </button>   
     </center>
     <br>
     <table style='width:100%;background-color:white;opacity:1'>
@@ -179,7 +175,7 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
     <td style='width:20%;border-width:0;border-style:solid;border-bottom-width:2px'>
     Player
 </td>
-    <td style='background-color:grey;width:50%;border-width:0;border-style:solid;border-bottom-width:2px'>
+    <td style='color:white;background-color:grey;width:50%;border-width:0;border-style:solid;border-bottom-width:2px'>
     <center>Best Three Scores</center>
 </td>
     </table>
@@ -197,7 +193,7 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
     <tbody>
 
       <tr ng-repeat="thing in division_one_ranks|limitTo:num_to_scroll" class="repeated-item">
-      <td align='center' colspan="8" ng-if="thing.divider != undefined">{{thing.divider}}</td>
+      <td style='background-color:red' align='center' colspan="8" ng-if="thing.divider != undefined">{{thing.divider}}</td>
 
     <td class='col-md-4' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.entry.second_query_scorepointsrank }}</td>
     <td class='col-md-4' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.entry.first_query_player_first_name }} {{ thing.entry.first_query_player_last_name }}</td>    

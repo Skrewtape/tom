@@ -116,7 +116,7 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
         }
         
         $("html, body").animate({ scrollTop: $(document).height() }, "slow");                  
-    },5000);
+    },1000);
 
     $scope.divisions.get({},function(data){
         $scope.division_objects = data;        
@@ -152,8 +152,8 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
     <hr style='background-color:red;border-color:red;width:{{countdown}}%'>
     <div style='height:150px'>
     <center>
-    Division :  {{division_objects[divisionId].tournament_name}}<br>    
-    <button ng-class='{btn:true,"btn-info":i==divisionMachineId}' ng-repeat='i in division_machine_list[divisionId]'>    
+    <span style='font-size:24px'> Division :  {{division_objects[divisionId].tournament_name}}</span><br>    
+    <button style='margin:5px;font-size:18px' ng-class='{btn:true,"btn-info":i==divisionMachineId}' ng-repeat='i in division_machine_list[divisionId]'>    
     {{machine_objects[i].name|limitTo:12}}
     </button>    
     </center>
@@ -166,8 +166,8 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
     <td style='width:20%;border-width:0;border-style:solid;border-bottom-width:2px'>
     Player
 </td>
-    <td style='background-color:grey;width:50%;border-width:0;border-style:solid;border-bottom-width:2px'>
-    <center>Best Score</center>
+    <td style='color:white;background-color:grey;width:50%;border-width:0;border-style:solid;border-bottom-width:2px'>
+    <center>Score</center>
 </td>
     </table>
      
