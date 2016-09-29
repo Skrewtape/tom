@@ -5,7 +5,7 @@
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
     <div class="scrollable-content"  style='padding:10px'>
-      <div ng-repeat='machine in resources.division.machines'>
+      <div ng-repeat='machine in resources.division.machines' ng-if="machine.removed == false">
         <button style='width:75%' ui-sref='.confirm({divisionMachineId:machine.division_machine_id})' class='btn btn-info btn-xlg'>
           {{machine.name}} ({{resources.division_queue[machine.division_machine_id].length}})
         </button>

@@ -6,7 +6,7 @@
 <div class="scrollable">
   <!--<div style='background:#AAAAAA' ui-view='player_add_progress'></div>-->
   <div class="big-web-font scrollable-content"  style='padding:10px'>
-    <div ng-repeat='machine in resources.division.machines|orderBy:"name"|filter:{removed:"false"}'>
+    <div ng-repeat='machine in resources.division.machines|orderBy:"name"|filter:{removed:"false"}' ng-if="machine.removed == false">
       <button
          style='width:75%;margin-bottom:15px'
 	 ng-if='machine.player_id == undefined && machine.team_id == undefined'
