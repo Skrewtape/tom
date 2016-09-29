@@ -90,7 +90,7 @@
 
 		  		  .sidebar-left {
 		  background: #555555;
-		  width: 500px;
+		  width: 250px;
 		  left: 0;
 		  right: auto;
 		  -webkit-transition: width 400ms ease;
@@ -100,10 +100,10 @@
 
 		  .sidebar-left-in .app {
 		  width: 100%;
-		  -webkit-transform: translate(500px, 0);
-		  -ms-transform: translate(500px, 0);
-		  -o-transform: translate(500px, 0);
-		  transform: translate(500px, 0);
+		  -webkit-transform: translate(250px, 0);
+		  -ms-transform: translate(250px, 0);
+		  -o-transform: translate(250px, 0);
+		  transform: translate(250px, 0);
 		  -webkit-transition: -webkit-transform 400ms ease;
 		  -moz-transition: -moz-transform 400ms ease;
 		  -o-transition: -o-transform 400ms ease;
@@ -297,7 +297,7 @@
       <div class="scrollable">
 	<h1 class="scrollable-header app-name"><a ui-sref='app'>TOM</a><small>1.0</small></h1>
 	<div class="scrollable-content">
-	  <div class="list-group" style='font-size:35px' ui-turn-off='uiSidebarLeft'>
+	  <div class="list-group" style='font-size:25px' ui-turn-off='uiSidebarLeft'>
 	    <a id='sidebar-login-link' ng-if='Page.logged_in_player().first_name == undefined' class="list-group-item" ui-sref="app.playerlogin">
 	      Player Login
 	      <i class="fa fa-chevron-right pull-right"></i></a>

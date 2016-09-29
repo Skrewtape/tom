@@ -89,7 +89,7 @@ app.controller(
     function($scope, $location, $http, 
              $state, $injector, Page, StatusModal) {
 	$scope.Page = Page;
-
+        $scope.player_page=true;
         //FIXME : wipeStateParamToPreventRepost is a hack, and should be handled at the
         //        REST level
 	$scope.checkForBlankParams = function(param){
