@@ -49,7 +49,23 @@
   </td>
 </tr>          
 {% endfor %}
+  {% if player_scores_ranks[division_id]|length <= divider and divider < 100 and divider_placed == None %}
+    <tr><td align='center' style='background-color:red' colspan=5> FINALS CUTOFF  </td></tr>
+    {% set divider_placed = "placed" %}
+  {% endif %}
+  {% if player_scores_ranks[division_id]|length <= divider_a and divider_a < 100 and divider_a_placed == None %}
+    <tr><td align='center' style='background-color:red' colspan=5> FINALS CUTOFF A </td></tr>
+    {% set divider_a_placed = "placed" %}
+  {% endif %}
+  {% if player_scores_ranks[division_id]|length > divider_a and divider_b < 100 and player_scores_ranks[division_id]|length < divider_a + divider_b and divider_b_placed == None %}
+    <tr><td align='center' style='background-color:red' colspan=5> FINALS CUTOFF B </td></tr>
+    {% set divider_b_placed = "placed" %}
+  {% endif %}  
+
 {% endif %}
+
+
+
 {% if division_results %}
   {% for entry_id in sorted_division_entry_ids[division_id] %}
     {% if division_results[division_id][entry_id]['entry']['second_query_scorepointsrank'] > divider and divider_placed == None %}
@@ -60,7 +76,7 @@
       <tr><td align='center' style='background-color:red' colspan=5> FINALS CUTOFF FOR A </td></tr>
       {% set divider_a_placed = "placed" %}        
     {% endif %}
-    {% if division_results[division_id][entry_id]['entry']['second_query_scorepointsrank'] > divider_b and divider_b_placed == None %}
+    {% if division_results[division_id][entry_id]['entry']['second_query_scorepointsrank'] > divider_b + divider_a and divider_b_placed == None %}
       <tr><td align='center' style='background-color:red' colspan=5> FINALS CUTOFF FOR B </td></tr>
       {% set divider_b_placed = "placed" %}        
     {% endif %}    
@@ -78,7 +94,20 @@
       </td>
     </tr>    
   {% endfor %}
-{% endif %}
+    {% if sorted_division_entry_ids[division_id]|length <= divider and divider < 100 and divider_placed == None %}
+      <tr><td align='center' style='background-color:red' colspan=5> FINALS CUTOFF  </td></tr>
+      {% set divider_placed = "placed" %}
+    {% endif %}
+    {% if sorted_division_entry_ids[division_id]|length <= divider_a and divider_a < 100 and divider_a_placed == None %}
+      <tr><td align='center' style='background-color:red' colspan=5> FINALS CUTOFF FOR A </td></tr>
+      {% set divider_a_placed = "placed" %}        
+    {% endif %}
+    {% if sorted_division_entry_ids[division_id]|length > divider_a and sorted_division_entry_ids[division_id]|length <= divider_b + divider_a and divider_b < 100 and divider_b_placed == None %}
+      <tr><td align='center' style='background-color:red' colspan=5> FINALS CUTOFF FOR B </td></tr>
+      {% set divider_b_placed = "placed" %}        
+    {% endif %}    
+  {% endif %}
+  
       </tbody>
     </table>    
   </div>

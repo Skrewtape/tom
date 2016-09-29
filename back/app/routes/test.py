@@ -316,9 +316,12 @@ def get_herb_division_results_ex(division_id=None,player_id=None,division_machin
     scores_and_ranks = {}
     division_results = {}
     player_scores_ranks = {}
+    player_scores_ranks_player_only = {}
+
     for division in divisions:        
         division_results[division.division_id]=[]
-        player_scores_ranks[division.division_id]={}    
+        player_scores_ranks[division.division_id]={}
+        player_scores_ranks_player_only[division.division_id]=[]
     for result in results:        
         division_results[result.entry_division_id].append(result)
         # if result.entry_player_id not in player_scores_ranks:
@@ -339,6 +342,16 @@ def get_herb_division_results_ex(division_id=None,player_id=None,division_machin
         for ranked_tuple in ranked_list:
             ranked_tuple[1]['rank']=ranked_tuple[0]
         player_scores_ranks[division.division_id] = [e[1] for e in ranked_list]
+    
+    if player_id:
+        for division in divisions:            
+            if division.tournament.scoring_type == "papa":
+                continue
+            print "hi there"
+            for player_entry in player_scores_ranks[division.division_id]:
+                if player_entry['scores'][0].player_player_id == player_id:
+                    player_scores_ranks_player_only[division.division_id].append(player_entry)
+        player_scores_ranks = player_scores_ranks_player_only
     return player_scores_ranks,division_results
 
         
@@ -617,22 +630,24 @@ def get_players_entries_ex(player_id):
     player = Player.query.filter_by(player_id=player_id).first()
     
     sorted_division_entry_ids, division_results,in_progress_results = get_division_results_ex(player_id=player_id)    
-    herb_player_points,herb_results = get_herb_division_results_ex(player_id=player_id)    
+    herb_player_points,herb_results = get_herb_division_results_ex(player_id=int(player_id))    
 
     query = select([                
         Token.division_id,
-        func.sum(Token.token_id).label('token_total')        
+        func.count(Token.token_id).label('token_total')        
     ]).select_from(Token).where(text("player_id=%s" % player_id)).group_by(Token.division_id)    
+    
     token_counts = [t for t in DB.engine.execute(query) if t.token_total > 0 and t.division_id is not None]
-
+    
     metadiv_query = select([                
         Token.metadivision_id,
-        func.sum(Token.token_id).label('token_total')        
+        func.count(Token.token_id).label('token_total')        
     ]).select_from(Token).where(text("player_id=%s" % player_id)).group_by(Token.metadivision_id)    
     metadiv_token_counts = [t for t in DB.engine.execute(metadiv_query) if t.token_total > 0 and t.metadivision_id is not None]
     
     #sorted_division_entry_ids = {}
     #division_results = {}
+    #print herb_player_points
     return render_template('player_entries_ex.html', division_results=division_results,
                            herb_results=herb_results, player=player,
                            sorted_division_entry_ids=sorted_division_entry_ids, divisions=get_divisions(),

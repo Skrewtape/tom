@@ -59,7 +59,7 @@
         <div class="panel-heading"><center><h1 class='panel-title'>Best entries for {{divisions[division_id]['tournament_name']}}</center></h1></div>
         <center>
           <br>
-          <b>Player Rank : {{herb_player_points[division_id][player.player_id]['rank']}}</b>
+          <b>Player Rank : {{herb_player_points[division_id][0]['rank']}}</b>
           <hr style='width:50%'>
         </center>
         <table class='table'>
@@ -69,7 +69,7 @@
             <th> Score </th>
             <th> Points </th>
             </tr>
-        {% for score in herb_player_points[division_id][player.player_id]['scores'] %}
+        {% for score in herb_player_points[division_id][0]['scores'] %}
           <tr>
             <td> {{score.filter_rank}}</td>
             <td> <a href="/division_machine_entries_ex/{{score.score_division_machine_id}}">{{score.machine_abbreviation}}</a> </td>
@@ -84,7 +84,7 @@
           </tr>          
         {% endfor %}
         <tr>
-          <td colspan=3></td><td>{{herb_player_points[division_id][player.player_id]['total_points']}}</td>
+          <td colspan=3></td><td>{{herb_player_points[division_id][0]['total_points']}}</td>
           </tr>
         </table>
       </div>
@@ -131,7 +131,7 @@
   {% for division_id in divisions %}
     {% if herb_player_points[division_id]|length > 0 %}
       <h3>All entries for {{divisions[division_id]['tournament_name']}}</h3>      
-      {% for score in herb_player_points[division_id][player.player_id]['all_scores'] %}
+      {% for score in herb_player_points[division_id][0]['all_scores'] %}
       <br>
       <div class="panel panel-default" style='width:97%;margin:auto'>
         <div class="panel-heading"><center><h1 class='panel-title'>Entry ID : {{score.entry_entry_id}}, Rank : {{score.filter_rank}}</h1> </center></div>
