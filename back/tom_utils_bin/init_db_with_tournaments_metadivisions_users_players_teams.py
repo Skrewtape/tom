@@ -56,7 +56,7 @@ def init_tournaments():
     add_machines_to_division(classics_all_2,machines[11:20])
     add_machines_to_division(classics_all_3,machines[21:30])
     add_machines_to_division(split_flipper_all,machines[31:40])    
-    add_machines_to_division(main_a,machines[31:40])
+    add_machines_to_division(main_a,machines[31:39])
     add_machines_to_division(main_b,machines[41:50])
     add_machines_to_division(main_c,machines[51:60])
     add_machines_to_division(main_d,machines[61:70])
