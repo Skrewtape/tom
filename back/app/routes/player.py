@@ -6,8 +6,9 @@ from app import App
 from app.types import Player, Division, Entry, Score, Tournament, Team
 from app import App, Admin_permission, Desk_permission, DB
 from app.routes.util import fetch_entity, calculate_score_points_from_rank
-from werkzeug.exceptions import Conflict
+from werkzeug.exceptions import Conflict, BadRequest, Unauthorized
 from flask_restless.helpers import to_dict
+from flask_login import current_user
 
 
 @App.route('/player', methods=['GET'])
@@ -38,9 +39,11 @@ def get_latest_players(num_players):
 
 @App.route('/player/pin/<player_id>', methods=['GET'])
 @login_required
-@Desk_permission.require(403)
+#@Desk_permission.require(403)
 @fetch_entity(Player, 'player')
 def get_player_pin(player):
+    if hasattr(current_user,'player_id') and current_user.player_id != player.player_id:
+        raise BadRequest('Tried to access another players pin number - very naughty')            
     return jsonify({'pin':player.pin})
 
 @App.route('/player/current', methods=['GET'])
