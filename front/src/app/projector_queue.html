@@ -52,12 +52,12 @@
       
 var app = angular.module('projector', ['ngResource','ngAnimate','sticky']);
 app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$interval','$location', function projectorController($scope,$resource,$sce,$http,$interval,$location) {
-    $scope.queues = $resource('http://localhost:8000/queue');
+    $scope.queues = $resource('[APIHOST]/queue');
     $scope.searchObject = $location.search();
     if($scope.searchObject.divisionIndex != undefined){
      $scope.fixedDivisionIndex=$scope.searchObject.divisionIndex;
     }
-    $scope.divisions = $resource('http://localhost:8000/division/active');    
+    $scope.divisions = $resource('[APIHOST]/division/active');    
     $scope.divisionId=1; 
     $scope.countdown=100
     $scope.division_list = [];

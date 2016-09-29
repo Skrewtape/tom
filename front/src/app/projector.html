@@ -52,10 +52,10 @@
       
 var app = angular.module('projector', ['ngResource','ngAnimate','sticky']);
 app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$interval', function projectorController($scope,$resource,$sce,$http,$interval) {
-    $scope.division_scores = $resource('http://localhost:8000/division_entries_ex_json/:divisionId',{divisionId:1});
-    $scope.divisions = $resource('http://localhost:8000/division/active');    
+    $scope.division_scores = $resource('[APIHOST]/division_entries_ex_json/:divisionId',{divisionId:1});
+    $scope.divisions = $resource('[APIHOST]/division/active');    
     $scope.divisionId=1; 
-    //$http.get('http://localhost:8000/division_entries_ex/'+divisionId).then(function(data){
+    //$http.get('[APIHOST]/division_entries_ex/'+divisionId).then(function(data){
     //$scope.division_scores_html = $sce.trustAsHtml(data.data);
     //})
     $scope.countdown=100
