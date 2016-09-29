@@ -137,18 +137,18 @@ console.log($scope.division_list);
       <body  ng-controller="projectorController">
     <!-- <table class="table"> -->
     <!--   <tbody> -->
-    <div ng-repeat="division_id in division_list|limitTo:division_index+1" class="repeated-item row">
-      <center><h1>{{division_objects[division_id].tournament_name}}</h1></center>
-      <div ng-repeat="(machine_id,machine) in division_one_queues[division_id]" class="col-md-4" style='height:275px;margin-bottom:10px'>
+    <div ng-repeat="division_id in division_list|limitTo:division_index+1" class="repeated-item row" style='background-color:grey'>
+      <center><span style='font-size:200px'><b>{{division_objects[division_id].tournament_name}}</b></span></center>
+      <div ng-repeat="(machine_id,machine) in division_one_queues[division_id]" class="col-md-6" style='height:800px;margin-bottom:10px;'>
         <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 style='font-size:20px;' lass="panel-title">{{machines[machine_id]}}</h4>
+          <div class="panel-heading" style='border-width:2px;border-color:grey;border-style:solid;background-color:black;color:white'>
+            <h4 style='font-size:125px;' lass="panel-title">{{machines[machine_id]}}</h4>
           </div>
           <div class="panel-body">
             <div ng-repeat='player in machine|limitTo:3'>
-              <h3>{{player.player_id}} {{player.player_name}}</h3>
+              <h3 style='font-size:100px'>{{player.player_id}} {{player.player_name}}</h3>
             </div>
-            <div ng-if="machine.length > 2">
+            <div style='font-size:100px' ng-if="machine.length > 2">
               ...
             </div>
           </div>
