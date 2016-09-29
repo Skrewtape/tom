@@ -177,7 +177,7 @@ def confirm_tokens():
                 division_id=token.division_id,
                 token_id=token.token_id
             )
-        DB.session.add(new_audit_log_entry)
+        #DB.session.add(new_audit_log_entry)
         DB.session.commit()        
             
     return jsonify({})
@@ -198,11 +198,16 @@ url params:
 returns:
     empty dict
     """
+    if hasattr(current_user,'player_id') and paid_for != 0:
+        raise BadRequest('Stop being a dick, you assface')                
     total_tokens=[]
     tokens_data = json.loads(request.data)
     check_player_valid_for_add_token_request(tokens_data)    
     player_id = tokens_data['player_id']
-    comped = tokens_data['comped']
+    if 'comped' in tokens_data:
+        comped = tokens_data['comped']
+    else:
+        comped = False
     player = Player.query.filter_by(player_id=player_id).first()        
     if tokens_data.has_key('team_id'):
         team_id = tokens_data['team_id']
