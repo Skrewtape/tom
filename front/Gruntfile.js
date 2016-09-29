@@ -130,7 +130,7 @@ module.exports = function(grunt) {
                 replacements: [
                     {
                         from: '[APIHOST]',
-                        to: 'http://'+backend_ip+':8001'
+                        to: 'https://'+backend_ip+':8001'
                     },
                 ],
             },            
