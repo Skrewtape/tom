@@ -259,7 +259,7 @@ def edit_score(score): #killroy
     DB.session.commit()
     return jsonify(score.to_dict_simple())
 
-def add_score(division_machine,new_score_value): #killroy   
+def add_score(division_machine,new_score_value,asshole=False): #killroy   
     #if entry.player is None and entry.team is None:
     #    raise BadRequest("Entry does not have a team or player assigned.  This should not happen.")
 
@@ -330,7 +330,9 @@ def add_score(division_machine,new_score_value): #killroy
         player_entry.active=False
         tournament = Tournament.query.join(Division).filter_by(division_id=player_entry.division_id).first()
         if tournament.scoring_type=='herb':
-            player_entry.completed = True            
+            player_entry.completed = True
+        if asshole:
+            player_entry.voided = True
     DB.session.commit()
     #available_tokens = Token.query.filter_by(paid_for=True,player_id=player_entry.player_id,division_id=division_machine.division_id).all()            
     v1_utils.add_audit_log_entry(

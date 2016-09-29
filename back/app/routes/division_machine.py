@@ -131,12 +131,11 @@ returns:
     
     return jsonify(divisionmachine.to_dict_simple())
 
-@App.route('/divisionmachine/<divisionmachine_id>/entry/<entry_id>/asshole', methods=['PUT'])
+@App.route('/divisionmachine/<divisionmachine_id>/asshole', methods=['PUT'])
 @Scorekeeper_permission.require(403)
 @login_required
 @fetch_entity(DivisionMachine, 'divisionmachine')
-@fetch_entity(Entry, 'entry')
-def declare_player_or_team_an_asshole(divisionmachine, entry):
+def declare_player_or_team_an_asshole(divisionmachine):
     """
 description: increment the "asshole count" for whoever is playing a specified entry and give them a score of 0
 post data: 
@@ -147,34 +146,27 @@ url params:
 returns:
     empty dict
     """
-    if entry.player is None and entry.team is None:
-        BadRequest("Entry has no team or player associated with it.  This should not happen.")
-    if entry.team:
-        asshole = entry.team        
     #FIXME : should not be setting player in entry when it's a team entry
-    if entry.player is not None and entry.team is None:        
-        asshole = entry.player        
+    if divisionmachine.player_id is not None and divisionmachine.team_id is None:
+        asshole = divisionmachine.player
+    #if entry.player is not None and entry.team is None:        
+    #    asshole = entry.player
 
-    if asshole.division_machine is None:
-        raise Conflict('Asshole is not playing any machines !')                
-    if asshole.division_machine.division_machine_id != divisionmachine.division_machine_id:
-        raise Conflict('Asshole is not playing machine %s !' % (divisionmachine.machine.name))
-    divisionmachine.player_id = None
-    divisionmachine.team_id = None
-    if entry.team:
-        asshole_players = entry.team.players
-    if entry.player:
-        asshole_players = [entry.player]
+#    if asshole.division_machine is None:
+#        raise Conflict('Asshole is not playing any machines !')                
+#    if asshole.division_machine.division_machine_id != divisionmachine.division_machine_id:
+#        raise Conflict('Asshole is not playing machine %s !' % (divisionmachine.machine.name))
+    if divisionmachine.team:
+        asshole_players = divisionmachine.team.players
+    if divisionmachine.player:
+        asshole_players = [divisionmachine.player]
     for player in asshole_players:
         if player.player_is_an_asshole_count is None:
             player.player_is_an_asshole_count=0        
         player.player_is_an_asshole_count=player.player_is_an_asshole_count+1
-    route_entry.add_score(entry,divisionmachine,0)    
-    DB.session.commit()
-    division = Division.query.filter_by(division_id=divisionmachine.division_id).first()
-    if len(entry.scores) >= division.number_of_scores_per_entry:
-        entry.active=False
-        entry.voided=True
+    route_entry.add_score(divisionmachine,0,asshole=True)    
+    divisionmachine.player_id = None
+    divisionmachine.team_id = None                             
     DB.session.commit()
     return jsonify({})
 

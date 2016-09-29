@@ -219,7 +219,7 @@ angular.module('tom_services.timeout_resources').factory('TimeoutResources', fun
                                                  'PUT');
     loginPlayerResource = generate_resource_definition('/login/player/pin/:player_pin',
                                                        'PUT');
-    playerIsAssholeResource = generate_resource_definition('/divisionmachine/:division_machine_id/entry/:entry_id/asshole',
+    playerIsAssholeResource = generate_resource_definition('/divisionmachine/:division_machine_id/asshole',
                                                            'PUT');
     
     removeMachineFromDivisionResource = generate_resource_definition('/division_machine/:division_machine_id',
