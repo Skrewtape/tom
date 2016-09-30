@@ -97,7 +97,8 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
                 }
             }
             $scope.divisionId=$scope.division_list[$scope.division_index];
-            $scope.divisionMachineId=$scope.division_machine_list[$scope.divisionId][$scope.division_machine_index];
+            $scope.machineId=$scope.division_machine_list[$scope.divisionId][$scope.division_machine_index];
+            $scope.divisionMachineId=$scope.machine_objects[$scope.machineId].division_machine_id;
 
             $scope.division_machine_scores.get({divisionMachineId:$scope.divisionMachineId},function(data){
                 console.log("loading "+$scope.divisionMachineId)
@@ -135,7 +136,9 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
         console.log('logging machine list')
         console.log($scope.division_machine_list)
         $scope.divisionId = $scope.division_list[0];
-        $scope.divisionMachineId = $scope.division_machine_list[$scope.divisionId][0]
+        $scope.machineId = $scope.division_machine_list[$scope.divisionId][0]
+        $scope.divisionMachineId=$scope.machine_objects[$scope.machineId].division_machine_id;
+
     }).$promise.then(function(data){
         //return $scope.division_scores.get({divisionId:$scope.divisionId},function(data){
         //$scope.division_one_results = data['division_results'][$scope.divisionId];
@@ -153,7 +156,7 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
     <div style='height:150px'>
     <center>
     <span style='font-size:24px'> Division :  {{division_objects[divisionId].tournament_name}}</span><br>    
-    <button style='margin:5px;font-size:18px' ng-class='{btn:true,"btn-info":i==divisionMachineId}' ng-repeat='i in division_machine_list[divisionId]'>    
+    <button style='margin:5px;font-size:18px' ng-class='{btn:true,"btn-info":i==machineId}' ng-repeat='i in division_machine_list[divisionId]'>    
     {{machine_objects[i].name|limitTo:12}}
     </button>    
     </center>
