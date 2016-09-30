@@ -195,6 +195,13 @@ module.exports = function(grunt) {
 		dest: admin_dest+'app_html_templates.js'
 	    }
 	},
+      rename: {
+          player: {
+              files: [
+  		  {src: [player_dest+'player.html'], dest: player_dest+'index.html'},
+              ]
+          }
+      },
       concat: {
           my_stuff: {
               src: 
@@ -291,6 +298,7 @@ module.exports = function(grunt) {
 	}
   });
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-rename');
     grunt.loadNpmTasks('grunt-contrib-copy');    
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-compass');
@@ -322,7 +330,8 @@ module.exports = function(grunt) {
 	//'bower_concat:player',
         //'browserify:player',
         //	'ngtemplates:PlayerApp',
-        'copy:player',        
+        'copy:player',
+        'rename:player'
 	//'concat:player',
 	//'shell:makeRevHistory'
     ]);    
