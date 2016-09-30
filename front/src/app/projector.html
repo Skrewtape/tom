@@ -156,66 +156,66 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
     //     $scope.division_one_ranks = data['sorted_division_entry_ids'][1];      
     //     $scope.ready_to_scroll = true;
     // });            
-    }])
-</script>
-    </head>
-    <body  ng-controller="projectorController">
-    <div  data-sticky style='background-color:white;opacity:1'>
-    <hr style='background-color:red;border-color:red;width:{{countdown}}%'>
-    <center>
-    <button style='font-size:24px; margin:5px' ng-class='{"btn":true, "btn-info":i==divisionId}' ng-repeat='i in division_list'>    
-      {{division_objects[i].tournament_name}}
-    </button>   
-    </center>
-    <br>
-    <table style='width:100%;background-color:white;opacity:1'>
-    <td style='width:20%;border-width:0;border-style:solid;border-bottom-width:2px'>
-    Rank
-</td>
-    <td style='width:20%;border-width:0;border-style:solid;border-bottom-width:2px'>
-    Player
-</td>
-    <td style='color:white;background-color:grey;width:50%;border-width:0;border-style:solid;border-bottom-width:2px'>
-    <center>Best Three Scores</center>
-</td>
-    </table>
-     
-    </div>
-    
-    <table class="table">
-        <thead>
-          <tr>
-            <th style='color:white;opacity:0'>Rank</th>
-            <th style='color:white;opacity:0'>Player</th>
-            <th colspan=6 style='color:white;opacity:0'>Best 3 Scores</th>
-          </tr>
-    </thead>
-    <tbody>
+}])
+    </script>
+      </head>
+      <body  ng-controller="projectorController">
+        <div  data-sticky style='background-color:white;opacity:1;background-image: url("https://upload.wikimedia.org/wikipedia/commons/e/eb/Blank.jpg");'>
+          <hr style='background-color:red;border-color:red;width:{{countdown}}%'>
+          <div style='height:150px'>
+            <center>
+              <button style='font-size:24px; margin:5px' ng-class='{"btn":true, "btn-info":i==divisionId}' ng-repeat='i in division_list'>    
+                {{division_objects[i].tournament_name}}
+              </button>   
+            </center>
+            <br>
+            <table style='width:100%;background-color:white;opacity:1'>
+              <td style='width:20%;border-width:0;border-style:solid;border-bottom-width:2px'>
+                Rank
+              </td>
+              <td style='width:20%;border-width:0;border-style:solid;border-bottom-width:2px'>
+                Player
+              </td>
+              <td style='color:white;background-color:grey;width:50%;border-width:0;border-style:solid;border-bottom-width:2px'>
+                <center>Best Three Scores</center>
+              </td>
+            </table>
+          </div>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th style='color:white;opacity:0'>Rank</th>
+              <th style='color:white;opacity:0'>Player</th>
+              <th colspan=6 style='color:white;opacity:0'>Best 3 Scores</th>
+            </tr>
+          </thead>
+          <tbody>
 
-      <tr ng-repeat="thing in division_one_ranks|limitTo:num_to_scroll" class="repeated-item">
-      <td style='background-color:red' align='center' colspan="8" ng-if="thing.divider != undefined">{{thing.divider}}</td>
+            <tr ng-repeat="thing in division_one_ranks|limitTo:num_to_scroll" class="repeated-item">
+              <td style='background-color:red' align='center' colspan="8" ng-if="thing.divider != undefined">{{thing.divider}}</td>
 
-    <td class='col-md-4' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.entry.second_query_scorepointsrank }}</td>
-    <td class='col-md-4' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.entry.first_query_player_first_name }} {{ thing.entry.first_query_player_last_name }}</td>    
-      <td class='col-md-1' align='right' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.scores[0].first_query_machine_abbreviation }}</td>
-      <td class='col-md-1' ng-if="thing.divider==undefined && tourney_type=='papa'" align='left'>(#{{thing.scores[0].first_query_scorerank}})</td>
-      <td class='col-md-1' align='right' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.scores[1].first_query_machine_abbreviation }}</td>
-      <td class='col-md-1' ng-if="thing.divider==undefined && tourney_type=='papa'" align='left'>(#{{thing.scores[1].first_query_scorerank}})</td>
-      <td class='col-md-1' align='right' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.scores[2].first_query_machine_abbreviation }}</td>
-      <td class='col-md-1' ng-if="thing.divider==undefined && tourney_type=='papa'" align='left'>(#{{thing.scores[2].first_query_scorerank}})</td>
-      <td ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.entry.rank + 1 }}</td>
-      <td ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.scores[0].player_first_name }} {{ thing.scores[0].player_last_name }}</td>
-      <td align='right' ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.scores[0].machine_abbreviation }}</td>
-      <td ng-if="thing.divider==undefined && tourney_type=='herb'" align='left'>(#{{thing.scores[0].filter_rank}})</td>
-      <td align='right' ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.scores[1].machine_abbreviation }}</td>
-      <td ng-if="thing.divider==undefined && tourney_type=='herb'" align='left'>(#{{thing.scores[1].filter_rank}})</td>
-      <td align='right' ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.scores[2].machine_abbreviation }}</td>
-      <td ng-if="thing.divider==undefined && tourney_type=='herb'" align='left'>(#{{thing.scores[2].filter_rank}})</td>
+              <td class='col-md-4' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.entry.second_query_scorepointsrank }}</td>
+              <td class='col-md-4' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.entry.first_query_player_first_name }} {{ thing.entry.first_query_player_last_name }}</td>    
+              <td class='col-md-1' align='right' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.scores[0].first_query_machine_abbreviation }}</td>
+              <td class='col-md-1' ng-if="thing.divider==undefined && tourney_type=='papa'" align='left'>(#{{thing.scores[0].first_query_scorerank}})</td>
+              <td class='col-md-1' align='right' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.scores[1].first_query_machine_abbreviation }}</td>
+              <td class='col-md-1' ng-if="thing.divider==undefined && tourney_type=='papa'" align='left'>(#{{thing.scores[1].first_query_scorerank}})</td>
+              <td class='col-md-1' align='right' ng-if="thing.divider==undefined && tourney_type=='papa'">{{ thing.scores[2].first_query_machine_abbreviation }}</td>
+              <td class='col-md-1' ng-if="thing.divider==undefined && tourney_type=='papa'" align='left'>(#{{thing.scores[2].first_query_scorerank}})</td>
+              <td ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.entry.rank + 1 }}</td>
+              <td ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.scores[0].player_first_name }} {{ thing.scores[0].player_last_name }}</td>
+              <td align='right' ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.scores[0].machine_abbreviation }}</td>
+              <td ng-if="thing.divider==undefined && tourney_type=='herb'" align='left'>(#{{thing.scores[0].filter_rank}})</td>
+              <td align='right' ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.scores[1].machine_abbreviation }}</td>
+              <td ng-if="thing.divider==undefined && tourney_type=='herb'" align='left'>(#{{thing.scores[1].filter_rank}})</td>
+              <td align='right' ng-if="thing.divider==undefined && tourney_type=='herb'">{{ thing.scores[2].machine_abbreviation }}</td>
+              <td ng-if="thing.divider==undefined && tourney_type=='herb'" align='left'>(#{{thing.scores[2].filter_rank}})</td>
 
-        </tr>
-        </tbody>
-    </table>
-    </body>
+            </tr>
+          </tbody>
+        </table>
+      </body>
     </html>
     
 

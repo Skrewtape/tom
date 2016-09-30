@@ -3,6 +3,14 @@ module.exports = function(grunt) {
     var admin_dest = '/var/www/html/dist/'
     var player_dest = '/var/www/html/player/'    
     var backend_ip = grunt.option('backend_ip') || undefined;
+    var secure = grunt.option('secure') || false;
+
+    if(secure == true){
+        player_protocol="https";
+    } else {
+        player_protocol="http";
+    }
+    
     if(backend_ip == undefined){
         console.log('OOPS!  No backend ip was specified.');
         console.log('Usage : grunt --backend_ip=<backend ip>');
@@ -130,10 +138,11 @@ module.exports = function(grunt) {
                 replacements: [
                     {
                         from: '[APIHOST]',
-                        to: 'https://'+backend_ip+':8001'
+                        to: player_protocol+'://'+backend_ip+':8001'
                     },
                 ],
-            },            
+            }            
+
         },
         watch: {
             main: {		
