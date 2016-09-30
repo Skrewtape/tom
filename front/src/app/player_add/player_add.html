@@ -25,8 +25,26 @@
 		   aria-describedby='player-last-name'
 		   name='filter'
 		   ng-model='new_player.last_name'
-		   />		
+		   />                
 	      </div>
+              
+              <button ng-click='get_ajax_ifpa()' target="_blank" href="" class='btn btn-info btn-xlg'>
+                IFPA Lookup
+              </button>
+              <span style='margin-left:10px' ng-if='ifpa_loading == true'>
+                <i class="fa fa-spinner fa-pulse fa-3x fa-fw margin-bottom"></i>
+              </span>
+              <span class='big-web-font' ng-if='ifpa_results.count == 0'>
+                No IFPA ranking found 
+              </span>              
+              <span class='big-web-font' ng-if='ifpa_results.count == 1'>
+                IFPA ranking is {{ifpa_results.rank[0]}}
+              </span>
+              <span class='big-web-font' ng-if='ifpa_results.count > 1'>
+                IFPA matched more than one player - please click <a ng-click='get_ifpa_in_new_tab()'> here </a> to see the results
+                
+              </span>
+              <br>
 	      <div class='form-group form-group-xlg input-group input-group-xlg'>        
 		<span class="input-group-addon" id="player-email">Email</span>
 		<input
@@ -36,11 +54,13 @@
 		   aria-describedby='player-email'
 		   name='filter'
 		   ng-model='new_player.email'
-		   />		
+		   />
 	      </div>
-	      
+
+              
 	      <br>
-	    </form>
+    </form>
+    <br><br>
 	    <button
 	       ng-disabled='new_player.first_name == undefined || new_player.first_name == ""'
 	       class='btn btn-info btn-xlg'
