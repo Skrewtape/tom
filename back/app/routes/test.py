@@ -589,8 +589,8 @@ def get_division_machine_entries_ex(division_machine_id):
 
 @App.route('/division_machine_entries_ex_json/<division_machine_id>', methods=['GET'])
 def get_division_machine_entries_json_ex(division_machine_id):
-    division_machine = DivisionMachine.query.filter_by(division_machine_id=division_machine_id).first()
-    results = get_division_machine_results_ex(division_machine_id)        
+    division_machine = DivisionMachine.query.filter_by(division_machine_id=int(division_machine_id)).first()
+    results = get_division_machine_results_ex(int(division_machine_id))        
     #return render_template('division_machines_scores_ex.html', machine_scores = results,
     #                       division_machine=division_machine, division_machines=get_machines(division_machine.division_id))
     new_results = []
