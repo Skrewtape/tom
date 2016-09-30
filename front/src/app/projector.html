@@ -162,7 +162,8 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
       <body  ng-controller="projectorController">
         <div  data-sticky style='background-color:white;opacity:1;background-image: url("https://upload.wikimedia.org/wikipedia/commons/e/eb/Blank.jpg");'>
           <hr style='background-color:red;border-color:red;width:{{countdown}}%'>
-          <div style='height:150px'>
+          <div style='height:100px'>
+            
             <center>
               <button style='font-size:24px; margin:5px' ng-class='{"btn":true, "btn-info":i==divisionId}' ng-repeat='i in division_list'>    
                 {{division_objects[i].tournament_name}}

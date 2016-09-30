@@ -8,7 +8,7 @@
     <table class='table'>
       <tr><th colspan=2>Scores On Ticket</th></tr>
       <tr  ng-repeat='score in resources.entry.scores'>
-        <td>{{resources.machines[score.division_machine_id].name}}</td><td align=left>{{score.score}}</td>
+        <td>{{resources.machines[score.division_machine_id].name}}</td><td align=left>{{score.score|number}}</td>
       </tr>
     </table>
     <button

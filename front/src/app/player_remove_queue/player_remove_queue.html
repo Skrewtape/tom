@@ -1,5 +1,5 @@
 <div ui-content-for="title">
-  <span></span>
+  <span>Leave Queue</span>
 </div>
 <div ui-view="backbutton"></div>
 <div class="scrollable">
@@ -7,10 +7,10 @@
     <div class="big-web-font scrollable-content"  style='padding:10px'>
       <div ng-if="resources.player_queue.player_id != undefined">
 
-        Confirm you want to remove player from {{resources.division_machines[resources.player_queue.division_machine_id].name}}?<br><br>
+        Confirm you want to remove player from <b>{{resources.division_machines[resources.player_queue.division_machine_id].name}}</b>?<br><br>
         <button class='btn btn-info btn-xlg'
                 ui-sref='.process'>
-          Remove Player From Queue
+          Remove From Queue
         </button>
 
       </div>

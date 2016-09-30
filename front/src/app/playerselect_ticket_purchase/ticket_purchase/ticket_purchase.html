@@ -8,7 +8,7 @@
   <div class="scrollable-content big-web-font"  style='padding:10px'>    
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title big-web-font">Select Tickets</h3>
+        <h3 class="panel-title big-web-font">Select Tickets For {{resources.player.first_name}} {{resources.player.last_name}} (#{{resources.player.player_id}})</h3>
       </div>
         <ul class='list-group'  ng-repeat='tournament in resources.tournaments'>
           <span ng-repeat='division in tournament.divisions'>

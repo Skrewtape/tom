@@ -1,5 +1,5 @@
 <div ui-content-for="title">
-  <span>Select Queue Division</span>
+  <span>Select Division</span>
 </div>
 <div ui-view="backbutton"></div>
 <div class="scrollable">
@@ -9,11 +9,13 @@
         OOPS!  Player #{{player_id}} is already on a queue!
       </div>-->
       <div ng-repeat="division in resources.divisions">
-        <button style='width:75%' ui-sref='.division_machines({divisionId:division.division_id})' class='btn btn-info btn-xlg'>
+        <center>
+        <button style='width:95%' ui-sref='.division_machines({divisionId:division.division_id})' class='btn btn-info btn-xlg'>
           {{division.tournament_name}}
         </button>
         <br>
         <br>
+        </center>
       </div>
     </div>
 </div>

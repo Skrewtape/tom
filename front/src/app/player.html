@@ -305,11 +305,13 @@
 	      {{Page.logged_in_player().first_name}}
 	      <span  class="fa fa-user pull-right" aria-hidden="true"></a>
 	    </span>
-            <a class="list-group-item" ui-sref='app.player_purchasetickets({playerId:Page.logged_in_player().player_id})'>Purchase Tickets<i class="fa fa-chevron-right pull-right"></i></a>
-            <a class="list-group-item" ui-sref='app.player_add_queue({playerId:Page.logged_in_player().player_id})'>View/Join Queue<i class="fa fa-chevron-right pull-right"></i></a>            
-            <a class="list-group-item" ui-sref='app.player_remove_queue({playerId:Page.logged_in_player().player_id})'>Leave Queue<i class="fa fa-chevron-right pull-right"></i></a>
-	    <a  class="list-group-item" ui-sref='app.playerselect_player_info.player_info({playerId:Page.logged_in_player().player_id})'>Player Info
-	      <i class="fa fa-chevron-right pull-right"></i></a>            
+            <a ng-if='Page.logged_in_player().first_name != undefined' class="list-group-item" ui-sref='app.player_purchasetickets({playerId:Page.logged_in_player().player_id})'>Purchase Tickets<i class="fa fa-chevron-right pull-right"></i></a>
+            <a ng-if='Page.logged_in_player().first_name != undefined' class="list-group-item" ui-sref='app.player_add_queue({playerId:Page.logged_in_player().player_id})'>Join Queue<i class="fa fa-chevron-right pull-right"></i></a>            
+            <a ng-if='Page.logged_in_player().first_name != undefined' class="list-group-item" ui-sref='app.player_remove_queue({playerId:Page.logged_in_player().player_id})'>Leave Queue<i class="fa fa-chevron-right pull-right"></i></a>
+            <a ng-if='Page.logged_in_player().first_name != undefined' class="list-group-item" ui-sref='app.player_see_queue()'>View Queues<i class="fa fa-chevron-right pull-right"></i></a>            
+	    <a  ng-if='Page.logged_in_player().first_name != undefined' class="list-group-item" ui-sref='app.playerselect_player_info.player_info({playerId:Page.logged_in_player().player_id})'>Player Info
+	      <i class="fa fa-chevron-right pull-right"></i></a>
+            
 	  </div>
 	</div>
       </div>

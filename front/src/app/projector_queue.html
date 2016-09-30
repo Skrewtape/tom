@@ -146,7 +146,7 @@ console.log($scope.division_list);
           </div>
           <div class="panel-body">
             <div ng-repeat='player in machine|limitTo:3'>
-              <h3 style='font-size:100px'>{{player.player_id}} {{player.player_name}}</h3>
+              <h3 style='font-size:100px'>{{$index+1}} {{player.player_name}}</h3>
             </div>
             <div style='font-size:100px' ng-if="machine.length > 2">
               ...

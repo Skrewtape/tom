@@ -1,5 +1,5 @@
 <div ui-content-for="title">
-  <span>Queue For Machine</span>
+  <span>Machine Queue</span>
 </div>
 <div ui-view="backbutton"></div>
 <div class="scrollable">
@@ -9,7 +9,7 @@
     <hr style='background-color:red;border-color:red;width:{{countdown}}%'>
     </center>
       <div class="panel panel-default" style='width:97%;margin:auto'>
-        <div class="panel-heading"><center><h1 class='panel-title'>Queue for {{resources.division_machines[division_machine_id].name}} entry</center></h1></div>
+        <div class="panel-heading"><center><h1 class='panel-title'>Queue for {{resources.division_machines[division_machine_id].name}} </center></h1></div>
         <table class='table' ng-if="resources.division_queue[division_machine_id].length > 0 ">
           <tr  ng-repeat="queue_item in resources.division_queue[division_machine_id]">
             <td>{{$index+1}} {{queue_item.first_name}} {{queue_item.last_name}}</td>      
