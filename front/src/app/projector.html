@@ -120,7 +120,7 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
         }
         
         $("html, body").animate({ scrollTop: $(document).height() }, "slow");                  
-    },1000);
+    },10000);
 
     $scope.divisions.get({},function(data){
         $scope.division_objects = data;
