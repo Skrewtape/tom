@@ -22,7 +22,7 @@
       <div class="panel-heading"><center><h1 class='panel-title'>In progress {{divisions[division_id]['tournament_name']}} entry</center></h1></div>
         <center>
           <br><b>
-            Entry ID : # {{in_progress_results[division_id]['entry']['entry_entry_id']}}, Rank : {{in_progress_results[division_id]['entry']['second_query_scorepointsrank']}}
+            Entry ID : # {{in_progress_results[division_id]['entry']['entry_entry_id']}}, <!--Rank : {{in_progress_results[division_id]['entry']['second_query_scorepointsrank']}}-->
           </b>
           <hr style='width:50%'>
         </center>
@@ -59,7 +59,7 @@
         <div class="panel-heading"><center><h1 class='panel-title'>Best entries for {{divisions[division_id]['tournament_name']}}</center></h1></div>
         <center>
           <br>
-          <b>Player Rank : {{herb_player_points[division_id][0]['rank']}}</b>
+          <b>Player Rank : {{herb_player_points[division_id][0]['rank']+1}}</b>
           <hr style='width:50%'>
         </center>
         <table class='table'>
@@ -97,7 +97,7 @@
             {% if division_results[division_id][sorted_division_entry_ids[division_id][0]]['entry']['entry_completed'] == False %}
               (IN PROGRESS)
             {% endif %}
-            Entry ID : # {{division_results[division_id][sorted_division_entry_ids[division_id][0]]['entry']['entry_entry_id']}}, Rank : {{division_results[division_id][sorted_division_entry_ids[division_id][0]]['entry']['second_query_scorepointsrank']}}
+            Entry ID : # {{division_results[division_id][sorted_division_entry_ids[division_id][0]]['entry']['entry_entry_id']}}, <!--Rank : {{division_results[division_id][sorted_division_entry_ids[division_id][0]]['entry']['second_query_scorepointsrank']}}-->
           </b>
           <hr style='width:50%'>
         </center>
@@ -134,7 +134,7 @@
       {% for score in herb_player_points[division_id][0]['all_scores'] %}
       <br>
       <div class="panel panel-default" style='width:97%;margin:auto'>
-        <div class="panel-heading"><center><h1 class='panel-title'>Entry ID : {{score.entry_entry_id}}, Rank : {{score.filter_rank}}</h1> </center></div>
+        <div class="panel-heading"><center><h1 class='panel-title'>Entry ID : {{score.entry_entry_id}} <!--, Rank : {{score.filter_rank}}--></h1> </center></div>
         <table class='table'>
           <tr>
             <th> Rank </th>
@@ -169,7 +169,7 @@
             {% if entry['entry']['entry_completed'] == False %}
               (IN PROGRESS)
             {% endif %}
-            Entry ID : # {{entry['entry']['entry_entry_id']}}, Rank : {{entry['entry']['second_query_scorepointsrank']}}
+            Entry ID : # {{entry['entry']['entry_entry_id']}}<!--, Rank : {{entry['entry']['second_query_scorepointsrank']}}-->
             </h1>
           </center>
         </div>

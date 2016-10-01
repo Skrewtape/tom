@@ -145,7 +145,7 @@ returns:
     DB.session.commit()
     #available_tokens = Token.query.filter_by(paid_for=True,player_id=entry.player_id,division_id=entry.division_id).all()        
     v1_utils.add_audit_log_entry(
-        "Void Entry",                       
+        "Void",                       
         entry.player_id,
         division_id=entry.division_id,
         entry_id=entry.entry_id        
@@ -177,7 +177,7 @@ def void_entry_before_create(division_machine):
     DB.session.commit()
     #available_tokens = Token.query.filter_by(paid_for=True,player_id=entry.player_id,division_id=entry.division_id).all()            
     v1_utils.add_audit_log_entry(
-        "Void Entry Before First Score Recorded",        
+        "Void Special",        
         entry.player_id,
         entry_id=entry.entry_id,
         division_id=entry.division_id
@@ -201,15 +201,15 @@ def toggle_entry_completed(entry,complete_state): #killroy
     """Set a entry completed state, and DOES NOT try and start a new entry.  For admin use only"""
     #FIXME : this should have better checks
     print complete_state
-    if len(entry.scores) == entry.number_of_scores_per_entry:
-        if complete_state == "true":
-            entry.completed = True
-            if entry.player and entry.player.division_machine:
-                entry.player.division_machine = None
-            if entry.team and entry.team.division_machine:
-                entry.team.division_machine = None            
-        else:
-            entry.completed = False
+    #if len(entry.scores) == entry.number_of_scores_per_entry:
+    if complete_state == "true":
+        entry.completed = False
+            #if entry.player and entry.player.division_machine:
+            #    entry.player.division_machine = None
+            #if entry.team and entry.team.division_machine:
+            #    entry.team.division_machine = None            
+    else:
+        entry.completed = True
     DB.session.commit()
     return jsonify(entry.to_dict_simple())
 
@@ -308,7 +308,7 @@ def add_score(division_machine,new_score_value,asshole=False): #killroy
     if player_entry is None: 
         player = Player.query.filter_by(player_id=division_machine.player_id).first()       
         player_entry = shared_create_active_entry(division_machine.division,player=player)
-        v1_utils.add_audit_log_entry("Creating Entry",
+        v1_utils.add_audit_log_entry("Create Entry",
                                      division_machine.player_id,                                     
                                      entry_id=player_entry.entry_id,
                                      division_id=division_machine.division_id,
@@ -336,7 +336,7 @@ def add_score(division_machine,new_score_value,asshole=False): #killroy
     DB.session.commit()
     #available_tokens = Token.query.filter_by(paid_for=True,player_id=player_entry.player_id,division_id=division_machine.division_id).all()            
     v1_utils.add_audit_log_entry(
-        "Recording Score",
+        "Record Score",
         player_entry.player_id,
         entry_id=player_entry.entry_id,        
         division_id=division_machine.division_id,

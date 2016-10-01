@@ -466,25 +466,60 @@ def get_division_results_ex(division_id=None,player_id=None):
     #query_three = get_third_query(second_query,player_id)
     query_three = get_third_query(first_query,second_query,player_id)
 
+    # create player hash
+    # player hash looks like this : player_hash['player_id']['division_id'][]
+    # check player_hash for each entry in list
+    # if player_hash['player_id']['division_id'] has length > 0, do nothing - otherwise, add
+    
     #divisions = Division.query.all()    
     sorted_list_entry_ids = {}
     division_results = {}
     in_progress_results = {}
+    player_hash={}
+    new_tuple_list_for_reranking=[]
+    new_player_tuple_list_for_reranking={0:[],1:[],2:[],3:[]}
+    
     for division in divisions:
         sorted_list_entry_ids[division.division_id] = [] 
         division_results[division.division_id]={}
     for result in DB.engine.execute(query_three):
         if result.entry_entry_id not in division_results[result.entry_division_id]:
             division_results[result.entry_division_id][result.entry_entry_id]={'entry':result,'scores':[]}
-            sorted_list_entry_ids[result.entry_division_id].append(result.entry_entry_id)            
-        division_results[result.entry_division_id][result.entry_entry_id]['scores'].append(result)
+            #######sorted_list_entry_ids[result.entry_division_id].append(result.entry_entry_id)            
+        ######division_results[result.entry_division_id][result.entry_entry_id]['scores'].append(result)
+        if result.entry_player_id not in player_hash:
+            player_hash[result.entry_player_id]={}
+        if result.entry_division_id not in player_hash[result.entry_player_id]:
+            player_hash[result.entry_player_id][result.entry_division_id]=[]
+        if len(player_hash[result.entry_player_id][result.entry_division_id])==0:
+            player_hash[result.entry_player_id][result.entry_division_id].append(result.entry_entry_id)
+            if player_id is None:
+                sorted_list_entry_ids[result.entry_division_id].append(result.entry_entry_id)            
+                new_tuple_list_for_reranking.append((result.entry_entry_id,int(result.second_query_scorepointsrank),result.entry_division_id))
+        #if  player_hash[result.entry_player_id][result.entry_division_id][0] == result.entry_entry_id:
+            #print "found score %s %s " % (result.entry_division_id,result.entry_entry_id)
+        if player_id:
+            sorted_list_entry_ids[result.entry_division_id].append(result.entry_entry_id)                        
+            #new_player_tuple_list_for_reranking[result.entry_division_id]
+        division_results[result.entry_division_id][result.entry_entry_id]['scores'].append(result)###        
+        # create new list of tuples (entry_score, entry_id) as we loop through
+        # resort new list based on entry score
+        # rerank new list
+        # create new sorted_list_entry_ids based on reranked list        
+        
         #division_results[result.entry_division_id][result.entry_entry_id]['scores'] = sorted(division_results[result.entry_division_id][result.entry_entry_id]['scores'],
         #                                                                                     key= lambda s: s[1]['first_query_scorerank'])
         if result.entry_completed is not True:
             if result.entry_division_id not in in_progress_results:
                 in_progress_results[result.entry_division_id]={'entry':result,'scores':[]}
             in_progress_results[result.entry_division_id]['scores'].append(result)
-                
+    if player_id is None:
+        ranked_new_tuple_list = list(Ranking(new_tuple_list_for_reranking,key=lambda e: e[1],reverse=True))
+        for new_ranked_tuple in ranked_new_tuple_list:
+            new_entry_id = int(new_ranked_tuple[1][0])            
+            division_results[int(division_id)][new_entry_id]['new_rank']=int(new_ranked_tuple[0])+1
+    if player_id:
+        print "%s %s" % (new_tuple_list_for_reranking,division_id)
     #for division in divisions:        
     #    sorted_list =  sorted(division_results[division.division_id].items(), key= lambda e: e[1]['entry'].second_query_scorepointssum,reverse=True)
     #    division_results[division.division_id]=[e[1] for e in sorted_list]

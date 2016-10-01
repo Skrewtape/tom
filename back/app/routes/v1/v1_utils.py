@@ -63,6 +63,13 @@ def get_players_ranked_by_qualifying_herb(division_id,num_players,checked_player
 
 
 def add_audit_log_entry(type,player_id,**kwargs):
+    audit_log_user_name = "dummy"
+    if hasattr(current_user,'user_id'):
+        audit_log_user_name = current_user.username
+    
+    audit_log_user_name = audit_log_user_name[:10] if len(audit_log_user_name) > 10 else audit_log_user_name
+
+    type = type + " " + audit_log_user_name
     new_audit_log_entry = AuditLogEntry(
         type=type,
         timestamp=time.time(),
@@ -82,7 +89,10 @@ def add_audit_log_entry(type,player_id,**kwargs):
     if "score_id" in kwargs:
         new_audit_log_entry.score_id=kwargs['score_id']                
     if "score" in kwargs:
-        new_audit_log_entry.score=kwargs['score']                
+        if int(kwargs['score']) < 1000000000:
+            new_audit_log_entry.score=kwargs['score']
+        else:
+            new_audit_log_entry.score=1000000000
     if "comped" in kwargs:
         new_audit_log_entry.comped=kwargs['comped']                        
     if "division_id" in kwargs and kwargs['division_id']:

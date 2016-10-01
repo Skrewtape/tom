@@ -196,7 +196,7 @@ returns:
     #available_tokens = Token.query.filter_by(paid_for=True,player_id=player.player_id,division_id=divisionmachine.division_id).all()        
 
     v1_utils.add_audit_log_entry(
-        "Remove Player/Undo Game Start",        
+        "Remove/Undo",        
         player_id=player.player_id,                                                                                
         division_machine_id=divisionmachine.division_machine_id,
         division_id=divisionmachine.division_id

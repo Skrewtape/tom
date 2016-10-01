@@ -84,7 +84,7 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
             }
         }
         
-    },50);
+    },100);
 
     $scope.stop = $interval(function() {
         if($scope.ready_to_scroll == false){
@@ -110,7 +110,7 @@ app.controller('projectorController', ['$scope','$resource', '$sce', '$http', '$
         }
         
         $("html, body").animate({ scrollTop: $(document).height() }, "slow");                  
-    },5000);
+    },10000);
 
     $scope.divisions.get({},function(data){
         $scope.division_objects = data;        
@@ -138,7 +138,6 @@ console.log($scope.division_list);
     <!-- <table class="table"> -->
     <!--   <tbody> -->
     <div ng-repeat="division_id in division_list|limitTo:division_index+1" class="repeated-item row" style='background-color:grey'>
-      <center><span style='font-size:200px'><b>{{division_objects[division_id].tournament_name}}</b></span></center>
       <div ng-repeat="(machine_id,machine) in division_one_queues[division_id]" class="col-md-6" style='height:800px;margin-bottom:10px;'>
         <div class="panel panel-default">
           <div class="panel-heading" style='border-width:2px;border-color:grey;border-style:solid;background-color:black;color:white'>

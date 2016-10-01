@@ -68,20 +68,20 @@
 
 {% if division_results %}
   {% for entry_id in sorted_division_entry_ids[division_id] %}
-    {% if division_results[division_id][entry_id]['entry']['second_query_scorepointsrank'] > divider and divider_placed == None %}
+    {% if division_results[division_id][entry_id]['new_rank'] > divider and divider_placed == None %}
       <tr><td align='center' style='background-color:red' colspan=5> FINALS CUTOFF  </td></tr>
       {% set divider_placed = "placed" %}
     {% endif %}
-    {% if division_results[division_id][entry_id]['entry']['second_query_scorepointsrank'] > divider_a and divider_a_placed == None %}
+    {% if division_results[division_id][entry_id]['new_rank'] > divider_a and divider_a_placed == None %}
       <tr><td align='center' style='background-color:red' colspan=5> FINALS CUTOFF FOR A </td></tr>
       {% set divider_a_placed = "placed" %}        
     {% endif %}
-    {% if division_results[division_id][entry_id]['entry']['second_query_scorepointsrank'] > divider_b + divider_a and divider_b_placed == None %}
+    {% if division_results[division_id][entry_id]['new_rank'] > divider_b + divider_a and divider_b_placed == None %}
       <tr><td align='center' style='background-color:red' colspan=5> FINALS CUTOFF FOR B </td></tr>
       {% set divider_b_placed = "placed" %}        
     {% endif %}    
     <tr>
-      <td><small>{{division_results[division_id][entry_id]['entry']['second_query_scorepointsrank']}}</small></td>
+      <td><small>{{division_results[division_id][entry_id]['new_rank']}}</small></td>
       <td>
         <small><a href="/player_entries_ex/{{division_results[division_id][entry_id]['entry']['first_query_player_player_id']}}">{{division_results[division_id][entry_id]['entry']['first_query_player_first_name']}} {{division_results[division_id][entry_id]['entry']['first_query_player_last_name']}}</a></small>
       </td>
